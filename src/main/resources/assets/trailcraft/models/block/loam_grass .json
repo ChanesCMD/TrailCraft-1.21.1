@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "trailcraft:block/loam",
+    "down": "trailcraft:block/loam",
+    "up": "trailcraft:block/turf_top",
+    "north": "trailcraft:block/turf_side",
+    "east": "trailcraft:block/turf_side",
+    "south": "trailcraft:block/turf_side",
+    "west": "trailcraft:block/turf_side"
+  }
+}

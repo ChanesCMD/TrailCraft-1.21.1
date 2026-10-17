@@ -1,0 +1,12 @@
+﻿{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "trailcraft:block/basalt",
+    "down": "trailcraft:block/basalt_bottom",
+    "up": "trailcraft:block/basalt_top",
+    "north": "trailcraft:block/basalt",
+    "east": "trailcraft:block/basalt",
+    "south": "trailcraft:block/basalt",
+    "west": "trailcraft:block/basalt"
+  }
+}

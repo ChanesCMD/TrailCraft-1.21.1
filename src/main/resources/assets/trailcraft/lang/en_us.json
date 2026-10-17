@@ -1,0 +1,13 @@
+{
+  "itemGroup.trailcraft": "Example Mod Tab",
+  "block.trailcraft.example_block": "Example Block",
+  "item.trailcraft.example_item": "Example Item",
+
+  "trailcraft.configuration.title": "Example Mod Configs",
+  "trailcraft.configuration.section.trailcraft.common.toml": "Example Mod Configs",
+  "trailcraft.configuration.section.trailcraft.common.toml.title": "Example Mod Configs",
+  "trailcraft.configuration.items": "Item List",
+  "trailcraft.configuration.logDirtBlock": "Log Dirt Block",
+  "trailcraft.configuration.magicNumberIntroduction": "Magic Number Text",
+  "trailcraft.configuration.magicNumber": "Magic Number"
+}
