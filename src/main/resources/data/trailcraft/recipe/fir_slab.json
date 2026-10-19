@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "trailcraft:fir_planks"
+    }
+  },
+  "pattern": [
+    "###"
+  ],
+  "result": {
+    "id": "trailcraft:fir_slab",
+    "count": 6
+  }
+}

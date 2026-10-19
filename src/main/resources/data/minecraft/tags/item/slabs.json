@@ -1,0 +1,28 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:oak_slab",
+    "trailcraft:birch_slab",
+    "trailcraft:acacia_slab",
+    "trailcraft:sakura_slab",
+    "trailcraft:eucalyptus_slab",
+    "trailcraft:chestnut_slab",
+    "trailcraft:thuja_slab",
+    "trailcraft:pine_slab",
+    "trailcraft:fir_slab",
+    "trailcraft:spruce_slab",
+    "trailcraft:white_poplar_slab",
+    "trailcraft:ebony_slab",
+    "trailcraft:maple_slab",
+    "trailcraft:cedar_slab",
+    "trailcraft:willow_slab",
+    "trailcraft:lilac_slab",
+    "trailcraft:palm_slab",
+    "trailcraft:ironwood_slab",
+    "trailcraft:aspen_slab",
+    "trailcraft:linden_slab",
+    "trailcraft:pussy_willow_slab",
+    "trailcraft:walnut_slab",
+    "trailcraft:alder_slab"
+  ]
+}

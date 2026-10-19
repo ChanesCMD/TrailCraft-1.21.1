@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    {
+      "item": "trailcraft:pussy_willow_planks"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:pussy_willow_button",
+    "count": 1
+  }
+}

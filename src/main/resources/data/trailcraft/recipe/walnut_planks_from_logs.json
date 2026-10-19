@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "trailcraft:walnut_logs"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:walnut_planks",
+    "count": 4
+  }
+}

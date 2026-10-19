@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    {
+      "item": "trailcraft:cedar_planks"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:cedar_button",
+    "count": 1
+  }
+}

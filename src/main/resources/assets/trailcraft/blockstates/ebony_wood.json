@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "trailcraft:block/ebony_wood"
+    },
+    "axis=z": {
+      "model": "trailcraft:block/ebony_wood",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "trailcraft:block/ebony_wood",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

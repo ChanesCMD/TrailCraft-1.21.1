@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "trailcraft:alder_planks"
+    }
+  },
+  "pattern": [
+    "###"
+  ],
+  "result": {
+    "id": "trailcraft:alder_slab",
+    "count": 6
+  }
+}

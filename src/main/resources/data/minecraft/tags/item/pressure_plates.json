@@ -1,0 +1,28 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:oak_pressure_plate",
+    "trailcraft:birch_pressure_plate",
+    "trailcraft:acacia_pressure_plate",
+    "trailcraft:sakura_pressure_plate",
+    "trailcraft:eucalyptus_pressure_plate",
+    "trailcraft:chestnut_pressure_plate",
+    "trailcraft:thuja_pressure_plate",
+    "trailcraft:pine_pressure_plate",
+    "trailcraft:fir_pressure_plate",
+    "trailcraft:spruce_pressure_plate",
+    "trailcraft:white_poplar_pressure_plate",
+    "trailcraft:ebony_pressure_plate",
+    "trailcraft:maple_pressure_plate",
+    "trailcraft:cedar_pressure_plate",
+    "trailcraft:willow_pressure_plate",
+    "trailcraft:lilac_pressure_plate",
+    "trailcraft:palm_pressure_plate",
+    "trailcraft:ironwood_pressure_plate",
+    "trailcraft:aspen_pressure_plate",
+    "trailcraft:linden_pressure_plate",
+    "trailcraft:pussy_willow_pressure_plate",
+    "trailcraft:walnut_pressure_plate",
+    "trailcraft:alder_pressure_plate"
+  ]
+}

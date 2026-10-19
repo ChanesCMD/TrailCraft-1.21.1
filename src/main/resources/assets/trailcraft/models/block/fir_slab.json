@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "trailcraft:block/fir_planks",
+    "top": "trailcraft:block/fir_planks",
+    "side": "trailcraft:block/fir_planks"
+  }
+}

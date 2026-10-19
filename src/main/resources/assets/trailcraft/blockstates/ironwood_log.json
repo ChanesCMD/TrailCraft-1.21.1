@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "trailcraft:block/ironwood_log"
+    },
+    "axis=z": {
+      "model": "trailcraft:block/ironwood_log",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "trailcraft:block/ironwood_log",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

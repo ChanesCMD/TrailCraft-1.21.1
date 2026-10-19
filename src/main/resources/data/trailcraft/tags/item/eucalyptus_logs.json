@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:eucalyptus_log",
+    "trailcraft:stripped_eucalyptus_log",
+    "trailcraft:eucalyptus_wood",
+    "trailcraft:stripped_eucalyptus_wood"
+  ]
+}

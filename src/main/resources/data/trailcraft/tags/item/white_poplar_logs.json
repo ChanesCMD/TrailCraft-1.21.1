@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:white_poplar_log",
+    "trailcraft:stripped_white_poplar_log",
+    "trailcraft:white_poplar_wood",
+    "trailcraft:stripped_white_poplar_wood"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "trailcraft:block/white_poplar_log"
+    },
+    "axis=z": {
+      "model": "trailcraft:block/white_poplar_log",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "trailcraft:block/white_poplar_log",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

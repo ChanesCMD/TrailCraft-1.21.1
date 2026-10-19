@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    {
+      "item": "trailcraft:thuja_planks"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:thuja_button",
+    "count": 1
+  }
+}

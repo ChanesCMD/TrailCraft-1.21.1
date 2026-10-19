@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "trailcraft:block/white_poplar_slab"
+    },
+    "type=top": {
+      "model": "trailcraft:block/white_poplar_slab_top"
+    },
+    "type=double": {
+      "model": "trailcraft:block/white_poplar_planks"
+    }
+  }
+}

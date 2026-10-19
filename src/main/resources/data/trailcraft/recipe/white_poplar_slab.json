@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "trailcraft:white_poplar_planks"
+    }
+  },
+  "pattern": [
+    "###"
+  ],
+  "result": {
+    "id": "trailcraft:white_poplar_slab",
+    "count": 6
+  }
+}

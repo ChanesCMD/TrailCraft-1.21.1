@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    {
+      "item": "trailcraft:willow_planks"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:willow_button",
+    "count": 1
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:chernozem_plains",
+    "trailcraft:chernozem_river",
+    "trailcraft:chernozem_shore",
+    "trailcraft:burozem_plains",
+    "trailcraft:burozem_river",
+    "trailcraft:burozem_shore",
+    "trailcraft:zheltozem_plains",
+    "trailcraft:zheltozem_river",
+    "trailcraft:zheltozem_shore",
+    "trailcraft:desert",
+    "trailcraft:red_desert",
+    "trailcraft:sea",
+    "trailcraft:arboretum"
+  ]
+}

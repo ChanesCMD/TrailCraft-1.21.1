@@ -1,0 +1,28 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:oak_sapling",
+    "trailcraft:birch_sapling",
+    "trailcraft:acacia_sapling",
+    "trailcraft:sakura_sapling",
+    "trailcraft:eucalyptus_sapling",
+    "trailcraft:chestnut_sapling",
+    "trailcraft:thuja_sapling",
+    "trailcraft:pine_sapling",
+    "trailcraft:fir_sapling",
+    "trailcraft:spruce_sapling",
+    "trailcraft:white_poplar_sapling",
+    "trailcraft:ebony_sapling",
+    "trailcraft:maple_sapling",
+    "trailcraft:cedar_sapling",
+    "trailcraft:willow_sapling",
+    "trailcraft:lilac_sapling",
+    "trailcraft:palm_sapling",
+    "trailcraft:ironwood_sapling",
+    "trailcraft:aspen_sapling",
+    "trailcraft:linden_sapling",
+    "trailcraft:pussy_willow_sapling",
+    "trailcraft:walnut_sapling",
+    "trailcraft:alder_sapling"
+  ]
+}

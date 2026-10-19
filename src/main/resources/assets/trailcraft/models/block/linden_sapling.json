@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "trailcraft:block/linden_sapling"
+  },
+  "render_type": "minecraft:cutout"
+}

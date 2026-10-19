@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "name": "trailcraft:zheltozem_grass",
+              "conditions": [
+                {
+                  "condition": "minecraft:match_tool",
+                  "predicate": {
+                    "items": "trailcraft:turf_cutter"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "trailcraft:zheltozem"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "random_sequence": "trailcraft:blocks/zheltozem_grass"
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_bottom_left",
+  "textures": {
+    "bottom": "trailcraft:block/chestnut_door_bottom",
+    "top": "trailcraft:block/chestnut_door_top"
+  }
+}

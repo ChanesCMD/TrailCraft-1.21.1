@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "trailcraft:palm_planks"
+    }
+  },
+  "pattern": [
+    "###"
+  ],
+  "result": {
+    "id": "trailcraft:palm_slab",
+    "count": 6
+  }
+}

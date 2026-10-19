@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "trailcraft:aspen_planks"
+    }
+  },
+  "pattern": [
+    "###"
+  ],
+  "result": {
+    "id": "trailcraft:aspen_slab",
+    "count": 6
+  }
+}

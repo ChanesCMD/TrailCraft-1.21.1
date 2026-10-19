@@ -1,0 +1,28 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:oak_fence",
+    "trailcraft:birch_fence",
+    "trailcraft:acacia_fence",
+    "trailcraft:sakura_fence",
+    "trailcraft:eucalyptus_fence",
+    "trailcraft:chestnut_fence",
+    "trailcraft:thuja_fence",
+    "trailcraft:pine_fence",
+    "trailcraft:fir_fence",
+    "trailcraft:spruce_fence",
+    "trailcraft:white_poplar_fence",
+    "trailcraft:ebony_fence",
+    "trailcraft:maple_fence",
+    "trailcraft:cedar_fence",
+    "trailcraft:willow_fence",
+    "trailcraft:lilac_fence",
+    "trailcraft:palm_fence",
+    "trailcraft:ironwood_fence",
+    "trailcraft:aspen_fence",
+    "trailcraft:linden_fence",
+    "trailcraft:pussy_willow_fence",
+    "trailcraft:walnut_fence",
+    "trailcraft:alder_fence"
+  ]
+}

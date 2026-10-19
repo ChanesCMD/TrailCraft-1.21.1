@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "trailcraft:eucalyptus_logs"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:eucalyptus_planks",
+    "count": 4
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "type": "minecraft:random_patch",
+  "config": {
+    "tries": 68,
+    "xz_spread": 7,
+    "y_spread": 3,
+    "feature": {
+      "feature": {
+        "type": "minecraft:simple_block",
+        "config": {
+          "to_place": {
+            "type": "minecraft:weighted_state_provider",
+            "entries": [
+              {
+                "weight": 6,
+                "data": {
+                  "Name": "trailcraft:grass_small"
+                }
+              },
+              {
+                "weight": 3,
+                "data": {
+                  "Name": "trailcraft:grass_medium"
+                }
+              },
+              {
+                "weight": 1,
+                "data": {
+                  "Name": "trailcraft:grass_tall"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "placement": [
+        {
+          "type": "minecraft:block_predicate_filter",
+          "predicate": {
+            "type": "minecraft:matching_blocks",
+            "blocks": "minecraft:air"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "feature": "trailcraft:pussy_willow_tree",
+  "placement": [
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:would_survive",
+        "state": {
+          "Name": "trailcraft:pussy_willow_sapling"
+        }
+      }
+    }
+  ]
+}

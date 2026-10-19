@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "trailcraft:sakura_logs"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:sakura_planks",
+    "count": 4
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "trailcraft:pussy_willow_logs"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:pussy_willow_planks",
+    "count": 4
+  }
+}

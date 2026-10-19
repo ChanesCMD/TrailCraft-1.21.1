@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:simple_random_selector",
+  "config": {
+    "features": [
+      "trailcraft:oak_checked",
+      "trailcraft:birch_checked",
+      "trailcraft:acacia_checked",
+      "trailcraft:sakura_checked",
+      "trailcraft:eucalyptus_checked",
+      "trailcraft:chestnut_checked",
+      "trailcraft:thuja_checked",
+      "trailcraft:pine_checked",
+      "trailcraft:fir_checked",
+      "trailcraft:spruce_checked",
+      "trailcraft:white_poplar_checked",
+      "trailcraft:ebony_checked",
+      "trailcraft:maple_checked",
+      "trailcraft:cedar_checked",
+      "trailcraft:willow_checked",
+      "trailcraft:lilac_checked",
+      "trailcraft:palm_checked",
+      "trailcraft:ironwood_checked",
+      "trailcraft:aspen_checked",
+      "trailcraft:linden_checked",
+      "trailcraft:pussy_willow_checked",
+      "trailcraft:walnut_checked",
+      "trailcraft:alder_checked"
+    ]
+  }
+}

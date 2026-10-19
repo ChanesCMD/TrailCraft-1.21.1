@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "trailcraft:acacia_logs"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:acacia_planks",
+    "count": 4
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "trailcraft:block/walnut_log"
+    },
+    "axis=z": {
+      "model": "trailcraft:block/walnut_log",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "trailcraft:block/walnut_log",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

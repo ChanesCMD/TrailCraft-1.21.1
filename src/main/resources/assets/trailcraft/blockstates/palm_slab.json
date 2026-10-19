@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "trailcraft:block/palm_slab"
+    },
+    "type=top": {
+      "model": "trailcraft:block/palm_slab_top"
+    },
+    "type=double": {
+      "model": "trailcraft:block/palm_planks"
+    }
+  }
+}

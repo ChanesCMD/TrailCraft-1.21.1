@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "trailcraft:block/walnut_log_top",
+    "side": "trailcraft:block/walnut_log"
+  }
+}

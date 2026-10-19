@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    {
+      "item": "trailcraft:oak_planks"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:oak_button",
+    "count": 1
+  }
+}

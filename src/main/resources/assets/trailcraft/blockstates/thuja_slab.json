@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "trailcraft:block/thuja_slab"
+    },
+    "type=top": {
+      "model": "trailcraft:block/thuja_slab_top"
+    },
+    "type=double": {
+      "model": "trailcraft:block/thuja_planks"
+    }
+  }
+}

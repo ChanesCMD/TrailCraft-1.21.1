@@ -1,0 +1,31 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:oak_leaves",
+    "trailcraft:birch_leaves",
+    "trailcraft:acacia_leaves",
+    "trailcraft:sakura_leaves",
+    "trailcraft:eucalyptus_leaves",
+    "trailcraft:chestnut_leaves",
+    "trailcraft:thuja_leaves",
+    "trailcraft:pine_leaves",
+    "trailcraft:fir_leaves",
+    "trailcraft:spruce_leaves",
+    "trailcraft:white_poplar_leaves",
+    "trailcraft:ebony_leaves",
+    "trailcraft:maple_leaves",
+    "trailcraft:cedar_leaves",
+    "trailcraft:willow_leaves",
+    "trailcraft:lilac_leaves",
+    "trailcraft:palm_leaves",
+    "trailcraft:ironwood_leaves",
+    "trailcraft:aspen_leaves",
+    "trailcraft:linden_leaves",
+    "trailcraft:pussy_willow_leaves",
+    "trailcraft:walnut_leaves",
+    "trailcraft:alder_leaves",
+    "trailcraft:grass_small",
+    "trailcraft:grass_medium",
+    "trailcraft:grass_tall"
+  ]
+}

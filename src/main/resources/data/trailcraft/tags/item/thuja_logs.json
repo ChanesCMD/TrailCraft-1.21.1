@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:thuja_log",
+    "trailcraft:stripped_thuja_log",
+    "trailcraft:thuja_wood",
+    "trailcraft:stripped_thuja_wood"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    {
+      "item": "trailcraft:spruce_planks"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:spruce_button",
+    "count": 1
+  }
+}

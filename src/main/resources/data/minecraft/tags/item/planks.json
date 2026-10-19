@@ -1,0 +1,28 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:oak_planks",
+    "trailcraft:birch_planks",
+    "trailcraft:acacia_planks",
+    "trailcraft:sakura_planks",
+    "trailcraft:eucalyptus_planks",
+    "trailcraft:chestnut_planks",
+    "trailcraft:thuja_planks",
+    "trailcraft:pine_planks",
+    "trailcraft:fir_planks",
+    "trailcraft:spruce_planks",
+    "trailcraft:white_poplar_planks",
+    "trailcraft:ebony_planks",
+    "trailcraft:maple_planks",
+    "trailcraft:cedar_planks",
+    "trailcraft:willow_planks",
+    "trailcraft:lilac_planks",
+    "trailcraft:palm_planks",
+    "trailcraft:ironwood_planks",
+    "trailcraft:aspen_planks",
+    "trailcraft:linden_planks",
+    "trailcraft:pussy_willow_planks",
+    "trailcraft:walnut_planks",
+    "trailcraft:alder_planks"
+  ]
+}

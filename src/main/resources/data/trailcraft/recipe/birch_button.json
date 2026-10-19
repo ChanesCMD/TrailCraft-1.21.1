@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    {
+      "item": "trailcraft:birch_planks"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:birch_button",
+    "count": 1
+  }
+}

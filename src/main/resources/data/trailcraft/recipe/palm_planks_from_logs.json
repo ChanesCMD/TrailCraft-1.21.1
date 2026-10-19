@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "trailcraft:palm_logs"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:palm_planks",
+    "count": 4
+  }
+}

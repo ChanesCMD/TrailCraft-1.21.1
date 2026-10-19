@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "trailcraft:block/chestnut_slab"
+    },
+    "type=top": {
+      "model": "trailcraft:block/chestnut_slab_top"
+    },
+    "type=double": {
+      "model": "trailcraft:block/chestnut_planks"
+    }
+  }
+}

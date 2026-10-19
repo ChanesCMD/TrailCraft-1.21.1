@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "W": {
+      "item": "trailcraft:chestnut_planks"
+    },
+    "#": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "#W#",
+    "#W#"
+  ],
+  "result": {
+    "id": "trailcraft:chestnut_fence_gate",
+    "count": 1
+  }
+}

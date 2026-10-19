@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    {
+      "item": "trailcraft:white_poplar_planks"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:white_poplar_button",
+    "count": 1
+  }
+}

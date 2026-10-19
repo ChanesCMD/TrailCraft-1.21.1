@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "trailcraft:block/stripped_lilac_log_top",
+    "side": "trailcraft:block/stripped_lilac_log"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "trailcraft:block/eucalyptus_slab"
+    },
+    "type=top": {
+      "model": "trailcraft:block/eucalyptus_slab_top"
+    },
+    "type=double": {
+      "model": "trailcraft:block/eucalyptus_planks"
+    }
+  }
+}

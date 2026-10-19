@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "trailcraft:block/spruce_pressure_plate_up"
+    },
+    "powered=true": {
+      "model": "trailcraft:block/spruce_pressure_plate_down"
+    }
+  }
+}

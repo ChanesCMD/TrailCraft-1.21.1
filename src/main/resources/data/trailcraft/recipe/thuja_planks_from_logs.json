@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "trailcraft:thuja_logs"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:thuja_planks",
+    "count": 4
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "trailcraft:oak_logs"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:oak_planks",
+    "count": 4
+  }
+}

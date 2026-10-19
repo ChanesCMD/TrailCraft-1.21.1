@@ -1,0 +1,23 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:burozem",
+    "trailcraft:chernozem",
+    "trailcraft:zheltozem",
+    "trailcraft:peat",
+    "trailcraft:loam",
+    "trailcraft:clay_white",
+    "trailcraft:clay_blue",
+    "trailcraft:clay_gray",
+    "trailcraft:clay_red",
+    "trailcraft:burozem_grass",
+    "trailcraft:chernozem_grass",
+    "trailcraft:zheltozem_grass",
+    "trailcraft:peat_grass",
+    "trailcraft:loam_grass",
+    "trailcraft:clay_white_grass",
+    "trailcraft:clay_blue_grass",
+    "trailcraft:clay_gray_grass",
+    "trailcraft:clay_red_grass"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "trailcraft:ironwood_logs"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:ironwood_planks",
+    "count": 4
+  }
+}

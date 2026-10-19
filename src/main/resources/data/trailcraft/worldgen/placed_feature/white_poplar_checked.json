@@ -1,0 +1,14 @@
+{
+  "feature": "trailcraft:white_poplar_tree",
+  "placement": [
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:would_survive",
+        "state": {
+          "Name": "trailcraft:white_poplar_sapling"
+        }
+      }
+    }
+  ]
+}

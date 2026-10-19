@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_bottom_right",
+  "textures": {
+    "bottom": "trailcraft:block/pussy_willow_door_bottom",
+    "top": "trailcraft:block/pussy_willow_door_top"
+  }
+}

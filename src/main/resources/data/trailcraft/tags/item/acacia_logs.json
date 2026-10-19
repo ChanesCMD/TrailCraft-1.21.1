@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:acacia_log",
+    "trailcraft:stripped_acacia_log",
+    "trailcraft:acacia_wood",
+    "trailcraft:stripped_acacia_wood"
+  ]
+}

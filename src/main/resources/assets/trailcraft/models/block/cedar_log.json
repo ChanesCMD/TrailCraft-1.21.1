@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "trailcraft:block/cedar_log_top",
+    "side": "trailcraft:block/cedar_log"
+  }
+}

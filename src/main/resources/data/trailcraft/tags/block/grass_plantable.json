@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:dirt",
+    "trailcraft:burozem_grass",
+    "trailcraft:chernozem_grass",
+    "trailcraft:zheltozem_grass",
+    "trailcraft:peat_grass",
+    "trailcraft:loam_grass",
+    "trailcraft:clay_blue_grass",
+    "trailcraft:clay_gray_grass",
+    "trailcraft:clay_white_grass",
+    "trailcraft:clay_red_grass"
+  ]
+}

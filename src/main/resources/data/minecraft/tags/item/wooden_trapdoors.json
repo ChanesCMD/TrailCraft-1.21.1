@@ -1,0 +1,28 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:oak_trapdoor",
+    "trailcraft:birch_trapdoor",
+    "trailcraft:acacia_trapdoor",
+    "trailcraft:sakura_trapdoor",
+    "trailcraft:eucalyptus_trapdoor",
+    "trailcraft:chestnut_trapdoor",
+    "trailcraft:thuja_trapdoor",
+    "trailcraft:pine_trapdoor",
+    "trailcraft:fir_trapdoor",
+    "trailcraft:spruce_trapdoor",
+    "trailcraft:white_poplar_trapdoor",
+    "trailcraft:ebony_trapdoor",
+    "trailcraft:maple_trapdoor",
+    "trailcraft:cedar_trapdoor",
+    "trailcraft:willow_trapdoor",
+    "trailcraft:lilac_trapdoor",
+    "trailcraft:palm_trapdoor",
+    "trailcraft:ironwood_trapdoor",
+    "trailcraft:aspen_trapdoor",
+    "trailcraft:linden_trapdoor",
+    "trailcraft:pussy_willow_trapdoor",
+    "trailcraft:walnut_trapdoor",
+    "trailcraft:alder_trapdoor"
+  ]
+}

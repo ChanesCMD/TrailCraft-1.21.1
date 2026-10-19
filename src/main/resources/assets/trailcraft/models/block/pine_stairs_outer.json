@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "trailcraft:block/pine_planks",
+    "top": "trailcraft:block/pine_planks",
+    "side": "trailcraft:block/pine_planks"
+  }
+}

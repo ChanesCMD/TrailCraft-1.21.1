@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "trailcraft:spruce_logs"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:spruce_planks",
+    "count": 4
+  }
+}

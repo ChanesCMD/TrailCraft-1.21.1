@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "trailcraft:block/lilac_sapling"
+  },
+  "render_type": "minecraft:cutout"
+}

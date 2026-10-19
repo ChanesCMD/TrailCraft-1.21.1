@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "trailcraft:alder_logs"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:alder_planks",
+    "count": 4
+  }
+}

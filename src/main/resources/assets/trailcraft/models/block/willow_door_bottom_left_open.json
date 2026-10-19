@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_bottom_left_open",
+  "textures": {
+    "bottom": "trailcraft:block/willow_door_bottom",
+    "top": "trailcraft:block/willow_door_top"
+  }
+}

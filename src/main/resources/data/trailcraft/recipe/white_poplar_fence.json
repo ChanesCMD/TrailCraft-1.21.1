@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "W": {
+      "item": "trailcraft:white_poplar_planks"
+    },
+    "#": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "W#W",
+    "W#W"
+  ],
+  "result": {
+    "id": "trailcraft:white_poplar_fence",
+    "count": 3
+  }
+}

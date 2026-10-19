@@ -1,0 +1,28 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:oak_button",
+    "trailcraft:birch_button",
+    "trailcraft:acacia_button",
+    "trailcraft:sakura_button",
+    "trailcraft:eucalyptus_button",
+    "trailcraft:chestnut_button",
+    "trailcraft:thuja_button",
+    "trailcraft:pine_button",
+    "trailcraft:fir_button",
+    "trailcraft:spruce_button",
+    "trailcraft:white_poplar_button",
+    "trailcraft:ebony_button",
+    "trailcraft:maple_button",
+    "trailcraft:cedar_button",
+    "trailcraft:willow_button",
+    "trailcraft:lilac_button",
+    "trailcraft:palm_button",
+    "trailcraft:ironwood_button",
+    "trailcraft:aspen_button",
+    "trailcraft:linden_button",
+    "trailcraft:pussy_willow_button",
+    "trailcraft:walnut_button",
+    "trailcraft:alder_button"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "trailcraft:block/stripped_linden_wood"
+    },
+    "axis=z": {
+      "model": "trailcraft:block/stripped_linden_wood",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "trailcraft:block/stripped_linden_wood",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

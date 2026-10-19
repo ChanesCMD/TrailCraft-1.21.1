@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:chalk",
+    "trailcraft:sandstone",
+    "trailcraft:shale",
+    "trailcraft:limestone",
+    "trailcraft:dolomite",
+    "trailcraft:marble",
+    "trailcraft:andesite",
+    "trailcraft:diorite",
+    "trailcraft:granite",
+    "trailcraft:gray_granite",
+    "trailcraft:gabbro",
+    "trailcraft:basalt"
+  ]
+}

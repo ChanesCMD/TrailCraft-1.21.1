@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:spruce_log",
+    "trailcraft:stripped_spruce_log",
+    "trailcraft:spruce_wood",
+    "trailcraft:stripped_spruce_wood"
+  ]
+}

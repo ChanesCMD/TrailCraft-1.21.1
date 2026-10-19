@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "trailcraft:block/birch_pressure_plate_up"
+    },
+    "powered=true": {
+      "model": "trailcraft:block/birch_pressure_plate_down"
+    }
+  }
+}

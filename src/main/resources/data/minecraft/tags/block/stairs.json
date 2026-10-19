@@ -1,0 +1,28 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:oak_stairs",
+    "trailcraft:birch_stairs",
+    "trailcraft:acacia_stairs",
+    "trailcraft:sakura_stairs",
+    "trailcraft:eucalyptus_stairs",
+    "trailcraft:chestnut_stairs",
+    "trailcraft:thuja_stairs",
+    "trailcraft:pine_stairs",
+    "trailcraft:fir_stairs",
+    "trailcraft:spruce_stairs",
+    "trailcraft:white_poplar_stairs",
+    "trailcraft:ebony_stairs",
+    "trailcraft:maple_stairs",
+    "trailcraft:cedar_stairs",
+    "trailcraft:willow_stairs",
+    "trailcraft:lilac_stairs",
+    "trailcraft:palm_stairs",
+    "trailcraft:ironwood_stairs",
+    "trailcraft:aspen_stairs",
+    "trailcraft:linden_stairs",
+    "trailcraft:pussy_willow_stairs",
+    "trailcraft:walnut_stairs",
+    "trailcraft:alder_stairs"
+  ]
+}

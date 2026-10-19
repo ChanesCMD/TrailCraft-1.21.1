@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "trailcraft:aspen_logs"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:aspen_planks",
+    "count": 4
+  }
+}

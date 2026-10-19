@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "trailcraft:block/linden_slab"
+    },
+    "type=top": {
+      "model": "trailcraft:block/linden_slab_top"
+    },
+    "type=double": {
+      "model": "trailcraft:block/linden_planks"
+    }
+  }
+}

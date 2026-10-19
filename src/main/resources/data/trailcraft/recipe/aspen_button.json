@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    {
+      "item": "trailcraft:aspen_planks"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:aspen_button",
+    "count": 1
+  }
+}

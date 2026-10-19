@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "trailcraft:block/fir_slab"
+    },
+    "type=top": {
+      "model": "trailcraft:block/fir_slab_top"
+    },
+    "type=double": {
+      "model": "trailcraft:block/fir_planks"
+    }
+  }
+}
