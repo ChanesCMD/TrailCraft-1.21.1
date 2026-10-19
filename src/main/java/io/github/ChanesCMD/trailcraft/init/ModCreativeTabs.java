@@ -87,4 +87,16 @@ public class ModCreativeTabs {
                         output.accept(ModItems.CLAY_BALL_GRAY);
                         output.accept(ModItems.CLAY_BALL_RED);
                     }).build());
+
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TRAILCRAFT_WOOD_TAB =
+            CREATIVE_MODE_TABS.register("trailcraft_wood_tab", () -> CreativeModeTab.builder()
+                    .title(Component.translatable("itemGroup.trailcraft_wood"))
+                    .icon(() -> ModWood.SETS.get(0).log.get().asItem().getDefaultInstance())
+                    .displayItems((parameters, output) -> {
+                        for (ModWood.WoodSet set : ModWood.SETS) {
+                            for (var item : set.items) {
+                                output.accept(item);
+                            }
+                        }
+                    }).build());
 }

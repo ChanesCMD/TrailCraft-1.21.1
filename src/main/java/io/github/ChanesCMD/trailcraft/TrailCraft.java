@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import io.github.ChanesCMD.trailcraft.init.ModBlocks;
 import io.github.ChanesCMD.trailcraft.init.ModCreativeTabs;
 import io.github.ChanesCMD.trailcraft.init.ModItems;
+import io.github.ChanesCMD.trailcraft.init.ModWood;
 
 @Mod(TrailCraft.MODID)
 public class TrailCraft {
@@ -16,6 +17,9 @@ public class TrailCraft {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public TrailCraft(IEventBus modEventBus, ModContainer modContainer) {
+        // Деревья регистрируются в статическом блоке ModWood
+        ModWood.init();
+
         // Регистрируем блоки и предметы
         ModBlocks.BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
