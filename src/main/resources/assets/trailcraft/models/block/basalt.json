@@ -1,12 +1,7 @@
-﻿{
-  "parent": "minecraft:block/cube",
+{
+  "parent": "minecraft:block/cube_column",
   "textures": {
-    "particle": "trailcraft:block/basalt",
-    "down": "trailcraft:block/basalt_bottom",
-    "up": "trailcraft:block/basalt_top",
-    "north": "trailcraft:block/basalt",
-    "east": "trailcraft:block/basalt",
-    "south": "trailcraft:block/basalt",
-    "west": "trailcraft:block/basalt"
+    "end": "trailcraft:block/basalt_top",
+    "side": "trailcraft:block/basalt"
   }
 }

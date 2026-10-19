@@ -30,30 +30,47 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.SANDSTONE);
                         output.accept(ModBlocks.SHALE);
 
-                        // Базовые блоки (8)
+                        // Базовые блоки (9)
                         output.accept(ModBlocks.ZHELTOZEM);
                         output.accept(ModBlocks.BUROZEM);
                         output.accept(ModBlocks.CHERNOZEM);
                         output.accept(ModBlocks.LOAM);
                         output.accept(ModBlocks.CLAY_WHITE);
                         output.accept(ModBlocks.CLAY_BLUE);
+                        output.accept(ModBlocks.CLAY_RED);
                         output.accept(ModBlocks.CLAY_GRAY);
                         output.accept(ModBlocks.PEAT);
 
-                        // Травяные пары (8)
+                        // Травяные пары (9)
                         output.accept(ModBlocks.ZHELTOZEM_GRASS);
                         output.accept(ModBlocks.BUROZEM_GRASS);
                         output.accept(ModBlocks.CHERNOZEM_GRASS);
                         output.accept(ModBlocks.LOAM_GRASS);
                         output.accept(ModBlocks.CLAY_WHITE_GRASS);
                         output.accept(ModBlocks.CLAY_BLUE_GRASS);
+                        output.accept(ModBlocks.CLAY_RED_GRASS);
                         output.accept(ModBlocks.CLAY_GRAY_GRASS);
                         output.accept(ModBlocks.PEAT_GRASS);
 
-                        // Песок (3)
+                        // Гравий (12)
+                        output.accept(ModBlocks.ANDESITE_GRAVEL);
+                        output.accept(ModBlocks.BASALT_GRAVEL);
+                        output.accept(ModBlocks.CHALK_GRAVEL);
+                        output.accept(ModBlocks.DIORITE_GRAVEL);
+                        output.accept(ModBlocks.DOLOMITE_GRAVEL);
+                        output.accept(ModBlocks.GABBRO_GRAVEL);
+                        output.accept(ModBlocks.GRANITE_GRAVEL);
+                        output.accept(ModBlocks.GRAY_GRANITE_GRAVEL);
+                        output.accept(ModBlocks.LIMESTONE_GRAVEL);
+                        output.accept(ModBlocks.MARBLE_GRAVEL);
+                        output.accept(ModBlocks.SANDSTONE_GRAVEL);
+                        output.accept(ModBlocks.SHALE_GRAVEL);
+
+                        // Песок (4)
                         output.accept(ModBlocks.SAND_WHITE);
                         output.accept(ModBlocks.SAND_YELLOW);
-                        output.accept(ModBlocks.SAND_DARK);
+                        output.accept(ModBlocks.SAND_GRAY);
+                        output.accept(ModBlocks.SAND_RED);
 
                         // Ил (1)
                         output.accept(ModBlocks.SILT);
@@ -62,5 +79,12 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.GRASS_MEDIUM);
                         output.accept(ModBlocks.GRASS_SMALL);
                         output.accept(ModBlocks.GRASS_TALL);
+
+                        // Предметы
+                        output.accept(ModItems.TURF_CUTTER);
+                        output.accept(ModItems.CLAY_BALL_WHITE);
+                        output.accept(ModItems.CLAY_BALL_BLUE);
+                        output.accept(ModItems.CLAY_BALL_GRAY);
+                        output.accept(ModItems.CLAY_BALL_RED);
                     }).build());
 }

@@ -1,8 +1,13 @@
 package io.github.ChanesCMD.trailcraft.init;
 
+import net.minecraft.util.ColorRGBA;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ColoredFallingBlock;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.PushReaction;
+import io.github.ChanesCMD.trailcraft.block.GrassPlantBlock;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -13,42 +18,42 @@ public class ModBlocks {
 
     // === КАМНИ (12 блоков) ===
     public static final DeferredBlock<Block> ANDESITE = BLOCKS.registerSimpleBlock("andesite",
-            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5f, 6.0f).sound(SoundType.STONE));
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(3.0f, 12.0f).requiresCorrectToolForDrops().sound(SoundType.STONE));
 
-    public static final DeferredBlock<Block> BASALT = BLOCKS.registerSimpleBlock("basalt",
-            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(1.5f, 6.0f).sound(SoundType.STONE));
+    public static final DeferredBlock<Block> BASALT = BLOCKS.registerBlock("basalt", RotatedPillarBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(4.0f, 16.0f).requiresCorrectToolForDrops().sound(SoundType.STONE));
 
     public static final DeferredBlock<Block> CHALK = BLOCKS.registerSimpleBlock("chalk",
-            BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).strength(0.8f, 0.8f).sound(SoundType.STONE));
+            BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).strength(0.8f, 3.2f).requiresCorrectToolForDrops().sound(SoundType.STONE));
 
     public static final DeferredBlock<Block> DIORITE = BLOCKS.registerSimpleBlock("diorite",
-            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5f, 6.0f).sound(SoundType.STONE));
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(3.0f, 12.0f).requiresCorrectToolForDrops().sound(SoundType.STONE));
 
     public static final DeferredBlock<Block> DOLOMITE = BLOCKS.registerSimpleBlock("dolomite",
-            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5f, 6.0f).sound(SoundType.STONE));
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(2.5f, 10.0f).requiresCorrectToolForDrops().sound(SoundType.STONE));
 
     public static final DeferredBlock<Block> GABBRO = BLOCKS.registerSimpleBlock("gabbro",
-            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5f, 6.0f).sound(SoundType.STONE));
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(4.0f, 16.0f).requiresCorrectToolForDrops().sound(SoundType.STONE));
 
     public static final DeferredBlock<Block> GRANITE = BLOCKS.registerSimpleBlock("granite",
-            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5f, 6.0f).sound(SoundType.STONE));
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(3.5f, 14.0f).requiresCorrectToolForDrops().sound(SoundType.STONE));
 
     public static final DeferredBlock<Block> GRAY_GRANITE = BLOCKS.registerSimpleBlock("gray_granite",
-            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5f, 6.0f).sound(SoundType.STONE));
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(3.5f, 14.0f).requiresCorrectToolForDrops().sound(SoundType.STONE));
 
     public static final DeferredBlock<Block> LIMESTONE = BLOCKS.registerSimpleBlock("limestone",
-            BlockBehaviour.Properties.of().mapColor(MapColor.SAND).strength(1.5f, 6.0f).sound(SoundType.STONE));
+            BlockBehaviour.Properties.of().mapColor(MapColor.SAND).strength(2.0f, 8.0f).requiresCorrectToolForDrops().sound(SoundType.STONE));
 
     public static final DeferredBlock<Block> MARBLE = BLOCKS.registerSimpleBlock("marble",
-            BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).strength(1.5f, 6.0f).sound(SoundType.STONE));
+            BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).strength(2.5f, 10.0f).requiresCorrectToolForDrops().sound(SoundType.STONE));
 
     public static final DeferredBlock<Block> SANDSTONE = BLOCKS.registerSimpleBlock("sandstone",
-            BlockBehaviour.Properties.of().mapColor(MapColor.SAND).strength(0.8f, 0.8f).sound(SoundType.STONE));
+            BlockBehaviour.Properties.of().mapColor(MapColor.SAND).strength(1.0f, 4.0f).requiresCorrectToolForDrops().sound(SoundType.STONE));
 
     public static final DeferredBlock<Block> SHALE = BLOCKS.registerSimpleBlock("shale",
-            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5f, 6.0f).sound(SoundType.STONE));
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5f, 6.0f).requiresCorrectToolForDrops().sound(SoundType.STONE));
 
-    // === БАЗОВЫЕ БЛОКИ (8 блоков) ===
+    // === БАЗОВЫЕ БЛОКИ (9 блоков) ===
     public static final DeferredBlock<Block> ZHELTOZEM = BLOCKS.registerSimpleBlock("zheltozem",
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW).strength(0.5f).sound(SoundType.GRAVEL));
 
@@ -67,13 +72,16 @@ public class ModBlocks {
     public static final DeferredBlock<Block> CLAY_BLUE = BLOCKS.registerSimpleBlock("clay_blue",
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).strength(0.6f).sound(SoundType.GRAVEL));
 
+    public static final DeferredBlock<Block> CLAY_RED = BLOCKS.registerSimpleBlock("clay_red",
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).strength(0.6f).sound(SoundType.GRAVEL));
+
     public static final DeferredBlock<Block> CLAY_GRAY = BLOCKS.registerSimpleBlock("clay_gray",
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(0.6f).sound(SoundType.GRAVEL));
 
     public static final DeferredBlock<Block> PEAT = BLOCKS.registerSimpleBlock("peat",
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).strength(0.5f).sound(SoundType.GRAVEL));
 
-    // === ТРАВЯНЫЕ ПАРЫ (8 блоков) ===
+    // === ТРАВЯНЫЕ ПАРЫ (9 блоков) ===
     public static final DeferredBlock<Block> ZHELTOZEM_GRASS = BLOCKS.registerSimpleBlock("zheltozem_grass",
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW).strength(0.5f).sound(SoundType.GRASS));
 
@@ -92,33 +100,102 @@ public class ModBlocks {
     public static final DeferredBlock<Block> CLAY_BLUE_GRASS = BLOCKS.registerSimpleBlock("clay_blue_grass",
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).strength(0.6f).sound(SoundType.GRASS));
 
+    public static final DeferredBlock<Block> CLAY_RED_GRASS = BLOCKS.registerSimpleBlock("clay_red_grass",
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).strength(0.6f).sound(SoundType.GRASS));
+
     public static final DeferredBlock<Block> CLAY_GRAY_GRASS = BLOCKS.registerSimpleBlock("clay_gray_grass",
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(0.6f).sound(SoundType.GRASS));
 
     public static final DeferredBlock<Block> PEAT_GRASS = BLOCKS.registerSimpleBlock("peat_grass",
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).strength(0.5f).sound(SoundType.GRASS));
 
-    // === ПЕСОК (3 блока) ===
-    public static final DeferredBlock<Block> SAND_WHITE = BLOCKS.registerSimpleBlock("sand_white",
+    // === ПЕСОК (4 блока) ===
+    public static final DeferredBlock<Block> SAND_WHITE = BLOCKS.registerBlock("sand_white",
+            props -> new ColoredFallingBlock(new ColorRGBA(0xE6E4DC), props),
             BlockBehaviour.Properties.of().mapColor(MapColor.SAND).strength(0.5f).sound(SoundType.SAND));
 
-    public static final DeferredBlock<Block> SAND_YELLOW = BLOCKS.registerSimpleBlock("sand_yellow",
+    public static final DeferredBlock<Block> SAND_YELLOW = BLOCKS.registerBlock("sand_yellow",
+            props -> new ColoredFallingBlock(new ColorRGBA(0xDAD0A2), props),
             BlockBehaviour.Properties.of().mapColor(MapColor.SAND).strength(0.5f).sound(SoundType.SAND));
 
-    public static final DeferredBlock<Block> SAND_DARK = BLOCKS.registerSimpleBlock("sand_dark",
+    public static final DeferredBlock<Block> SAND_GRAY = BLOCKS.registerBlock("sand_gray",
+            props -> new ColoredFallingBlock(new ColorRGBA(0x4F4F52), props),
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(0.5f).sound(SoundType.SAND));
+
+    public static final DeferredBlock<Block> SAND_RED = BLOCKS.registerBlock("sand_red",
+            props -> new ColoredFallingBlock(new ColorRGBA(0xCF987B), props),
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE).strength(0.5f).sound(SoundType.SAND));
 
     // === ИЛ (1 блок) ===
     public static final DeferredBlock<Block> SILT = BLOCKS.registerSimpleBlock("silt",
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(0.5f).sound(SoundType.GRAVEL));
 
-    // === ТРАВА (3 блока) ===
-    public static final DeferredBlock<Block> GRASS_MEDIUM = BLOCKS.registerSimpleBlock("grass_medium",
-            BlockBehaviour.Properties.of().mapColor(MapColor.GRASS).strength(0.6f).sound(SoundType.GRASS));
+    // === ГРАВИЙ ИЗ ПОРОД (12 блоков, падает как обычный гравий) ===
+    public static final DeferredBlock<Block> ANDESITE_GRAVEL = BLOCKS.registerBlock("andesite_gravel",
+            props -> new ColoredFallingBlock(new ColorRGBA(0x838382), props),
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.6f).sound(SoundType.GRAVEL));
 
-    public static final DeferredBlock<Block> GRASS_SMALL = BLOCKS.registerSimpleBlock("grass_small",
-            BlockBehaviour.Properties.of().mapColor(MapColor.GRASS).strength(0.6f).sound(SoundType.GRASS));
+    public static final DeferredBlock<Block> BASALT_GRAVEL = BLOCKS.registerBlock("basalt_gravel",
+            props -> new ColoredFallingBlock(new ColorRGBA(0x46464B), props),
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(0.6f).sound(SoundType.GRAVEL));
 
-    public static final DeferredBlock<Block> GRASS_TALL = BLOCKS.registerSimpleBlock("grass_tall",
-            BlockBehaviour.Properties.of().mapColor(MapColor.GRASS).strength(0.6f).sound(SoundType.GRASS));
+    public static final DeferredBlock<Block> CHALK_GRAVEL = BLOCKS.registerBlock("chalk_gravel",
+            props -> new ColoredFallingBlock(new ColorRGBA(0xE2E1DB), props),
+            BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).strength(0.6f).sound(SoundType.GRAVEL));
+
+    public static final DeferredBlock<Block> DIORITE_GRAVEL = BLOCKS.registerBlock("diorite_gravel",
+            props -> new ColoredFallingBlock(new ColorRGBA(0xB4B4B4), props),
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.6f).sound(SoundType.GRAVEL));
+
+    public static final DeferredBlock<Block> DOLOMITE_GRAVEL = BLOCKS.registerBlock("dolomite_gravel",
+            props -> new ColoredFallingBlock(new ColorRGBA(0xCBC5BA), props),
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.6f).sound(SoundType.GRAVEL));
+
+    public static final DeferredBlock<Block> GABBRO_GRAVEL = BLOCKS.registerBlock("gabbro_gravel",
+            props -> new ColoredFallingBlock(new ColorRGBA(0x414644), props),
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.6f).sound(SoundType.GRAVEL));
+
+    public static final DeferredBlock<Block> GRANITE_GRAVEL = BLOCKS.registerBlock("granite_gravel",
+            props -> new ColoredFallingBlock(new ColorRGBA(0x966958), props),
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.6f).sound(SoundType.GRAVEL));
+
+    public static final DeferredBlock<Block> GRAY_GRANITE_GRAVEL = BLOCKS.registerBlock("gray_granite_gravel",
+            props -> new ColoredFallingBlock(new ColorRGBA(0x5B5553), props),
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.6f).sound(SoundType.GRAVEL));
+
+    public static final DeferredBlock<Block> LIMESTONE_GRAVEL = BLOCKS.registerBlock("limestone_gravel",
+            props -> new ColoredFallingBlock(new ColorRGBA(0xCFC39A), props),
+            BlockBehaviour.Properties.of().mapColor(MapColor.SAND).strength(0.6f).sound(SoundType.GRAVEL));
+
+    public static final DeferredBlock<Block> MARBLE_GRAVEL = BLOCKS.registerBlock("marble_gravel",
+            props -> new ColoredFallingBlock(new ColorRGBA(0xC1C4C9), props),
+            BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).strength(0.6f).sound(SoundType.GRAVEL));
+
+    public static final DeferredBlock<Block> SANDSTONE_GRAVEL = BLOCKS.registerBlock("sandstone_gravel",
+            props -> new ColoredFallingBlock(new ColorRGBA(0xB9996F), props),
+            BlockBehaviour.Properties.of().mapColor(MapColor.SAND).strength(0.6f).sound(SoundType.GRAVEL));
+
+    public static final DeferredBlock<Block> SHALE_GRAVEL = BLOCKS.registerBlock("shale_gravel",
+            props -> new ColoredFallingBlock(new ColorRGBA(0x575B62), props),
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.6f).sound(SoundType.GRAVEL));
+
+    // === ТРАВА (3 блока, настоящие растения с крестообразной моделью) ===
+    private static BlockBehaviour.Properties plantProps() {
+        return BlockBehaviour.Properties.of()
+                .mapColor(MapColor.GRASS)
+                .replaceable()
+                .noCollission()
+                .instabreak()
+                .sound(SoundType.GRASS)
+                .pushReaction(PushReaction.DESTROY);
+    }
+
+    public static final DeferredBlock<Block> GRASS_SMALL = BLOCKS.registerBlock("grass_small",
+            props -> new GrassPlantBlock(props, 6), plantProps());
+
+    public static final DeferredBlock<Block> GRASS_MEDIUM = BLOCKS.registerBlock("grass_medium",
+            props -> new GrassPlantBlock(props, 10), plantProps());
+
+    public static final DeferredBlock<Block> GRASS_TALL = BLOCKS.registerBlock("grass_tall",
+            props -> new GrassPlantBlock(props, 14), plantProps());
 }

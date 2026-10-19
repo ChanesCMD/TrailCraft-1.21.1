@@ -1,3 +1,6 @@
-﻿{
-  "parent": "trailcraft:block/grass_medium"
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "trailcraft:block/grass_medium"
+  }
 }

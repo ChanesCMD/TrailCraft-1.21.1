@@ -1,5 +1,16 @@
-﻿{
+{
   "variants": {
-    "": { "model": "trailcraft:block/basalt" }
+    "axis=x": {
+      "model": "trailcraft:block/basalt",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "trailcraft:block/basalt"
+    },
+    "axis=z": {
+      "model": "trailcraft:block/basalt",
+      "x": 90
+    }
   }
 }

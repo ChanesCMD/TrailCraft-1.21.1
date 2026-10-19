@@ -1,6 +1,7 @@
-﻿{
-  "parent": "minecraft:block/cube_all",
+{
+  "parent": "minecraft:block/tinted_cross",
+  "render_type": "minecraft:cutout",
   "textures": {
-    "all": "trailcraft:block/grass_small"
+    "cross": "trailcraft:block/grass_small"
   }
 }
