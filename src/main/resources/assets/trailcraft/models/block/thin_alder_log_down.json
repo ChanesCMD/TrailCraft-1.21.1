@@ -1,0 +1,7 @@
+{
+  "parent": "trailcraft:block/thin_log/down",
+  "textures": {
+    "side": "trailcraft:block/alder_log",
+    "end": "trailcraft:block/thin_alder_log_top"
+  }
+}

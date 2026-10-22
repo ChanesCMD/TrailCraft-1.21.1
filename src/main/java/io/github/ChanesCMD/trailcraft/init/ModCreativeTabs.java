@@ -66,6 +66,22 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.SANDSTONE_GRAVEL);
                         output.accept(ModBlocks.SHALE_GRAVEL);
 
+                        // Камешки (12)
+                        output.accept(ModBlocks.ANDESITE_PEBBLE);
+                        output.accept(ModBlocks.BASALT_PEBBLE);
+                        output.accept(ModBlocks.CHALK_PEBBLE);
+                        output.accept(ModBlocks.DIORITE_PEBBLE);
+                        output.accept(ModBlocks.DOLOMITE_PEBBLE);
+                        output.accept(ModBlocks.GABBRO_PEBBLE);
+                        output.accept(ModBlocks.GRANITE_PEBBLE);
+                        output.accept(ModBlocks.GRAY_GRANITE_PEBBLE);
+                        output.accept(ModBlocks.LIMESTONE_PEBBLE);
+                        output.accept(ModBlocks.MARBLE_PEBBLE);
+                        output.accept(ModBlocks.SANDSTONE_PEBBLE);
+                        output.accept(ModBlocks.SHALE_PEBBLE);
+                        output.accept(ModItems.FLINT);
+                        output.accept(ModItems.CHOPPING_STUMP);
+
                         // Песок (4)
                         output.accept(ModBlocks.SAND_WHITE);
                         output.accept(ModBlocks.SAND_YELLOW);
@@ -86,6 +102,24 @@ public class ModCreativeTabs {
                         output.accept(ModItems.CLAY_BALL_BLUE);
                         output.accept(ModItems.CLAY_BALL_GRAY);
                         output.accept(ModItems.CLAY_BALL_RED);
+
+                        // Палки
+                        output.accept(ModItems.STICK_BRANCH_02);
+                        output.accept(ModItems.STICK_PROCESSED_02);
+
+                        // Инструменты
+                        output.accept(ModItems.FLINT_AXE);
+                        output.accept(ModItems.FLINT_SHOVEL);
+                        output.accept(ModItems.FLINT_PICKAXE);
+                        output.accept(ModItems.COPPER_PICKAXE);
+                        output.accept(ModItems.IRON_PICKAXE);
+                        output.accept(ModItems.COPPER_AXE);
+                        output.accept(ModItems.IRON_AXE);
+
+                        // Мусор
+                        output.accept(ModItems.METAL_SCRAP);
+                        output.accept(ModItems.PAPER_SCRAPS);
+                        output.accept(ModItems.PLASTIC_WASTE);
                     }).build());
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TRAILCRAFT_WOOD_TAB =

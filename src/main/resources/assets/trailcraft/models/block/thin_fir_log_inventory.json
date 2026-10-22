@@ -1,0 +1,7 @@
+{
+  "parent": "trailcraft:block/thin_log/inventory",
+  "textures": {
+    "side": "trailcraft:block/fir_log",
+    "end": "trailcraft:block/thin_fir_log_top"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "trailcraft:stripped_logs"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:chopping_stump",
+    "count": 1
+  }
+}

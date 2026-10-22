@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "trailcraft:block/limestone",
+    "all": "trailcraft:block/limestone"
+  },
+  "elements": [
+    {
+      "from": [6.5, 7, 5.5],
+      "to": [9.5, 9, 10.5],
+      "faces": {
+        "down": {"uv": [6.5, 5.5, 9.5, 10.5], "texture": "#all"},
+        "up": {"uv": [6.5, 5.5, 9.5, 10.5], "texture": "#all"},
+        "north": {"uv": [6.5, 7, 9.5, 9], "texture": "#all"},
+        "south": {"uv": [6.5, 7, 9.5, 9], "texture": "#all"},
+        "west": {"uv": [5.5, 7, 10.5, 9], "texture": "#all"},
+        "east": {"uv": [5.5, 7, 10.5, 9], "texture": "#all"}
+      }
+    }
+  ],
+  "display": {
+    "gui": {
+      "rotation": [30, 225, 0],
+      "scale": [2.2, 2.2, 2.2]
+    },
+    "ground": {
+      "translation": [0, -1, 0],
+      "scale": [0.6, 0.6, 0.6]
+    },
+    "fixed": {
+      "scale": [1.6, 1.6, 1.6]
+    },
+    "thirdperson_righthand": {
+      "rotation": [75, 45, 0],
+      "translation": [0, 2.5, 0],
+      "scale": [0.7, 0.7, 0.7]
+    },
+    "firstperson_righthand": {
+      "rotation": [0, 45, 0],
+      "translation": [0, 2, 0],
+      "scale": [0.9, 0.9, 0.9]
+    }
+  }
+}

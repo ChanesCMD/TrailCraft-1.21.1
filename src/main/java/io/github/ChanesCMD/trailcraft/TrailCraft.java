@@ -7,7 +7,9 @@ import net.neoforged.fml.config.ModConfig;
 import com.mojang.logging.LogUtils;
 import org.slf4j.Logger;
 import io.github.ChanesCMD.trailcraft.init.ModBlocks;
+import io.github.ChanesCMD.trailcraft.init.ModComponents;
 import io.github.ChanesCMD.trailcraft.init.ModCreativeTabs;
+import io.github.ChanesCMD.trailcraft.init.ModFeatures;
 import io.github.ChanesCMD.trailcraft.init.ModItems;
 import io.github.ChanesCMD.trailcraft.init.ModWood;
 
@@ -23,9 +25,13 @@ public class TrailCraft {
         // Регистрируем блоки и предметы
         ModBlocks.BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
+        ModComponents.COMPONENTS.register(modEventBus);
         ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
+        ModFeatures.FEATURES.register(modEventBus);
 
         // Регистрируем конфиг
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        // Серверный конфиг (календарь): лежит в папке мира, клиентам синхронизируется
+        modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
     }
 }

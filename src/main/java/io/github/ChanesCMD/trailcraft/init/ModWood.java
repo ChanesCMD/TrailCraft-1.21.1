@@ -2,6 +2,7 @@ package io.github.ChanesCMD.trailcraft.init;
 
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.block.StrippableLogBlock;
+import io.github.ChanesCMD.trailcraft.block.ThinLogBlock;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -35,16 +36,23 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-/** 23 вида деревьев: по 15 блоков на вид (бревно, древесина, обтёсанные, листва, саженец, доски, ступени, плита, забор, калитка, дверь, люк, кнопка, нажимная плита). */
+/** 23 вида деревьев: по 16 блоков на вид (бревно, тонкое бревно, древесина, обтёсанные, листва, саженец, доски, ступени, плита, забор, калитка, дверь, люк, кнопка, нажимная плита). */
 public final class ModWood {
     public static final class WoodSet {
         public final String id;
-        public DeferredBlock<Block> log, strippedLog, wood, strippedWood, leaves, sapling, planks, stairs, slab, fence, gate, door, trapdoor, button, plate;
+        public DeferredBlock<Block> log, thinLog, strippedLog, wood, strippedWood, leaves, sapling, planks, stairs, slab, fence, gate, door, trapdoor, button, plate;
         public final List<DeferredItem<? extends Item>> items = new ArrayList<>();
         WoodSet(String id) { this.id = id; }
     }
 
     public static final List<WoodSet> SETS = new ArrayList<>();
+
+    /**
+     * Прочность обычных брёвен и древесины: в 2 раза больше прежней (2.0), добываются вдвое дольше.
+     * Все брёвна требуют топор (рукой ничего не выпадает); полные брёвна — топор лучше каменного
+     * (см. теги incorrect_for_wooden/stone/gold_tool), тонкие можно рубить любым топором.
+     */
+    private static final float LOG_HARDNESS = 4.0f;
 
     static {
         add("oak", MapColor.WOOD, MapColor.PODZOL);
@@ -86,10 +94,12 @@ public final class ModWood {
     private static void add(String id, MapColor planksColor, MapColor barkColor) {
         WoodSet s = new WoodSet(id);
 
-        s.strippedLog = reg("stripped_" + id + "_log", RotatedPillarBlock::new, wood(planksColor, 2.0f, 2.0f));
-        s.strippedWood = reg("stripped_" + id + "_wood", RotatedPillarBlock::new, wood(planksColor, 2.0f, 2.0f));
-        s.log = reg(id + "_log", p -> new StrippableLogBlock(() -> s.strippedLog.get(), p), wood(barkColor, 2.0f, 2.0f));
-        s.wood = reg(id + "_wood", p -> new StrippableLogBlock(() -> s.strippedWood.get(), p), wood(barkColor, 2.0f, 2.0f));
+        s.strippedLog = reg("stripped_" + id + "_log", RotatedPillarBlock::new, wood(planksColor, LOG_HARDNESS, 2.0f).requiresCorrectToolForDrops());
+        s.strippedWood = reg("stripped_" + id + "_wood", RotatedPillarBlock::new, wood(planksColor, LOG_HARDNESS, 2.0f).requiresCorrectToolForDrops());
+        s.log = reg(id + "_log", p -> new StrippableLogBlock(() -> s.strippedLog.get(), p), wood(barkColor, LOG_HARDNESS, 2.0f).requiresCorrectToolForDrops());
+        // Тонкое бревно: характеристики как у прежних брёвен (прочность 2.0)
+        s.thinLog = reg("thin_" + id + "_log", ThinLogBlock::new, wood(barkColor, 2.0f, 2.0f).noOcclusion().requiresCorrectToolForDrops());
+        s.wood = reg(id + "_wood", p -> new StrippableLogBlock(() -> s.strippedWood.get(), p), wood(barkColor, LOG_HARDNESS, 2.0f).requiresCorrectToolForDrops());
 
         s.leaves = reg(id + "_leaves", LeavesBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).strength(0.2f).randomTicks()
                 .sound(SoundType.GRASS).noOcclusion().isValidSpawn((st, lv, pos, e) -> false).isSuffocating((st, lv, pos) -> false)
@@ -112,7 +122,7 @@ public final class ModWood {
         s.plate = reg(id + "_pressure_plate", p -> new PressurePlateBlock(BlockSetType.OAK, p),
                 BlockBehaviour.Properties.of().mapColor(planksColor).forceSolidOn().noCollission().strength(0.5f).sound(SoundType.WOOD).ignitedByLava().pushReaction(PushReaction.DESTROY));
 
-        item(s, "stripped_" + id + "_log", s.strippedLog); item(s, id + "_log", s.log);
+        item(s, "stripped_" + id + "_log", s.strippedLog); item(s, id + "_log", s.log); item(s, "thin_" + id + "_log", s.thinLog);
         item(s, "stripped_" + id + "_wood", s.strippedWood); item(s, id + "_wood", s.wood);
         item(s, id + "_leaves", s.leaves); item(s, id + "_sapling", s.sapling); item(s, id + "_planks", s.planks);
         item(s, id + "_stairs", s.stairs); item(s, id + "_slab", s.slab); item(s, id + "_fence", s.fence); item(s, id + "_fence_gate", s.gate);

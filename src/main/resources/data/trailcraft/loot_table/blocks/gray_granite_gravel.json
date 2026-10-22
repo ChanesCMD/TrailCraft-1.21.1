@@ -4,15 +4,30 @@
     {
       "rolls": 1.0,
       "bonus_rolls": 0.0,
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "trailcraft:gray_granite_gravel"
-        }
-      ],
       "conditions": [
         {
           "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "name": "trailcraft:flint",
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.15
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "trailcraft:gray_granite_gravel"
+            }
+          ]
         }
       ]
     }

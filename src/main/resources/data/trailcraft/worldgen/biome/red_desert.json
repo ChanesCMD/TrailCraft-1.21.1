@@ -27,7 +27,7 @@
     [],
     [],
     [],
-    [],
+    ["trailcraft:loose_pebbles", "trailcraft:fallen_branches"],
     []
   ],
   "spawners": {

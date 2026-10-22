@@ -1,0 +1,7 @@
+{
+  "parent": "trailcraft:block/thin_log/center",
+  "textures": {
+    "side": "trailcraft:block/lilac_log",
+    "end": "trailcraft:block/thin_lilac_log_top"
+  }
+}

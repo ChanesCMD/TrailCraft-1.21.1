@@ -519,6 +519,442 @@
       {
         "type": "minecraft:condition",
         "if_true": {
+          "type": "minecraft:y_above",
+          "anchor": {
+            "absolute": 95
+          },
+          "surface_depth_multiplier": 0,
+          "add_stone_depth": false
+        },
+        "then_run": {
+          "type": "minecraft:condition",
+          "if_true": {
+            "type": "minecraft:noise_threshold",
+            "noise": "trailcraft:gravel_patches",
+            "min_threshold": 0.405,
+            "max_threshold": 3.0
+          },
+          "then_run": {
+            "type": "minecraft:condition",
+            "if_true": {
+              "type": "minecraft:stone_depth",
+              "offset": 0,
+              "surface_type": "floor",
+              "add_surface_depth": true,
+              "secondary_depth_range": 0
+            },
+            "then_run": {
+              "type": "minecraft:sequence",
+              "sequence": [
+                {
+                  "type": "minecraft:condition",
+                  "if_true": {
+                    "type": "minecraft:vertical_gradient",
+                    "random_name": "trailcraft:rock_bottom_mid",
+                    "true_at_and_below": {
+                      "absolute": -22
+                    },
+                    "false_at_and_above": {
+                      "absolute": -10
+                    }
+                  },
+                  "then_run": {
+                    "type": "minecraft:sequence",
+                    "sequence": [
+                      {
+                        "type": "minecraft:condition",
+                        "if_true": {
+                          "type": "minecraft:noise_threshold",
+                          "noise": "trailcraft:rock_bottom",
+                          "min_threshold": -2.0,
+                          "max_threshold": -0.246
+                        },
+                        "then_run": {
+                          "type": "minecraft:block",
+                          "result_state": {
+                            "Name": "trailcraft:granite_gravel"
+                          }
+                        }
+                      },
+                      {
+                        "type": "minecraft:condition",
+                        "if_true": {
+                          "type": "minecraft:noise_threshold",
+                          "noise": "trailcraft:rock_bottom",
+                          "min_threshold": -0.246,
+                          "max_threshold": 0.048
+                        },
+                        "then_run": {
+                          "type": "minecraft:block",
+                          "result_state": {
+                            "Name": "trailcraft:gray_granite_gravel"
+                          }
+                        }
+                      },
+                      {
+                        "type": "minecraft:condition",
+                        "if_true": {
+                          "type": "minecraft:noise_threshold",
+                          "noise": "trailcraft:rock_bottom",
+                          "min_threshold": 0.048,
+                          "max_threshold": 0.205
+                        },
+                        "then_run": {
+                          "type": "minecraft:block",
+                          "result_state": {
+                            "Name": "trailcraft:basalt_gravel"
+                          }
+                        }
+                      },
+                      {
+                        "type": "minecraft:condition",
+                        "if_true": {
+                          "type": "minecraft:noise_threshold",
+                          "noise": "trailcraft:rock_bottom",
+                          "min_threshold": 0.205,
+                          "max_threshold": 0.342
+                        },
+                        "then_run": {
+                          "type": "minecraft:block",
+                          "result_state": {
+                            "Name": "trailcraft:gabbro_gravel"
+                          }
+                        }
+                      },
+                      {
+                        "type": "minecraft:condition",
+                        "if_true": {
+                          "type": "minecraft:noise_threshold",
+                          "noise": "trailcraft:rock_bottom",
+                          "min_threshold": 0.342,
+                          "max_threshold": 0.517
+                        },
+                        "then_run": {
+                          "type": "minecraft:block",
+                          "result_state": {
+                            "Name": "trailcraft:diorite_gravel"
+                          }
+                        }
+                      },
+                      {
+                        "type": "minecraft:condition",
+                        "if_true": {
+                          "type": "minecraft:noise_threshold",
+                          "noise": "trailcraft:rock_bottom",
+                          "min_threshold": 0.517,
+                          "max_threshold": 2.0
+                        },
+                        "then_run": {
+                          "type": "minecraft:block",
+                          "result_state": {
+                            "Name": "trailcraft:andesite_gravel"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "minecraft:condition",
+                  "if_true": {
+                    "type": "minecraft:vertical_gradient",
+                    "random_name": "trailcraft:rock_mid_top",
+                    "true_at_and_below": {
+                      "absolute": 34
+                    },
+                    "false_at_and_above": {
+                      "absolute": 46
+                    }
+                  },
+                  "then_run": {
+                    "type": "minecraft:sequence",
+                    "sequence": [
+                      {
+                        "type": "minecraft:condition",
+                        "if_true": {
+                          "type": "minecraft:noise_threshold",
+                          "noise": "trailcraft:rock_mid",
+                          "min_threshold": -2.0,
+                          "max_threshold": -0.225
+                        },
+                        "then_run": {
+                          "type": "minecraft:block",
+                          "result_state": {
+                            "Name": "trailcraft:shale_gravel"
+                          }
+                        }
+                      },
+                      {
+                        "type": "minecraft:condition",
+                        "if_true": {
+                          "type": "minecraft:noise_threshold",
+                          "noise": "trailcraft:rock_mid",
+                          "min_threshold": -0.225,
+                          "max_threshold": -0.115
+                        },
+                        "then_run": {
+                          "type": "minecraft:block",
+                          "result_state": {
+                            "Name": "trailcraft:limestone_gravel"
+                          }
+                        }
+                      },
+                      {
+                        "type": "minecraft:condition",
+                        "if_true": {
+                          "type": "minecraft:noise_threshold",
+                          "noise": "trailcraft:rock_mid",
+                          "min_threshold": -0.115,
+                          "max_threshold": 0.009
+                        },
+                        "then_run": {
+                          "type": "minecraft:block",
+                          "result_state": {
+                            "Name": "trailcraft:dolomite_gravel"
+                          }
+                        }
+                      },
+                      {
+                        "type": "minecraft:condition",
+                        "if_true": {
+                          "type": "minecraft:noise_threshold",
+                          "noise": "trailcraft:rock_mid",
+                          "min_threshold": 0.009,
+                          "max_threshold": 0.065
+                        },
+                        "then_run": {
+                          "type": "minecraft:block",
+                          "result_state": {
+                            "Name": "trailcraft:marble_gravel"
+                          }
+                        }
+                      },
+                      {
+                        "type": "minecraft:condition",
+                        "if_true": {
+                          "type": "minecraft:noise_threshold",
+                          "noise": "trailcraft:rock_mid",
+                          "min_threshold": 0.065,
+                          "max_threshold": 0.141
+                        },
+                        "then_run": {
+                          "type": "minecraft:block",
+                          "result_state": {
+                            "Name": "trailcraft:diorite_gravel"
+                          }
+                        }
+                      },
+                      {
+                        "type": "minecraft:condition",
+                        "if_true": {
+                          "type": "minecraft:noise_threshold",
+                          "noise": "trailcraft:rock_mid",
+                          "min_threshold": 0.141,
+                          "max_threshold": 0.235
+                        },
+                        "then_run": {
+                          "type": "minecraft:block",
+                          "result_state": {
+                            "Name": "trailcraft:andesite_gravel"
+                          }
+                        }
+                      },
+                      {
+                        "type": "minecraft:condition",
+                        "if_true": {
+                          "type": "minecraft:noise_threshold",
+                          "noise": "trailcraft:rock_mid",
+                          "min_threshold": 0.235,
+                          "max_threshold": 0.357
+                        },
+                        "then_run": {
+                          "type": "minecraft:block",
+                          "result_state": {
+                            "Name": "trailcraft:granite_gravel"
+                          }
+                        }
+                      },
+                      {
+                        "type": "minecraft:condition",
+                        "if_true": {
+                          "type": "minecraft:noise_threshold",
+                          "noise": "trailcraft:rock_mid",
+                          "min_threshold": 0.357,
+                          "max_threshold": 0.444
+                        },
+                        "then_run": {
+                          "type": "minecraft:block",
+                          "result_state": {
+                            "Name": "trailcraft:gray_granite_gravel"
+                          }
+                        }
+                      },
+                      {
+                        "type": "minecraft:condition",
+                        "if_true": {
+                          "type": "minecraft:noise_threshold",
+                          "noise": "trailcraft:rock_mid",
+                          "min_threshold": 0.444,
+                          "max_threshold": 0.547
+                        },
+                        "then_run": {
+                          "type": "minecraft:block",
+                          "result_state": {
+                            "Name": "trailcraft:gabbro_gravel"
+                          }
+                        }
+                      },
+                      {
+                        "type": "minecraft:condition",
+                        "if_true": {
+                          "type": "minecraft:noise_threshold",
+                          "noise": "trailcraft:rock_mid",
+                          "min_threshold": 0.547,
+                          "max_threshold": 2.0
+                        },
+                        "then_run": {
+                          "type": "minecraft:block",
+                          "result_state": {
+                            "Name": "trailcraft:basalt_gravel"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "minecraft:sequence",
+                  "sequence": [
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:noise_threshold",
+                        "noise": "trailcraft:rock_top",
+                        "min_threshold": -2.0,
+                        "max_threshold": -0.246
+                      },
+                      "then_run": {
+                        "type": "minecraft:block",
+                        "result_state": {
+                          "Name": "trailcraft:sandstone_gravel"
+                        }
+                      }
+                    },
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:noise_threshold",
+                        "noise": "trailcraft:rock_top",
+                        "min_threshold": -0.246,
+                        "max_threshold": -0.048
+                      },
+                      "then_run": {
+                        "type": "minecraft:block",
+                        "result_state": {
+                          "Name": "trailcraft:limestone_gravel"
+                        }
+                      }
+                    },
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:noise_threshold",
+                        "noise": "trailcraft:rock_top",
+                        "min_threshold": -0.048,
+                        "max_threshold": 0.032
+                      },
+                      "then_run": {
+                        "type": "minecraft:block",
+                        "result_state": {
+                          "Name": "trailcraft:chalk_gravel"
+                        }
+                      }
+                    },
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:noise_threshold",
+                        "noise": "trailcraft:rock_top",
+                        "min_threshold": 0.032,
+                        "max_threshold": 0.098
+                      },
+                      "then_run": {
+                        "type": "minecraft:block",
+                        "result_state": {
+                          "Name": "trailcraft:dolomite_gravel"
+                        }
+                      }
+                    },
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:noise_threshold",
+                        "noise": "trailcraft:rock_top",
+                        "min_threshold": 0.098,
+                        "max_threshold": 0.132
+                      },
+                      "then_run": {
+                        "type": "minecraft:block",
+                        "result_state": {
+                          "Name": "trailcraft:marble_gravel"
+                        }
+                      }
+                    },
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:noise_threshold",
+                        "noise": "trailcraft:rock_top",
+                        "min_threshold": 0.132,
+                        "max_threshold": 0.168
+                      },
+                      "then_run": {
+                        "type": "minecraft:block",
+                        "result_state": {
+                          "Name": "trailcraft:andesite_gravel"
+                        }
+                      }
+                    },
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:noise_threshold",
+                        "noise": "trailcraft:rock_top",
+                        "min_threshold": 0.168,
+                        "max_threshold": 0.186
+                      },
+                      "then_run": {
+                        "type": "minecraft:block",
+                        "result_state": {
+                          "Name": "trailcraft:gray_granite_gravel"
+                        }
+                      }
+                    },
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:noise_threshold",
+                        "noise": "trailcraft:rock_top",
+                        "min_threshold": 0.186,
+                        "max_threshold": 2.0
+                      },
+                      "then_run": {
+                        "type": "minecraft:block",
+                        "result_state": {
+                          "Name": "trailcraft:shale_gravel"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "minecraft:condition",
+        "if_true": {
           "type": "minecraft:biome",
           "biome_is": [
             "trailcraft:chernozem_plains"
@@ -527,6 +963,431 @@
         "then_run": {
           "type": "minecraft:sequence",
           "sequence": [
+            {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:noise_threshold",
+                "noise": "trailcraft:gravel_patches",
+                "min_threshold": 0.789,
+                "max_threshold": 3.0
+              },
+              "then_run": {
+                "type": "minecraft:condition",
+                "if_true": {
+                  "type": "minecraft:stone_depth",
+                  "offset": 0,
+                  "surface_type": "floor",
+                  "add_surface_depth": true,
+                  "secondary_depth_range": 0
+                },
+                "then_run": {
+                  "type": "minecraft:sequence",
+                  "sequence": [
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:vertical_gradient",
+                        "random_name": "trailcraft:rock_bottom_mid",
+                        "true_at_and_below": {
+                          "absolute": -22
+                        },
+                        "false_at_and_above": {
+                          "absolute": -10
+                        }
+                      },
+                      "then_run": {
+                        "type": "minecraft:sequence",
+                        "sequence": [
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": -2.0,
+                              "max_threshold": -0.246
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": -0.246,
+                              "max_threshold": 0.048
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gray_granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.048,
+                              "max_threshold": 0.205
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:basalt_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.205,
+                              "max_threshold": 0.342
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gabbro_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.342,
+                              "max_threshold": 0.517
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:diorite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.517,
+                              "max_threshold": 2.0
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:andesite_gravel"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:vertical_gradient",
+                        "random_name": "trailcraft:rock_mid_top",
+                        "true_at_and_below": {
+                          "absolute": 34
+                        },
+                        "false_at_and_above": {
+                          "absolute": 46
+                        }
+                      },
+                      "then_run": {
+                        "type": "minecraft:sequence",
+                        "sequence": [
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -2.0,
+                              "max_threshold": -0.225
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:shale_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -0.225,
+                              "max_threshold": -0.115
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:limestone_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -0.115,
+                              "max_threshold": 0.009
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:dolomite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.009,
+                              "max_threshold": 0.065
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:marble_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.065,
+                              "max_threshold": 0.141
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:diorite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.141,
+                              "max_threshold": 0.235
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:andesite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.235,
+                              "max_threshold": 0.357
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.357,
+                              "max_threshold": 0.444
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gray_granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.444,
+                              "max_threshold": 0.547
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gabbro_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.547,
+                              "max_threshold": 2.0
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:basalt_gravel"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "minecraft:sequence",
+                      "sequence": [
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -2.0,
+                            "max_threshold": -0.246
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:sandstone_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -0.246,
+                            "max_threshold": -0.048
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:limestone_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -0.048,
+                            "max_threshold": 0.032
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:chalk_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.032,
+                            "max_threshold": 0.098
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:dolomite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.098,
+                            "max_threshold": 0.132
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:marble_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.132,
+                            "max_threshold": 0.168
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:andesite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.168,
+                            "max_threshold": 0.186
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:gray_granite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.186,
+                            "max_threshold": 2.0
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:shale_gravel"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
             {
               "type": "minecraft:condition",
               "if_true": {
@@ -831,6 +1692,431 @@
             {
               "type": "minecraft:condition",
               "if_true": {
+                "type": "minecraft:noise_threshold",
+                "noise": "trailcraft:gravel_patches",
+                "min_threshold": 0.789,
+                "max_threshold": 3.0
+              },
+              "then_run": {
+                "type": "minecraft:condition",
+                "if_true": {
+                  "type": "minecraft:stone_depth",
+                  "offset": 0,
+                  "surface_type": "floor",
+                  "add_surface_depth": true,
+                  "secondary_depth_range": 0
+                },
+                "then_run": {
+                  "type": "minecraft:sequence",
+                  "sequence": [
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:vertical_gradient",
+                        "random_name": "trailcraft:rock_bottom_mid",
+                        "true_at_and_below": {
+                          "absolute": -22
+                        },
+                        "false_at_and_above": {
+                          "absolute": -10
+                        }
+                      },
+                      "then_run": {
+                        "type": "minecraft:sequence",
+                        "sequence": [
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": -2.0,
+                              "max_threshold": -0.246
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": -0.246,
+                              "max_threshold": 0.048
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gray_granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.048,
+                              "max_threshold": 0.205
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:basalt_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.205,
+                              "max_threshold": 0.342
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gabbro_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.342,
+                              "max_threshold": 0.517
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:diorite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.517,
+                              "max_threshold": 2.0
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:andesite_gravel"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:vertical_gradient",
+                        "random_name": "trailcraft:rock_mid_top",
+                        "true_at_and_below": {
+                          "absolute": 34
+                        },
+                        "false_at_and_above": {
+                          "absolute": 46
+                        }
+                      },
+                      "then_run": {
+                        "type": "minecraft:sequence",
+                        "sequence": [
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -2.0,
+                              "max_threshold": -0.225
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:shale_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -0.225,
+                              "max_threshold": -0.115
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:limestone_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -0.115,
+                              "max_threshold": 0.009
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:dolomite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.009,
+                              "max_threshold": 0.065
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:marble_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.065,
+                              "max_threshold": 0.141
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:diorite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.141,
+                              "max_threshold": 0.235
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:andesite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.235,
+                              "max_threshold": 0.357
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.357,
+                              "max_threshold": 0.444
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gray_granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.444,
+                              "max_threshold": 0.547
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gabbro_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.547,
+                              "max_threshold": 2.0
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:basalt_gravel"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "minecraft:sequence",
+                      "sequence": [
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -2.0,
+                            "max_threshold": -0.246
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:sandstone_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -0.246,
+                            "max_threshold": -0.048
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:limestone_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -0.048,
+                            "max_threshold": 0.032
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:chalk_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.032,
+                            "max_threshold": 0.098
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:dolomite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.098,
+                            "max_threshold": 0.132
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:marble_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.132,
+                            "max_threshold": 0.168
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:andesite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.168,
+                            "max_threshold": 0.186
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:gray_granite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.186,
+                            "max_threshold": 2.0
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:shale_gravel"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "minecraft:condition",
+              "if_true": {
                 "type": "minecraft:stone_depth",
                 "offset": 0,
                 "surface_type": "floor",
@@ -1132,6 +2418,431 @@
             {
               "type": "minecraft:condition",
               "if_true": {
+                "type": "minecraft:noise_threshold",
+                "noise": "trailcraft:gravel_patches",
+                "min_threshold": 0.789,
+                "max_threshold": 3.0
+              },
+              "then_run": {
+                "type": "minecraft:condition",
+                "if_true": {
+                  "type": "minecraft:stone_depth",
+                  "offset": 0,
+                  "surface_type": "floor",
+                  "add_surface_depth": true,
+                  "secondary_depth_range": 0
+                },
+                "then_run": {
+                  "type": "minecraft:sequence",
+                  "sequence": [
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:vertical_gradient",
+                        "random_name": "trailcraft:rock_bottom_mid",
+                        "true_at_and_below": {
+                          "absolute": -22
+                        },
+                        "false_at_and_above": {
+                          "absolute": -10
+                        }
+                      },
+                      "then_run": {
+                        "type": "minecraft:sequence",
+                        "sequence": [
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": -2.0,
+                              "max_threshold": -0.246
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": -0.246,
+                              "max_threshold": 0.048
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gray_granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.048,
+                              "max_threshold": 0.205
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:basalt_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.205,
+                              "max_threshold": 0.342
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gabbro_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.342,
+                              "max_threshold": 0.517
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:diorite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.517,
+                              "max_threshold": 2.0
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:andesite_gravel"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:vertical_gradient",
+                        "random_name": "trailcraft:rock_mid_top",
+                        "true_at_and_below": {
+                          "absolute": 34
+                        },
+                        "false_at_and_above": {
+                          "absolute": 46
+                        }
+                      },
+                      "then_run": {
+                        "type": "minecraft:sequence",
+                        "sequence": [
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -2.0,
+                              "max_threshold": -0.225
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:shale_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -0.225,
+                              "max_threshold": -0.115
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:limestone_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -0.115,
+                              "max_threshold": 0.009
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:dolomite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.009,
+                              "max_threshold": 0.065
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:marble_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.065,
+                              "max_threshold": 0.141
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:diorite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.141,
+                              "max_threshold": 0.235
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:andesite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.235,
+                              "max_threshold": 0.357
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.357,
+                              "max_threshold": 0.444
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gray_granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.444,
+                              "max_threshold": 0.547
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gabbro_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.547,
+                              "max_threshold": 2.0
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:basalt_gravel"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "minecraft:sequence",
+                      "sequence": [
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -2.0,
+                            "max_threshold": -0.246
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:sandstone_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -0.246,
+                            "max_threshold": -0.048
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:limestone_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -0.048,
+                            "max_threshold": 0.032
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:chalk_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.032,
+                            "max_threshold": 0.098
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:dolomite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.098,
+                            "max_threshold": 0.132
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:marble_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.132,
+                            "max_threshold": 0.168
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:andesite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.168,
+                            "max_threshold": 0.186
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:gray_granite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.186,
+                            "max_threshold": 2.0
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:shale_gravel"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "minecraft:condition",
+              "if_true": {
                 "type": "minecraft:stone_depth",
                 "offset": 0,
                 "surface_type": "floor",
@@ -1430,6 +3141,431 @@
         "then_run": {
           "type": "minecraft:sequence",
           "sequence": [
+            {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:noise_threshold",
+                "noise": "trailcraft:gravel_patches",
+                "min_threshold": 0.789,
+                "max_threshold": 3.0
+              },
+              "then_run": {
+                "type": "minecraft:condition",
+                "if_true": {
+                  "type": "minecraft:stone_depth",
+                  "offset": 0,
+                  "surface_type": "floor",
+                  "add_surface_depth": true,
+                  "secondary_depth_range": 0
+                },
+                "then_run": {
+                  "type": "minecraft:sequence",
+                  "sequence": [
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:vertical_gradient",
+                        "random_name": "trailcraft:rock_bottom_mid",
+                        "true_at_and_below": {
+                          "absolute": -22
+                        },
+                        "false_at_and_above": {
+                          "absolute": -10
+                        }
+                      },
+                      "then_run": {
+                        "type": "minecraft:sequence",
+                        "sequence": [
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": -2.0,
+                              "max_threshold": -0.246
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": -0.246,
+                              "max_threshold": 0.048
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gray_granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.048,
+                              "max_threshold": 0.205
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:basalt_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.205,
+                              "max_threshold": 0.342
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gabbro_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.342,
+                              "max_threshold": 0.517
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:diorite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.517,
+                              "max_threshold": 2.0
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:andesite_gravel"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:vertical_gradient",
+                        "random_name": "trailcraft:rock_mid_top",
+                        "true_at_and_below": {
+                          "absolute": 34
+                        },
+                        "false_at_and_above": {
+                          "absolute": 46
+                        }
+                      },
+                      "then_run": {
+                        "type": "minecraft:sequence",
+                        "sequence": [
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -2.0,
+                              "max_threshold": -0.225
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:shale_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -0.225,
+                              "max_threshold": -0.115
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:limestone_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -0.115,
+                              "max_threshold": 0.009
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:dolomite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.009,
+                              "max_threshold": 0.065
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:marble_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.065,
+                              "max_threshold": 0.141
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:diorite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.141,
+                              "max_threshold": 0.235
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:andesite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.235,
+                              "max_threshold": 0.357
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.357,
+                              "max_threshold": 0.444
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gray_granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.444,
+                              "max_threshold": 0.547
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gabbro_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.547,
+                              "max_threshold": 2.0
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:basalt_gravel"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "minecraft:sequence",
+                      "sequence": [
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -2.0,
+                            "max_threshold": -0.246
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:sandstone_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -0.246,
+                            "max_threshold": -0.048
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:limestone_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -0.048,
+                            "max_threshold": 0.032
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:chalk_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.032,
+                            "max_threshold": 0.098
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:dolomite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.098,
+                            "max_threshold": 0.132
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:marble_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.132,
+                            "max_threshold": 0.168
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:andesite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.168,
+                            "max_threshold": 0.186
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:gray_granite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.186,
+                            "max_threshold": 2.0
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:shale_gravel"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
             {
               "type": "minecraft:condition",
               "if_true": {
@@ -1795,6 +3931,431 @@
                     }
                   }
                 ]
+              }
+            },
+            {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:noise_threshold",
+                "noise": "trailcraft:gravel_patches",
+                "min_threshold": 0.268,
+                "max_threshold": 3.0
+              },
+              "then_run": {
+                "type": "minecraft:condition",
+                "if_true": {
+                  "type": "minecraft:stone_depth",
+                  "offset": 0,
+                  "surface_type": "floor",
+                  "add_surface_depth": true,
+                  "secondary_depth_range": 0
+                },
+                "then_run": {
+                  "type": "minecraft:sequence",
+                  "sequence": [
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:vertical_gradient",
+                        "random_name": "trailcraft:rock_bottom_mid",
+                        "true_at_and_below": {
+                          "absolute": -22
+                        },
+                        "false_at_and_above": {
+                          "absolute": -10
+                        }
+                      },
+                      "then_run": {
+                        "type": "minecraft:sequence",
+                        "sequence": [
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": -2.0,
+                              "max_threshold": -0.246
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": -0.246,
+                              "max_threshold": 0.048
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gray_granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.048,
+                              "max_threshold": 0.205
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:basalt_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.205,
+                              "max_threshold": 0.342
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gabbro_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.342,
+                              "max_threshold": 0.517
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:diorite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.517,
+                              "max_threshold": 2.0
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:andesite_gravel"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:vertical_gradient",
+                        "random_name": "trailcraft:rock_mid_top",
+                        "true_at_and_below": {
+                          "absolute": 34
+                        },
+                        "false_at_and_above": {
+                          "absolute": 46
+                        }
+                      },
+                      "then_run": {
+                        "type": "minecraft:sequence",
+                        "sequence": [
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -2.0,
+                              "max_threshold": -0.225
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:shale_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -0.225,
+                              "max_threshold": -0.115
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:limestone_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -0.115,
+                              "max_threshold": 0.009
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:dolomite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.009,
+                              "max_threshold": 0.065
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:marble_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.065,
+                              "max_threshold": 0.141
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:diorite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.141,
+                              "max_threshold": 0.235
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:andesite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.235,
+                              "max_threshold": 0.357
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.357,
+                              "max_threshold": 0.444
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gray_granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.444,
+                              "max_threshold": 0.547
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gabbro_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.547,
+                              "max_threshold": 2.0
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:basalt_gravel"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "minecraft:sequence",
+                      "sequence": [
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -2.0,
+                            "max_threshold": -0.246
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:sandstone_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -0.246,
+                            "max_threshold": -0.048
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:limestone_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -0.048,
+                            "max_threshold": 0.032
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:chalk_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.032,
+                            "max_threshold": 0.098
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:dolomite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.098,
+                            "max_threshold": 0.132
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:marble_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.132,
+                            "max_threshold": 0.168
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:andesite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.168,
+                            "max_threshold": 0.186
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:gray_granite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.186,
+                            "max_threshold": 2.0
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:shale_gravel"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
               }
             },
             {
@@ -2199,6 +4760,431 @@
             {
               "type": "minecraft:condition",
               "if_true": {
+                "type": "minecraft:noise_threshold",
+                "noise": "trailcraft:gravel_patches",
+                "min_threshold": 0.268,
+                "max_threshold": 3.0
+              },
+              "then_run": {
+                "type": "minecraft:condition",
+                "if_true": {
+                  "type": "minecraft:stone_depth",
+                  "offset": 0,
+                  "surface_type": "floor",
+                  "add_surface_depth": true,
+                  "secondary_depth_range": 0
+                },
+                "then_run": {
+                  "type": "minecraft:sequence",
+                  "sequence": [
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:vertical_gradient",
+                        "random_name": "trailcraft:rock_bottom_mid",
+                        "true_at_and_below": {
+                          "absolute": -22
+                        },
+                        "false_at_and_above": {
+                          "absolute": -10
+                        }
+                      },
+                      "then_run": {
+                        "type": "minecraft:sequence",
+                        "sequence": [
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": -2.0,
+                              "max_threshold": -0.246
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": -0.246,
+                              "max_threshold": 0.048
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gray_granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.048,
+                              "max_threshold": 0.205
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:basalt_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.205,
+                              "max_threshold": 0.342
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gabbro_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.342,
+                              "max_threshold": 0.517
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:diorite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.517,
+                              "max_threshold": 2.0
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:andesite_gravel"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:vertical_gradient",
+                        "random_name": "trailcraft:rock_mid_top",
+                        "true_at_and_below": {
+                          "absolute": 34
+                        },
+                        "false_at_and_above": {
+                          "absolute": 46
+                        }
+                      },
+                      "then_run": {
+                        "type": "minecraft:sequence",
+                        "sequence": [
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -2.0,
+                              "max_threshold": -0.225
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:shale_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -0.225,
+                              "max_threshold": -0.115
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:limestone_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -0.115,
+                              "max_threshold": 0.009
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:dolomite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.009,
+                              "max_threshold": 0.065
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:marble_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.065,
+                              "max_threshold": 0.141
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:diorite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.141,
+                              "max_threshold": 0.235
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:andesite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.235,
+                              "max_threshold": 0.357
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.357,
+                              "max_threshold": 0.444
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gray_granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.444,
+                              "max_threshold": 0.547
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gabbro_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.547,
+                              "max_threshold": 2.0
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:basalt_gravel"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "minecraft:sequence",
+                      "sequence": [
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -2.0,
+                            "max_threshold": -0.246
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:sandstone_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -0.246,
+                            "max_threshold": -0.048
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:limestone_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -0.048,
+                            "max_threshold": 0.032
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:chalk_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.032,
+                            "max_threshold": 0.098
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:dolomite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.098,
+                            "max_threshold": 0.132
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:marble_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.132,
+                            "max_threshold": 0.168
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:andesite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.168,
+                            "max_threshold": 0.186
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:gray_granite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.186,
+                            "max_threshold": 2.0
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:shale_gravel"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "minecraft:condition",
+              "if_true": {
                 "type": "minecraft:y_above",
                 "anchor": {
                   "absolute": 67
@@ -2593,6 +5579,431 @@
                     }
                   }
                 ]
+              }
+            },
+            {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:noise_threshold",
+                "noise": "trailcraft:gravel_patches",
+                "min_threshold": 0.268,
+                "max_threshold": 3.0
+              },
+              "then_run": {
+                "type": "minecraft:condition",
+                "if_true": {
+                  "type": "minecraft:stone_depth",
+                  "offset": 0,
+                  "surface_type": "floor",
+                  "add_surface_depth": true,
+                  "secondary_depth_range": 0
+                },
+                "then_run": {
+                  "type": "minecraft:sequence",
+                  "sequence": [
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:vertical_gradient",
+                        "random_name": "trailcraft:rock_bottom_mid",
+                        "true_at_and_below": {
+                          "absolute": -22
+                        },
+                        "false_at_and_above": {
+                          "absolute": -10
+                        }
+                      },
+                      "then_run": {
+                        "type": "minecraft:sequence",
+                        "sequence": [
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": -2.0,
+                              "max_threshold": -0.246
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": -0.246,
+                              "max_threshold": 0.048
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gray_granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.048,
+                              "max_threshold": 0.205
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:basalt_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.205,
+                              "max_threshold": 0.342
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gabbro_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.342,
+                              "max_threshold": 0.517
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:diorite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.517,
+                              "max_threshold": 2.0
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:andesite_gravel"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:vertical_gradient",
+                        "random_name": "trailcraft:rock_mid_top",
+                        "true_at_and_below": {
+                          "absolute": 34
+                        },
+                        "false_at_and_above": {
+                          "absolute": 46
+                        }
+                      },
+                      "then_run": {
+                        "type": "minecraft:sequence",
+                        "sequence": [
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -2.0,
+                              "max_threshold": -0.225
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:shale_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -0.225,
+                              "max_threshold": -0.115
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:limestone_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -0.115,
+                              "max_threshold": 0.009
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:dolomite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.009,
+                              "max_threshold": 0.065
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:marble_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.065,
+                              "max_threshold": 0.141
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:diorite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.141,
+                              "max_threshold": 0.235
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:andesite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.235,
+                              "max_threshold": 0.357
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.357,
+                              "max_threshold": 0.444
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gray_granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.444,
+                              "max_threshold": 0.547
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gabbro_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.547,
+                              "max_threshold": 2.0
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:basalt_gravel"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "minecraft:sequence",
+                      "sequence": [
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -2.0,
+                            "max_threshold": -0.246
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:sandstone_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -0.246,
+                            "max_threshold": -0.048
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:limestone_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -0.048,
+                            "max_threshold": 0.032
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:chalk_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.032,
+                            "max_threshold": 0.098
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:dolomite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.098,
+                            "max_threshold": 0.132
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:marble_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.132,
+                            "max_threshold": 0.168
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:andesite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.168,
+                            "max_threshold": 0.186
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:gray_granite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.186,
+                            "max_threshold": 2.0
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:shale_gravel"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
               }
             },
             {
@@ -4123,20 +7534,450 @@
           ]
         },
         "then_run": {
-          "type": "minecraft:condition",
-          "if_true": {
-            "type": "minecraft:stone_depth",
-            "offset": 0,
-            "surface_type": "floor",
-            "add_surface_depth": true,
-            "secondary_depth_range": 0
-          },
-          "then_run": {
-            "type": "minecraft:block",
-            "result_state": {
-              "Name": "trailcraft:sand_yellow"
+          "type": "minecraft:sequence",
+          "sequence": [
+            {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:noise_threshold",
+                "noise": "trailcraft:gravel_patches",
+                "min_threshold": 0.444,
+                "max_threshold": 3.0
+              },
+              "then_run": {
+                "type": "minecraft:condition",
+                "if_true": {
+                  "type": "minecraft:stone_depth",
+                  "offset": 0,
+                  "surface_type": "floor",
+                  "add_surface_depth": true,
+                  "secondary_depth_range": 0
+                },
+                "then_run": {
+                  "type": "minecraft:sequence",
+                  "sequence": [
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:vertical_gradient",
+                        "random_name": "trailcraft:rock_bottom_mid",
+                        "true_at_and_below": {
+                          "absolute": -22
+                        },
+                        "false_at_and_above": {
+                          "absolute": -10
+                        }
+                      },
+                      "then_run": {
+                        "type": "minecraft:sequence",
+                        "sequence": [
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": -2.0,
+                              "max_threshold": -0.246
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": -0.246,
+                              "max_threshold": 0.048
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gray_granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.048,
+                              "max_threshold": 0.205
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:basalt_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.205,
+                              "max_threshold": 0.342
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gabbro_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.342,
+                              "max_threshold": 0.517
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:diorite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_bottom",
+                              "min_threshold": 0.517,
+                              "max_threshold": 2.0
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:andesite_gravel"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "minecraft:condition",
+                      "if_true": {
+                        "type": "minecraft:vertical_gradient",
+                        "random_name": "trailcraft:rock_mid_top",
+                        "true_at_and_below": {
+                          "absolute": 34
+                        },
+                        "false_at_and_above": {
+                          "absolute": 46
+                        }
+                      },
+                      "then_run": {
+                        "type": "minecraft:sequence",
+                        "sequence": [
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -2.0,
+                              "max_threshold": -0.225
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:shale_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -0.225,
+                              "max_threshold": -0.115
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:limestone_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": -0.115,
+                              "max_threshold": 0.009
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:dolomite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.009,
+                              "max_threshold": 0.065
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:marble_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.065,
+                              "max_threshold": 0.141
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:diorite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.141,
+                              "max_threshold": 0.235
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:andesite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.235,
+                              "max_threshold": 0.357
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.357,
+                              "max_threshold": 0.444
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gray_granite_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.444,
+                              "max_threshold": 0.547
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:gabbro_gravel"
+                              }
+                            }
+                          },
+                          {
+                            "type": "minecraft:condition",
+                            "if_true": {
+                              "type": "minecraft:noise_threshold",
+                              "noise": "trailcraft:rock_mid",
+                              "min_threshold": 0.547,
+                              "max_threshold": 2.0
+                            },
+                            "then_run": {
+                              "type": "minecraft:block",
+                              "result_state": {
+                                "Name": "trailcraft:basalt_gravel"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "minecraft:sequence",
+                      "sequence": [
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -2.0,
+                            "max_threshold": -0.246
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:sandstone_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -0.246,
+                            "max_threshold": -0.048
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:limestone_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": -0.048,
+                            "max_threshold": 0.032
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:chalk_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.032,
+                            "max_threshold": 0.098
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:dolomite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.098,
+                            "max_threshold": 0.132
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:marble_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.132,
+                            "max_threshold": 0.168
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:andesite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.168,
+                            "max_threshold": 0.186
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:gray_granite_gravel"
+                            }
+                          }
+                        },
+                        {
+                          "type": "minecraft:condition",
+                          "if_true": {
+                            "type": "minecraft:noise_threshold",
+                            "noise": "trailcraft:rock_top",
+                            "min_threshold": 0.186,
+                            "max_threshold": 2.0
+                          },
+                          "then_run": {
+                            "type": "minecraft:block",
+                            "result_state": {
+                              "Name": "trailcraft:shale_gravel"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:stone_depth",
+                "offset": 0,
+                "surface_type": "floor",
+                "add_surface_depth": true,
+                "secondary_depth_range": 0
+              },
+              "then_run": {
+                "type": "minecraft:block",
+                "result_state": {
+                  "Name": "trailcraft:sand_yellow"
+                }
+              }
             }
-          }
+          ]
         }
       },
       {

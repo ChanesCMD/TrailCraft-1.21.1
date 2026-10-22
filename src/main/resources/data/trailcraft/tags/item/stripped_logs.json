@@ -1,0 +1,28 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:stripped_oak_log",
+    "trailcraft:stripped_birch_log",
+    "trailcraft:stripped_acacia_log",
+    "trailcraft:stripped_sakura_log",
+    "trailcraft:stripped_eucalyptus_log",
+    "trailcraft:stripped_chestnut_log",
+    "trailcraft:stripped_thuja_log",
+    "trailcraft:stripped_pine_log",
+    "trailcraft:stripped_fir_log",
+    "trailcraft:stripped_spruce_log",
+    "trailcraft:stripped_white_poplar_log",
+    "trailcraft:stripped_ebony_log",
+    "trailcraft:stripped_maple_log",
+    "trailcraft:stripped_cedar_log",
+    "trailcraft:stripped_willow_log",
+    "trailcraft:stripped_lilac_log",
+    "trailcraft:stripped_palm_log",
+    "trailcraft:stripped_ironwood_log",
+    "trailcraft:stripped_aspen_log",
+    "trailcraft:stripped_linden_log",
+    "trailcraft:stripped_pussy_willow_log",
+    "trailcraft:stripped_walnut_log",
+    "trailcraft:stripped_alder_log"
+  ]
+}

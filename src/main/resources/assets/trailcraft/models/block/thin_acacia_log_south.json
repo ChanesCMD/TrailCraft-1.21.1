@@ -1,0 +1,7 @@
+{
+  "parent": "trailcraft:block/thin_log/south",
+  "textures": {
+    "side": "trailcraft:block/acacia_log",
+    "end": "trailcraft:block/thin_acacia_log_top"
+  }
+}

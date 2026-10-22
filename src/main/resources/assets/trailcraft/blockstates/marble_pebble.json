@@ -1,0 +1,66 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "trailcraft:block/marble_pebble_a"
+      },
+      {
+        "model": "trailcraft:block/marble_pebble_a",
+        "y": 90
+      },
+      {
+        "model": "trailcraft:block/marble_pebble_a",
+        "y": 180
+      },
+      {
+        "model": "trailcraft:block/marble_pebble_a",
+        "y": 270
+      },
+      {
+        "model": "trailcraft:block/marble_pebble_b"
+      },
+      {
+        "model": "trailcraft:block/marble_pebble_b",
+        "y": 90
+      },
+      {
+        "model": "trailcraft:block/marble_pebble_b",
+        "y": 180
+      },
+      {
+        "model": "trailcraft:block/marble_pebble_b",
+        "y": 270
+      },
+      {
+        "model": "trailcraft:block/marble_pebble_c"
+      },
+      {
+        "model": "trailcraft:block/marble_pebble_c",
+        "y": 90
+      },
+      {
+        "model": "trailcraft:block/marble_pebble_c",
+        "y": 180
+      },
+      {
+        "model": "trailcraft:block/marble_pebble_c",
+        "y": 270
+      },
+      {
+        "model": "trailcraft:block/marble_pebble_d"
+      },
+      {
+        "model": "trailcraft:block/marble_pebble_d",
+        "y": 90
+      },
+      {
+        "model": "trailcraft:block/marble_pebble_d",
+        "y": 180
+      },
+      {
+        "model": "trailcraft:block/marble_pebble_d",
+        "y": 270
+      }
+    ]
+  }
+}

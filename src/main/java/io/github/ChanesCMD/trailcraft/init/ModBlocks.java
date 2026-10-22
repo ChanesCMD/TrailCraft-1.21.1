@@ -2,6 +2,8 @@ package io.github.ChanesCMD.trailcraft.init;
 
 import net.minecraft.util.ColorRGBA;
 import net.minecraft.world.level.block.Block;
+import io.github.ChanesCMD.trailcraft.block.PebbleBlock;
+import io.github.ChanesCMD.trailcraft.block.ChoppingStumpBlock;
 import net.minecraft.world.level.block.ColoredFallingBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -178,6 +180,55 @@ public class ModBlocks {
     public static final DeferredBlock<Block> SHALE_GRAVEL = BLOCKS.registerBlock("shale_gravel",
             props -> new ColoredFallingBlock(new ColorRGBA(0x575B62), props),
             BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.6f).sound(SoundType.GRAVEL));
+
+    // === КАМЕШКИ (12 блоков, 3x5x2 пикселя) ===
+    public static final DeferredBlock<Block> ANDESITE_PEBBLE = BLOCKS.registerBlock("andesite_pebble", PebbleBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.2f).sound(SoundType.STONE).noCollission().noOcclusion().pushReaction(PushReaction.DESTROY));
+
+    public static final DeferredBlock<Block> BASALT_PEBBLE = BLOCKS.registerBlock("basalt_pebble", PebbleBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(0.2f).sound(SoundType.STONE).noCollission().noOcclusion().pushReaction(PushReaction.DESTROY));
+
+    public static final DeferredBlock<Block> CHALK_PEBBLE = BLOCKS.registerBlock("chalk_pebble", PebbleBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).strength(0.2f).sound(SoundType.STONE).noCollission().noOcclusion().pushReaction(PushReaction.DESTROY));
+
+    public static final DeferredBlock<Block> DIORITE_PEBBLE = BLOCKS.registerBlock("diorite_pebble", PebbleBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.2f).sound(SoundType.STONE).noCollission().noOcclusion().pushReaction(PushReaction.DESTROY));
+
+    public static final DeferredBlock<Block> DOLOMITE_PEBBLE = BLOCKS.registerBlock("dolomite_pebble", PebbleBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.2f).sound(SoundType.STONE).noCollission().noOcclusion().pushReaction(PushReaction.DESTROY));
+
+    public static final DeferredBlock<Block> GABBRO_PEBBLE = BLOCKS.registerBlock("gabbro_pebble", PebbleBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.2f).sound(SoundType.STONE).noCollission().noOcclusion().pushReaction(PushReaction.DESTROY));
+
+    public static final DeferredBlock<Block> GRANITE_PEBBLE = BLOCKS.registerBlock("granite_pebble", PebbleBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.2f).sound(SoundType.STONE).noCollission().noOcclusion().pushReaction(PushReaction.DESTROY));
+
+    public static final DeferredBlock<Block> GRAY_GRANITE_PEBBLE = BLOCKS.registerBlock("gray_granite_pebble", PebbleBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.2f).sound(SoundType.STONE).noCollission().noOcclusion().pushReaction(PushReaction.DESTROY));
+
+    public static final DeferredBlock<Block> LIMESTONE_PEBBLE = BLOCKS.registerBlock("limestone_pebble", PebbleBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.SAND).strength(0.2f).sound(SoundType.STONE).noCollission().noOcclusion().pushReaction(PushReaction.DESTROY));
+
+    public static final DeferredBlock<Block> MARBLE_PEBBLE = BLOCKS.registerBlock("marble_pebble", PebbleBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).strength(0.2f).sound(SoundType.STONE).noCollission().noOcclusion().pushReaction(PushReaction.DESTROY));
+
+    public static final DeferredBlock<Block> SANDSTONE_PEBBLE = BLOCKS.registerBlock("sandstone_pebble", PebbleBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.SAND).strength(0.2f).sound(SoundType.STONE).noCollission().noOcclusion().pushReaction(PushReaction.DESTROY));
+
+    public static final DeferredBlock<Block> SHALE_PEBBLE = BLOCKS.registerBlock("shale_pebble", PebbleBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.2f).sound(SoundType.STONE).noCollission().noOcclusion().pushReaction(PushReaction.DESTROY));
+
+    /** Упавшая ветка на земле. Своего предмета нет: при разрушении выпадает ветка (stick_branch_02). */
+    public static final DeferredBlock<Block> FALLEN_BRANCH = BLOCKS.registerBlock("fallen_branch", PebbleBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instabreak().sound(SoundType.WOOD).noCollission().noOcclusion().ignitedByLava().pushReaction(PushReaction.DESTROY));
+
+    /** Пень для рубки: бревно на нём раскалывается топором на 2 тонких. */
+    public static final DeferredBlock<Block> CHOPPING_STUMP = BLOCKS.registerBlock("chopping_stump", ChoppingStumpBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(2.0f).sound(SoundType.WOOD).ignitedByLava());
+
+    /** Кремень на земле. Своего предмета у блока нет: ставится и выпадает как предмет trailcraft:flint. */
+    public static final DeferredBlock<Block> FLINT_PEBBLE = BLOCKS.registerBlock("flint_pebble", PebbleBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(0.2f).sound(SoundType.STONE).noCollission().noOcclusion().pushReaction(PushReaction.DESTROY));
 
     // === ТРАВА (3 блока, настоящие растения с крестообразной моделью) ===
     private static BlockBehaviour.Properties plantProps() {

@@ -1,0 +1,11 @@
+{
+  "multipart": [
+    { "apply": { "model": "trailcraft:block/thin_acacia_log_center" } },
+    { "when": { "up": "true" }, "apply": { "model": "trailcraft:block/thin_acacia_log_up" } },
+    { "when": { "down": "true" }, "apply": { "model": "trailcraft:block/thin_acacia_log_down" } },
+    { "when": { "north": "true" }, "apply": { "model": "trailcraft:block/thin_acacia_log_north" } },
+    { "when": { "south": "true" }, "apply": { "model": "trailcraft:block/thin_acacia_log_south" } },
+    { "when": { "east": "true" }, "apply": { "model": "trailcraft:block/thin_acacia_log_east" } },
+    { "when": { "west": "true" }, "apply": { "model": "trailcraft:block/thin_acacia_log_west" } }
+  ]
+}

@@ -1,4 +1,5 @@
 {
+  "render_type": "minecraft:cutout",
   "parent": "minecraft:block/door_bottom_left_open",
   "textures": {
     "bottom": "trailcraft:block/sakura_door_bottom",

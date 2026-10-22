@@ -1,6 +1,17 @@
 {
-  "parent": "minecraft:item/handheld",
-  "textures": {
-    "layer0": "trailcraft:item/turf_cutter"
+  "loader": "neoforge:separate_transforms",
+  "base": {
+    "parent": "minecraft:item/handheld",
+    "textures": {
+      "layer0": "trailcraft:item/turf_cutter"
+    }
+  },
+  "perspectives": {
+    "thirdperson_righthand": {
+      "parent": "trailcraft:item/turf_cutter_long"
+    },
+    "thirdperson_lefthand": {
+      "parent": "trailcraft:item/turf_cutter_long"
+    }
   }
 }

@@ -1,0 +1,7 @@
+{
+  "parent": "trailcraft:block/thin_log/up",
+  "textures": {
+    "side": "trailcraft:block/birch_log",
+    "end": "trailcraft:block/thin_birch_log_top"
+  }
+}

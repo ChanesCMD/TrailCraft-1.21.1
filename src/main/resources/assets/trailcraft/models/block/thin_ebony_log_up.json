@@ -1,0 +1,7 @@
+{
+  "parent": "trailcraft:block/thin_log/up",
+  "textures": {
+    "side": "trailcraft:block/ebony_log",
+    "end": "trailcraft:block/thin_ebony_log_top"
+  }
+}

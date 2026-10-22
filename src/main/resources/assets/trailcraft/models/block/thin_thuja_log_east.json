@@ -1,0 +1,7 @@
+{
+  "parent": "trailcraft:block/thin_log/east",
+  "textures": {
+    "side": "trailcraft:block/thuja_log",
+    "end": "trailcraft:block/thin_thuja_log_top"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "": [
+      { "model": "trailcraft:block/chopping_stump" },
+      { "model": "trailcraft:block/chopping_stump", "y": 90 },
+      { "model": "trailcraft:block/chopping_stump", "y": 180 },
+      { "model": "trailcraft:block/chopping_stump", "y": 270 }
+    ]
+  }
+}

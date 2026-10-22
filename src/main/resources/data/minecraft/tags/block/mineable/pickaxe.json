@@ -12,6 +12,19 @@
     "trailcraft:granite",
     "trailcraft:gray_granite",
     "trailcraft:gabbro",
-    "trailcraft:basalt"
+    "trailcraft:basalt",
+    "trailcraft:andesite_pebble",
+    "trailcraft:basalt_pebble",
+    "trailcraft:chalk_pebble",
+    "trailcraft:diorite_pebble",
+    "trailcraft:dolomite_pebble",
+    "trailcraft:gabbro_pebble",
+    "trailcraft:granite_pebble",
+    "trailcraft:gray_granite_pebble",
+    "trailcraft:limestone_pebble",
+    "trailcraft:marble_pebble",
+    "trailcraft:sandstone_pebble",
+    "trailcraft:shale_pebble",
+    "trailcraft:flint_pebble"
   ]
 }

@@ -1,0 +1,7 @@
+{
+  "parent": "trailcraft:block/thin_log/south",
+  "textures": {
+    "side": "trailcraft:block/willow_log",
+    "end": "trailcraft:block/thin_willow_log_top"
+  }
+}

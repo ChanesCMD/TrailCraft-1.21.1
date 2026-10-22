@@ -1,0 +1,8 @@
+{
+  "type": "trailcraft:trail_tree",
+  "config": {
+    "wood": "ebony",
+    "shape": "round",
+    "old_chance": 0.5
+  }
+}

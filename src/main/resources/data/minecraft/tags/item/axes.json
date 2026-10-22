@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:copper_axe",
+    "trailcraft:iron_axe",
+    "trailcraft:flint_axe"
+  ]
+}

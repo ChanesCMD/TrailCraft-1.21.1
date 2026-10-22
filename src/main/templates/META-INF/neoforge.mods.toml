@@ -46,7 +46,7 @@ displayName="${mod_name}" #mandatory
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-Example mod description.
+TrailCraft is a mix of everything I have ever wanted in one place, and it is growing into something more like SevTech: Ages.
 '''
 
 # The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.

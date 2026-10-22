@@ -1,0 +1,7 @@
+{
+  "parent": "trailcraft:block/thin_log/east",
+  "textures": {
+    "side": "trailcraft:block/aspen_log",
+    "end": "trailcraft:block/thin_aspen_log_top"
+  }
+}

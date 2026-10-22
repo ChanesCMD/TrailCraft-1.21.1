@@ -1,0 +1,14 @@
+{
+  "variants": {
+    "": [
+      { "model": "trailcraft:block/fallen_branch_a" },
+      { "model": "trailcraft:block/fallen_branch_a", "y": 90 },
+      { "model": "trailcraft:block/fallen_branch_a", "y": 180 },
+      { "model": "trailcraft:block/fallen_branch_a", "y": 270 },
+      { "model": "trailcraft:block/fallen_branch_b" },
+      { "model": "trailcraft:block/fallen_branch_b", "y": 90 },
+      { "model": "trailcraft:block/fallen_branch_b", "y": 180 },
+      { "model": "trailcraft:block/fallen_branch_b", "y": 270 }
+    ]
+  }
+}

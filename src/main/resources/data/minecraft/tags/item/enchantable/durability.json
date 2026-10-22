@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:flint_axe",
+    "trailcraft:flint_shovel",
+    "trailcraft:flint_pickaxe",
+    "trailcraft:copper_pickaxe",
+    "trailcraft:iron_pickaxe",
+    "trailcraft:turf_cutter"
+  ]
+}
