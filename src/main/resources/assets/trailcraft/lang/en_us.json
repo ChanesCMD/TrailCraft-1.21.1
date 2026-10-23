@@ -565,6 +565,7 @@
   "gui.trailcraft.voice.call": "Call",
   "gui.trailcraft.voice.hangup": "Hang up",
   "gui.trailcraft.voice.no_players": "Nobody to call",
+  "gui.trailcraft.voice.in_call": "Call with %s",
   "gui.trailcraft.voice.unavailable": "Voice chat is not connected",
   "gui.trailcraft.call.incoming": "Call from %s",
   "gui.trailcraft.call.accept": "Accept",

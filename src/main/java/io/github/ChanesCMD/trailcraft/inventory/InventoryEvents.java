@@ -120,7 +120,8 @@ public class InventoryEvents {
         }
 
         boolean hadBackpack = loot.stream().anyMatch(stack -> stack.getItem() instanceof BackpackItem);
-        BlockPos gravePos = loot.isEmpty() ? null : GraveBlock.place(player, loot, now);
+        // Могила ставится при любой смерти, даже без рюкзака и пустая: по ней видно место смерти
+        BlockPos gravePos = GraveBlock.place(player, loot, now);
         event.getDrops().clear();
         if (gravePos == null) {
             // Места под могилу нет — вещи выпадают как обычно

@@ -47,7 +47,15 @@ public class VoiceChatWindow {
     private List<UUID> callTargets() {
         Minecraft mc = Minecraft.getInstance();
         UUID self = mc.player == null ? null : mc.player.getUUID();
-        return VoiceClient.connectedPlayers().stream().filter(id -> !id.equals(self)).toList();
+        UUID partner = VoiceClient.callPartner();
+        // Собеседник — первым, чтобы его строка была видна без прокрутки
+        return VoiceClient.connectedPlayers().stream().filter(id -> !id.equals(self))
+                .sorted((a, b) -> Boolean.compare(b.equals(partner), a.equals(partner))).toList();
+    }
+
+    private static String name(UUID player) {
+        PlayerInfo info = Minecraft.getInstance().getConnection().getPlayerInfo(player);
+        return info == null ? "?" : info.getProfile().getName();
     }
 
     private static boolean remoteAllowed() {
@@ -84,20 +92,24 @@ public class VoiceChatWindow {
             }
         }
 
-        g.drawString(font, Component.translatable("gui.trailcraft.voice.calls"), x + 7, y + CALL_Y - 10, 0xFF606060, false);
+        // Во время звонка вместо «Звонки игрокам» — «Звонок с …», строка собеседника подсвечена, как текущий канал
+        UUID partner = VoiceClient.callPartner();
+        if (partner != null) {
+            g.drawString(font, Component.translatable("gui.trailcraft.voice.in_call", name(partner)), x + 7, y + CALL_Y - 10, 0xFF2E7D2A, false);
+        } else {
+            g.drawString(font, Component.translatable("gui.trailcraft.voice.calls"), x + 7, y + CALL_Y - 10, 0xFF606060, false);
+        }
         List<UUID> targets = callTargets();
         if (targets.isEmpty()) {
             g.drawString(font, Component.translatable("gui.trailcraft.voice.no_players"), x + ROW_X + 2, y + CALL_Y + 4, 0xFF606060, false);
         }
-        UUID partner = VoiceClient.callPartner();
         for (int i = 0; i < CALL_ROWS && scroll + i < targets.size(); i++) {
             UUID target = targets.get(scroll + i);
             int ry = y + CALL_Y + i * CALL_STEP;
-            UiDraw.frame(g, x + ROW_X, ry, ROW_W, CALL_H, 0xFF373737, 0xFFFFFFFF, 0xFF8B8B8B);
-            VoiceHeads.head(g, x + ROW_X + 2, ry + 2, target);
-            PlayerInfo info = Minecraft.getInstance().getConnection().getPlayerInfo(target);
-            g.drawString(font, info == null ? "?" : info.getProfile().getName(), x + ROW_X + 24, ry + 6, 0xFFFFFFFF, false);
             boolean inCall = target.equals(partner);
+            UiDraw.frame(g, x + ROW_X, ry, ROW_W, CALL_H, inCall ? 0xFFFFFFFF : 0xFF373737, 0xFFFFFFFF, inCall ? 0xFF55B04F : 0xFF8B8B8B);
+            VoiceHeads.head(g, x + ROW_X + 2, ry + 2, target);
+            g.drawString(font, name(target), x + ROW_X + 24, ry + 6, 0xFFFFFFFF, false);
             boolean active = inCall || remote;
             int bx = x + ROW_X + ROW_W - CALL_BUTTON_W - 3, by = ry + 3;
             boolean hover = active && mouseX >= bx && mouseX < bx + CALL_BUTTON_W && mouseY >= by && mouseY < by + 14;

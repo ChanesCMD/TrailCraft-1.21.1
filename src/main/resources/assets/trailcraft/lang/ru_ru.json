@@ -565,6 +565,7 @@
   "gui.trailcraft.voice.call": "Позвонить",
   "gui.trailcraft.voice.hangup": "Завершить",
   "gui.trailcraft.voice.no_players": "Звонить некому",
+  "gui.trailcraft.voice.in_call": "Звонок с %s",
   "gui.trailcraft.voice.unavailable": "Голосовой чат не подключён",
   "gui.trailcraft.call.incoming": "Звонок от %s",
   "gui.trailcraft.call.accept": "Принять",
