@@ -2,11 +2,13 @@ package io.github.ChanesCMD.trailcraft.init;
 
 import com.mojang.serialization.Codec;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
+import io.github.ChanesCMD.trailcraft.inventory.DeathRecord;
 import io.github.ChanesCMD.trailcraft.inventory.PlayerSlots;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 public final class ModAttachments {
@@ -20,6 +22,10 @@ public final class ModAttachments {
     /** Переключатели косметики: бит i = показывать косметику вместо брони в слоте i (0 — шлем … 3 — ботинки). */
     public static final Supplier<AttachmentType<Integer>> COSMETIC_TOGGLES = ATTACHMENT_TYPES.register("cosmetic_toggles",
             () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).copyOnDeath().build());
+
+    /** Журнал смертей игрока (последние DeathRecord.MAX_RECORDS). */
+    public static final Supplier<AttachmentType<List<DeathRecord>>> DEATH_LOG = ATTACHMENT_TYPES.register("death_log",
+            () -> AttachmentType.<List<DeathRecord>>builder(() -> List.of()).serialize(DeathRecord.CODEC.listOf()).copyOnDeath().build());
 
     private ModAttachments() {}
 }

@@ -4,6 +4,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DiggerItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tiers;
+import io.github.ChanesCMD.trailcraft.item.BackpackItem;
 import io.github.ChanesCMD.trailcraft.item.BranchStickItem;
 import io.github.ChanesCMD.trailcraft.item.TurfCutterItem;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -110,6 +111,11 @@ public class ModItems {
 
     // === ПЕНЬ ДЛЯ РУБКИ ===
     public static final DeferredItem<BlockItem> CHOPPING_STUMP = ITEMS.registerSimpleBlockItem("chopping_stump", ModBlocks.CHOPPING_STUMP);
+
+    // === РЮКЗАКИ ===
+    /** Тестовый рюкзак: открывает все 54 слота основного инвентаря. TODO: уточнить тиры рюкзаков. */
+    public static final DeferredItem<BackpackItem> TEST_BACKPACK = ITEMS.registerItem("test_backpack",
+            props -> new BackpackItem(ModBlocks.TEST_BACKPACK.get(), props.stacksTo(1), BackpackItem.MAIN_SIZE));
 
     // === КРЕМЕНЬ ===
     /** Новый кремень: ставится на землю как камушек (блок flint_pebble) и выпадает из него. */

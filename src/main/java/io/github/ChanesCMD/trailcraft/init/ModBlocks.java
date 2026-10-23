@@ -3,6 +3,8 @@ package io.github.ChanesCMD.trailcraft.init;
 import net.minecraft.util.ColorRGBA;
 import net.minecraft.world.level.block.Block;
 import io.github.ChanesCMD.trailcraft.block.PebbleBlock;
+import io.github.ChanesCMD.trailcraft.block.BackpackBlock;
+import io.github.ChanesCMD.trailcraft.block.GraveBlock;
 import io.github.ChanesCMD.trailcraft.block.ChoppingStumpBlock;
 import net.minecraft.world.level.block.ColoredFallingBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
@@ -229,6 +231,15 @@ public class ModBlocks {
     /** Кремень на земле. Своего предмета у блока нет: ставится и выпадает как предмет trailcraft:flint. */
     public static final DeferredBlock<Block> FLINT_PEBBLE = BLOCKS.registerBlock("flint_pebble", PebbleBlock::new,
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(0.2f).sound(SoundType.STONE).noCollission().noOcclusion().pushReaction(PushReaction.DESTROY));
+
+    // === РЮКЗАК И МОГИЛА ===
+    /** Тестовый рюкзак, стоящий на земле (выброшенный). Предмет — ModItems.TEST_BACKPACK. */
+    public static final DeferredBlock<Block> TEST_BACKPACK = BLOCKS.registerBlock("test_backpack", BackpackBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).strength(0.5f).sound(SoundType.WOOL).noOcclusion().pushReaction(PushReaction.DESTROY));
+
+    /** Могила с вещами умершего игрока. Не взрывается и не сдвигается поршнем. */
+    public static final DeferredBlock<Block> GRAVE = BLOCKS.registerBlock("grave", GraveBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5f, 3600000.0f).sound(SoundType.STONE).noOcclusion().pushReaction(PushReaction.BLOCK));
 
     // === ТРАВА (3 блока, настоящие растения с крестообразной моделью) ===
     private static BlockBehaviour.Properties plantProps() {

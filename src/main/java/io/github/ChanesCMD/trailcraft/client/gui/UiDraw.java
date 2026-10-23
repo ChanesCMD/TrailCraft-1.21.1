@@ -24,6 +24,17 @@ public final class UiDraw {
         frame(g, x, y, 18, 18, 0xFF373737, 0xFFFFFFFF, GREY);
     }
 
+    /** Заблокированный слот: темнее, с пиксельным замком в центре. */
+    public static void lockedSlot(GuiGraphics g, int x, int y) {
+        frame(g, x, y, 18, 18, 0xFF2E2E2E, 0xFF9E9E9E, 0xFF6E6E6E);
+        int lock = 0xFF3A3A3A;
+        g.fill(x + 7, y + 4, x + 11, y + 5, lock);   // дужка
+        g.fill(x + 6, y + 5, x + 7, y + 8, lock);
+        g.fill(x + 11, y + 5, x + 12, y + 8, lock);
+        g.fill(x + 5, y + 8, x + 13, y + 14, lock);  // корпус
+        g.fill(x + 8, y + 10, x + 10, y + 12, 0xFF6E6E6E); // скважина
+    }
+
     public static void frame(GuiGraphics g, int x, int y, int w, int h, int dark, int light, int fill) {
         g.fill(x, y, x + w, y + h, dark);
         g.fill(x + 1, y + 1, x + w, y + h, light);

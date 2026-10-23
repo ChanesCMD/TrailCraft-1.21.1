@@ -81,6 +81,7 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.SHALE_PEBBLE);
                         output.accept(ModItems.FLINT);
                         output.accept(ModItems.CHOPPING_STUMP);
+                        output.accept(ModItems.TEST_BACKPACK);
 
                         // Песок (4)
                         output.accept(ModBlocks.SAND_WHITE);

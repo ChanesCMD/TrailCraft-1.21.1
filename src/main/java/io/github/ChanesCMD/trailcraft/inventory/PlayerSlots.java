@@ -10,7 +10,7 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 
 /**
  * Дополнительные слоты игрока (хранятся на игроке через Data Attachment, см. ModAttachments).
- * Ряды 1–3 основного инвентаря — ванильные слоты 9..35, ряды 4–6 лежат здесь.
+ * Основной инвентарь 9×6 лежит в надетом рюкзаке (BackpackHandler), ванильные слоты 9..35 не используются.
  */
 public class PlayerSlots extends ItemStackHandler {
     public static final int COSMETIC = 0;      // 4: шлем, нагрудник, поножи, ботинки
@@ -19,8 +19,7 @@ public class PlayerSlots extends ItemStackHandler {
     public static final int WALLET = 16;
     public static final int BELT = 17;
     public static final int BACKPACK = 18;
-    public static final int EXTRA_MAIN = 19;   // 27: ряды 4–6 основного инвентаря
-    public static final int SIZE = 46;
+    public static final int SIZE = 19;
 
     public static final TagKey<Item> WARM_CLOTHING = tag("warm_clothing");
     public static final TagKey<Item> ACCESSORY_ITEMS = tag("accessories");
@@ -45,12 +44,12 @@ public class PlayerSlots extends ItemStackHandler {
         if (slot == WALLET) return stack.is(WALLETS);
         if (slot == BELT) return stack.is(BELTS);
         if (slot == BACKPACK) return stack.is(BACKPACKS);
-        return true; // косметическую броню проверяет слот меню, основной инвентарь принимает всё
+        return true; // косметическую броню проверяет слот меню
     }
 
     @Override
     public int getSlotLimit(int slot) {
-        return slot < EXTRA_MAIN ? 1 : super.getSlotLimit(slot);
+        return 1;
     }
 
     private static TagKey<Item> tag(String name) {

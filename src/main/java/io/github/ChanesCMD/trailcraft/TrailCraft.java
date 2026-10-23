@@ -7,6 +7,7 @@ import net.neoforged.fml.config.ModConfig;
 import com.mojang.logging.LogUtils;
 import org.slf4j.Logger;
 import io.github.ChanesCMD.trailcraft.init.ModAttachments;
+import io.github.ChanesCMD.trailcraft.init.ModBlockEntities;
 import io.github.ChanesCMD.trailcraft.init.ModBlocks;
 import io.github.ChanesCMD.trailcraft.init.ModComponents;
 import io.github.ChanesCMD.trailcraft.init.ModCreativeTabs;
@@ -34,6 +35,7 @@ public class TrailCraft {
         ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         ModFeatures.FEATURES.register(modEventBus);
         ModAttachments.ATTACHMENT_TYPES.register(modEventBus);
+        ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         ModMenus.MENUS.register(modEventBus);
 
         // Регистрируем конфиг

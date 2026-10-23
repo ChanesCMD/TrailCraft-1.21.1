@@ -1,6 +1,12 @@
 package io.github.ChanesCMD.trailcraft.client.gui;
 
+import io.github.ChanesCMD.trailcraft.ServerConfig;
+import io.github.ChanesCMD.trailcraft.calendar.Calendar;
+import io.github.ChanesCMD.trailcraft.inventory.DeathLogPayloads;
+import io.github.ChanesCMD.trailcraft.inventory.DeathRecord;
 import io.github.ChanesCMD.trailcraft.inventory.TrailInventoryMenu;
+import io.github.ChanesCMD.trailcraft.inventory.TrailInventoryMenu.MenuSlot;
+import io.github.ChanesCMD.trailcraft.inventory.TrailInventoryMenu.Popup;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
@@ -8,22 +14,46 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.network.PacketDistributor;
+
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static io.github.ChanesCMD.trailcraft.inventory.TrailInventoryMenu.*;
 
 /**
- * Экран инвентаря (ТЗ, часть 1, разделы 1–2). Макеты: docs/ui/01_inventory_default.png, 02_inventory_warmth.png.
+ * Экран инвентаря (ТЗ, часть 1, разделы 1–3). Макеты: docs/ui/01_inventory_default.png, 02_inventory_warmth.png, 04_backpack.png.
  * Слева от панели — панель голосового чата (головы появятся на шаге 7).
+ * Окна (рюкзак, журнал смертей) рисуются поверх инвентаря с лёгким затемнением; закрываются Esc, повторным нажатием
+ * кнопки или кликом вне окна.
  */
 public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventoryMenu> {
     private static final int VOICE_W = 32, VOICE_H = 125, VOICE_GAP = 6;
     /** Насколько панель поднята над центром, чтобы под кнопкой календаря влезло его окно (на 640×360 верх на y=78). */
     private static final int RAISE = 16;
-    private static final int CALENDAR_X = 279, CALENDAR_Y = 95, CALENDAR_W = 102, CALENDAR_H = 20;
+    private static final int CALENDAR_X = 279, CALENDAR_Y = 95, BUTTON_W = 102, BUTTON_H = 20;
+    private static final int DEATHS_BUTTON_Y = 119;
     /** Фон столбика «Тепло» (x=60..84, y=32..110). */
     private static final int WARMTH_BG_X = 60, WARMTH_BG_Y = 32, WARMTH_BG_W = 24, WARMTH_BG_H = 78;
+    /** Окно журнала смертей поверх основного инвентаря. */
+    private static final int DEATHS_X = 74, DEATHS_Y = 11, DEATHS_W = 240, DEATHS_H = 150, DEATH_ROW_H = 31;
+    private static final int[] BAR_COLORS = {0xFFE8C33A, 0, 0xFF4A7BE0, 0, 0, 0, 0};
+    private static final String[] BACKPACK_ROWS = {"battery", "solar", "mana", "sleeping", "workbench", "atlas", "calendar"};
+    private static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").withZone(ZoneId.systemDefault());
+    /** Слои по глубине: предметы в слотах ≈150–200, затемнение и окна выше, предмет на курсоре ≈380. */
+    private static final int Z_BUTTONS = 210, Z_DIM = 220, Z_POPUP = 230, Z_POPUP_ITEMS = 100;
 
     private final Inventory playerInventory;
+    private Button calendarButton;
+    private List<DeathRecord> deaths = List.of();
+    private long deathsNow;
+    private int deathsScroll;
 
     public TrailInventoryScreen(TrailInventoryMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -41,19 +71,72 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         leftPos = Math.max(4, (width - groupWidth) / 2) + VOICE_W + VOICE_GAP;
         topPos = Math.max(4, (height - HEIGHT) / 2 - RAISE);
 
-        // TODO (шаг 4): активна, только если в рюкзаке есть календарь; открывает окно календаря
-        Button calendar = Button.builder(Component.translatable("gui.trailcraft.calendar"), b -> {})
-                .bounds(leftPos + CALENDAR_X, topPos + CALENDAR_Y, CALENDAR_W, CALENDAR_H)
-                .tooltip(Tooltip.create(Component.translatable("gui.trailcraft.calendar.need")))
-                .build();
-        calendar.active = false;
-        addRenderableWidget(calendar);
+        // TODO (шаг 4): открывает окно календаря
+        calendarButton = addRenderableWidget(Button.builder(Component.translatable("gui.trailcraft.calendar"), b -> {})
+                .bounds(leftPos + CALENDAR_X, topPos + CALENDAR_Y, BUTTON_W, BUTTON_H).build());
+        addRenderableWidget(Button.builder(Component.translatable("gui.trailcraft.deaths"), b -> toggleDeaths())
+                .bounds(leftPos + CALENDAR_X, topPos + DEATHS_BUTTON_Y, BUTTON_W, BUTTON_H).build());
+        updateCalendarButton();
     }
 
     @Override
+    protected void containerTick() {
+        super.containerTick();
+        updateCalendarButton();
+    }
+
+    private void updateCalendarButton() {
+        boolean has = menu.hasCalendar();
+        calendarButton.active = has;
+        calendarButton.setTooltip(has ? null : Tooltip.create(Component.translatable("gui.trailcraft.calendar.need")));
+    }
+
+    // === Окна ===
+
+    private void openPopup(Popup popup) {
+        menu.popup = popup;
+        switch (popup) {
+            case BACKPACK -> setPopupRect(BACKPACK_WIN_X, BACKPACK_WIN_Y, BACKPACK_W, BACKPACK_H);
+            case DEATHS -> setPopupRect(DEATHS_X, DEATHS_Y, DEATHS_W, DEATHS_H);
+            default -> setPopupRect(0, 0, 0, 0);
+        }
+    }
+
+    private void setPopupRect(int x, int y, int w, int h) {
+        menu.popupX = x;
+        menu.popupY = y;
+        menu.popupW = w;
+        menu.popupH = h;
+    }
+
+    private void toggleDeaths() {
+        if (menu.popup == Popup.DEATHS) {
+            openPopup(Popup.NONE);
+        } else {
+            deaths = List.of();
+            deathsScroll = 0;
+            openPopup(Popup.DEATHS);
+            PacketDistributor.sendToServer(DeathLogPayloads.Request.INSTANCE);
+        }
+    }
+
+    public void showDeathLog(DeathLogPayloads.Log log) {
+        List<DeathRecord> newestFirst = new ArrayList<>(log.records());
+        Collections.reverse(newestFirst);
+        deaths = newestFirst;
+        deathsNow = log.now();
+    }
+
+    private boolean overPopup(double mouseX, double mouseY) {
+        return menu.popup != Popup.NONE && isOver(mouseX, mouseY, menu.popupX, menu.popupY, menu.popupW, menu.popupH);
+    }
+
+    // === Отрисовка ===
+
+    @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        menu.warmthVisible = isOver(mouseX, mouseY, ARMOR_X, EQUIP_Y, 18, 72)
-                || menu.warmthVisible && isOver(mouseX, mouseY, WARMTH_BG_X, WARMTH_BG_Y, WARMTH_BG_W, WARMTH_BG_H);
+        menu.warmthVisible = menu.popup == Popup.NONE && (isOver(mouseX, mouseY, ARMOR_X, EQUIP_Y, 18, 72)
+                || menu.warmthVisible && isOver(mouseX, mouseY, WARMTH_BG_X, WARMTH_BG_Y, WARMTH_BG_W, WARMTH_BG_H));
         super.render(g, mouseX, mouseY, partialTick);
         renderTooltip(g, mouseX, mouseY);
     }
@@ -68,9 +151,16 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         }
 
         UiDraw.panel(g, x, y, WIDTH, HEIGHT);
-        for (int i = 0; i < 4; i++) {
-            UiDraw.slot(g, x + COSMETIC_X, y + EQUIP_Y + i * 18);
-            UiDraw.slot(g, x + ARMOR_X, y + EQUIP_Y + i * 18);
+        for (int i = 0; i < menu.slots.size(); i++) {
+            Slot slot = menu.slots.get(i);
+            if (i == RESULT || slot instanceof MenuSlot s && s.group() != GROUP_BASE) {
+                continue;
+            }
+            if (slot instanceof MenuSlot s && s.isLocked()) {
+                UiDraw.lockedSlot(g, x + slot.x - 1, y + slot.y - 1);
+            } else {
+                UiDraw.slot(g, x + slot.x - 1, y + slot.y - 1);
+            }
         }
         UiDraw.frame(g, x + MODEL_X, y + MODEL_Y, MODEL_W, MODEL_H, 0xFF373737, 0xFFFFFFFF, 0xFF000000);
         InventoryScreen.renderEntityInInventoryFollowsMouse(g, x + MODEL_X + 1, y + MODEL_Y + 1,
@@ -87,31 +177,10 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
             }
             g.pose().popPose();
         }
-
-        for (int i = 0; i < 8; i++) {
-            UiDraw.slot(g, x + ACCESSORY_X + (i % 4) * 18, y + ACCESSORY_Y + (i / 4) * 18);
-        }
-        for (int slotX : new int[]{WALLET_X, BELT_X, BACKPACK_X, OFFHAND_X}) {
-            UiDraw.slot(g, x + slotX, y + BOTTOM_Y);
-        }
-        for (int row = 0; row < 6; row++) {
-            for (int col = 0; col < 9; col++) {
-                UiDraw.slot(g, x + MAIN_X + col * 18, y + MAIN_Y + row * 18);
-            }
-        }
-        for (int col = 0; col < 9; col++) {
-            UiDraw.slot(g, x + MAIN_X + col * 18, y + HOTBAR_Y);
-        }
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 3; col++) {
-                UiDraw.slot(g, x + CRAFT_X + col * 18, y + CRAFT_Y + row * 18);
-            }
-        }
         UiDraw.arrow(g, x + 337, y + 55);
         UiDraw.slot(g, x + RESULT_X, y + RESULT_Y);
     }
 
-    /** Переключатели косметики и кнопки окон рисуются поверх предметов в слотах. */
     @Override
     protected void renderLabels(GuiGraphics g, int mouseX, int mouseY) {
         g.drawString(font, title, titleLabelX, titleLabelY, UiDraw.LABEL, false);
@@ -124,27 +193,166 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
             g.drawString(font, warmth, -font.width(warmth) / 2, 0, UiDraw.LABEL, false);
             g.pose().popPose();
         }
+
+        // Переключатели косметики и кнопки окон поверх предметов в слотах
         g.pose().pushPose();
-        g.pose().translate(0, 0, 300);
+        g.pose().translate(0, 0, Z_BUTTONS);
         for (int i = 0; i < 4; i++) {
             UiDraw.circle(g, COSMETIC_X + 12, EQUIP_Y + i * 18 + 1, 5, menu.isCosmeticShown(i) ? UiDraw.GREEN : 0xFF6E6E6E);
         }
-        // TODO (шаг 3): кнопки открывают окна кошелька, пояса и рюкзака
         for (int slotX : new int[]{WALLET_X, BELT_X, BACKPACK_X}) {
             UiDraw.plusButton(g, slotX + 10, BOTTOM_Y + 1);
         }
         g.pose().popPose();
+
+        if (menu.popup != Popup.NONE) {
+            g.pose().pushPose();
+            g.pose().translate(0, 0, Z_DIM);
+            g.fill(-leftPos, -topPos, width - leftPos, height - topPos, 0x40000000);
+            g.pose().translate(0, 0, Z_POPUP - Z_DIM);
+            if (menu.popup == Popup.BACKPACK) {
+                renderBackpack(g);
+            } else {
+                renderDeaths(g);
+            }
+            g.pose().popPose();
+        }
     }
+
+    /** Окно рюкзака 126×201 (ТЗ 3.1). */
+    private void renderBackpack(GuiGraphics g) {
+        int px = BACKPACK_WIN_X, py = BACKPACK_WIN_Y;
+        UiDraw.panel(g, px, py, BACKPACK_W, BACKPACK_H);
+        g.drawString(font, Component.translatable("gui.trailcraft.backpack"), px + 7, py + 6, UiDraw.LABEL, false);
+        boolean present = menu.backpack().isPresent();
+        for (int i = 0; i < 7; i++) {
+            int rowY = py + 20 + 21 * i;
+            drawSlotFrame(g, px + 7, rowY, !present);
+            boolean bar = BAR_COLORS[i] != 0;
+            g.drawString(font, Component.translatable("gui.trailcraft.backpack." + BACKPACK_ROWS[i]), px + 29, rowY + (bar ? 1 : 5), UiDraw.LABEL, false);
+            if (bar) {
+                // TODO: уровень энергии и маны, когда появятся аккумулятор и планшет
+                UiDraw.frame(g, px + 29, rowY + 10, 88, 6, 0xFF373737, 0xFFFFFFFF, 0xFF555555);
+            }
+        }
+        g.drawString(font, Component.translatable("gui.trailcraft.backpack.pockets"), px + 7, py + 166, UiDraw.LABEL, false);
+        for (int k = 0; k < 6; k++) {
+            drawSlotFrame(g, px + 7 + 18 * k, py + 176, !present);
+        }
+        renderPopupItems(g);
+    }
+
+    private void drawSlotFrame(GuiGraphics g, int x, int y, boolean locked) {
+        if (locked) {
+            UiDraw.lockedSlot(g, x, y);
+        } else {
+            UiDraw.slot(g, x, y);
+        }
+    }
+
+    /** Предметы в слотах окна рисуются заново поверх затемнения. */
+    private void renderPopupItems(GuiGraphics g) {
+        g.pose().pushPose();
+        g.pose().translate(0, 0, Z_POPUP_ITEMS);
+        for (Slot slot : menu.slots) {
+            if (slot instanceof MenuSlot s && s.group() == GROUP_BACKPACK) {
+                ItemStack stack = slot.getItem();
+                g.renderItem(stack, slot.x, slot.y);
+                g.renderItemDecorations(font, stack, slot.x, slot.y);
+                if (slot == hoveredSlot) {
+                    g.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, 0x80FFFFFF);
+                }
+            }
+        }
+        g.pose().popPose();
+    }
+
+    /** Окно журнала смертей: дата, игровая дата, координаты и что с рюкзаком. Колесо мыши — прокрутка. */
+    private void renderDeaths(GuiGraphics g) {
+        int px = DEATHS_X, py = DEATHS_Y;
+        UiDraw.panel(g, px, py, DEATHS_W, DEATHS_H);
+        g.drawString(font, Component.translatable("gui.trailcraft.deaths"), px + 7, py + 6, UiDraw.LABEL, false);
+        if (deaths.isEmpty()) {
+            g.drawString(font, Component.translatable("gui.trailcraft.deaths.empty"), px + 7, py + 22, 0xFF606060, false);
+            return;
+        }
+        int rows = (DEATHS_H - 22) / DEATH_ROW_H;
+        for (int i = 0; i < rows && deathsScroll + i < deaths.size(); i++) {
+            int index = deathsScroll + i;
+            DeathRecord death = deaths.get(index);
+            int ry = py + 20 + i * DEATH_ROW_H;
+            UiDraw.frame(g, px + 6, ry - 1, DEATHS_W - 12, DEATH_ROW_H - 2, 0xFF8B8B8B, 0xFFFFFFFF, 0xFFB8B8B8);
+            String dimension = death.dimension().equals("minecraft:overworld") ? "" : "  " + death.dimension().replace("minecraft:", "");
+            g.drawString(font, "№" + (deaths.size() - index) + "  " + DATE.format(Instant.ofEpochMilli(death.time())) + dimension,
+                    px + 9, ry + 1, UiDraw.LABEL, false);
+            Calendar date = Calendar.of(death.dayTime(), ServerConfig.daysPerSeason());
+            g.drawString(font, Component.translatable("gui.trailcraft.deaths.date", date.year(),
+                    Component.translatable(date.season().translationKey()), date.dayOfSeason()), px + 9, ry + 10, 0xFF606060, false);
+            DeathRecord.BackpackStatus status = death.status(deathsNow);
+            g.drawString(font, Component.translatable("gui.trailcraft.deaths.place", death.pos().getX(), death.pos().getY(), death.pos().getZ(),
+                    Component.translatable(status.translationKey())), px + 9, ry + 19, UiDraw.LABEL, false);
+        }
+    }
+
+    // === Ввод ===
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        for (int i = 0; i < 4; i++) {
-            if (button == 0 && isOver(mouseX, mouseY, COSMETIC_X + 12, EQUIP_Y + i * 18 + 1, 5, 5)) {
-                minecraft.gameMode.handleInventoryButtonClick(menu.containerId, i);
+        if (menu.popup != Popup.NONE) {
+            if (isOver(mouseX, mouseY, BACKPACK_X + 10, BOTTOM_Y + 1, 7, 7) && menu.popup == Popup.BACKPACK) {
+                openPopup(Popup.NONE);
+                return true;
+            }
+            // Клик по видимому слоту инвентаря проходит в слот (чтобы перекладывать вещи в окно и из него),
+            // клик по пустому месту вне окна закрывает окно.
+            if (!overPopup(mouseX, mouseY) && !overActiveSlot(mouseX, mouseY)) {
+                openPopup(Popup.NONE);
+                return true;
+            }
+            return super.mouseClicked(mouseX, mouseY, button);
+        }
+        if (button == 0) {
+            for (int i = 0; i < 4; i++) {
+                if (isOver(mouseX, mouseY, COSMETIC_X + 12, EQUIP_Y + i * 18 + 1, 5, 5)) {
+                    minecraft.gameMode.handleInventoryButtonClick(menu.containerId, i);
+                    return true;
+                }
+            }
+            if (isOver(mouseX, mouseY, BACKPACK_X + 10, BOTTOM_Y + 1, 7, 7)) {
+                openPopup(Popup.BACKPACK);
+                return true;
+            }
+            // TODO (шаг 3): окна кошелька и пояса
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == 256 && menu.popup != Popup.NONE) {
+            openPopup(Popup.NONE);
+            return true;
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        if (menu.popup == Popup.DEATHS) {
+            int rows = (DEATHS_H - 22) / DEATH_ROW_H;
+            deathsScroll = Math.max(0, Math.min(deathsScroll - (int) Math.signum(scrollY), deaths.size() - rows));
+            return true;
+        }
+        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+    }
+
+    private boolean overActiveSlot(double mouseX, double mouseY) {
+        for (Slot slot : menu.slots) {
+            if (slot.isActive() && isHovering(slot.x, slot.y, 16, 16, mouseX, mouseY)) {
                 return true;
             }
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return false;
     }
 
     /** Попадание в прямоугольник, заданный относительно панели. */
@@ -153,10 +361,10 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         return rx >= x && rx < x + w && ry >= y && ry < y + h;
     }
 
-    /** Клик по панели голосового чата не считается кликом мимо окна (иначе предмет с курсора выбросится). */
+    /** Клик по панели голосового чата или по окну не считается кликом мимо (иначе предмет с курсора выбросится). */
     @Override
     protected boolean hasClickedOutside(double mouseX, double mouseY, int left, int top, int button) {
         boolean onVoice = mouseX >= left - VOICE_GAP - VOICE_W && mouseX < left && mouseY >= top && mouseY < top + VOICE_H;
-        return !onVoice && super.hasClickedOutside(mouseX, mouseY, left, top, button);
+        return !onVoice && !overPopup(mouseX, mouseY) && super.hasClickedOutside(mouseX, mouseY, left, top, button);
     }
 }
