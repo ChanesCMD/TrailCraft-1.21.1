@@ -1,5 +1,6 @@
 {
   "loader": "neoforge:separate_transforms",
+  "gui_light": "front",
   "base": {
     "parent": "trailcraft:item/bone_spear_in_hand"
   },
@@ -22,5 +23,13 @@
         "layer0": "trailcraft:item/bone_spear"
       }
     }
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "trailcraft:charging": 1
+      },
+      "model": "trailcraft:item/bone_spear_charging"
+    }
+  ]
 }

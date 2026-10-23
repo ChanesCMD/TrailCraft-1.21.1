@@ -239,7 +239,8 @@ public class ModBlocks {
 
     /** Могила с вещами умершего игрока. Не взрывается и не сдвигается поршнем. */
     public static final DeferredBlock<Block> GRAVE = BLOCKS.registerBlock("grave", GraveBlock::new,
-            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5f, 3600000.0f).sound(SoundType.STONE).noOcclusion().pushReaction(PushReaction.BLOCK));
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5f, 3600000.0f).sound(SoundType.STONE).noOcclusion().pushReaction(PushReaction.BLOCK)
+                    .forceSolidOn());
 
     // === ТРАВА (3 блока, настоящие растения с крестообразной моделью) ===
     private static BlockBehaviour.Properties plantProps() {

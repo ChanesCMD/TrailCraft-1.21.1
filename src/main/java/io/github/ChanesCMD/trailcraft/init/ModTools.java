@@ -48,8 +48,7 @@ public final class ModTools {
                     p.attributes(SwordItem.createAttributes(m.tier, ModTiers.KNIFE_DAMAGE, ModTiers.KNIFE_SPEED))));
         }
         for (Material m : Material.values()) {
-            reg(m.id + "_spear", p -> new SpearItem(m.tier,
-                    p.attributes(SpearItem.createAttributes(m.tier, ModTiers.SPEAR_DAMAGE, ModTiers.SPEAR_SPEED, ModTiers.SPEAR_REACH))));
+            reg(m.id + "_spear", p -> new SpearItem(m.tier, m.spear, p.attributes(SpearItem.createAttributes(m.spear))));
         }
         for (Material m : Material.values()) {
             if (m.isMetal()) {

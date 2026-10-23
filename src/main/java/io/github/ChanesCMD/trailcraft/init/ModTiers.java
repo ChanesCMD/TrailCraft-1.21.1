@@ -44,23 +44,26 @@ public final class ModTiers {
 
     /** Материалы инструментов. Железо — ванильный уровень. Топоры у каждого материала свои (урон, скорость атаки). */
     public enum Material {
-        FLINT("flint", ModTiers.FLINT, 7.0f, -3.2f),
-        BONE("bone", ModTiers.BONE, 7.0f, -3.2f),
-        AMETHYST("amethyst", ModTiers.AMETHYST, 7.0f, -3.2f),
-        COPPER("copper", ModTiers.COPPER, 6.5f, -3.15f),
-        BRONZE("bronze", ModTiers.BRONZE, 6.0f, -3.1f),
-        IRON("iron", Tiers.IRON, 6.0f, -3.1f),
-        STEEL("steel", ModTiers.STEEL, 5.5f, -3.0f);
+        // Копья: кремень и кость — как каменное копьё 1.21.11, медь и железо — как ванильные, сталь — как алмазное.
+        FLINT("flint", ModTiers.FLINT, 7.0f, -3.2f, new SpearStats(2, 1.33f, 0.82f, 0.7f, 4.5f, 13, 9.0f, 13.75f)),
+        BONE("bone", ModTiers.BONE, 7.0f, -3.2f, new SpearStats(2, 1.33f, 0.82f, 0.7f, 4.5f, 13, 9.0f, 13.75f)),
+        AMETHYST("amethyst", ModTiers.AMETHYST, 7.0f, -3.2f, new SpearStats(2, 1.25f, 0.82f, 0.65f, 4.25f, 12.5f, 8.5f, 13.0f)),
+        COPPER("copper", ModTiers.COPPER, 6.5f, -3.15f, new SpearStats(2, 1.18f, 0.82f, 0.65f, 4.0f, 12, 8.25f, 12.5f)),
+        BRONZE("bronze", ModTiers.BRONZE, 6.0f, -3.1f, new SpearStats(3, 1.1f, 0.9f, 0.62f, 3.25f, 11.5f, 7.5f, 12.0f)),
+        IRON("iron", Tiers.IRON, 6.0f, -3.1f, new SpearStats(3, 1.05f, 0.95f, 0.6f, 2.5f, 11, 6.75f, 11.25f)),
+        STEEL("steel", ModTiers.STEEL, 5.5f, -3.0f, new SpearStats(4, 0.95f, 1.075f, 0.5f, 3.0f, 10, 6.5f, 10.0f));
 
         public final String id;
         public final Tier tier;
         public final float axeDamage, axeSpeed;
+        public final SpearStats spear;
 
-        Material(String id, Tier tier, float axeDamage, float axeSpeed) {
+        Material(String id, Tier tier, float axeDamage, float axeSpeed, SpearStats spear) {
             this.id = id;
             this.tier = tier;
             this.axeDamage = axeDamage;
             this.axeSpeed = axeSpeed;
+            this.spear = spear;
         }
 
         /** Металлы: из них делают серпы, косы, пилы и кусачки. */
@@ -79,9 +82,28 @@ public final class ModTiers {
     public static final float SCYTHE_DAMAGE = 3.0f, SCYTHE_SPEED = -3.0f;
     public static final float SAW_DAMAGE = 1.0f, SAW_SPEED = -2.8f;
     public static final float CUTTERS_DAMAGE = 0.5f, CUTTERS_SPEED = -2.4f;
-    /** Копьё бьёт дальше обычного на SPEAR_REACH блоков. TODO: уточнить механику копья. */
-    public static final float SPEAR_DAMAGE = 3.0f, SPEAR_SPEED = -2.9f;
-    public static final double SPEAR_REACH = 1.0;
+
+    // === КОПЬЁ (бэкпорт 1.21.11, см. SpearItem) ===
+    /**
+     * Числа копья одного материала. Время — в секундах.
+     * @param jabDamage        урон укола (ЛКМ)
+     * @param attackSpeed      скорость атаки (уколов в секунду при полной зарядке)
+     * @param chargeMultiplier урон разгона = множитель × относительная скорость (блоков/с)
+     * @param delay            сколько держать ПКМ, прежде чем копьё начнёт бить
+     * @param dismountTime     сколько после этого разгон сбрасывает цель с седла (стадия 1)…
+     * @param dismountSpeed    …если относительная скорость не меньше этой (блоков/с)
+     * @param knockbackTime    до какого момента разгон отбрасывает цель (конец стадии 2)
+     * @param damageTime       до какого момента разгон наносит урон (конец стадии 3, потом копьё опускается)
+     */
+    public record SpearStats(float jabDamage, float attackSpeed, float chargeMultiplier, float delay,
+                             float dismountTime, float dismountSpeed, float knockbackTime, float damageTime) {}
+
+    /** Укол и разгон достают цели от SPEAR_MIN_REACH до SPEAR_MAX_REACH блоков; хитбокс цели расширяется на поле. */
+    public static final double SPEAR_MIN_REACH = 2.0, SPEAR_MAX_REACH = 4.5, SPEAR_HITBOX_MARGIN = 0.125;
+    /** Минимальная относительная скорость (блоков/с), с которой разгон отбрасывает и ранит цель. */
+    public static final float SPEAR_KNOCKBACK_SPEED = 5.1f, SPEAR_DAMAGE_SPEED = 4.6f;
+    /** Одну и ту же цель разгон задевает не чаще раза в столько тиков. */
+    public static final int SPEAR_CONTACT_COOLDOWN = 10;
 
     private ModTiers() {}
 }
