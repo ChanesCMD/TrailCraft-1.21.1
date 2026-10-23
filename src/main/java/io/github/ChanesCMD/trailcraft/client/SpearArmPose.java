@@ -26,8 +26,9 @@ public final class SpearArmPose {
         float jab = mainArm ? SpearJabAnim.progress(entity, Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false)) : -1;
         boolean charging = entity.isUsingItem() && (entity.getUsedItemHand() == InteractionHand.MAIN_HAND) == mainArm;
         if (charging || jab >= 0) {
-            // Копьё горизонтально (модель charging): рука не качается при ходьбе, иначе качается и копьё
-            part.xRot = -Mth.PI / 10;
+            // Рука поднята вперёд на 45°, копьё горизонтально (модель charging повёрнута под этот угол).
+            // Рука не качается при ходьбе, иначе качалось бы и копьё
+            part.xRot = -Mth.PI / 4;
         } else {
             // Как ArmPose.ITEM
             part.xRot = part.xRot * 0.5f - Mth.PI / 10;

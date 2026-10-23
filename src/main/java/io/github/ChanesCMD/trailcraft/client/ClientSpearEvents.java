@@ -108,7 +108,7 @@ public class ClientSpearEvents {
                 int used = player.getTicksUsingItem();
                 float time = used + partialTick;
                 float raise = Mth.clamp(time / SpearItem.ticks(spear.stats().delay()), 0, 1);
-                poseStack.translate(-side * 0.2f * raise, 0, -0.3f * raise);
+                raise(poseStack, side, raise);
                 switch (spear.stage(used)) {
                     // Устал: копьё дрожит
                     case 2 -> poseStack.translate(Mth.sin(time * 2.1f) * 0.006f, Mth.cos(time * 2.7f) * 0.006f, 0);
@@ -119,11 +119,16 @@ public class ClientSpearEvents {
             } else {
                 float jab = SpearJabAnim.progress(player, partialTick);
                 if (jab >= 0) {
-                    float thrust = SpearJabAnim.thrust(jab);
-                    poseStack.translate(-side * 0.1f * thrust, -0.03f * thrust, -0.45f * thrust);
+                    raise(poseStack, side, 1);
+                    poseStack.translate(0, 0, -0.25f * SpearJabAnim.thrust(jab));
                 }
             }
             return true;
+        }
+
+        /** Рука с копьём поднята почти до уровня глаз (как рука на 45° от третьего лица): копьё смотрит вперёд ровно. */
+        private static void raise(PoseStack poseStack, int side, float amount) {
+            poseStack.translate(-side * 0.2f * amount, 0.3f * amount, -0.1f * amount);
         }
     }
 }
