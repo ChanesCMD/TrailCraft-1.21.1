@@ -5,6 +5,7 @@ import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.inventory.DeathRecord;
 import io.github.ChanesCMD.trailcraft.inventory.PlayerSlots;
 import io.github.ChanesCMD.trailcraft.stamina.Stamina;
+import io.github.ChanesCMD.trailcraft.water.Water;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -44,6 +45,14 @@ public final class ModAttachments {
     /** Служебное состояние выносливости на сервере (не сохраняется). */
     public static final Supplier<AttachmentType<Stamina.Tracker>> STAMINA_TRACKER = ATTACHMENT_TYPES.register("stamina_tracker",
             () -> AttachmentType.builder(() -> new Stamina.Tracker()).build());
+
+    /** Запас воды (после смерти — снова полный). */
+    public static final Supplier<AttachmentType<Integer>> WATER = ATTACHMENT_TYPES.register("water",
+            () -> AttachmentType.builder(() -> Water.MAX).serialize(Codec.INT).build());
+
+    /** Служебное состояние воды на сервере (не сохраняется). */
+    public static final Supplier<AttachmentType<Water.Tracker>> WATER_TRACKER = ATTACHMENT_TYPES.register("water_tracker",
+            () -> AttachmentType.builder(() -> new Water.Tracker()).build());
 
     private ModAttachments() {}
 }

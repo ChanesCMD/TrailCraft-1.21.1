@@ -519,6 +519,8 @@
   "item.trailcraft.steel_sickle": "Steel Sickle",
   "item.trailcraft.steel_spear": "Steel Spear",
   "enchantment.trailcraft.lunge": "Lunge",
+  "death.attack.trailcraft.thirst": "%1$s died of thirst",
+  "death.attack.trailcraft.thirst.player": "%1$s died of thirst while fighting %2$s",
   "item.trailcraft.wooden_ruler": "Wooden Ruler",
   "item.trailcraft.wooden_watering_can": "Wooden Watering Can",
   "item.trailcraft.zinc_watering_can": "Zinc Watering Can",

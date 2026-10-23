@@ -519,6 +519,8 @@
   "item.trailcraft.steel_sickle": "Стальной серп",
   "item.trailcraft.steel_spear": "Стальное копьё",
   "enchantment.trailcraft.lunge": "Выпад",
+  "death.attack.trailcraft.thirst": "%1$s умер от жажды",
+  "death.attack.trailcraft.thirst.player": "%1$s умер от жажды, сражаясь с %2$s",
   "item.trailcraft.wooden_ruler": "Деревянная линейка",
   "item.trailcraft.wooden_watering_can": "Деревянная лейка",
   "item.trailcraft.zinc_watering_can": "Цинковая лейка",
