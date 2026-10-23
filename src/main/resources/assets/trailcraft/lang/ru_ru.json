@@ -532,7 +532,7 @@
   "message.trailcraft.grave.locked": "Могила игрока %s. Откроется для всех через %s",
   "message.trailcraft.backpack.no_space": "Некуда взять рюкзак: нет свободного слота",
   "gui.trailcraft.backpack": "Рюкзак",
-  "gui.trailcraft.backpack.battery": "Аккумулятор",
+  "gui.trailcraft.backpack.battery": "Выносливость",
   "gui.trailcraft.backpack.solar": "Солнечная панель",
   "gui.trailcraft.backpack.mana": "Планшет маны",
   "gui.trailcraft.backpack.sleeping": "Спальник / палатка",
@@ -547,5 +547,6 @@
   "gui.trailcraft.deaths.backpack.none": "не было",
   "gui.trailcraft.deaths.backpack.taken": "забрал",
   "gui.trailcraft.deaths.backpack.unknown": "неизвестно",
-  "gui.trailcraft.deaths.backpack.present": "есть"
+  "gui.trailcraft.deaths.backpack.present": "есть",
+  "gui.trailcraft.deaths.total": "Всего: %s"
 }

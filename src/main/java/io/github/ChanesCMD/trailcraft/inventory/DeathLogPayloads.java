@@ -22,10 +22,12 @@ public final class DeathLogPayloads {
         }
     }
 
-    public record Log(List<DeathRecord> records, long now) implements CustomPacketPayload {
+    /** records — последние записи, total — сколько всего смертей, now — время сервера. */
+    public record Log(List<DeathRecord> records, int total, long now) implements CustomPacketPayload {
         public static final Type<Log> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "death_log"));
         public static final StreamCodec<ByteBuf, Log> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.fromCodec(DeathRecord.CODEC.listOf()), Log::records,
+                ByteBufCodecs.VAR_INT, Log::total,
                 ByteBufCodecs.VAR_LONG, Log::now,
                 Log::new);
 

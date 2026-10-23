@@ -29,6 +29,8 @@ import java.util.List;
 public class GraveBlock extends BaseEntityBlock {
     public static final MapCodec<GraveBlock> CODEC = simpleCodec(GraveBlock::new);
     private static final VoxelShape SHAPE = Block.box(2, 0, 4, 14, 14, 12);
+    /** Насколько далеко от места смерти искать место под могилу. */
+    private static final int SEARCH_RADIUS = 16;
 
     public GraveBlock(Properties properties) {
         super(properties);
@@ -98,31 +100,54 @@ public class GraveBlock extends BaseEntityBlock {
     }
 
     /**
-     * Ставит могилу с вещами на месте смерти (или ближайшем свободном месте выше).
-     * Что не влезло в могилу, выпадает рядом. @return позиция могилы или null, если места нет
+     * Ставит могилу с вещами на месте смерти, а если там занято — в ближайшем свободном месте
+     * (в радиусе SEARCH_RADIUS). Что не влезло в могилу, выпадает рядом. @return позиция могилы или null, если места нет
      */
     @Nullable
     public static BlockPos place(ServerPlayer player, List<ItemStack> items, long deathTime) {
         Level level = player.level();
-        BlockPos start = player.blockPosition();
-        int y = Mth.clamp(start.getY(), level.getMinBuildHeight(), level.getMaxBuildHeight() - 1);
-        for (int dy = 0; dy < 16 && y + dy < level.getMaxBuildHeight(); dy++) {
-            BlockPos pos = new BlockPos(start.getX(), y + dy, start.getZ());
-            if (!level.getBlockState(pos).canBeReplaced()) {
-                continue;
+        BlockPos pos = findSpot(level, player.blockPosition());
+        if (pos == null) {
+            return null;
+        }
+        level.setBlock(pos, ModBlocks.GRAVE.get().defaultBlockState(), Block.UPDATE_ALL);
+        if (!(level.getBlockEntity(pos) instanceof GraveBlockEntity grave)) {
+            return null;
+        }
+        grave.setOwner(player, deathTime);
+        int slot = 0;
+        for (ItemStack stack : items) {
+            if (slot < GraveBlockEntity.SIZE) {
+                grave.setItem(slot++, stack);
+            } else {
+                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), stack);
             }
-            level.setBlock(pos, ModBlocks.GRAVE.get().defaultBlockState(), Block.UPDATE_ALL);
-            if (level.getBlockEntity(pos) instanceof GraveBlockEntity grave) {
-                grave.setOwner(player, deathTime);
-                int slot = 0;
-                for (ItemStack stack : items) {
-                    if (slot < GraveBlockEntity.SIZE) {
-                        grave.setItem(slot++, stack);
-                    } else {
-                        Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), stack);
-                    }
+        }
+        return pos;
+    }
+
+    /** Ближайшая к точке смерти заменяемая позиция (воздух, вода, трава…): обходим кубы всё большего радиуса. */
+    @Nullable
+    private static BlockPos findSpot(Level level, BlockPos origin) {
+        int minY = level.getMinBuildHeight(), maxY = level.getMaxBuildHeight() - 1;
+        BlockPos start = new BlockPos(origin.getX(), Mth.clamp(origin.getY(), minY, maxY), origin.getZ());
+        for (int r = 0; r <= SEARCH_RADIUS; r++) {
+            BlockPos best = null;
+            double bestDistance = Double.MAX_VALUE;
+            for (BlockPos pos : BlockPos.betweenClosed(start.offset(-r, -r, -r), start.offset(r, r, r))) {
+                int shell = Math.max(Math.abs(pos.getX() - start.getX()),
+                        Math.max(Math.abs(pos.getY() - start.getY()), Math.abs(pos.getZ() - start.getZ())));
+                if (shell != r || pos.getY() < minY || pos.getY() > maxY || !level.getBlockState(pos).canBeReplaced()) {
+                    continue;
                 }
-                return pos;
+                double distance = pos.distSqr(start);
+                if (distance < bestDistance) {
+                    best = pos.immutable();
+                    bestDistance = distance;
+                }
+            }
+            if (best != null) {
+                return best;
             }
         }
         return null;

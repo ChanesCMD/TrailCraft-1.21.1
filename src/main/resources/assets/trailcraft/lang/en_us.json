@@ -532,7 +532,7 @@
   "message.trailcraft.grave.locked": "Grave of %s. Opens for everyone in %s",
   "message.trailcraft.backpack.no_space": "No free slot to take the backpack",
   "gui.trailcraft.backpack": "Backpack",
-  "gui.trailcraft.backpack.battery": "Battery",
+  "gui.trailcraft.backpack.battery": "Stamina",
   "gui.trailcraft.backpack.solar": "Solar panel",
   "gui.trailcraft.backpack.mana": "Mana tablet",
   "gui.trailcraft.backpack.sleeping": "Sleeping bag / tent",
@@ -547,5 +547,6 @@
   "gui.trailcraft.deaths.backpack.none": "none",
   "gui.trailcraft.deaths.backpack.taken": "taken",
   "gui.trailcraft.deaths.backpack.unknown": "unknown",
-  "gui.trailcraft.deaths.backpack.present": "in grave"
+  "gui.trailcraft.deaths.backpack.present": "in grave",
+  "gui.trailcraft.deaths.total": "Total: %s"
 }

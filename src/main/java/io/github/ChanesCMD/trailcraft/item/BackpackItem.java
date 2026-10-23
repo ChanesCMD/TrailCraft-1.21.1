@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -21,7 +22,7 @@ import java.util.List;
 /**
  * Рюкзак. Носится в слоте рюкзака или в левой руке и открывает слоты основного инвентаря.
  * Всё содержимое (основной инвентарь, служебные слоты, карманы) хранится в компоненте CONTENTS самого рюкзака.
- * Если выбросить — ставится на землю блоком (см. BackpackBlock).
+ * В хотбар не кладётся. Если выбросить — ставится на землю блоком (см. BackpackBlock).
  */
 public class BackpackItem extends BlockItem {
     // === Разметка содержимого ===
@@ -73,6 +74,20 @@ public class BackpackItem extends BlockItem {
         if (slot < MAIN_SIZE) return true;
         if (slot < POCKETS) return stack.is(UTILITY.get(slot - BATTERY));
         return stack.is(SMALL_POCKETS) || stack.is(LARGE_POCKETS);
+    }
+
+    /** Надевает рюкзак: в свой слот, иначе в левую руку. В хотбар и основной инвентарь рюкзак не кладётся. */
+    public static boolean equip(Player player, ItemStack stack) {
+        PlayerSlots slots = player.getData(ModAttachments.PLAYER_SLOTS);
+        if (slots.getStackInSlot(PlayerSlots.BACKPACK).isEmpty() && slots.isItemValid(PlayerSlots.BACKPACK, stack)) {
+            slots.setStackInSlot(PlayerSlots.BACKPACK, stack);
+            return true;
+        }
+        if (player.getOffhandItem().isEmpty()) {
+            player.setItemSlot(EquipmentSlot.OFFHAND, stack);
+            return true;
+        }
+        return false;
     }
 
     /** Надетый рюкзак: в своём слоте, иначе в левой руке. */

@@ -4,7 +4,9 @@ import com.mojang.serialization.Codec;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.inventory.DeathRecord;
 import io.github.ChanesCMD.trailcraft.inventory.PlayerSlots;
+import io.github.ChanesCMD.trailcraft.stamina.Stamina;
 import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
@@ -26,6 +28,22 @@ public final class ModAttachments {
     /** Журнал смертей игрока (последние DeathRecord.MAX_RECORDS). */
     public static final Supplier<AttachmentType<List<DeathRecord>>> DEATH_LOG = ATTACHMENT_TYPES.register("death_log",
             () -> AttachmentType.<List<DeathRecord>>builder(() -> List.of()).serialize(DeathRecord.CODEC.listOf()).copyOnDeath().build());
+
+    /** Сколько раз игрок умер за всё время (журнал хранит только последние записи). */
+    public static final Supplier<AttachmentType<Integer>> DEATH_COUNT = ATTACHMENT_TYPES.register("death_count",
+            () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).copyOnDeath().build());
+
+    /** Хотбар, отложенный в момент смерти: после возрождения возвращается игроку. */
+    public static final Supplier<AttachmentType<ItemStackHandler>> KEPT_HOTBAR = ATTACHMENT_TYPES.register("kept_hotbar",
+            () -> AttachmentType.serializable(() -> new ItemStackHandler(9)).build());
+
+    /** Выносливость (после смерти — снова полная). */
+    public static final Supplier<AttachmentType<Float>> STAMINA = ATTACHMENT_TYPES.register("stamina",
+            () -> AttachmentType.builder(() -> Stamina.MAX).serialize(Codec.FLOAT).build());
+
+    /** Служебное состояние выносливости на сервере (не сохраняется). */
+    public static final Supplier<AttachmentType<Stamina.Tracker>> STAMINA_TRACKER = ATTACHMENT_TYPES.register("stamina_tracker",
+            () -> AttachmentType.builder(() -> new Stamina.Tracker()).build());
 
     private ModAttachments() {}
 }

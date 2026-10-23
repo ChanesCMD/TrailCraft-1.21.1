@@ -21,7 +21,7 @@ import java.util.UUID;
 
 /**
  * Могила: вещи умершего игрока. Первые 2 реальных часа (DeathRecord.OWNER_ONLY_MS) открыть и сломать
- * её может только владелец, потом — кто угодно. Пустая могила исчезает, когда её закрывают.
+ * её может только владелец, потом — кто угодно. Пустая могила остаётся стоять, пока её не сломают.
  */
 public class GraveBlockEntity extends BaseContainerBlockEntity {
     public static final int SIZE = 54;
@@ -114,9 +114,6 @@ public class GraveBlockEntity extends BaseContainerBlockEntity {
         super.stopOpen(player);
         if (level != null && !level.isClientSide) {
             checkBackpackTaken(player);
-            if (isEmpty()) {
-                level.removeBlock(worldPosition, false);
-            }
         }
     }
 

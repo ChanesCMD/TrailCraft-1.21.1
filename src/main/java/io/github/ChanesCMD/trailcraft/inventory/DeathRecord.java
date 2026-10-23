@@ -49,7 +49,9 @@ public record DeathRecord(long time, long dayTime, String dimension, BlockPos po
         return now - time >= OWNER_ONLY_MS ? BackpackStatus.UNKNOWN : BackpackStatus.PRESENT;
     }
 
+    /** Добавляет запись в журнал и увеличивает счётчик смертей (он хранит все смерти, журнал — последние MAX_RECORDS). */
     public static void add(Player player, DeathRecord record) {
+        player.setData(ModAttachments.DEATH_COUNT, player.getData(ModAttachments.DEATH_COUNT) + 1);
         List<DeathRecord> list = new ArrayList<>(player.getData(ModAttachments.DEATH_LOG));
         list.add(record);
         while (list.size() > MAX_RECORDS) {

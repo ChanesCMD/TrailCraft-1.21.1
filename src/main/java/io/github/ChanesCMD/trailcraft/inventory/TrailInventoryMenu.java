@@ -37,7 +37,7 @@ import java.util.function.BooleanSupplier;
  *
  * Блокировка: без рюкзака доступны только хотбар и крафт 2×2. Рюкзак (в своём слоте или в левой руке)
  * открывает слоты основного инвентаря, верстак в рюкзаке — крафт 3×3.
- * Из заблокированного слота предмет можно забрать, положить — нельзя.
+ * Из заблокированного слота предмет можно забрать, положить — нельзя. Рюкзак в хотбар и крафт не кладётся.
  */
 public class TrailInventoryMenu extends AbstractContainerMenu {
     // === Разметка панели (общая с экраном) ===
@@ -106,7 +106,7 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
             for (int col = 0; col < 3; col++) {
                 boolean outer = row == 2 || col == 2;
                 addSlot(new MenuSlot(craft, col + row * 3, CRAFT_X + 1 + col * 18, CRAFT_Y + 1 + row * 18)
-                        .locked(outer ? () -> !hasWorkbench() : null));
+                        .locked(outer ? () -> !hasWorkbench() : null).noBackpack());
             }
         }
         for (int i = 0; i < 4; i++) {
@@ -132,7 +132,7 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
                     .locked(() -> index >= backpack.capacity()));
         }
         for (int col = 0; col < 9; col++) {
-            addSlot(new MenuSlot(vanilla, col, MAIN_X + 1 + col * 18, HOTBAR_Y + 1));
+            addSlot(new MenuSlot(vanilla, col, MAIN_X + 1 + col * 18, HOTBAR_Y + 1).noBackpack());
         }
         for (int i = 0; i < 7; i++) {
             addSlot(new MenuSlot(backpack, BackpackItem.BATTERY + i, BACKPACK_WIN_X + 8, BACKPACK_WIN_Y + 21 + 21 * i)
@@ -303,6 +303,7 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
         @Nullable
         private ResourceLocation icon;
         private boolean cosmetic;
+        private boolean noBackpack;
 
         MenuSlot(IItemHandler handler, int index, int x, int y) {
             super(handler, index, x, y);
@@ -330,6 +331,12 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
             return this;
         }
 
+        /** Рюкзак носится только в своём слоте или в левой руке. */
+        MenuSlot noBackpack() {
+            this.noBackpack = true;
+            return this;
+        }
+
         public int group() {
             return group;
         }
@@ -350,7 +357,7 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
 
         @Override
         public boolean mayPlace(ItemStack stack) {
-            if (isLocked()) return false;
+            if (isLocked() || noBackpack && stack.getItem() instanceof BackpackItem) return false;
             boolean armor = equipment != null && equipment != EquipmentSlot.OFFHAND;
             if (armor && player.getEquipmentSlotForItem(stack) != equipment) return false;
             return super.mayPlace(stack);

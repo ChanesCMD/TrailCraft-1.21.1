@@ -2,15 +2,12 @@ package io.github.ChanesCMD.trailcraft.block;
 
 import com.mojang.serialization.MapCodec;
 import io.github.ChanesCMD.trailcraft.block.entity.BackpackBlockEntity;
-import io.github.ChanesCMD.trailcraft.init.ModAttachments;
-import io.github.ChanesCMD.trailcraft.inventory.PlayerSlots;
+import io.github.ChanesCMD.trailcraft.item.BackpackItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +26,7 @@ import javax.annotation.Nullable;
 
 /**
  * Рюкзак на земле. Появляется, когда рюкзак выбрасывают (или ставят ПКМ).
- * ПКМ — забрать: в слот рюкзака, иначе в левую руку, иначе в свободный слот хотбара.
+ * ПКМ — забрать: в слот рюкзака, иначе в левую руку.
  * При разрушении выпадает предметом со всем содержимым.
  */
 public class BackpackBlock extends BaseEntityBlock {
@@ -74,7 +71,7 @@ public class BackpackBlock extends BaseEntityBlock {
         }
         if (level.getBlockEntity(pos) instanceof BackpackBlockEntity backpack) {
             ItemStack stack = backpack.getStack();
-            if (stack.isEmpty() || give(player, stack)) {
+            if (stack.isEmpty() || BackpackItem.equip(player, stack)) {
                 backpack.setStack(ItemStack.EMPTY);
                 level.removeBlock(pos, false);
             } else {
@@ -82,26 +79,6 @@ public class BackpackBlock extends BaseEntityBlock {
             }
         }
         return InteractionResult.CONSUME;
-    }
-
-    private static boolean give(Player player, ItemStack stack) {
-        PlayerSlots slots = player.getData(ModAttachments.PLAYER_SLOTS);
-        if (slots.getStackInSlot(PlayerSlots.BACKPACK).isEmpty() && slots.isItemValid(PlayerSlots.BACKPACK, stack)) {
-            slots.setStackInSlot(PlayerSlots.BACKPACK, stack);
-            return true;
-        }
-        if (player.getOffhandItem().isEmpty()) {
-            player.setItemSlot(EquipmentSlot.OFFHAND, stack);
-            return true;
-        }
-        Inventory inventory = player.getInventory();
-        for (int i = 0; i < Inventory.getSelectionSize(); i++) {
-            if (inventory.getItem(i).isEmpty()) {
-                inventory.setItem(i, stack);
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override

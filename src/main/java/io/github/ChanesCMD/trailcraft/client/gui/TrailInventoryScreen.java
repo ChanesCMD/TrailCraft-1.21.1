@@ -7,6 +7,8 @@ import io.github.ChanesCMD.trailcraft.inventory.DeathRecord;
 import io.github.ChanesCMD.trailcraft.inventory.TrailInventoryMenu;
 import io.github.ChanesCMD.trailcraft.inventory.TrailInventoryMenu.MenuSlot;
 import io.github.ChanesCMD.trailcraft.inventory.TrailInventoryMenu.Popup;
+import io.github.ChanesCMD.trailcraft.stamina.Stamina;
+import io.github.ChanesCMD.trailcraft.stamina.StaminaEvents;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
@@ -52,6 +54,7 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
     private final Inventory playerInventory;
     private Button calendarButton;
     private List<DeathRecord> deaths = List.of();
+    private int deathsTotal;
     private long deathsNow;
     private int deathsScroll;
 
@@ -124,6 +127,7 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         List<DeathRecord> newestFirst = new ArrayList<>(log.records());
         Collections.reverse(newestFirst);
         deaths = newestFirst;
+        deathsTotal = log.total();
         deathsNow = log.now();
     }
 
@@ -231,8 +235,10 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
             boolean bar = BAR_COLORS[i] != 0;
             g.drawString(font, Component.translatable("gui.trailcraft.backpack." + BACKPACK_ROWS[i]), px + 29, rowY + (bar ? 1 : 5), UiDraw.LABEL, false);
             if (bar) {
-                // TODO: уровень энергии и маны, когда появятся аккумулятор и планшет
+                // Первая шкала — выносливость. TODO: мана, когда появится планшет маны
+                float fill = i == 0 ? StaminaEvents.get(playerInventory.player) / Stamina.MAX : 0;
                 UiDraw.frame(g, px + 29, rowY + 10, 88, 6, 0xFF373737, 0xFFFFFFFF, 0xFF555555);
+                g.fill(px + 30, rowY + 11, px + 30 + Math.round(86 * fill), rowY + 15, BAR_COLORS[i]);
             }
         }
         g.drawString(font, Component.translatable("gui.trailcraft.backpack.pockets"), px + 7, py + 166, UiDraw.LABEL, false);
@@ -272,6 +278,8 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         int px = DEATHS_X, py = DEATHS_Y;
         UiDraw.panel(g, px, py, DEATHS_W, DEATHS_H);
         g.drawString(font, Component.translatable("gui.trailcraft.deaths"), px + 7, py + 6, UiDraw.LABEL, false);
+        Component total = Component.translatable("gui.trailcraft.deaths.total", deathsTotal);
+        g.drawString(font, total, px + DEATHS_W - 7 - font.width(total), py + 6, UiDraw.LABEL, false);
         if (deaths.isEmpty()) {
             g.drawString(font, Component.translatable("gui.trailcraft.deaths.empty"), px + 7, py + 22, 0xFF606060, false);
             return;
@@ -283,7 +291,7 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
             int ry = py + 20 + i * DEATH_ROW_H;
             UiDraw.frame(g, px + 6, ry - 1, DEATHS_W - 12, DEATH_ROW_H - 2, 0xFF8B8B8B, 0xFFFFFFFF, 0xFFB8B8B8);
             String dimension = death.dimension().equals("minecraft:overworld") ? "" : "  " + death.dimension().replace("minecraft:", "");
-            g.drawString(font, "№" + (deaths.size() - index) + "  " + DATE.format(Instant.ofEpochMilli(death.time())) + dimension,
+            g.drawString(font, "№" + (deathsTotal - index) + "  " + DATE.format(Instant.ofEpochMilli(death.time())) + dimension,
                     px + 9, ry + 1, UiDraw.LABEL, false);
             Calendar date = Calendar.of(death.dayTime(), ServerConfig.daysPerSeason());
             g.drawString(font, Component.translatable("gui.trailcraft.deaths.date", date.year(),
