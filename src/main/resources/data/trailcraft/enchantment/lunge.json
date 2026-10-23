@@ -1,0 +1,21 @@
+{
+  "anvil_cost": 2,
+  "description": {
+    "translate": "enchantment.trailcraft.lunge"
+  },
+  "max_cost": {
+    "base": 25,
+    "per_level_above_first": 8
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 5,
+    "per_level_above_first": 8
+  },
+  "primary_items": "#trailcraft:enchantable/lunge",
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#trailcraft:enchantable/lunge",
+  "weight": 5
+}

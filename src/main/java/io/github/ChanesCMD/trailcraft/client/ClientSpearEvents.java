@@ -4,16 +4,20 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.init.ModTools;
 import io.github.ChanesCMD.trailcraft.item.SpearItem;
+import io.github.ChanesCMD.trailcraft.spear.SpearCombat;
 import io.github.ChanesCMD.trailcraft.spear.SpearJabPayload;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -42,9 +46,14 @@ public class ClientSpearEvents {
         if (player.isUsingItem() || player.isSpectator() || player.getAttackStrengthScale(0) < 1) {
             return;
         }
+        int lunge = SpearCombat.lungeLevel(player, player.getMainHandItem());
         player.swing(InteractionHand.MAIN_HAND);
         player.resetAttackStrengthTicker();
         PacketDistributor.sendToServer(SpearJabPayload.INSTANCE);
+        if (lunge > 0) {
+            Vec3 impulse = SpearCombat.lungeImpulse(player, lunge);
+            player.push(impulse.x, impulse.y, impulse.z);
+        }
     }
 
     /** Ванилла замедляет игрока с предметом в руке в 5 раз; с копьём разгоняются на бегу, поэтому возвращаем скорость. */
@@ -79,6 +88,12 @@ public class ClientSpearEvents {
 
     /** Положение копья от первого лица: укол — тычок вперёд вместо взмаха; разгон — копьё выставлено вперёд. */
     private static class SpearHand implements IClientItemExtensions {
+        /** От третьего лица: укол — выпад рукой вперёд (SpearArmPose). */
+        @Override
+        public HumanoidModel.ArmPose getArmPose(LivingEntity entity, InteractionHand hand, ItemStack stack) {
+            return SpearArmPose.get();
+        }
+
         @Override
         public boolean applyForgeHandTransform(PoseStack poseStack, LocalPlayer player, HumanoidArm arm, ItemStack stack,
                                                float partialTick, float equipProcess, float swingProcess) {

@@ -1,8 +1,10 @@
 package io.github.ChanesCMD.trailcraft.spear;
 
 import io.github.ChanesCMD.trailcraft.TrailCraft;
+import io.github.ChanesCMD.trailcraft.init.ModEnchantments;
 import io.github.ChanesCMD.trailcraft.init.ModTiers;
 import io.github.ChanesCMD.trailcraft.item.SpearItem;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -47,6 +49,19 @@ public final class SpearCombat {
         }
         player.resetAttackStrengthTicker();
         ServerLevel level = player.serverLevel();
+        // Толчок «Выпада» делает клиент (движение игрока считает он), сервер берёт плату
+        int lunge = lungeLevel(player, stack);
+        if (lunge > 0) {
+            if (!player.getAbilities().instabuild) {
+                player.causeFoodExhaustion(ModTiers.LUNGE_EXHAUSTION * lunge);
+            }
+            stack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
+            level.playSound(null, player.getX(), player.getY(), player.getZ(),
+                    SoundEvents.PLAYER_ATTACK_SWEEP, player.getSoundSource(), 1, 1.3f);
+            if (stack.isEmpty()) {
+                return;
+            }
+        }
         DamageSource source = player.damageSources().playerAttack(player);
         float base = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
         boolean hit = false;
@@ -122,6 +137,25 @@ public final class SpearCombat {
                 break;
             }
         }
+    }
+
+    /**
+     * Уровень «Выпада» для укола или 0, если он сейчас не сработает: верхом, в полёте на элитрах, в воде
+     * или когда еды меньше LUNGE_MIN_FOOD (в творческом еда не нужна).
+     */
+    public static int lungeLevel(Player player, ItemStack stack) {
+        if (player.isPassenger() || player.isFallFlying() || player.isInWater()
+                || !player.getAbilities().instabuild && player.getFoodData().getFoodLevel() < ModTiers.LUNGE_MIN_FOOD) {
+            return 0;
+        }
+        return player.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolder(ModEnchantments.LUNGE)
+                .map(lunge -> EnchantmentHelper.getItemEnchantmentLevel(lunge, stack)).orElse(0);
+    }
+
+    /** Толчок «Выпада»: по горизонтали, тем сильнее, чем ровнее смотрит игрок. */
+    public static Vec3 lungeImpulse(Player player, int level) {
+        Vec3 look = player.getLookAngle();
+        return new Vec3(look.x, 0, look.z).scale(ModTiers.LUNGE_IMPULSE * level);
     }
 
     public static void stopCharge(LivingEntity user) {

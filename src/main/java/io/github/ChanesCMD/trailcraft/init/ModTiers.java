@@ -104,6 +104,10 @@ public final class ModTiers {
     public static final float SPEAR_KNOCKBACK_SPEED = 5.1f, SPEAR_DAMAGE_SPEED = 4.6f;
     /** Одну и ту же цель разгон задевает не чаще раза в столько тиков. */
     public static final int SPEAR_CONTACT_COOLDOWN = 10;
+    /** «Выпад»: толчок вперёд за уровень (блоков за тик), истощение за уровень и сколько еды нужно, чтобы он сработал. */
+    public static final double LUNGE_IMPULSE = 0.458;
+    public static final float LUNGE_EXHAUSTION = 4;
+    public static final int LUNGE_MIN_FOOD = 7;
 
     private ModTiers() {}
 }

@@ -1,0 +1,13 @@
+{
+  "entries": [
+    {
+      "enum": "net/minecraft/client/model/HumanoidModel$ArmPose",
+      "name": "TRAILCRAFT_SPEAR",
+      "constructor": "(ZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
+      "parameters": {
+        "class": "io/github/ChanesCMD/trailcraft/client/SpearArmPose",
+        "field": "PROXY"
+      }
+    }
+  ]
+}

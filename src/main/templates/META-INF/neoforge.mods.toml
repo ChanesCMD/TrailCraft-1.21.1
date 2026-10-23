@@ -28,6 +28,8 @@ version="${mod_version}" #mandatory
 
 # A display name for the mod
 displayName="${mod_name}" #mandatory
+# Новые константы ванильных enum (поза руки с копьём)
+enumExtensions="META-INF/enumextensions.json"
 
 # A URL to query for updates for this mod. See the JSON update specification https://docs.neoforged.net/docs/misc/updatechecker/
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
