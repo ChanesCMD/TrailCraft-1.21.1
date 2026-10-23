@@ -3,3 +3,7 @@
 # are changed when only line endings change.
 src/generated/**/.cache/* text eol=lf
 src/generated/**/*.json text eol=lf
+
+# Windows scripts need CRLF, PowerShell scripts keep their UTF-8 BOM (Cyrillic shortcut names)
+*.bat text eol=crlf
+*.ps1 text eol=crlf
