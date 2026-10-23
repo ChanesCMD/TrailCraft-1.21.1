@@ -2,6 +2,8 @@ package io.github.ChanesCMD.trailcraft.client.gui;
 
 import io.github.ChanesCMD.trailcraft.ServerConfig;
 import io.github.ChanesCMD.trailcraft.calendar.Calendar;
+import io.github.ChanesCMD.trailcraft.client.voice.VoiceClient;
+import io.github.ChanesCMD.trailcraft.client.voice.VoiceHeads;
 import io.github.ChanesCMD.trailcraft.inventory.DeathLogPayloads;
 import io.github.ChanesCMD.trailcraft.inventory.DeathRecord;
 import io.github.ChanesCMD.trailcraft.inventory.TrailInventoryMenu;
@@ -31,12 +33,13 @@ import static io.github.ChanesCMD.trailcraft.inventory.TrailInventoryMenu.*;
 
 /**
  * Экран инвентаря (ТЗ, часть 1, разделы 1–3). Макеты: docs/ui/01_inventory_default.png, 02_inventory_warmth.png, 04_backpack.png.
- * Слева от панели — панель голосового чата (головы появятся на шаге 7).
- * Окна (рюкзак, журнал смертей) рисуются поверх инвентаря с лёгким затемнением; закрываются Esc, повторным нажатием
- * кнопки или кликом вне окна.
+ * Слева от панели — головы голосового чата (только когда в нём хотя бы двое), в левом верхнем углу экрана — 5 кнопок.
+ * Окна (рюкзак, журнал смертей, голосовой чат) рисуются поверх инвентаря с лёгким затемнением; закрываются Esc,
+ * повторным нажатием кнопки или кликом вне окна.
  */
 public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventoryMenu> {
-    private static final int VOICE_W = 32, VOICE_H = 125, VOICE_GAP = 6;
+    /** Головы голосового чата слева от панели: отступ, ширина столбика с обводкой, верх первой головы. */
+    private static final int HEADS_GAP = 6, HEADS_W = VoiceHeads.SIZE + 2, HEADS_Y = 20;
     /** Насколько панель поднята над центром, чтобы под кнопкой календаря влезло его окно (на 640×360 верх на y=78). */
     private static final int RAISE = 16;
     private static final int CALENDAR_X = 279, CALENDAR_Y = 95, BUTTON_W = 102, BUTTON_H = 20;
@@ -51,8 +54,13 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
     /** Слои по глубине: предметы в слотах ≈150–200, затемнение и окна выше, предмет на курсоре ≈380. */
     private static final int Z_BUTTONS = 210, Z_DIM = 220, Z_POPUP = 230, Z_POPUP_ITEMS = 100;
 
+    private static final int Z_OVERLAY = 400;
+
     private final Inventory playerInventory;
     private Button calendarButton;
+    private List<CornerButtons.Entry> cornerButtons = List.of();
+    private VoiceChatWindow voiceWindow;
+    private boolean voiceOpen;
     private List<DeathRecord> deaths = List.of();
     private int deathsTotal;
     private long deathsNow;
@@ -70,9 +78,15 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
     @Override
     protected void init() {
         super.init();
-        int groupWidth = VOICE_W + VOICE_GAP + WIDTH;
-        leftPos = Math.max(4, (width - groupWidth) / 2) + VOICE_W + VOICE_GAP;
+        leftPos = Math.max(4 + HEADS_W + HEADS_GAP, (width - WIDTH) / 2);
         topPos = Math.max(4, (height - HEIGHT) / 2 - RAISE);
+        cornerButtons = CornerButtons.create(this, this::toggleVoice);
+        voiceWindow = new VoiceChatWindow(font);
+        for (int i = 0; i < cornerButtons.size(); i++) {
+            if (cornerButtons.get(i).id().equals("voice")) {
+                voiceWindow.place(CornerButtons.x(i), width, height);
+            }
+        }
 
         // TODO (шаг 4): открывает окно календаря
         calendarButton = addRenderableWidget(Button.builder(Component.translatable("gui.trailcraft.calendar"), b -> {})
@@ -131,6 +145,13 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         deathsNow = log.now();
     }
 
+    private void toggleVoice() {
+        voiceOpen = !voiceOpen;
+        if (voiceOpen) {
+            openPopup(Popup.NONE);
+        }
+    }
+
     private boolean overPopup(double mouseX, double mouseY) {
         return menu.popup != Popup.NONE && isOver(mouseX, mouseY, menu.popupX, menu.popupY, menu.popupW, menu.popupH);
     }
@@ -142,16 +163,34 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         menu.warmthVisible = menu.popup == Popup.NONE && (isOver(mouseX, mouseY, ARMOR_X, EQUIP_Y, 18, 72)
                 || menu.warmthVisible && isOver(mouseX, mouseY, WARMTH_BG_X, WARMTH_BG_Y, WARMTH_BG_W, WARMTH_BG_H));
         super.render(g, mouseX, mouseY, partialTick);
-        renderTooltip(g, mouseX, mouseY);
+        // Кнопки в углу и окно голосового чата — поверх всего (в координатах экрана)
+        g.pose().pushPose();
+        g.pose().translate(0, 0, Z_OVERLAY);
+        if (voiceOpen) {
+            g.fill(0, 0, width, height, 0x40000000);
+            voiceWindow.render(g, mouseX, mouseY);
+        }
+        CornerButtons.render(g, font, cornerButtons, mouseX, mouseY, voiceOpen ? voiceButton() : -1);
+        g.pose().popPose();
+        if (!voiceOpen) {
+            renderTooltip(g, mouseX, mouseY);
+        }
+    }
+
+    private int voiceButton() {
+        for (int i = 0; i < cornerButtons.size(); i++) {
+            if (cornerButtons.get(i).id().equals("voice")) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override
     protected void renderBg(GuiGraphics g, float partialTick, int mouseX, int mouseY) {
         int x = leftPos, y = topPos;
-        UiDraw.panel(g, x - VOICE_GAP - VOICE_W, y, VOICE_W, VOICE_H);
-        // TODO (шаг 7): значок микрофона и головы говоривших игроков
-        for (int i = 0; i < 5; i++) {
-            UiDraw.slot(g, x - VOICE_GAP - VOICE_W + 7, y + 19 + i * 20);
+        if (VoiceClient.showHeads()) {
+            VoiceHeads.column(g, x - HEADS_GAP - HEADS_W + 1, y + HEADS_Y, VoiceClient.heads());
         }
 
         UiDraw.panel(g, x, y, WIDTH, HEIGHT);
@@ -306,6 +345,17 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        int corner = CornerButtons.hovered(cornerButtons, mouseX, mouseY);
+        if (corner >= 0) {
+            cornerButtons.get(corner).action().run();
+            return true;
+        }
+        if (voiceOpen) {
+            if (!voiceWindow.mouseClicked(mouseX, mouseY)) {
+                voiceOpen = false;
+            }
+            return true;
+        }
         if (menu.popup != Popup.NONE) {
             if (isOver(mouseX, mouseY, BACKPACK_X + 10, BOTTOM_Y + 1, 7, 7) && menu.popup == Popup.BACKPACK) {
                 openPopup(Popup.NONE);
@@ -337,6 +387,10 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == 256 && voiceOpen) {
+            voiceOpen = false;
+            return true;
+        }
         if (keyCode == 256 && menu.popup != Popup.NONE) {
             openPopup(Popup.NONE);
             return true;
@@ -346,6 +400,9 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        if (voiceOpen) {
+            return voiceWindow.mouseScrolled(mouseX, mouseY, scrollY);
+        }
         if (menu.popup == Popup.DEATHS) {
             int rows = (DEATHS_H - 22) / DEATH_ROW_H;
             deathsScroll = Math.max(0, Math.min(deathsScroll - (int) Math.signum(scrollY), deaths.size() - rows));
@@ -369,10 +426,11 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         return rx >= x && rx < x + w && ry >= y && ry < y + h;
     }
 
-    /** Клик по панели голосового чата или по окну не считается кликом мимо (иначе предмет с курсора выбросится). */
+    /** Клик по головам голосового чата или по окну не считается кликом мимо (иначе предмет с курсора выбросится). */
     @Override
     protected boolean hasClickedOutside(double mouseX, double mouseY, int left, int top, int button) {
-        boolean onVoice = mouseX >= left - VOICE_GAP - VOICE_W && mouseX < left && mouseY >= top && mouseY < top + VOICE_H;
-        return !onVoice && !overPopup(mouseX, mouseY) && super.hasClickedOutside(mouseX, mouseY, left, top, button);
+        boolean onHeads = mouseX >= left - HEADS_GAP - HEADS_W && mouseX < left
+                && mouseY >= top + HEADS_Y - 1 && mouseY < top + HEADS_Y + VoiceClient.HEADS * VoiceHeads.STEP;
+        return !onHeads && !overPopup(mouseX, mouseY) && super.hasClickedOutside(mouseX, mouseY, left, top, button);
     }
 }

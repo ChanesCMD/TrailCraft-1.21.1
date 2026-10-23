@@ -1,6 +1,9 @@
 package io.github.ChanesCMD.trailcraft.client.hud;
 
 import io.github.ChanesCMD.trailcraft.TrailCraft;
+import io.github.ChanesCMD.trailcraft.client.gui.TrailInventoryScreen;
+import io.github.ChanesCMD.trailcraft.client.voice.VoiceClient;
+import io.github.ChanesCMD.trailcraft.client.voice.VoiceHeads;
 import io.github.ChanesCMD.trailcraft.health.BodyHealth;
 import io.github.ChanesCMD.trailcraft.health.BodyHealth.Part;
 import io.github.ChanesCMD.trailcraft.stamina.Stamina;
@@ -10,6 +13,7 @@ import io.github.ChanesCMD.trailcraft.water.WaterEvents;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -37,6 +41,7 @@ public class TrailHud {
         event.replaceLayer(VanillaGuiLayers.ARMOR_LEVEL, TrailHud::renderAir);
         event.replaceLayer(VanillaGuiLayers.FOOD_LEVEL, TrailHud::renderFood);
         event.replaceLayer(VanillaGuiLayers.AIR_LEVEL, TrailHud::renderStamina);
+        event.registerBelow(VanillaGuiLayers.CHAT, ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "voice_heads"), TrailHud::renderVoiceHeads);
     }
 
     /**
@@ -45,6 +50,17 @@ public class TrailHud {
      */
     private static boolean visible(Minecraft mc) {
         return !mc.options.hideGui && mc.gameMode != null && mc.gameMode.canHurtPlayer();
+    }
+
+    /**
+     * Головы голосового чата у левого края (x=6, y=20+20·i), когда в нём хотя бы двое.
+     * Пока открыт инвентарь, головы нарисованы там (слева от панели), а здесь их нет.
+     */
+    private static void renderVoiceHeads(GuiGraphics g, DeltaTracker delta) {
+        Minecraft mc = Minecraft.getInstance();
+        if (!mc.options.hideGui && !(mc.screen instanceof TrailInventoryScreen) && VoiceClient.showHeads()) {
+            VoiceHeads.column(g, 6, 20, VoiceClient.heads());
+        }
     }
 
     /** 10 капель слева над хотбаром; фигурка HP слева от хотбара, если здоровье не полное. */

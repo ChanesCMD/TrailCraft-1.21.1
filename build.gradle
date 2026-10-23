@@ -33,6 +33,16 @@ repositories {
         name = "BlameJared"
         url = "https://maven.blamejared.com/"
     }
+    // Simple Voice Chat API (голосовой чат строим поверх него)
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Henkelmax"
+                url = "https://maven.maxhenkel.de/repository/public"
+            }
+        }
+        filter { includeGroup "de.maxhenkel.voicechat" }
+    }
     // Моды с Modrinth (Seed Viewer, Genesis)
     exclusiveContent {
         forRepository {
@@ -145,6 +155,9 @@ dependencies {
     localRuntime "maven.modrinth:seed-viewer:${seed_viewer_version}"
     localRuntime "maven.modrinth:genesis-world-previewer-pregenerator:${genesis_version}"
     localRuntime "maven.modrinth:architectury-api:${architectury_version}"
+    // Голосовой чат: API для компиляции, сам мод — для запуска из среды разработки (у игроков он необязателен)
+    compileOnly "de.maxhenkel.voicechat:voicechat-api:${voicechat_api_version}"
+    localRuntime "maven.modrinth:simple-voice-chat:${voicechat_version}"
 
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
