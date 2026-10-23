@@ -27,12 +27,21 @@ import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.joml.Quaternionf;
 
 /** Копьё на клиенте: ЛКМ — укол вместо обычной атаки, разгон без замедления, анимации от первого лица. */
 @EventBusSubscriber(modid = TrailCraft.MODID, value = Dist.CLIENT)
 public class ClientSpearEvents {
-    /** 1, пока копьём разгоняются или колют: модель в руке переключается на горизонтальную (overrides в модели копья). */
-    private static final ResourceLocation CHARGING = ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "charging");
+    /** 1, пока копьём колют: модель spear/*_jab (горизонтально, ребром). См. overrides в модели копья. */
+    private static final ResourceLocation JAB = ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "jab");
+    /**
+     * Доля перехода в разгон (SpearItem.chargeProgress), пока копьём разгоняются, иначе 0: модели spear/*_charge_0..8
+     * плавно поворачивают копьё из стойки в горизонталь плоской стороной вверх.
+     */
+    private static final ResourceLocation CHARGE = ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "charge");
+    /** Положение копья от первого лица в стойке и при разгоне (как display в моделях; модели разгона его не задают). */
+    private static final float[] FP_IDLE_ROTATION = {-45, 90, 45}, FP_IDLE_TRANSLATION = {0, 2, -6};
+    private static final float[] FP_CHARGE_ROTATION = {-90, 0, 45}, FP_CHARGE_TRANSLATION = {0, -1, -9};
 
     /** ЛКМ с копьём в руке: обычную атаку и копание отменяем; при полной зарядке — укол. */
     @SubscribeEvent
@@ -75,12 +84,19 @@ public class ClientSpearEvents {
     public static class ModBus {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
-            event.enqueueWork(() -> ModTools.ITEMS.stream().map(item -> item.get()).filter(ClientSpearEvents::isSpear).forEach(item ->
-                    // Рендер руки от первого лица держит свою копию стака, поэтому сравниваем предмет, а не ссылку
-                    ItemProperties.register(item, CHARGING, (stack, level, entity, seed) ->
-                            entity != null && (entity.isUsingItem() && entity.getUseItem().getItem() == stack.getItem()
-                                    || entity.getMainHandItem().getItem() == stack.getItem() && SpearJabAnim.progress(entity, 0) >= 0)
-                                    ? 1 : 0)));
+            event.enqueueWork(() -> ModTools.ITEMS.stream().map(item -> item.get()).filter(ClientSpearEvents::isSpear).forEach(item -> {
+                // Рендер руки от первого лица держит свою копию стака, поэтому сравниваем предмет, а не ссылку
+                ItemProperties.register(item, CHARGE, (stack, level, entity, seed) ->
+                        entity != null && charging(entity, stack) && stack.getItem() instanceof SpearItem spear
+                                ? Math.max(0.01f, spear.chargeProgress(entity.getTicksUsingItem())) : 0);
+                ItemProperties.register(item, JAB, (stack, level, entity, seed) ->
+                        entity != null && !charging(entity, stack) && entity.getMainHandItem().getItem() == stack.getItem()
+                                && SpearJabAnim.progress(entity, 0) >= 0 ? 1 : 0);
+            }));
+        }
+
+        private static boolean charging(LivingEntity entity, ItemStack stack) {
+            return entity.isUsingItem() && entity.getUseItem().getItem() == stack.getItem();
         }
 
         @SubscribeEvent
@@ -107,8 +123,8 @@ public class ClientSpearEvents {
                     && stack.getItem() instanceof SpearItem spear) {
                 int used = player.getTicksUsingItem();
                 float time = used + partialTick;
-                float raise = Mth.clamp(time / SpearItem.ticks(spear.stats().delay()), 0, 1);
-                raise(poseStack, side, raise);
+                float progress = spear.chargeProgress(time);
+                raise(poseStack, side, progress);
                 switch (spear.stage(used)) {
                     // Устал: копьё дрожит
                     case 2 -> poseStack.translate(Mth.sin(time * 2.1f) * 0.006f, Mth.cos(time * 2.7f) * 0.006f, 0);
@@ -116,6 +132,11 @@ public class ClientSpearEvents {
                     case 3, 4 -> poseStack.translate(0, -0.25f, 0.05f);
                     default -> {}
                 }
+                // Модели разгона не поворачивают копьё от первого лица: плавно поворачиваем здесь из стойки в горизонталь
+                poseStack.translate(side * Mth.lerp(progress, FP_IDLE_TRANSLATION[0], FP_CHARGE_TRANSLATION[0]) / 16,
+                        Mth.lerp(progress, FP_IDLE_TRANSLATION[1], FP_CHARGE_TRANSLATION[1]) / 16,
+                        Mth.lerp(progress, FP_IDLE_TRANSLATION[2], FP_CHARGE_TRANSLATION[2]) / 16);
+                poseStack.mulPose(rotation(FP_IDLE_ROTATION, side).slerp(rotation(FP_CHARGE_ROTATION, side), progress));
             } else {
                 float jab = SpearJabAnim.progress(player, partialTick);
                 if (jab >= 0) {
@@ -124,6 +145,12 @@ public class ClientSpearEvents {
                 }
             }
             return true;
+        }
+
+        /** Поворот из display модели (градусы XYZ); для левой руки зеркально, как у ванильных ItemTransform. */
+        private static Quaternionf rotation(float[] degrees, int side) {
+            return new Quaternionf().rotationXYZ(degrees[0] * Mth.DEG_TO_RAD, side * degrees[1] * Mth.DEG_TO_RAD,
+                    side * degrees[2] * Mth.DEG_TO_RAD);
         }
 
         /** Рука с копьём поднята почти до уровня глаз (как рука на 45° от третьего лица): копьё смотрит вперёд ровно. */

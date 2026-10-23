@@ -25,11 +25,15 @@
     }
   },
   "overrides": [
-    {
-      "predicate": {
-        "trailcraft:charging": 1
-      },
-      "model": "trailcraft:item/steel_spear_charging"
-    }
+    {"predicate": {"trailcraft:jab": 1}, "model": "trailcraft:item/spear/steel_jab"},
+    {"predicate": {"trailcraft:charge": 0.01}, "model": "trailcraft:item/spear/steel_charge_0"},
+    {"predicate": {"trailcraft:charge": 0.125}, "model": "trailcraft:item/spear/steel_charge_1"},
+    {"predicate": {"trailcraft:charge": 0.25}, "model": "trailcraft:item/spear/steel_charge_2"},
+    {"predicate": {"trailcraft:charge": 0.375}, "model": "trailcraft:item/spear/steel_charge_3"},
+    {"predicate": {"trailcraft:charge": 0.5}, "model": "trailcraft:item/spear/steel_charge_4"},
+    {"predicate": {"trailcraft:charge": 0.625}, "model": "trailcraft:item/spear/steel_charge_5"},
+    {"predicate": {"trailcraft:charge": 0.75}, "model": "trailcraft:item/spear/steel_charge_6"},
+    {"predicate": {"trailcraft:charge": 0.875}, "model": "trailcraft:item/spear/steel_charge_7"},
+    {"predicate": {"trailcraft:charge": 1}, "model": "trailcraft:item/spear/steel_charge_8"}
   ]
 }

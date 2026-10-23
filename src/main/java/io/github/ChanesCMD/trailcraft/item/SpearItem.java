@@ -51,6 +51,11 @@ public class SpearItem extends TieredToolItem {
         return Math.round(seconds * 20);
     }
 
+    /** Насколько копьё перешло из стойки в положение разгона (0..1): за время задержки до первой стадии. */
+    public float chargeProgress(float ticksUsed) {
+        return Math.clamp(ticksUsed / ticks(stats.delay()), 0, 1);
+    }
+
     /** Стадия разгона после ticksUsed тиков удержания ПКМ: 0 — ещё не бьёт, 1–3 — стадии, 4 — копьё опущено. */
     public int stage(int ticksUsed) {
         int t = ticksUsed - ticks(stats.delay());

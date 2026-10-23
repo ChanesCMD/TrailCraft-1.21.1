@@ -1,5 +1,6 @@
 package io.github.ChanesCMD.trailcraft.client;
 
+import io.github.ChanesCMD.trailcraft.item.SpearItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -23,11 +24,15 @@ public final class SpearArmPose {
         ModelPart part = arm == HumanoidArm.RIGHT ? model.rightArm : model.leftArm;
         part.yRot = 0;
         boolean mainArm = entity.getMainArm() == arm;
-        float jab = mainArm ? SpearJabAnim.progress(entity, Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false)) : -1;
+        float partialTick = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false);
+        float jab = mainArm ? SpearJabAnim.progress(entity, partialTick) : -1;
         boolean charging = entity.isUsingItem() && (entity.getUsedItemHand() == InteractionHand.MAIN_HAND) == mainArm;
-        if (charging || jab >= 0) {
-            // Рука поднята вперёд на 45°, копьё горизонтально (модель charging повёрнута под этот угол).
-            // Рука не качается при ходьбе, иначе качалось бы и копьё
+        // Рука не качается при ходьбе, иначе качалось бы и копьё
+        if (charging && entity.getUseItem().getItem() instanceof SpearItem spear) {
+            // Плавно поднимается от стойки до 45° вперёд (модели spear/*_charge_N рассчитаны под этот угол)
+            part.xRot = Mth.lerp(spear.chargeProgress(entity.getTicksUsingItem() + partialTick), -Mth.PI / 10, -Mth.PI / 4);
+        } else if (jab >= 0) {
+            // Рука на 45° вперёд, копьё горизонтально (модель spear/*_jab)
             part.xRot = -Mth.PI / 4;
         } else {
             // Как ArmPose.ITEM
