@@ -6,6 +6,16 @@
     "trailcraft:flint_pickaxe",
     "trailcraft:copper_pickaxe",
     "trailcraft:iron_pickaxe",
-    "trailcraft:turf_cutter"
+    "trailcraft:turf_cutter",
+    "trailcraft:bronze_pickaxe",
+    "trailcraft:steel_pickaxe",
+    "trailcraft:copper_axe",
+    "trailcraft:bronze_axe",
+    "trailcraft:iron_axe",
+    "trailcraft:steel_axe",
+    "trailcraft:copper_shovel",
+    "trailcraft:bronze_shovel",
+    "trailcraft:iron_shovel",
+    "trailcraft:steel_shovel"
   ]
 }

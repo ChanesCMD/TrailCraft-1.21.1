@@ -104,17 +104,13 @@ public class ModCreativeTabs {
                         output.accept(ModItems.CLAY_BALL_RED);
 
                         // Палки
-                        output.accept(ModItems.STICK_BRANCH_02);
-                        output.accept(ModItems.STICK_PROCESSED_02);
+                        output.accept(ModItems.STICK_BRANCH);
+                        output.accept(ModItems.STICK_PROCESSED);
 
-                        // Инструменты
-                        output.accept(ModItems.FLINT_AXE);
-                        output.accept(ModItems.FLINT_SHOVEL);
-                        output.accept(ModItems.FLINT_PICKAXE);
-                        output.accept(ModItems.COPPER_PICKAXE);
-                        output.accept(ModItems.IRON_PICKAXE);
-                        output.accept(ModItems.COPPER_AXE);
-                        output.accept(ModItems.IRON_AXE);
+                        // Инструменты и предметы (ModTools)
+                        for (var item : ModTools.ITEMS) {
+                            output.accept(item);
+                        }
 
                         // Мусор
                         output.accept(ModItems.METAL_SCRAP);

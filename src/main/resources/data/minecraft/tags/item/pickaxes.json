@@ -3,6 +3,8 @@
   "values": [
     "trailcraft:flint_pickaxe",
     "trailcraft:copper_pickaxe",
-    "trailcraft:iron_pickaxe"
+    "trailcraft:iron_pickaxe",
+    "trailcraft:bronze_pickaxe",
+    "trailcraft:steel_pickaxe"
   ]
 }

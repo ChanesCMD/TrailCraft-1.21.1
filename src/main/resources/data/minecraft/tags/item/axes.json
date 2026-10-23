@@ -3,6 +3,8 @@
   "values": [
     "trailcraft:copper_axe",
     "trailcraft:iron_axe",
-    "trailcraft:flint_axe"
+    "trailcraft:flint_axe",
+    "trailcraft:bronze_axe",
+    "trailcraft:steel_axe"
   ]
 }

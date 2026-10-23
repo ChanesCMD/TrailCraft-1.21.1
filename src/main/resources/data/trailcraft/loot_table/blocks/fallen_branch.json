@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "trailcraft:stick_branch_02"
+          "name": "trailcraft:stick_branch"
         }
       ],
       "conditions": [

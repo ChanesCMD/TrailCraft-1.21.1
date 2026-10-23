@@ -54,7 +54,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "trailcraft:stick_branch_02",
+          "name": "trailcraft:stick_branch",
           "functions": [
             {
               "function": "minecraft:set_count",

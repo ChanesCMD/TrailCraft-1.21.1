@@ -1,9 +1,6 @@
 package io.github.ChanesCMD.trailcraft.init;
 
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ShovelItem;
-import net.minecraft.world.item.PickaxeItem;
-import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.DiggerItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tiers;
@@ -90,22 +87,7 @@ public class ModItems {
     public static final DeferredItem<TurfCutterItem> TURF_CUTTER = ITEMS.registerItem("turf_cutter",
             props -> new TurfCutterItem(Tiers.IRON, props.attributes(DiggerItem.createAttributes(Tiers.IRON, 1.0F, -2.8F))));
 
-    // === ИНСТРУМЕНТЫ ===
-    public static final DeferredItem<Item> FLINT_AXE = ITEMS.registerItem("flint_axe",
-            props -> new AxeItem(Tiers.STONE, props.attributes(DiggerItem.createAttributes(Tiers.STONE, 7.0f, -3.2f))));
-    public static final DeferredItem<Item> FLINT_SHOVEL = ITEMS.registerItem("flint_shovel",
-            props -> new ShovelItem(Tiers.STONE, props.attributes(DiggerItem.createAttributes(Tiers.STONE, 1.5f, -3.0f))));
-    public static final DeferredItem<Item> FLINT_PICKAXE = ITEMS.registerItem("flint_pickaxe",
-            props -> new PickaxeItem(Tiers.STONE, props.attributes(DiggerItem.createAttributes(Tiers.STONE, 1.0f, -2.8f))));
-    public static final DeferredItem<Item> COPPER_PICKAXE = ITEMS.registerItem("copper_pickaxe",
-            props -> new PickaxeItem(ModTiers.COPPER, props.attributes(DiggerItem.createAttributes(ModTiers.COPPER, 1.0f, -2.8f))));
-    public static final DeferredItem<Item> IRON_PICKAXE = ITEMS.registerItem("iron_pickaxe",
-            props -> new PickaxeItem(Tiers.IRON, props.attributes(DiggerItem.createAttributes(Tiers.IRON, 1.0f, -2.8f))));
-    /** Металлические топоры рубят любые брёвна (кремнёвый — только тонкие). */
-    public static final DeferredItem<Item> COPPER_AXE = ITEMS.registerItem("copper_axe",
-            props -> new AxeItem(ModTiers.COPPER, props.attributes(DiggerItem.createAttributes(ModTiers.COPPER, 6.5f, -3.15f))));
-    public static final DeferredItem<Item> IRON_AXE = ITEMS.registerItem("iron_axe",
-            props -> new AxeItem(Tiers.IRON, props.attributes(DiggerItem.createAttributes(Tiers.IRON, 6.0f, -3.1f))));
+    // Остальные инструменты (кирки, топоры, ножи, копья и т. д.) — в ModTools
 
     // === КАМЕШКИ (12) ===
     public static final DeferredItem<BlockItem> ANDESITE_PEBBLE = ITEMS.registerSimpleBlockItem("andesite_pebble", ModBlocks.ANDESITE_PEBBLE);
@@ -123,8 +105,8 @@ public class ModItems {
 
     // === ПАЛКИ ===
     /** Обычная ветка: 3 раза ПКМ по породе, и получается обработанная палка. */
-    public static final DeferredItem<BranchStickItem> STICK_BRANCH_02 = ITEMS.registerItem("stick_branch_02", BranchStickItem::new);
-    public static final DeferredItem<Item> STICK_PROCESSED_02 = ITEMS.registerSimpleItem("stick_processed_02");
+    public static final DeferredItem<BranchStickItem> STICK_BRANCH = ITEMS.registerItem("stick_branch", BranchStickItem::new);
+    public static final DeferredItem<Item> STICK_PROCESSED = ITEMS.registerSimpleItem("stick_processed");
 
     // === ПЕНЬ ДЛЯ РУБКИ ===
     public static final DeferredItem<BlockItem> CHOPPING_STUMP = ITEMS.registerSimpleBlockItem("chopping_stump", ModBlocks.CHOPPING_STUMP);

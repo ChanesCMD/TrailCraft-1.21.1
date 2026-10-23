@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "trailcraft:item/stick_branch_02"
+    "layer0": "trailcraft:item/bronze_shovel"
   }
 }

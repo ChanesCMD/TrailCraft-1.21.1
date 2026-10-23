@@ -45,7 +45,7 @@ public class BranchStickItem extends Item {
             level.playSound(null, pos, SoundEvents.GRINDSTONE_USE, SoundSource.BLOCKS, 0.5f, 1.4f);
             if (rubs >= RUBS_NEEDED) {
                 held.shrink(1);
-                give(player, level, pos, new ItemStack(ModItems.STICK_PROCESSED_02.get()));
+                give(player, level, pos, new ItemStack(ModItems.STICK_PROCESSED.get()));
             } else if (held.getCount() == 1) {
                 held.set(ModComponents.RUBS.get(), rubs);
             } else {

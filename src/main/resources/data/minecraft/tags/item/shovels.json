@@ -2,6 +2,10 @@
   "replace": false,
   "values": [
     "trailcraft:flint_shovel",
-    "trailcraft:turf_cutter"
+    "trailcraft:turf_cutter",
+    "trailcraft:copper_shovel",
+    "trailcraft:bronze_shovel",
+    "trailcraft:iron_shovel",
+    "trailcraft:steel_shovel"
   ]
 }
