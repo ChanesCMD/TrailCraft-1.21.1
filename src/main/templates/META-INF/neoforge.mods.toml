@@ -92,7 +92,7 @@ TrailCraft is a mix of everything I have ever wanted in one place, and it is gro
 [[dependencies.${mod_id}]]
     modId="voicechat"
     type="optional"
-    versionRange="[1.21.1-2.6.0,)"
+    versionRange="[1.21.1-2.6.25,)"
     ordering="NONE"
     side="BOTH"
 

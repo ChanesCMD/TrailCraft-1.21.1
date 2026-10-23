@@ -29,9 +29,17 @@ public final class CommDevices {
         return player.getOffhandItem().is(TAG);
     }
 
+    /** Флаг voiceRequiresDevice, присланный сервером клиенту (меняется без перезахода); null — ещё не приходил. */
+    private static Boolean clientRule;
+
+    public static void setClientRule(boolean requiresDevice) {
+        clientRule = requiresDevice;
+    }
+
     /** Доступны ли игроку каналы party/city/country и звонки. */
     public static boolean allowsRemoteVoice(Player player) {
-        return !ServerConfig.voiceRequiresDevice() || has(player);
+        boolean required = player.level().isClientSide && clientRule != null ? clientRule : ServerConfig.voiceRequiresDevice();
+        return !required || has(player);
     }
 
     private CommDevices() {}
