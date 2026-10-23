@@ -10,7 +10,7 @@ import net.neoforged.neoforge.client.IArmPoseTransformer;
 
 /**
  * Поза руки с копьём от третьего лица (константа ArmPose добавляется через META-INF/enumextensions.json).
- * В покое — как у обычного предмета; при уколе рука выбрасывается вперёд по взгляду вместо ванильного взмаха.
+ * В покое — как у обычного предмета; при уколе рука выдвигается вперёд вместо ванильного взмаха.
  */
 public final class SpearArmPose {
     public static final EnumProxy<HumanoidModel.ArmPose> PROXY =
@@ -22,9 +22,10 @@ public final class SpearArmPose {
         part.xRot = part.xRot * 0.5f - Mth.PI / 10;
         part.yRot = 0;
         if (model.attackTime > 0 && entity.getMainArm() == arm) {
+            // Копьё при уколе горизонтально (модель charging), поэтому рука не поворачивается, а выдвигается вперёд
             float thrust = Mth.sin(model.attackTime * Mth.PI);
-            part.xRot = Mth.lerp(thrust, part.xRot, model.head.xRot - Mth.HALF_PI);
-            part.yRot = Mth.lerp(thrust, 0, model.head.yRot);
+            part.z -= thrust * 10;
+            part.xRot -= thrust * 0.5f;
             // Ванильный взмах (setupAttackAnimation идёт после позы) не нужен
             model.attackTime = 0;
         }

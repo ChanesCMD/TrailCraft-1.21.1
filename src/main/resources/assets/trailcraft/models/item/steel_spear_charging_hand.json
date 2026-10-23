@@ -2,13 +2,13 @@
   "parent": "trailcraft:item/steel_spear_in_hand",
   "display": {
     "thirdperson_righthand": {
-      "rotation": [0, -90, 70],
-      "translation": [0, 6, -0.7],
+      "rotation": [0, -90, 62],
+      "translation": [0, 0.9, 1.8],
       "scale": [1.7, 1.7, 0.85]
     },
     "thirdperson_lefthand": {
-      "rotation": [0, 90, -70],
-      "translation": [0, 6, -0.7],
+      "rotation": [0, 90, -62],
+      "translation": [0, 0.9, 1.8],
       "scale": [1.7, 1.7, 0.85]
     }
   }

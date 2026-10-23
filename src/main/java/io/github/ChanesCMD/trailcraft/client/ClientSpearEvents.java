@@ -31,7 +31,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 /** Копьё на клиенте: ЛКМ — укол вместо обычной атаки, разгон без замедления, анимации от первого лица. */
 @EventBusSubscriber(modid = TrailCraft.MODID, value = Dist.CLIENT)
 public class ClientSpearEvents {
-    /** 1, пока копьём разгоняются: модель в руке переключается на опущенную (overrides в модели копья). */
+    /** 1, пока копьём разгоняются или колют: модель в руке переключается на горизонтальную (overrides в модели копья). */
     private static final ResourceLocation CHARGING = ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "charging");
 
     /** ЛКМ с копьём в руке: обычную атаку и копание отменяем; при полной зарядке — укол. */
@@ -47,9 +47,10 @@ public class ClientSpearEvents {
             return;
         }
         int lunge = SpearCombat.lungeLevel(player, player.getMainHandItem());
+        // Сначала укол, потом взмах: сервер обнуляет зарядку атаки, получив пакет взмаха
+        PacketDistributor.sendToServer(SpearJabPayload.INSTANCE);
         player.swing(InteractionHand.MAIN_HAND);
         player.resetAttackStrengthTicker();
-        PacketDistributor.sendToServer(SpearJabPayload.INSTANCE);
         if (lunge > 0) {
             Vec3 impulse = SpearCombat.lungeImpulse(player, lunge);
             player.push(impulse.x, impulse.y, impulse.z);
@@ -75,8 +76,10 @@ public class ClientSpearEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             event.enqueueWork(() -> ModTools.ITEMS.stream().map(item -> item.get()).filter(ClientSpearEvents::isSpear).forEach(item ->
-                    ItemProperties.register(item, CHARGING, (stack, level, entity, seed) ->
-                            entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1 : 0)));
+                                // Рендер руки от первого лица держит свою копию стака, поэтому сравниваем предмет, а не ссылку
+ItemProperties.register(item, CHARGING, (stack, level, entity, seed) ->
+                            entity != null && (entity.isUsingItem() && entity.getUseItem().getItem() == stack.getItem()
+                                    || entity.swinging && entity.getMainHandItem().getItem() == stack.getItem()) ? 1 : 0)));
         }
 
         @SubscribeEvent
@@ -99,11 +102,12 @@ public class ClientSpearEvents {
                                                float partialTick, float equipProcess, float swingProcess) {
             int side = arm == HumanoidArm.RIGHT ? 1 : -1;
             poseStack.translate(side * 0.56f, -0.52f + equipProcess * -0.6f, -0.72f);
-            if (player.isUsingItem() && player.getUseItem() == stack && stack.getItem() instanceof SpearItem spear) {
+            if (player.isUsingItem() && player.getUsedItemHand() == (arm == player.getMainArm() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND)
+                    && stack.getItem() instanceof SpearItem spear) {
                 int used = player.getTicksUsingItem();
                 float time = used + partialTick;
                 float raise = Mth.clamp(time / SpearItem.ticks(spear.stats().delay()), 0, 1);
-                poseStack.translate(-side * 0.08f * raise, 0.06f * raise, -0.15f * raise);
+                poseStack.translate(-side * 0.2f * raise, 0.08f * raise, -0.3f * raise);
                 switch (spear.stage(used)) {
                     // Устал: копьё дрожит
                     case 2 -> poseStack.translate(Mth.sin(time * 2.1f) * 0.006f, Mth.cos(time * 2.7f) * 0.006f, 0);
