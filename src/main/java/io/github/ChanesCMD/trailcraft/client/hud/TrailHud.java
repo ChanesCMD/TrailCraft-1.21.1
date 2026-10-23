@@ -39,11 +39,19 @@ public class TrailHud {
         event.replaceLayer(VanillaGuiLayers.AIR_LEVEL, TrailHud::renderStamina);
     }
 
+    /**
+     * replaceLayer заменяет слой целиком вместе с условиями ванильных групп (NeoForge их разворачивает),
+     * поэтому проверяем их сами: интерфейс не скрыт и игрок может получать урон (не креатив и не наблюдатель).
+     */
+    private static boolean visible(Minecraft mc) {
+        return !mc.options.hideGui && mc.gameMode != null && mc.gameMode.canHurtPlayer();
+    }
+
     /** 10 капель слева над хотбаром; фигурка HP слева от хотбара, если здоровье не полное. */
     private static void renderWaterAndBody(GuiGraphics g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
-        if (player == null) {
+        if (player == null || !visible(mc)) {
             return;
         }
         int x = g.guiWidth() / 2 - 91, y = g.guiHeight() - mc.gui.leftHeight;
@@ -62,7 +70,7 @@ public class TrailHud {
     private static void renderAir(GuiGraphics g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
-        if (player == null) {
+        if (player == null || !visible(mc)) {
             return;
         }
         int air = Math.max(0, player.getAirSupply()), max = player.getMaxAirSupply();
@@ -81,7 +89,7 @@ public class TrailHud {
     private static void renderFood(GuiGraphics g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
-        if (player == null || player.getVehicle() instanceof LivingEntity vehicle && vehicle.showVehicleHealth()) {
+        if (player == null || !visible(mc) || player.getVehicle() instanceof LivingEntity vehicle && vehicle.showVehicleHealth()) {
             return;
         }
         int food = player.getFoodData().getFoodLevel();
@@ -93,7 +101,7 @@ public class TrailHud {
     private static void renderStamina(GuiGraphics g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
-        if (player == null || !mc.gameMode.canHurtPlayer()) {
+        if (player == null || !visible(mc)) {
             return;
         }
         float stamina = StaminaEvents.get(player);
