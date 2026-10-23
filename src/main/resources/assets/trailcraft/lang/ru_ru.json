@@ -520,5 +520,9 @@
   "item.trailcraft.steel_spear": "Стальное копьё",
   "item.trailcraft.wooden_ruler": "Деревянная линейка",
   "item.trailcraft.wooden_watering_can": "Деревянная лейка",
-  "item.trailcraft.zinc_watering_can": "Цинковая лейка"
+  "item.trailcraft.zinc_watering_can": "Цинковая лейка",
+  "container.trailcraft.inventory": "Инвентарь",
+  "gui.trailcraft.warmth": "Тепло",
+  "gui.trailcraft.calendar": "Календарь",
+  "gui.trailcraft.calendar.need": "Нужен календарь в рюкзаке"
 }

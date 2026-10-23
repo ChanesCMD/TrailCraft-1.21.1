@@ -520,5 +520,9 @@
   "item.trailcraft.steel_spear": "Steel Spear",
   "item.trailcraft.wooden_ruler": "Wooden Ruler",
   "item.trailcraft.wooden_watering_can": "Wooden Watering Can",
-  "item.trailcraft.zinc_watering_can": "Zinc Watering Can"
+  "item.trailcraft.zinc_watering_can": "Zinc Watering Can",
+  "container.trailcraft.inventory": "Inventory",
+  "gui.trailcraft.warmth": "Warmth",
+  "gui.trailcraft.calendar": "Calendar",
+  "gui.trailcraft.calendar.need": "Needs a calendar in the backpack"
 }

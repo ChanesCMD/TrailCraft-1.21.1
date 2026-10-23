@@ -6,11 +6,13 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import com.mojang.logging.LogUtils;
 import org.slf4j.Logger;
+import io.github.ChanesCMD.trailcraft.init.ModAttachments;
 import io.github.ChanesCMD.trailcraft.init.ModBlocks;
 import io.github.ChanesCMD.trailcraft.init.ModComponents;
 import io.github.ChanesCMD.trailcraft.init.ModCreativeTabs;
 import io.github.ChanesCMD.trailcraft.init.ModFeatures;
 import io.github.ChanesCMD.trailcraft.init.ModItems;
+import io.github.ChanesCMD.trailcraft.init.ModMenus;
 import io.github.ChanesCMD.trailcraft.init.ModTools;
 import io.github.ChanesCMD.trailcraft.init.ModWood;
 
@@ -31,6 +33,8 @@ public class TrailCraft {
         ModComponents.COMPONENTS.register(modEventBus);
         ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         ModFeatures.FEATURES.register(modEventBus);
+        ModAttachments.ATTACHMENT_TYPES.register(modEventBus);
+        ModMenus.MENUS.register(modEventBus);
 
         // Регистрируем конфиг
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
