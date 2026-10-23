@@ -144,6 +144,7 @@ dependencies {
     // Просмотр генерации мира и биомов (только для запуска из среды разработки)
     localRuntime "maven.modrinth:seed-viewer:${seed_viewer_version}"
     localRuntime "maven.modrinth:genesis-world-previewer-pregenerator:${genesis_version}"
+    localRuntime "maven.modrinth:architectury-api:${architectury_version}"
 
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
