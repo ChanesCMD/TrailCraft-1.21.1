@@ -76,10 +76,11 @@ public class ClientSpearEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             event.enqueueWork(() -> ModTools.ITEMS.stream().map(item -> item.get()).filter(ClientSpearEvents::isSpear).forEach(item ->
-                                // Рендер руки от первого лица держит свою копию стака, поэтому сравниваем предмет, а не ссылку
-ItemProperties.register(item, CHARGING, (stack, level, entity, seed) ->
+                    // Рендер руки от первого лица держит свою копию стака, поэтому сравниваем предмет, а не ссылку
+                    ItemProperties.register(item, CHARGING, (stack, level, entity, seed) ->
                             entity != null && (entity.isUsingItem() && entity.getUseItem().getItem() == stack.getItem()
-                                    || entity.swinging && entity.getMainHandItem().getItem() == stack.getItem()) ? 1 : 0)));
+                                    || entity.getMainHandItem().getItem() == stack.getItem() && SpearJabAnim.progress(entity, 0) >= 0)
+                                    ? 1 : 0)));
         }
 
         @SubscribeEvent
@@ -107,7 +108,7 @@ ItemProperties.register(item, CHARGING, (stack, level, entity, seed) ->
                 int used = player.getTicksUsingItem();
                 float time = used + partialTick;
                 float raise = Mth.clamp(time / SpearItem.ticks(spear.stats().delay()), 0, 1);
-                poseStack.translate(-side * 0.2f * raise, 0.08f * raise, -0.3f * raise);
+                poseStack.translate(-side * 0.2f * raise, 0, -0.3f * raise);
                 switch (spear.stage(used)) {
                     // Устал: копьё дрожит
                     case 2 -> poseStack.translate(Mth.sin(time * 2.1f) * 0.006f, Mth.cos(time * 2.7f) * 0.006f, 0);
@@ -115,9 +116,12 @@ ItemProperties.register(item, CHARGING, (stack, level, entity, seed) ->
                     case 3, 4 -> poseStack.translate(0, -0.25f, 0.05f);
                     default -> {}
                 }
-            } else if (swingProcess > 0) {
-                float thrust = Mth.sin(swingProcess * Mth.PI);
-                poseStack.translate(-side * 0.05f * thrust, 0.04f * thrust, -0.4f * thrust);
+            } else {
+                float jab = SpearJabAnim.progress(player, partialTick);
+                if (jab >= 0) {
+                    float thrust = SpearJabAnim.thrust(jab);
+                    poseStack.translate(-side * 0.1f * thrust, -0.03f * thrust, -0.45f * thrust);
+                }
             }
             return true;
         }

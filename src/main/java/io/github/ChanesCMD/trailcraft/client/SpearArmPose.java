@@ -1,8 +1,10 @@
 package io.github.ChanesCMD.trailcraft.client;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.fml.common.asm.enumextension.EnumProxy;
@@ -10,7 +12,8 @@ import net.neoforged.neoforge.client.IArmPoseTransformer;
 
 /**
  * Поза руки с копьём от третьего лица (константа ArmPose добавляется через META-INF/enumextensions.json).
- * В покое — как у обычного предмета; при уколе рука выдвигается вперёд вместо ванильного взмаха.
+ * В покое — как у обычного предмета; при разгоне рука неподвижна; при уколе (SpearJabAnim) рука выдвигается вперёд
+ * вместо ванильного взмаха.
  */
 public final class SpearArmPose {
     public static final EnumProxy<HumanoidModel.ArmPose> PROXY =
@@ -18,14 +21,25 @@ public final class SpearArmPose {
 
     private static void apply(HumanoidModel<?> model, LivingEntity entity, HumanoidArm arm) {
         ModelPart part = arm == HumanoidArm.RIGHT ? model.rightArm : model.leftArm;
-        // Как ArmPose.ITEM
-        part.xRot = part.xRot * 0.5f - Mth.PI / 10;
         part.yRot = 0;
-        if (model.attackTime > 0 && entity.getMainArm() == arm) {
-            // Копьё при уколе горизонтально (модель charging), поэтому рука не поворачивается, а выдвигается вперёд
-            float thrust = Mth.sin(model.attackTime * Mth.PI);
-            part.z -= thrust * 10;
-            part.xRot -= thrust * 0.5f;
+        boolean mainArm = entity.getMainArm() == arm;
+        float jab = mainArm ? SpearJabAnim.progress(entity, Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false)) : -1;
+        boolean charging = entity.isUsingItem() && (entity.getUsedItemHand() == InteractionHand.MAIN_HAND) == mainArm;
+        if (charging || jab >= 0) {
+            // Копьё горизонтально (модель charging): рука не качается при ходьбе, иначе качается и копьё
+            part.xRot = -Mth.PI / 10;
+        } else {
+            // Как ArmPose.ITEM
+            part.xRot = part.xRot * 0.5f - Mth.PI / 10;
+        }
+        if (jab >= 0) {
+            // Тычок: рука выдвигается вперёд и чуть вниз
+            float thrust = SpearJabAnim.thrust(jab);
+            part.z -= thrust * 6;
+            part.y += thrust * 2;
+            part.xRot += thrust * 0.1f;
+        }
+        if (mainArm) {
             // Ванильный взмах (setupAttackAnimation идёт после позы) не нужен
             model.attackTime = 0;
         }
