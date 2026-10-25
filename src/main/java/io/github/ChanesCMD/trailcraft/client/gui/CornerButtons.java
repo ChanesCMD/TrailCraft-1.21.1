@@ -1,6 +1,7 @@
 package io.github.ChanesCMD.trailcraft.client.gui;
 
 import io.github.ChanesCMD.trailcraft.client.ClientGear;
+import io.github.ChanesCMD.trailcraft.client.map.MapScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -14,7 +15,7 @@ import java.util.List;
 
 /**
  * Кнопки в левом верхнем углу экрана инвентаря (ТЗ, раздел 6): 14×14 на (4,4) с шагом 16, иконки 10×10.
- * JEI — только если он установлен. Карта (нужен атлас), приваты и гайдбук пока заглушки «Скоро».
+ * JEI — только если он установлен. Карта — если в рюкзаке атлас. Приваты и гайдбук пока заглушки «Скоро».
  */
 public final class CornerButtons {
     public static final int X = 4, Y = 4, SIZE = 14, STEP = 16;
@@ -59,14 +60,18 @@ public final class CornerButtons {
                 .ifPresentOrElse(mc::setScreen, CornerButtons::soon);
     }
 
-    /** Полноэкранная карта требует атлас в рюкзаке. TODO: сама карта (макет 08_map.png) */
+    /** Полноэкранная карта (MapScreen) требует атлас в рюкзаке. Инвентарь при этом закрывается. */
     private static void openMap() {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player != null && !ClientGear.hasAtlas()) {
-            mc.player.displayClientMessage(Component.translatable("message.trailcraft.map.need"), true);
-        } else {
-            soon();
+        if (mc.player == null) {
+            return;
         }
+        if (!ClientGear.hasAtlas()) {
+            mc.player.displayClientMessage(Component.translatable("message.trailcraft.map.need"), true);
+            return;
+        }
+        mc.player.closeContainer();
+        mc.setScreen(new MapScreen());
     }
 
     private static void soon() {

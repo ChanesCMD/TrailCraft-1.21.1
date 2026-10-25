@@ -4,6 +4,7 @@ import io.github.ChanesCMD.trailcraft.ServerConfig;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.calendar.Calendar;
 import io.github.ChanesCMD.trailcraft.client.ClientGear;
+import io.github.ChanesCMD.trailcraft.client.map.Minimap;
 import io.github.ChanesCMD.trailcraft.client.gui.TrailInventoryScreen;
 import io.github.ChanesCMD.trailcraft.client.voice.VoiceClient;
 import io.github.ChanesCMD.trailcraft.client.voice.VoiceHeads;

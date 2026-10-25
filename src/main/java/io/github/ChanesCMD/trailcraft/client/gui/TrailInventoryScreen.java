@@ -58,14 +58,18 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
     /** Окно календаря 140×158 (ТЗ 3.4): под кнопкой, правый край по кнопке; ячейки дней 20×18 с (10,51), по 6 в ряд. */
     private static final int CAL_W = 140, CAL_H = 158, CAL_CELL_W = 20, CAL_CELL_H = 18, CAL_GRID_X = 10, CAL_GRID_Y = 51;
     private static final int CAL_CLOSE_X = 122, CAL_CLOSE_Y = 5, CAL_NOTE_X = 10, CAL_NOTE_Y = 137;
+    /** Стрелки листания сезонов 10×12 слева от кнопки закрытия; шапка (клик — вернуться к сегодня). */
+    private static final int CAL_PREV_X = 96, CAL_NEXT_X = 108, CAL_ARROW_W = 10, CAL_HEADER_X = 8, CAL_HEADER_Y = 20;
     /** Кнопка «Выпить» в окне пояса (относительно окна). */
     private static final int DRINK_X = 7, DRINK_Y = 42, DRINK_W = 112, DRINK_H = 14;
     private static final int[] BAR_COLORS = {0xFFE8C33A, 0, 0xFF4A7BE0, 0, 0, 0, 0};
     private static final String[] BACKPACK_ROWS = {"battery", "solar", "mana", "sleeping", "workbench", "atlas", "calendar"};
     private static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").withZone(ZoneId.systemDefault());
-    /** Слои по глубине: предметы в слотах ≈150–200, затемнение и окна выше, предмет на курсоре ≈380. */
-    /** Кнопки окон (+) лежат выше затемнения и окон: ими же окно и закрывается. */
-    private static final int Z_BUTTONS = 210, Z_DIM = 220, Z_POPUP = 230, Z_POPUP_ITEMS = 100, Z_TOP_BUTTONS = 300;
+    /**
+     * Слои по глубине: предметы в слотах ≈150–200, затемнение и окна выше, предметы в окнах ≈380–430 (как предмет
+     * на курсоре). Кнопки окон (+) лежат выше затемнения и окон: ими же окно и закрывается. Подсказка — выше всего.
+     */
+    private static final int Z_BUTTONS = 210, Z_DIM = 220, Z_POPUP = 230, Z_POPUP_ITEMS = 0, Z_TOP_BUTTONS = 300, Z_TOOLTIP = 300;
 
     private static final int Z_OVERLAY = 400;
 
@@ -84,6 +88,8 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
     private Map<String, String> notes = new HashMap<>();
     private int selectedDay;
     private String noteKey;
+    /** На сколько сезонов показанный в календаре сезон впереди (или позади) текущего. */
+    private int seasonOffset;
 
     public TrailInventoryScreen(TrailInventoryMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -186,6 +192,7 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         }
         openPopup(Popup.CALENDAR);
         noteBox.setVisible(true);
+        seasonOffset = 0;
         selectDay(today().dayOfSeason());
         PacketDistributor.sendToServer(CalendarNotes.Request.INSTANCE);
     }
@@ -194,11 +201,32 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         return Calendar.of(minecraft.level.getDayTime(), ServerConfig.daysPerSeason());
     }
 
-    /** Выбирает день текущего сезона: заметка прежнего дня сохраняется, в поле — заметка нового. */
+    /** Номер сезона от начала календаря (0 — весна START_YEAR). */
+    private static long seasonIndex(Calendar calendar) {
+        return (calendar.year() - Calendar.START_YEAR) * 4 + calendar.season().ordinal();
+    }
+
+    /** Показанный сезон: номер от начала календаря. */
+    private long shownSeason() {
+        return Math.max(0, seasonIndex(today()) + seasonOffset);
+    }
+
+    /** Листает календарь на delta сезонов (не раньше первого); 0 — вернуться к текущему. */
+    private void turnSeason(int delta) {
+        long current = seasonIndex(today());
+        int offset = delta == 0 ? 0 : (int) Math.max(-current, seasonOffset + delta);
+        if (offset != seasonOffset) {
+            seasonOffset = offset;
+            selectDay(offset == 0 ? today().dayOfSeason() : 1);
+        }
+    }
+
+    /** Выбирает день показанного сезона: заметка прежнего дня сохраняется, в поле — заметка нового. */
     private void selectDay(int day) {
         flushNote();
         selectedDay = day;
-        noteKey = CalendarNotes.key(today(), day);
+        long shown = shownSeason();
+        noteKey = CalendarNotes.key(Calendar.START_YEAR + shown / 4, (int) (shown % 4), day);
         noteBox.setValue(notes.getOrDefault(noteKey, ""));
     }
 
@@ -272,7 +300,11 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         CornerButtons.render(g, font, cornerButtons, mouseX, mouseY, voiceOpen ? voiceButton() : -1);
         g.pose().popPose();
         if (!voiceOpen) {
+            // Подсказка рисуется на z≈400; поднимаем её над предметами в окнах (у них количество на z≈430)
+            g.pose().pushPose();
+            g.pose().translate(0, 0, Z_TOOLTIP);
             renderTooltip(g, mouseX, mouseY);
+            g.pose().popPose();
         }
     }
 
@@ -440,15 +472,21 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
     }
 
     /**
-     * Окно календаря 140×158 (ТЗ 3.4): шапка с годом, сезоном, днём и временем; сетка дней сезона (6 в ряд):
-     * прошедшие темнее, текущий зелёный с белой рамкой, выбранный в чёрной рамке, с заметкой — жёлтая точка;
-     * внизу заметка к выбранному дню.
+     * Окно календаря 140×158 (ТЗ 3.4): шапка с годом и сезоном показанной страницы, сегодняшним днём и временем;
+     * сетка дней сезона (6 в ряд): прошедшие темнее, текущий зелёный с белой рамкой, выбранный в чёрной рамке,
+     * с заметкой — жёлтая точка; внизу заметка к выбранному дню. Стрелки и колесо листают сезоны, клик по шапке —
+     * обратно к сегодня.
      */
     private void renderCalendar(GuiGraphics g, int mouseX, int mouseY) {
         int px = calX, py = calY;
         Calendar now = today();
+        long current = seasonIndex(now), shown = shownSeason();
+        long shownYear = Calendar.START_YEAR + shown / 4;
+        int shownSeasonOrdinal = (int) (shown % 4);
         UiDraw.panel(g, px, py, CAL_W, CAL_H);
         g.drawString(font, Component.translatable("gui.trailcraft.calendar"), px + 7, py + 6, UiDraw.LABEL, false);
+        arrowButton(g, px + CAL_PREV_X, py + CAL_CLOSE_Y, mouseX, mouseY, -1, shown > 0);
+        arrowButton(g, px + CAL_NEXT_X, py + CAL_CLOSE_Y, mouseX, mouseY, 1, true);
         // Кнопка закрытия 12×12 с крестиком
         int cx = px + CAL_CLOSE_X, cy = py + CAL_CLOSE_Y;
         boolean closeHover = isOver(mouseX, mouseY, cx, cy, 12, 12);
@@ -458,17 +496,18 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
             g.fill(cx + 8 - i, cy + 3 + i, cx + 9 - i, cy + 4 + i, UiDraw.LABEL);
         }
 
-        UiDraw.frame(g, px + 8, py + 20, 124, 26, 0xFF373737, 0xFFFFFFFF, 0xFFB8B8B8);
-        Component season = Component.translatable(now.season().translationKey());
-        g.drawString(font, Component.translatable("gui.trailcraft.calendar.year", now.year()), px + 12, py + 23, UiDraw.LABEL, false);
+        UiDraw.frame(g, px + CAL_HEADER_X, py + CAL_HEADER_Y, 124, 26, 0xFF373737, 0xFFFFFFFF, shown == current ? 0xFFB8B8B8 : 0xFFC8C0A0);
+        Component season = Component.translatable(Calendar.Season.values()[shownSeasonOrdinal].translationKey());
+        g.drawString(font, Component.translatable("gui.trailcraft.calendar.year", shownYear), px + 12, py + 23, UiDraw.LABEL, false);
         g.drawString(font, season, px + 128 - font.width(season), py + 23, UiDraw.LABEL, false);
         g.drawString(font, Component.translatable("gui.trailcraft.calendar.day", now.dayOfSeason()), px + 12, py + 34, UiDraw.LABEL, false);
         g.drawString(font, now.time(), px + 128 - font.width(now.time()), py + 34, UiDraw.LABEL, false);
 
         for (int day = 1; day <= now.daysPerSeason(); day++) {
             int x = px + CAL_GRID_X + CAL_CELL_W * ((day - 1) % 6), y = py + CAL_GRID_Y + CAL_CELL_H * ((day - 1) / 6);
-            boolean today = day == now.dayOfSeason();
-            int fill = today ? UiDraw.GREEN : day < now.dayOfSeason() ? 0xFF7A7A7A : 0xFFB8B8B8;
+            boolean today = shown == current && day == now.dayOfSeason();
+            boolean past = shown < current || shown == current && day < now.dayOfSeason();
+            int fill = today ? UiDraw.GREEN : past ? 0xFF7A7A7A : 0xFFB8B8B8;
             int border = today ? 0xFFFFFFFF : day == selectedDay ? 0xFF000000 : 0xFF8B8B8B;
             g.fill(x, y, x + CAL_CELL_W, y + CAL_CELL_H, border);
             g.fill(x + 1, y + 1, x + CAL_CELL_W - 1, y + CAL_CELL_H - 1, fill);
@@ -478,7 +517,7 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
             }
             String number = String.valueOf(day);
             g.drawString(font, number, x + (CAL_CELL_W - font.width(number) + 1) / 2, y + 5, today ? 0xFFFFFFFF : UiDraw.LABEL, today);
-            if (!notes.getOrDefault(CalendarNotes.key(now, day), "").isEmpty()) {
+            if (!notes.getOrDefault(CalendarNotes.key(shownYear, shownSeasonOrdinal, day), "").isEmpty()) {
                 g.fill(x + CAL_CELL_W - 5, y + 2, x + CAL_CELL_W - 2, y + 5, 0xFFF2D23A);
             }
         }
@@ -491,6 +530,18 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         noteBox.setPosition(leftPos + px + CAL_NOTE_X, topPos + py + CAL_NOTE_Y);
         noteBox.render(g, mouseX, mouseY, 0);
         g.pose().popPose();
+    }
+
+    /** Стрелка листания 10×12: direction −1 — назад, 1 — вперёд. */
+    private void arrowButton(GuiGraphics g, int x, int y, int mouseX, int mouseY, int direction, boolean active) {
+        boolean hover = active && isOver(mouseX, mouseY, x, y, CAL_ARROW_W, 12);
+        UiDraw.frame(g, x, y, CAL_ARROW_W, 12, 0xFF000000, active ? 0xFFFFFFFF : 0xFF9E9E9E,
+                hover ? 0xFFB0B0D8 : active ? 0xFFA8A8A8 : 0xFF6E6E6E);
+        int color = active ? UiDraw.LABEL : 0xFF8B8B8B;
+        for (int i = 0; i < 4; i++) {
+            int column = direction < 0 ? x + 3 + i : x + 6 - i;
+            g.fill(column, y + 6 - i, column + 1, y + 7 + i, color);
+        }
     }
 
     /** День под курсором в окне календаря или 0. */
@@ -523,7 +574,11 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
                 g.renderItem(stack, slot.x, slot.y);
                 g.renderItemDecorations(font, stack, slot.x, slot.y);
                 if (slot == hoveredSlot) {
+                    // Подсветка поверх предмета (он рисуется на +150)
+                    g.pose().pushPose();
+                    g.pose().translate(0, 0, 160);
                     g.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, 0x80FFFFFF);
+                    g.pose().popPose();
                 }
             }
         }
@@ -603,6 +658,12 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
                 noteBox.mouseClicked(mouseX, mouseY, button);
             } else if (isOver(mouseX, mouseY, calX + CAL_CLOSE_X, calY + CAL_CLOSE_Y, 12, 12)) {
                 openPopup(Popup.NONE);
+            } else if (isOver(mouseX, mouseY, calX + CAL_PREV_X, calY + CAL_CLOSE_Y, CAL_ARROW_W, 12)) {
+                turnSeason(-1);
+            } else if (isOver(mouseX, mouseY, calX + CAL_NEXT_X, calY + CAL_CLOSE_Y, CAL_ARROW_W, 12)) {
+                turnSeason(1);
+            } else if (isOver(mouseX, mouseY, calX + CAL_HEADER_X, calY + CAL_HEADER_Y, 124, 26)) {
+                turnSeason(0);
             } else {
                 int day = calendarDayAt(mouseX, mouseY);
                 if (day > 0) {
@@ -689,6 +750,12 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         if (voiceOpen) {
             return voiceWindow.mouseScrolled(mouseX, mouseY, scrollY);
+        }
+        if (menu.popup == Popup.CALENDAR) {
+            if (scrollY != 0) {
+                turnSeason(scrollY > 0 ? -1 : 1);
+            }
+            return true;
         }
         if (menu.popup == Popup.DEATHS) {
             int rows = (DEATHS_H - 22) / DEATH_ROW_H;

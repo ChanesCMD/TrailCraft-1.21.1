@@ -27,7 +27,11 @@ public final class CalendarNotes {
     private static final Pattern KEY = Pattern.compile("\\d{1,12}/[0-3]/\\d{1,2}");
 
     public static String key(Calendar calendar, int day) {
-        return calendar.year() + "/" + calendar.season().ordinal() + "/" + day;
+        return key(calendar.year(), calendar.season().ordinal(), day);
+    }
+
+    public static String key(long year, int season, int day) {
+        return year + "/" + season + "/" + day;
     }
 
     public record Request() implements CustomPacketPayload {
