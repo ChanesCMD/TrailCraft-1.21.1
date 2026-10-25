@@ -3,6 +3,7 @@ package io.github.ChanesCMD.trailcraft.inventory;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.block.BackpackBlock;
 import io.github.ChanesCMD.trailcraft.block.GraveBlock;
+import io.github.ChanesCMD.trailcraft.client.ClientCosmetics;
 import io.github.ChanesCMD.trailcraft.client.ClientGear;
 import io.github.ChanesCMD.trailcraft.client.ClientInventoryEvents;
 import io.github.ChanesCMD.trailcraft.init.ModAttachments;
@@ -192,6 +193,7 @@ public class InventoryEvents {
         BackpackHandler backpack = new BackpackHandler(player);
         moveFromLockedSlots(player, backpack);
         syncGear(player, backpack);
+        Cosmetics.sync(player);
         if (player.isCreative()) {
             return;
         }
@@ -307,6 +309,8 @@ public class InventoryEvents {
                     (payload, context) -> context.enqueueWork(() -> ClientInventoryEvents.showDeathLog(payload)));
             registrar.playToClient(GearPayload.TYPE, GearPayload.STREAM_CODEC,
                     (payload, context) -> context.enqueueWork(() -> ClientGear.set(payload)));
+            registrar.playToClient(CosmeticPayload.TYPE, CosmeticPayload.STREAM_CODEC,
+                    (payload, context) -> context.enqueueWork(() -> ClientCosmetics.set(payload)));
         }
     }
 

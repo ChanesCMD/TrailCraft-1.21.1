@@ -4,7 +4,7 @@ import net.minecraft.client.gui.GuiGraphics;
 
 /**
  * Значки HUD 9×9, нарисованные пикселями (заглушки до своих текстур). В шаблоне: 'o' — контур, 'f' — заливка,
- * 'h' — блик, '.' — пусто. Палитра — {контур, заливка, блик}.
+ * 'h' — блик, 'l' — ботва, '.' — пусто. Палитра — {контур, заливка, блик[, ботва]}; без цвета ботвы она как заливка.
  */
 public final class HudIcons {
     public static final String[] DROP = {
@@ -17,16 +17,17 @@ public final class HudIcons {
             ".offfffo.",
             "..offfo..",
             "...ooo..."};
+    /** Морковь остриём вниз-влево, 'l' — ботва. */
     public static final String[] FOOD = {
-            ".........",
-            "..ooooo..",
-            ".ohhfffo.",
-            "ohffffffo",
-            "offfffffo",
-            "offfffffo",
-            ".offfffo.",
-            "..ooooo..",
-            "........."};
+            "......l.l",
+            ".....ooll",
+            "....ohfo.",
+            "...ohffo.",
+            "..ohffo..",
+            "..offo...",
+            ".offo....",
+            ".oo......",
+            "o........"};
     public static final String[] BUBBLE = {
             "..ooooo..",
             ".ohhfffo.",
@@ -49,8 +50,8 @@ public final class HudIcons {
             "..ooo...."};
 
     public static final int[] WATER = {0xFF10204A, 0xFF3F76E4, 0xFF8FB8FF};
-    public static final int[] FOOD_COLORS = {0xFF4A2A0A, 0xFFD9822B, 0xFFF2B95C};
-    public static final int[] HUNGER_COLORS = {0xFF22330A, 0xFF7A9A2B, 0xFFB5D25C};
+    public static final int[] FOOD_COLORS = {0xFF5A2A06, 0xFFE8761E, 0xFFFFB061, 0xFF3E9A2B};
+    public static final int[] HUNGER_COLORS = {0xFF22330A, 0xFF7A9A2B, 0xFFB5D25C, 0xFF4A5A1A};
     public static final int[] AIR = {0xFF2A5A8A, 0xFF9FD3FF, 0xFFFFFFFF};
     public static final int[] STAMINA = {0xFF4A3A00, 0xFFF2D23A, 0xFFFFF59A};
     /** Пустое деление — тёмно-серое. */
@@ -72,7 +73,7 @@ public final class HudIcons {
                 }
                 boolean filled = full == 2 || full == 1 && (rightHalf ? col >= 4 : col < 5);
                 int[] palette = filled ? colors : EMPTY;
-                int color = c == 'o' ? palette[0] : c == 'h' ? palette[2] : palette[1];
+                int color = c == 'o' ? palette[0] : c == 'h' ? palette[2] : c == 'l' && palette.length > 3 ? palette[3] : palette[1];
                 g.fill(x + col, y + row, x + col + 1, y + row + 1, color);
             }
         }
