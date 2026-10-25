@@ -60,9 +60,9 @@ public final class UiDraw {
         }
     }
 
-    /** Янтарная кнопка окна 7×7 с белым «+». */
+    /** Синяя кнопка окна 7×7 с тёмно-синей обводкой и белым «+». */
     public static void plusButton(GuiGraphics g, int x, int y) {
-        circle(g, x, y, 7, AMBER);
+        outlinedCircle(g, x, y, 7, 0xFF4A7BE0, 0xFF1E3A78);
         g.fill(x + 3, y + 2, x + 4, y + 5, 0xFFFFFFFF);
         g.fill(x + 2, y + 3, x + 5, y + 4, 0xFFFFFFFF);
     }
