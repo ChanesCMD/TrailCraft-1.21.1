@@ -179,14 +179,19 @@ public class InventoryEvents {
     /**
      * Рюкзак, попавший в хотбар или ванильные слоты (обмен клавишами, /give, другие моды), надевается,
      * а если некуда — ставится на землю. Всё остальное из ванильных слотов 9..35 переносится в рюкзак или выбрасывается.
+     * Предметы из слотов рюкзака, закрывшихся из-за вынутого кармана, раскладываются заново (moveFromLockedSlots).
      */
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Post event) {
-        if (!(event.getEntity() instanceof ServerPlayer player) || player.isCreative() || player.isSpectator()) {
+        if (!(event.getEntity() instanceof ServerPlayer player) || player.isSpectator()) {
+            return;
+        }
+        BackpackHandler backpack = new BackpackHandler(player);
+        moveFromLockedSlots(player, backpack);
+        if (player.isCreative()) {
             return;
         }
         Inventory inventory = player.getInventory();
-        BackpackHandler backpack = null;
         for (int i = 0; i < VANILLA_MAIN_END; i++) {
             ItemStack stack = inventory.getItem(i);
             if (stack.getItem() instanceof BackpackItem) {
@@ -199,15 +204,51 @@ public class InventoryEvents {
             if (stack.isEmpty() || i < VANILLA_MAIN_START) {
                 continue;
             }
-            if (backpack == null) {
-                backpack = new BackpackHandler(player);
-            }
             inventory.setItem(i, ItemStack.EMPTY);
             ItemStack rest = backpack.insertMain(stack, false);
             if (!rest.isEmpty()) {
                 player.drop(rest, false);
             }
         }
+    }
+
+    /**
+     * Карман вынули, а в закрывшихся слотах рюкзака остались предметы: они переносятся сначала в открытые слоты
+     * рюкзака, потом в хотбар, а что не поместилось — выпадает.
+     */
+    private static void moveFromLockedSlots(ServerPlayer player, BackpackHandler backpack) {
+        if (!backpack.isPresent()) {
+            return;
+        }
+        for (int i = backpack.capacity(); i < BackpackItem.MAIN_SIZE; i++) {
+            ItemStack stack = backpack.getStackInSlot(i);
+            if (stack.isEmpty()) {
+                continue;
+            }
+            backpack.setStackInSlot(i, ItemStack.EMPTY);
+            ItemStack rest = insertHotbar(player.getInventory(), backpack.insertMain(stack, false));
+            if (!rest.isEmpty()) {
+                player.drop(rest, false);
+            }
+        }
+    }
+
+    /** Кладёт предмет в хотбар: сначала в такие же стопки, потом в пустые слоты. @return остаток */
+    private static ItemStack insertHotbar(Inventory inventory, ItemStack stack) {
+        for (int i = 0; i < Inventory.getSelectionSize() && !stack.isEmpty(); i++) {
+            ItemStack slot = inventory.getItem(i);
+            if (!slot.isEmpty() && ItemStack.isSameItemSameComponents(slot, stack)) {
+                int count = Math.min(stack.getCount(), slot.getMaxStackSize() - slot.getCount());
+                slot.grow(count);
+                stack.shrink(count);
+            }
+        }
+        for (int i = 0; i < Inventory.getSelectionSize() && !stack.isEmpty(); i++) {
+            if (inventory.getItem(i).isEmpty()) {
+                inventory.setItem(i, stack.split(stack.getMaxStackSize()));
+            }
+        }
+        return stack;
     }
 
     private static boolean canFit(Player player, ItemStack stack) {
