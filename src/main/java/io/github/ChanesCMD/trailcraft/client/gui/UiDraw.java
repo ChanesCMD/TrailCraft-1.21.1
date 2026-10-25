@@ -50,6 +50,16 @@ public final class UiDraw {
         }
     }
 
+    /** Круг 5×5 или 7×7 с обводкой в 1 px. */
+    public static void outlinedCircle(GuiGraphics g, int x, int y, int size, int fill, int outline) {
+        circle(g, x, y, size, outline);
+        if (size == 7) {
+            circle(g, x + 1, y + 1, 5, fill);
+        } else {
+            g.fill(x + 1, y + 1, x + size - 1, y + size - 1, fill);
+        }
+    }
+
     /** Янтарная кнопка окна 7×7 с белым «+». */
     public static void plusButton(GuiGraphics g, int x, int y) {
         circle(g, x, y, 7, AMBER);

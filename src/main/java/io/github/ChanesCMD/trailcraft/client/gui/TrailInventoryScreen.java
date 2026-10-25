@@ -50,7 +50,8 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
     private static final String[] BACKPACK_ROWS = {"battery", "solar", "mana", "sleeping", "workbench", "atlas", "calendar"};
     private static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").withZone(ZoneId.systemDefault());
     /** Слои по глубине: предметы в слотах ≈150–200, затемнение и окна выше, предмет на курсоре ≈380. */
-    private static final int Z_BUTTONS = 210, Z_DIM = 220, Z_POPUP = 230, Z_POPUP_ITEMS = 100;
+    /** Кнопки окон (+) лежат выше затемнения и окон: ими же окно и закрывается. */
+    private static final int Z_BUTTONS = 210, Z_DIM = 220, Z_POPUP = 230, Z_POPUP_ITEMS = 100, Z_TOP_BUTTONS = 300;
 
     private static final int Z_OVERLAY = 400;
 
@@ -235,14 +236,15 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
             g.pose().popPose();
         }
 
-        // Переключатели косметики и кнопки окон поверх предметов в слотах
+        // Переключатели косметики поверх предметов в слотах: включённый — светло-серый с обводкой
         g.pose().pushPose();
         g.pose().translate(0, 0, Z_BUTTONS);
         for (int i = 0; i < 4; i++) {
-            UiDraw.circle(g, COSMETIC_X + 12, EQUIP_Y + i * 18 + 1, 5, menu.isCosmeticShown(i) ? UiDraw.GREEN : 0xFF6E6E6E);
-        }
-        for (int slotX : new int[]{WALLET_X, BELT_X, BACKPACK_X}) {
-            UiDraw.plusButton(g, slotX + 10, BOTTOM_Y + 1);
+            if (menu.isCosmeticShown(i)) {
+                UiDraw.outlinedCircle(g, COSMETIC_X + 12, EQUIP_Y + i * 18 + 1, 5, 0xFFE0E0E0, 0xFF373737);
+            } else {
+                UiDraw.circle(g, COSMETIC_X + 12, EQUIP_Y + i * 18 + 1, 5, 0xFF6E6E6E);
+            }
         }
         g.pose().popPose();
 
@@ -258,6 +260,14 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
             }
             g.pose().popPose();
         }
+
+        // Кнопки окон на кошельке, поясе и рюкзаке — на самом верхнем слое, над предметами, затемнением и окнами
+        g.pose().pushPose();
+        g.pose().translate(0, 0, Z_TOP_BUTTONS);
+        for (int slotX : new int[]{WALLET_X, BELT_X, BACKPACK_X}) {
+            UiDraw.plusButton(g, slotX + 10, BOTTOM_Y + 1);
+        }
+        g.pose().popPose();
     }
 
     /** Окно рюкзака 176×201 (ТЗ 3.1). */
