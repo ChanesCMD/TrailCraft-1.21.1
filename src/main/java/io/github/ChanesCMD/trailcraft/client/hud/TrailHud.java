@@ -14,6 +14,7 @@ import io.github.ChanesCMD.trailcraft.stamina.Stamina;
 import io.github.ChanesCMD.trailcraft.stamina.StaminaEvents;
 import io.github.ChanesCMD.trailcraft.water.Water;
 import io.github.ChanesCMD.trailcraft.water.WaterEvents;
+import net.minecraft.Util;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -83,6 +84,12 @@ public class TrailHud {
         if (ClientGear.hasAtlas()) {
             Minimap.render(g, right - Minimap.SIZE, y, player, delta.getGameTimeDeltaPartialTick(true));
             y += Minimap.SIZE + 3;
+            // Под миникартой — биом, где стоит игрок
+            Component biome = player.level().getBiome(player.blockPosition()).unwrapKey()
+                    .map(key -> (Component) Component.translatable(Util.makeDescriptionId("biome", key.location())))
+                    .orElse(Component.empty());
+            g.drawString(mc.font, biome, right - mc.font.width(biome), y, 0xFFFFFFFF, true);
+            y += 10;
         }
         if (ClientGear.hasCalendar()) {
             Calendar date = Calendar.of(player.level().getDayTime(), ServerConfig.daysPerSeason());

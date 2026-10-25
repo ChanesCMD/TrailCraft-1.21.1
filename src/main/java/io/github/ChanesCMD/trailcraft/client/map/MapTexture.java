@@ -105,6 +105,13 @@ public final class MapTexture {
         }
     }
 
+    /** Блок видимой поверхности в столбце (x, z) — тот, что нарисован на карте; null, если чанк не загружен. */
+    public static BlockPos surfaceAt(Level level, int x, int z) {
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        int y = surface(level, pos, x, z);
+        return y < level.getMinBuildHeight() ? null : new BlockPos(x, y, z);
+    }
+
     /** Высота видимой поверхности (без травы и цветов) или ниже мира, если чанк не загружен. */
     private static int surface(Level level, BlockPos.MutableBlockPos pos, int x, int z) {
         if (!level.hasChunk(x >> 4, z >> 4)) {

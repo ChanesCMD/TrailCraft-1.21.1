@@ -1,6 +1,5 @@
 package io.github.ChanesCMD.trailcraft.client.gui;
 
-import io.github.ChanesCMD.trailcraft.client.ClientGear;
 import io.github.ChanesCMD.trailcraft.client.map.MapScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -60,18 +59,8 @@ public final class CornerButtons {
                 .ifPresentOrElse(mc::setScreen, CornerButtons::soon);
     }
 
-    /** Полноэкранная карта (MapScreen) требует атлас в рюкзаке. Инвентарь при этом закрывается. */
     private static void openMap() {
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null) {
-            return;
-        }
-        if (!ClientGear.hasAtlas()) {
-            mc.player.displayClientMessage(Component.translatable("message.trailcraft.map.need"), true);
-            return;
-        }
-        mc.player.closeContainer();
-        mc.setScreen(new MapScreen());
+        MapScreen.open();
     }
 
     private static void soon() {

@@ -2,8 +2,11 @@ package io.github.ChanesCMD.trailcraft.client.map;
 
 import io.github.ChanesCMD.trailcraft.client.gui.UiDraw;
 import net.minecraft.Util;
+import io.github.ChanesCMD.trailcraft.client.ClientGear;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -33,6 +36,22 @@ public class MapScreen extends Screen {
 
     public MapScreen() {
         super(Component.translatable("gui.trailcraft.map"));
+    }
+
+    /** Открывает карту, если в рюкзаке атлас (иначе сообщение). Открытый инвентарь при этом закрывается. */
+    public static void open() {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) {
+            return;
+        }
+        if (!ClientGear.hasAtlas()) {
+            mc.player.displayClientMessage(Component.translatable("message.trailcraft.map.need"), true);
+            return;
+        }
+        if (mc.screen != null) {
+            mc.player.closeContainer();
+        }
+        mc.setScreen(new MapScreen());
     }
 
     private int mapHeight() {
@@ -80,7 +99,7 @@ public class MapScreen extends Screen {
             g.fill(closeX + 10 - i, by + 3 + i, closeX + 11 - i, by + 4 + i, 0xFF3A3A3A);
         }
 
-        // Координаты внизу слева: точка под курсором, а если курсор не на карте — игрок
+        // Внизу слева: координаты, биом и блок под курсором, а если курсор не на карте — под игроком
         int bx, bz;
         if (mouseY >= BAR_H) {
             bx = Mth.floor(centerX + (mouseX - midX) / zoom);
@@ -90,6 +109,14 @@ public class MapScreen extends Screen {
             bz = player.getBlockZ();
         }
         g.drawString(font, Component.translatable("gui.trailcraft.map.coords", bx, bz), 8, height - 14, 0xFFFFFFFF, true);
+        BlockPos surface = MapTexture.surfaceAt(player.level(), bx, bz);
+        if (surface != null) {
+            Component biome = player.level().getBiome(surface).unwrapKey()
+                    .map(key -> (Component) Component.translatable(Util.makeDescriptionId("biome", key.location())))
+                    .orElse(Component.empty());
+            Component block = player.level().getBlockState(surface).getBlock().getName();
+            g.drawString(font, Component.translatable("gui.trailcraft.map.place", biome, block), 8, height - 25, 0xFFFFFFFF, true);
+        }
         Component hint = Component.translatable("gui.trailcraft.map.hint");
         g.drawString(font, hint, width - 8 - font.width(hint), height - 14, 0xFFC0C0C0, true);
 
@@ -174,6 +201,15 @@ public class MapScreen extends Screen {
     public void removed() {
         view.close();
         super.removed();
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (MapKeys.MAP.matches(keyCode, scanCode)) {
+            onClose();
+            return true;
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
