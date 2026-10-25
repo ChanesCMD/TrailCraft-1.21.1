@@ -2,6 +2,8 @@ package io.github.ChanesCMD.trailcraft.water;
 
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.init.ModAttachments;
+import io.github.ChanesCMD.trailcraft.inventory.BeltHandler;
+import io.github.ChanesCMD.trailcraft.item.FlaskItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -10,6 +12,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -31,6 +34,9 @@ public class WaterEvents {
         Water.Tracker tracker = player.getData(ModAttachments.WATER_TRACKER);
         if (tracker.drinkCooldown > 0) {
             tracker.drinkCooldown--;
+        }
+        if (player.isInWater()) {
+            fillFlask(player);
         }
         int water = get(player);
         Difficulty difficulty = player.level().getDifficulty();
@@ -75,6 +81,37 @@ public class WaterEvents {
         }
         tracker.drinkCooldown = Water.DRINK_COOLDOWN;
         set(player, get(player) + Water.DRINK_AMOUNT);
+        playDrinkSound(player);
+        fillFlask(player);
+    }
+
+    /** Глоток из фляги на поясе: фляга не пустая, запас воды не полный. */
+    private static void drinkFromFlask(ServerPlayer player) {
+        Water.Tracker tracker = player.getData(ModAttachments.WATER_TRACKER);
+        if (player.isSpectator() || tracker.drinkCooldown > 0 || get(player) >= Water.MAX) {
+            return;
+        }
+        BeltHandler belt = new BeltHandler(player);
+        int sips = FlaskItem.water(belt.flask());
+        if (sips <= 0) {
+            return;
+        }
+        belt.setFlaskWater(sips - 1);
+        tracker.drinkCooldown = Water.DRINK_COOLDOWN;
+        set(player, get(player) + Water.DRINK_AMOUNT);
+        playDrinkSound(player);
+    }
+
+    /** Наполняет флягу на поясе доверху (игрок в воде или пьёт воду ПКМ). */
+    private static void fillFlask(ServerPlayer player) {
+        BeltHandler belt = new BeltHandler(player);
+        ItemStack flask = belt.flask();
+        if (!flask.isEmpty() && FlaskItem.water(flask) < Water.FLASK_SIPS) {
+            belt.setFlaskWater(Water.FLASK_SIPS);
+        }
+    }
+
+    private static void playDrinkSound(ServerPlayer player) {
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_DRINK,
                 player.getSoundSource(), 0.5f, player.getRandom().nextFloat() * 0.1f + 0.9f);
     }
@@ -104,6 +141,12 @@ public class WaterEvents {
                     (payload, context) -> context.enqueueWork(() -> {
                         if (context.player() instanceof ServerPlayer player) {
                             drink(player);
+                        }
+                    }));
+            registrar.playToServer(Water.FlaskDrinkPayload.TYPE, Water.FlaskDrinkPayload.STREAM_CODEC,
+                    (payload, context) -> context.enqueueWork(() -> {
+                        if (context.player() instanceof ServerPlayer player) {
+                            drinkFromFlask(player);
                         }
                     }));
         }

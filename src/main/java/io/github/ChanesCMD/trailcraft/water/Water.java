@@ -12,7 +12,7 @@ import net.minecraft.world.damagesource.DamageType;
 
 /**
  * Вода (жажда) работает как голод: тратится со временем, быстрее при беге и прыжках; на нуле — урон, как от голода.
- * Пьют ПКМ пустой рукой по воде (позже ещё из фляги на поясе). Все числа черновые. TODO: уточнить.
+ * Пьют ПКМ пустой рукой по воде или из фляги на поясе. Все числа черновые. TODO: уточнить.
  */
 public final class Water {
     /** Полный запас: 10 капель по 2 единицы, как у еды. */
@@ -23,6 +23,8 @@ public final class Water {
     public static final float JUMP_THIRST = 0.05f;
     /** Сколько воды даёт один глоток и сколько тиков между глотками. */
     public static final int DRINK_AMOUNT = 2, DRINK_COOLDOWN = 10;
+    /** Фляга на поясе: сколько в ней глотков (каждый — DRINK_AMOUNT воды). */
+    public static final int FLASK_SIPS = 10;
     /** На нуле: урон 1 раз в столько тиков (как от голода). */
     public static final int DAMAGE_INTERVAL = 80;
 
@@ -54,6 +56,18 @@ public final class Water {
         public static final DrinkPayload INSTANCE = new DrinkPayload();
         public static final Type<DrinkPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "drink"));
         public static final StreamCodec<ByteBuf, DrinkPayload> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
+    /** Клиент → сервер: глоток из фляги на поясе (кнопка «Выпить»). */
+    public record FlaskDrinkPayload() implements CustomPacketPayload {
+        public static final FlaskDrinkPayload INSTANCE = new FlaskDrinkPayload();
+        public static final Type<FlaskDrinkPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "flask_drink"));
+        public static final StreamCodec<ByteBuf, FlaskDrinkPayload> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
         @Override
         public Type<? extends CustomPacketPayload> type() {

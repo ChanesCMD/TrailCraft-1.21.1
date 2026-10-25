@@ -2,6 +2,7 @@ package io.github.ChanesCMD.trailcraft.client.gui;
 
 import io.github.ChanesCMD.trailcraft.ServerConfig;
 import io.github.ChanesCMD.trailcraft.calendar.Calendar;
+import io.github.ChanesCMD.trailcraft.calendar.CalendarNotes;
 import io.github.ChanesCMD.trailcraft.client.voice.VoiceClient;
 import io.github.ChanesCMD.trailcraft.client.voice.VoiceHeads;
 import io.github.ChanesCMD.trailcraft.inventory.DeathLogPayloads;
@@ -9,13 +10,19 @@ import io.github.ChanesCMD.trailcraft.inventory.DeathRecord;
 import io.github.ChanesCMD.trailcraft.inventory.TrailInventoryMenu;
 import io.github.ChanesCMD.trailcraft.inventory.TrailInventoryMenu.MenuSlot;
 import io.github.ChanesCMD.trailcraft.inventory.TrailInventoryMenu.Popup;
+import io.github.ChanesCMD.trailcraft.item.CoinItem;
+import io.github.ChanesCMD.trailcraft.item.FlaskItem;
+import io.github.ChanesCMD.trailcraft.water.Water;
+import io.github.ChanesCMD.trailcraft.water.WaterEvents;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -25,14 +32,16 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static io.github.ChanesCMD.trailcraft.inventory.TrailInventoryMenu.*;
 
 /**
  * Экран инвентаря (ТЗ, часть 1, разделы 1–3). Макеты: docs/ui/01_inventory_default.png, 02_inventory_warmth.png, 04_backpack.png.
  * Слева от панели — головы голосового чата (только когда в нём хотя бы двое), в левом верхнем углу экрана — 5 кнопок.
- * Окна (рюкзак, журнал смертей, голосовой чат) рисуются поверх инвентаря с лёгким затемнением; закрываются Esc,
+ * Окна (рюкзак, кошелёк, пояс, календарь, журнал смертей, голосовой чат) рисуются поверх инвентаря с лёгким затемнением; закрываются Esc,
  * повторным нажатием кнопки или кликом вне окна.
  */
 public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventoryMenu> {
@@ -46,6 +55,11 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
     private static final int WARMTH_BG_X = 60, WARMTH_BG_Y = 32, WARMTH_BG_W = 24, WARMTH_BG_H = 78;
     /** Окно журнала смертей поверх основного инвентаря. */
     private static final int DEATHS_X = 74, DEATHS_Y = 11, DEATHS_W = 240, DEATHS_H = 150, DEATH_ROW_H = 31;
+    /** Окно календаря 140×158 (ТЗ 3.4): под кнопкой, правый край по кнопке; ячейки дней 20×18 с (10,51), по 6 в ряд. */
+    private static final int CAL_W = 140, CAL_H = 158, CAL_CELL_W = 20, CAL_CELL_H = 18, CAL_GRID_X = 10, CAL_GRID_Y = 51;
+    private static final int CAL_CLOSE_X = 122, CAL_CLOSE_Y = 5, CAL_NOTE_X = 10, CAL_NOTE_Y = 137;
+    /** Кнопка «Выпить» в окне пояса (относительно окна). */
+    private static final int DRINK_X = 7, DRINK_Y = 42, DRINK_W = 112, DRINK_H = 14;
     private static final int[] BAR_COLORS = {0xFFE8C33A, 0, 0xFF4A7BE0, 0, 0, 0, 0};
     private static final String[] BACKPACK_ROWS = {"battery", "solar", "mana", "sleeping", "workbench", "atlas", "calendar"};
     private static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").withZone(ZoneId.systemDefault());
@@ -64,6 +78,12 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
     private int deathsTotal;
     private long deathsNow;
     private int deathsScroll;
+    /** Окно календаря: положение относительно панели (прижимается к краю экрана), заметки, выбранный день. */
+    private int calX, calY;
+    private EditBox noteBox;
+    private Map<String, String> notes = new HashMap<>();
+    private int selectedDay;
+    private String noteKey;
 
     public TrailInventoryScreen(TrailInventoryMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -78,7 +98,8 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
     protected void init() {
         super.init();
         leftPos = Math.max(4 + HEADS_W + HEADS_GAP, (width - WIDTH) / 2);
-        topPos = Math.max(4, (height - HEIGHT) / 2 - RAISE);
+        // Окно рюкзака над панелью должно влезать по высоте (GUI scale 4 на 1080p: экран 480×270)
+        topPos = Math.min(Math.max((height - HEIGHT) / 2 - RAISE, 4 - BACKPACK_WIN_Y), Math.max(4, height - HEIGHT - 4));
         cornerButtons = CornerButtons.create(this, this::toggleVoice);
         voiceWindow = new VoiceChatWindow(font);
         for (int i = 0; i < cornerButtons.size(); i++) {
@@ -87,12 +108,30 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
             }
         }
 
-        // TODO (шаг 4): открывает окно календаря
-        calendarButton = addRenderableWidget(Button.builder(Component.translatable("gui.trailcraft.calendar"), b -> {})
+        calendarButton = addRenderableWidget(Button.builder(Component.translatable("gui.trailcraft.calendar"), b -> toggleCalendar())
                 .bounds(leftPos + CALENDAR_X, topPos + CALENDAR_Y, BUTTON_W, BUTTON_H).build());
         addRenderableWidget(Button.builder(Component.translatable("gui.trailcraft.deaths"), b -> toggleDeaths())
                 .bounds(leftPos + CALENDAR_X, topPos + DEATHS_BUTTON_Y, BUTTON_W, BUTTON_H).build());
         updateCalendarButton();
+
+        // Поле заметки рисуется вместе с окном календаря (поверх затемнения), поэтому добавлено без отрисовки
+        placeCalendar();
+        noteBox = new EditBox(font, leftPos + calX + CAL_NOTE_X, topPos + calY + CAL_NOTE_Y, 120, 15, Component.translatable("gui.trailcraft.calendar.note"));
+        noteBox.setMaxLength(CalendarNotes.MAX_LENGTH);
+        noteBox.setVisible(menu.popup == Popup.CALENDAR);
+        if (noteKey != null) {
+            noteBox.setValue(notes.getOrDefault(noteKey, ""));
+        }
+        addWidget(noteBox);
+        if (menu.popup == Popup.CALENDAR) {
+            setPopupRect(calX, calY, CAL_W, CAL_H);
+        }
+    }
+
+    @Override
+    public void removed() {
+        flushNote();
+        super.removed();
     }
 
     @Override
@@ -110,9 +149,18 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
     // === Окна ===
 
     private void openPopup(Popup popup) {
+        if (menu.popup == Popup.CALENDAR && popup != Popup.CALENDAR) {
+            flushNote();
+            noteBox.setFocused(false);
+            noteBox.setVisible(false);
+            setFocused(null);
+        }
         menu.popup = popup;
         switch (popup) {
             case BACKPACK -> setPopupRect(BACKPACK_WIN_X, BACKPACK_WIN_Y, BACKPACK_W, BACKPACK_H);
+            case WALLET -> setPopupRect(WALLET_WIN_X, WALLET_WIN_Y, WALLET_W, WALLET_H);
+            case BELT -> setPopupRect(BELT_WIN_X, BELT_WIN_Y, BELT_W, BELT_H);
+            case CALENDAR -> setPopupRect(calX, calY, CAL_W, CAL_H);
             case DEATHS -> setPopupRect(DEATHS_X, DEATHS_Y, DEATHS_W, DEATHS_H);
             default -> setPopupRect(0, 0, 0, 0);
         }
@@ -123,6 +171,58 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         menu.popupY = y;
         menu.popupW = w;
         menu.popupH = h;
+    }
+
+    /** Окно календаря под кнопкой; если не влезает по высоте или ширине — прижимается к краю экрана. */
+    private void placeCalendar() {
+        calX = Math.max(4 - leftPos, Math.min(CALENDAR_X + BUTTON_W - CAL_W, width - 4 - CAL_W - leftPos));
+        calY = Math.max(4 - topPos, Math.min(CALENDAR_Y + BUTTON_H + 2, height - 4 - CAL_H - topPos));
+    }
+
+    private void toggleCalendar() {
+        if (menu.popup == Popup.CALENDAR) {
+            openPopup(Popup.NONE);
+            return;
+        }
+        openPopup(Popup.CALENDAR);
+        noteBox.setVisible(true);
+        selectDay(today().dayOfSeason());
+        PacketDistributor.sendToServer(CalendarNotes.Request.INSTANCE);
+    }
+
+    private Calendar today() {
+        return Calendar.of(minecraft.level.getDayTime(), ServerConfig.daysPerSeason());
+    }
+
+    /** Выбирает день текущего сезона: заметка прежнего дня сохраняется, в поле — заметка нового. */
+    private void selectDay(int day) {
+        flushNote();
+        selectedDay = day;
+        noteKey = CalendarNotes.key(today(), day);
+        noteBox.setValue(notes.getOrDefault(noteKey, ""));
+    }
+
+    /** Отправляет заметку на сервер, если она изменилась. */
+    private void flushNote() {
+        if (noteKey == null || noteBox == null) {
+            return;
+        }
+        String text = noteBox.getValue().strip();
+        if (!text.equals(notes.getOrDefault(noteKey, ""))) {
+            if (text.isEmpty()) {
+                notes.remove(noteKey);
+            } else {
+                notes.put(noteKey, text);
+            }
+            PacketDistributor.sendToServer(new CalendarNotes.Update(noteKey, text));
+        }
+    }
+
+    public void showCalendarNotes(Map<String, String> notes) {
+        this.notes = new HashMap<>(notes);
+        if (noteKey != null && noteBox.getValue().isEmpty()) {
+            noteBox.setValue(this.notes.getOrDefault(noteKey, ""));
+        }
     }
 
     private void toggleDeaths() {
@@ -253,10 +353,12 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
             g.pose().translate(0, 0, Z_DIM);
             g.fill(-leftPos, -topPos, width - leftPos, height - topPos, 0x40000000);
             g.pose().translate(0, 0, Z_POPUP - Z_DIM);
-            if (menu.popup == Popup.BACKPACK) {
-                renderBackpack(g);
-            } else {
-                renderDeaths(g);
+            switch (menu.popup) {
+                case BACKPACK -> renderBackpack(g);
+                case WALLET -> renderWallet(g);
+                case BELT -> renderBelt(g, mouseX, mouseY);
+                case CALENDAR -> renderCalendar(g, mouseX, mouseY);
+                default -> renderDeaths(g);
             }
             g.pose().popPose();
         }
@@ -297,6 +399,112 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         renderPopupItems(g);
     }
 
+    /** Окно кошелька 86×64 (ТЗ 3.3): 8 ячеек 4×2, по виду монеты в каждой. */
+    private void renderWallet(GuiGraphics g) {
+        int px = WALLET_WIN_X, py = WALLET_WIN_Y;
+        UiDraw.panel(g, px, py, WALLET_W, WALLET_H);
+        g.drawString(font, Component.translatable("gui.trailcraft.wallet"), px + 7, py + 6, UiDraw.LABEL, false);
+        boolean present = menu.wallet().isPresent();
+        for (int k = 0; k < 8; k++) {
+            drawSlotFrame(g, px + 7 + 18 * (k % 4), py + 20 + 18 * (k / 4), !present);
+        }
+        renderPopupItems(g);
+    }
+
+    /** Окно пояса: слот фляги, запас воды в ней и кнопка «Выпить». */
+    private void renderBelt(GuiGraphics g, int mouseX, int mouseY) {
+        int px = BELT_WIN_X, py = BELT_WIN_Y;
+        UiDraw.panel(g, px, py, BELT_W, BELT_H);
+        g.drawString(font, Component.translatable("gui.trailcraft.belt"), px + 7, py + 6, UiDraw.LABEL, false);
+        drawSlotFrame(g, px + 7, py + 20, !menu.belt().isPresent());
+        ItemStack flask = menu.belt().flask();
+        int water = FlaskItem.water(flask);
+        Component label = flask.isEmpty() ? Component.translatable("gui.trailcraft.belt.no_flask")
+                : Component.translatable("gui.trailcraft.belt.flask", water, Water.FLASK_SIPS);
+        g.drawString(font, label, px + 29, py + 21, UiDraw.LABEL, false);
+        UiDraw.frame(g, px + 29, py + 31, 90, 6, 0xFF373737, 0xFFFFFFFF, 0xFF555555);
+        g.fill(px + 30, py + 32, px + 30 + Math.round(88f * water / Water.FLASK_SIPS), py + 36, 0xFF3F76E4);
+
+        boolean active = canDrinkFromFlask();
+        boolean hover = active && isOver(mouseX, mouseY, px + DRINK_X, py + DRINK_Y, DRINK_W, DRINK_H);
+        UiDraw.frame(g, px + DRINK_X, py + DRINK_Y, DRINK_W, DRINK_H, 0xFF000000, active ? 0xFFFFFFFF : 0xFF9E9E9E,
+                hover ? 0xFFB0B0D8 : active ? 0xFFA8A8A8 : 0xFF6E6E6E);
+        Component drink = Component.translatable("gui.trailcraft.belt.drink");
+        g.drawString(font, drink, px + DRINK_X + (DRINK_W - font.width(drink)) / 2, py + DRINK_Y + 3,
+                active ? 0xFFFFFFFF : 0xFFA0A0A0, active);
+        renderPopupItems(g);
+    }
+
+    private boolean canDrinkFromFlask() {
+        return FlaskItem.water(menu.belt().flask()) > 0 && WaterEvents.get(playerInventory.player) < Water.MAX;
+    }
+
+    /**
+     * Окно календаря 140×158 (ТЗ 3.4): шапка с годом, сезоном, днём и временем; сетка дней сезона (6 в ряд):
+     * прошедшие темнее, текущий зелёный с белой рамкой, выбранный в чёрной рамке, с заметкой — жёлтая точка;
+     * внизу заметка к выбранному дню.
+     */
+    private void renderCalendar(GuiGraphics g, int mouseX, int mouseY) {
+        int px = calX, py = calY;
+        Calendar now = today();
+        UiDraw.panel(g, px, py, CAL_W, CAL_H);
+        g.drawString(font, Component.translatable("gui.trailcraft.calendar"), px + 7, py + 6, UiDraw.LABEL, false);
+        // Кнопка закрытия 12×12 с крестиком
+        int cx = px + CAL_CLOSE_X, cy = py + CAL_CLOSE_Y;
+        boolean closeHover = isOver(mouseX, mouseY, cx, cy, 12, 12);
+        UiDraw.frame(g, cx, cy, 12, 12, 0xFF000000, 0xFFFFFFFF, closeHover ? 0xFFB0B0D8 : 0xFFA8A8A8);
+        for (int i = 0; i < 6; i++) {
+            g.fill(cx + 3 + i, cy + 3 + i, cx + 4 + i, cy + 4 + i, UiDraw.LABEL);
+            g.fill(cx + 8 - i, cy + 3 + i, cx + 9 - i, cy + 4 + i, UiDraw.LABEL);
+        }
+
+        UiDraw.frame(g, px + 8, py + 20, 124, 26, 0xFF373737, 0xFFFFFFFF, 0xFFB8B8B8);
+        Component season = Component.translatable(now.season().translationKey());
+        g.drawString(font, Component.translatable("gui.trailcraft.calendar.year", now.year()), px + 12, py + 23, UiDraw.LABEL, false);
+        g.drawString(font, season, px + 128 - font.width(season), py + 23, UiDraw.LABEL, false);
+        g.drawString(font, Component.translatable("gui.trailcraft.calendar.day", now.dayOfSeason()), px + 12, py + 34, UiDraw.LABEL, false);
+        g.drawString(font, now.time(), px + 128 - font.width(now.time()), py + 34, UiDraw.LABEL, false);
+
+        for (int day = 1; day <= now.daysPerSeason(); day++) {
+            int x = px + CAL_GRID_X + CAL_CELL_W * ((day - 1) % 6), y = py + CAL_GRID_Y + CAL_CELL_H * ((day - 1) / 6);
+            boolean today = day == now.dayOfSeason();
+            int fill = today ? UiDraw.GREEN : day < now.dayOfSeason() ? 0xFF7A7A7A : 0xFFB8B8B8;
+            int border = today ? 0xFFFFFFFF : day == selectedDay ? 0xFF000000 : 0xFF8B8B8B;
+            g.fill(x, y, x + CAL_CELL_W, y + CAL_CELL_H, border);
+            g.fill(x + 1, y + 1, x + CAL_CELL_W - 1, y + CAL_CELL_H - 1, fill);
+            if (day == selectedDay && !today) {
+                g.fill(x + 1, y + 1, x + CAL_CELL_W - 1, y + 2, 0xFF000000);
+                g.fill(x + 1, y + CAL_CELL_H - 2, x + CAL_CELL_W - 1, y + CAL_CELL_H - 1, 0xFF000000);
+            }
+            String number = String.valueOf(day);
+            g.drawString(font, number, x + (CAL_CELL_W - font.width(number) + 1) / 2, y + 5, today ? 0xFFFFFFFF : UiDraw.LABEL, today);
+            if (!notes.getOrDefault(CalendarNotes.key(now, day), "").isEmpty()) {
+                g.fill(x + CAL_CELL_W - 5, y + 2, x + CAL_CELL_W - 2, y + 5, 0xFFF2D23A);
+            }
+        }
+
+        g.drawString(font, Component.translatable("gui.trailcraft.calendar.note_for", selectedDay), px + CAL_NOTE_X, py + CAL_NOTE_Y - 10,
+                UiDraw.LABEL, false);
+        // Поле ввода в координатах экрана
+        g.pose().pushPose();
+        g.pose().translate(-leftPos, -topPos, 0);
+        noteBox.setPosition(leftPos + px + CAL_NOTE_X, topPos + py + CAL_NOTE_Y);
+        noteBox.render(g, mouseX, mouseY, 0);
+        g.pose().popPose();
+    }
+
+    /** День под курсором в окне календаря или 0. */
+    private int calendarDayAt(double mouseX, double mouseY) {
+        int days = today().daysPerSeason();
+        for (int day = 1; day <= days; day++) {
+            int x = calX + CAL_GRID_X + CAL_CELL_W * ((day - 1) % 6), y = calY + CAL_GRID_Y + CAL_CELL_H * ((day - 1) / 6);
+            if (isOver(mouseX, mouseY, x, y, CAL_CELL_W, CAL_CELL_H)) {
+                return day;
+            }
+        }
+        return 0;
+    }
+
     private void drawSlotFrame(GuiGraphics g, int x, int y, boolean locked) {
         if (locked) {
             UiDraw.lockedSlot(g, x, y);
@@ -310,7 +518,7 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         g.pose().pushPose();
         g.pose().translate(0, 0, Z_POPUP_ITEMS);
         for (Slot slot : menu.slots) {
-            if (slot instanceof MenuSlot s && s.group() == GROUP_BACKPACK && slot.isActive()) {
+            if (slot instanceof MenuSlot s && s.group() == popupGroup() && slot.isActive()) {
                 ItemStack stack = slot.getItem();
                 g.renderItem(stack, slot.x, slot.y);
                 g.renderItemDecorations(font, stack, slot.x, slot.y);
@@ -320,6 +528,16 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
             }
         }
         g.pose().popPose();
+    }
+
+    /** Группа слотов открытого окна. */
+    private int popupGroup() {
+        return switch (menu.popup) {
+            case BACKPACK -> GROUP_BACKPACK;
+            case WALLET -> GROUP_WALLET;
+            case BELT -> GROUP_BELT;
+            default -> -1;
+        };
     }
 
     /** Окно журнала смертей: дата, игровая дата, координаты и что с рюкзаком. Колесо мыши — прокрутка. */
@@ -366,11 +584,34 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
             }
             return true;
         }
-        if (menu.popup != Popup.NONE) {
-            if (isOver(mouseX, mouseY, BACKPACK_X + 10, BOTTOM_Y + 1, 7, 7) && menu.popup == Popup.BACKPACK) {
+        // Кнопки окон на кошельке, поясе и рюкзаке лежат поверх всего и работают всегда: открыть, переключить, закрыть
+        Popup plus = button == 0 ? plusButtonAt(mouseX, mouseY) : null;
+        if (plus != null) {
+            openPopup(menu.popup == plus ? Popup.NONE : plus);
+            return true;
+        }
+        if (menu.popup == Popup.BELT && button == 0 && canDrinkFromFlask()
+                && isOver(mouseX, mouseY, BELT_WIN_X + DRINK_X, BELT_WIN_Y + DRINK_Y, DRINK_W, DRINK_H)) {
+            PacketDistributor.sendToServer(Water.FlaskDrinkPayload.INSTANCE);
+            return true;
+        }
+        if (menu.popup == Popup.CALENDAR && overPopup(mouseX, mouseY)) {
+            boolean onNote = noteBox.isMouseOver(mouseX, mouseY);
+            noteBox.setFocused(onNote);
+            setFocused(onNote ? noteBox : null);
+            if (onNote) {
+                noteBox.mouseClicked(mouseX, mouseY, button);
+            } else if (isOver(mouseX, mouseY, calX + CAL_CLOSE_X, calY + CAL_CLOSE_Y, 12, 12)) {
                 openPopup(Popup.NONE);
-                return true;
+            } else {
+                int day = calendarDayAt(mouseX, mouseY);
+                if (day > 0) {
+                    selectDay(day);
+                }
             }
+            return true;
+        }
+        if (menu.popup != Popup.NONE) {
             // Клик по видимому слоту инвентаря проходит в слот (чтобы перекладывать вещи в окно и из него),
             // клик по пустому месту вне окна закрывает окно.
             if (!overPopup(mouseX, mouseY) && !overActiveSlot(mouseX, mouseY)) {
@@ -386,17 +627,45 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
                     return true;
                 }
             }
-            if (isOver(mouseX, mouseY, BACKPACK_X + 10, BOTTOM_Y + 1, 7, 7)) {
-                openPopup(Popup.BACKPACK);
-                return true;
-            }
-            // TODO (шаг 3): окна кошелька и пояса
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
+    /**
+     * Монета с курсора кладётся в ячейку своего вида, в какую бы ячейку кошелька ни кликнули:
+     * иначе клик по занятой ячейке поменял бы монеты местами.
+     */
+    @Override
+    protected void slotClicked(Slot slot, int slotId, int mouseButton, ClickType type) {
+        if (slot != null && type == ClickType.PICKUP && slotId >= WALLET_CONTENT_START && slotId < WALLET_CONTENT_START + CoinItem.TIERS
+                && menu.getCarried().getItem() instanceof CoinItem coin) {
+            slotId = WALLET_CONTENT_START + coin.tier();
+            slot = menu.slots.get(slotId);
+        }
+        super.slotClicked(slot, slotId, mouseButton, type);
+    }
+
+    /** Кнопка окна (+) под курсором: кошелёк, пояс или рюкзак. */
+    private Popup plusButtonAt(double mouseX, double mouseY) {
+        if (isOver(mouseX, mouseY, WALLET_X + 10, BOTTOM_Y + 1, 7, 7)) return Popup.WALLET;
+        if (isOver(mouseX, mouseY, BELT_X + 10, BOTTOM_Y + 1, 7, 7)) return Popup.BELT;
+        if (isOver(mouseX, mouseY, BACKPACK_X + 10, BOTTOM_Y + 1, 7, 7)) return Popup.BACKPACK;
+        return null;
+    }
+
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (menu.popup == Popup.CALENDAR && noteBox.isFocused() && keyCode != 256) {
+            // Пока пишется заметка, клавиши (E, цифры хотбара…) идут в поле, Enter сохраняет
+            if (keyCode == 257 || keyCode == 335) {
+                flushNote();
+                noteBox.setFocused(false);
+                setFocused(null);
+                return true;
+            }
+            noteBox.keyPressed(keyCode, scanCode, modifiers);
+            return true;
+        }
         if (keyCode == 256 && voiceOpen) {
             voiceOpen = false;
             return true;
@@ -406,6 +675,14 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
             return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public boolean charTyped(char codePoint, int modifiers) {
+        if (menu.popup == Popup.CALENDAR && noteBox.isFocused()) {
+            return noteBox.charTyped(codePoint, modifiers);
+        }
+        return super.charTyped(codePoint, modifiers);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package io.github.ChanesCMD.trailcraft.client.gui;
 
+import io.github.ChanesCMD.trailcraft.client.ClientGear;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -13,7 +14,7 @@ import java.util.List;
 
 /**
  * Кнопки в левом верхнем углу экрана инвентаря (ТЗ, раздел 6): 14×14 на (4,4) с шагом 16, иконки 10×10.
- * JEI — только если он установлен. Карта, приваты и гайдбук пока заглушки «Скоро».
+ * JEI — только если он установлен. Карта (нужен атлас), приваты и гайдбук пока заглушки «Скоро».
  */
 public final class CornerButtons {
     public static final int X = 4, Y = 4, SIZE = 14, STEP = 16;
@@ -43,7 +44,7 @@ public final class CornerButtons {
         if (ModList.get().isLoaded("jei")) {
             list.add(new Entry("jei", MAGNIFIER, () -> openJeiConfig(parent)));
         }
-        list.add(new Entry("map", MAP, CornerButtons::soon));
+        list.add(new Entry("map", MAP, CornerButtons::openMap));
         list.add(new Entry("voice", MIC, voice));
         list.add(new Entry("claims", FLAG, CornerButtons::soon));
         list.add(new Entry("guide", GUIDE, CornerButtons::soon));
@@ -56,6 +57,16 @@ public final class CornerButtons {
         ModList.get().getModContainerById("jei")
                 .flatMap(container -> container.getCustomExtension(IConfigScreenFactory.class).map(f -> f.createScreen(container, parent)))
                 .ifPresentOrElse(mc::setScreen, CornerButtons::soon);
+    }
+
+    /** Полноэкранная карта требует атлас в рюкзаке. TODO: сама карта (макет 08_map.png) */
+    private static void openMap() {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player != null && !ClientGear.hasAtlas()) {
+            mc.player.displayClientMessage(Component.translatable("message.trailcraft.map.need"), true);
+        } else {
+            soon();
+        }
     }
 
     private static void soon() {

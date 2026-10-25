@@ -6,9 +6,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tiers;
 import io.github.ChanesCMD.trailcraft.item.BackpackItem;
 import io.github.ChanesCMD.trailcraft.item.PocketItem;
+import io.github.ChanesCMD.trailcraft.item.CoinItem;
+import io.github.ChanesCMD.trailcraft.item.FlaskItem;
+import io.github.ChanesCMD.trailcraft.item.WalletItem;
 import io.github.ChanesCMD.trailcraft.item.BranchStickItem;
 import io.github.ChanesCMD.trailcraft.item.TurfCutterItem;
 import net.neoforged.neoforge.registries.DeferredItem;
+import java.util.ArrayList;
+import java.util.List;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 
@@ -125,10 +130,18 @@ public class ModItems {
     // === СНАРЯЖЕНИЕ ИГРОКА ===
     /** Календарь: кладётся в слот календаря рюкзака (кнопка календаря в инвентаре, дата в HUD). */
     public static final DeferredItem<Item> CALENDAR = ITEMS.registerItem("calendar", props -> new Item(props.stacksTo(1)));
-    /** Атлас: кладётся в слот атласа рюкзака (миникарта в HUD). */
+    /** Атлас: кладётся в слот атласа рюкзака (миникарта в HUD и полноэкранная карта). */
     public static final DeferredItem<Item> ATLAS = ITEMS.registerItem("atlas", props -> new Item(props.stacksTo(1)));
-    /** Пояс: носится в слоте пояса, при смерти остаётся у игрока. Окно пояса (подсумки, фляга, связь) пока не сделано. */
+    /** Пояс: носится в слоте пояса, при смерти остаётся у игрока вместе с флягой (см. BeltHandler). */
     public static final DeferredItem<Item> BELT = ITEMS.registerItem("belt", props -> new Item(props.stacksTo(1)));
+    /** Фляга для питьевой воды: кладётся в окно пояса. */
+    public static final DeferredItem<FlaskItem> FLASK = ITEMS.registerItem("flask", props -> new FlaskItem(props.stacksTo(1)));
+    /** Кошелёк на 8 видов монет: носится в слоте кошелька. */
+    public static final DeferredItem<WalletItem> WALLET = ITEMS.registerItem("wallet", props -> new WalletItem(props.stacksTo(1)));
+
+    // === МОНЕТЫ (по возрастанию, каждая в 10 раз дороже предыдущей; в кошельке меняются сами) ===
+    public static final List<DeferredItem<CoinItem>> COINS = registerCoins("copper_coin", "bronze_coin", "silver_coin", "gold_coin",
+            "platinum_coin", "precious_platinum_coin", "iridium_coin", "precious_iridium_coin");
 
     // === КАРМАНЫ РЮКЗАКА ===
     public static final DeferredItem<PocketItem> SMALL_POCKET = ITEMS.registerItem("small_pocket",
@@ -147,4 +160,13 @@ public class ModItems {
     public static final DeferredItem<Item> METAL_SCRAP = ITEMS.registerSimpleItem("metal_scrap");
     public static final DeferredItem<Item> PAPER_SCRAPS = ITEMS.registerSimpleItem("paper_scraps");
     public static final DeferredItem<Item> PLASTIC_WASTE = ITEMS.registerSimpleItem("plastic_waste");
+
+    private static List<DeferredItem<CoinItem>> registerCoins(String... names) {
+        List<DeferredItem<CoinItem>> coins = new ArrayList<>();
+        for (int tier = 0; tier < names.length; tier++) {
+            int t = tier;
+            coins.add(ITEMS.registerItem(names[tier], props -> new CoinItem(props.stacksTo(99), t)));
+        }
+        return List.copyOf(coins);
+    }
 }

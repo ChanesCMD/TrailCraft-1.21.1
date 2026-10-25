@@ -12,6 +12,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public final class ModAttachments {
@@ -37,6 +38,15 @@ public final class ModAttachments {
     /** Хотбар, отложенный в момент смерти: после возрождения возвращается игроку. */
     public static final Supplier<AttachmentType<ItemStackHandler>> KEPT_HOTBAR = ATTACHMENT_TYPES.register("kept_hotbar",
             () -> AttachmentType.serializable(() -> new ItemStackHandler(9)).build());
+
+    /** Заметки к дням календаря: «год/сезон/день» → текст (см. CalendarNotes). */
+    public static final Supplier<AttachmentType<Map<String, String>>> CALENDAR_NOTES = ATTACHMENT_TYPES.register("calendar_notes",
+            () -> AttachmentType.<Map<String, String>>builder(() -> Map.of())
+                    .serialize(Codec.unboundedMap(Codec.STRING, Codec.STRING)).copyOnDeath().build());
+
+    /** Последнее, что отправлено клиенту в GearPayload (не сохраняется: после входа отправится заново). */
+    public static final Supplier<AttachmentType<Integer>> GEAR_SENT = ATTACHMENT_TYPES.register("gear_sent",
+            () -> AttachmentType.builder(() -> -1).build());
 
     /** Выносливость (после смерти — снова полная). */
     public static final Supplier<AttachmentType<Float>> STAMINA = ATTACHMENT_TYPES.register("stamina",

@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import io.github.ChanesCMD.trailcraft.init.ModAttachments;
 import io.github.ChanesCMD.trailcraft.init.ModMenus;
 import io.github.ChanesCMD.trailcraft.item.BackpackItem;
+import io.github.ChanesCMD.trailcraft.item.CoinItem;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -51,6 +52,9 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
     /** Окно рюкзака 176×201 над слотом рюкзака: левый край = левый край слота, низ на 2 px выше слота. */
     public static final int BACKPACK_W = 176, BACKPACK_H = 201;
     public static final int BACKPACK_WIN_X = BACKPACK_X, BACKPACK_WIN_Y = BOTTOM_Y - 2 - BACKPACK_H;
+    /** Окно кошелька 86×64 (8 монет 4×2) и окно пояса 126×62 (фляга и кнопка «Выпить»), тоже над своими слотами. */
+    public static final int WALLET_W = 86, WALLET_H = 64, WALLET_WIN_X = WALLET_X, WALLET_WIN_Y = BOTTOM_Y - 2 - WALLET_H;
+    public static final int BELT_W = 126, BELT_H = 62, BELT_WIN_X = BELT_X, BELT_WIN_Y = BOTTOM_Y - 2 - BELT_H;
 
     // === Номера слотов меню ===
     public static final int RESULT = 0;
@@ -64,13 +68,15 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
     public static final int HOTBAR_START = 88;        // 9
     public static final int BACKPACK_UTILITY_START = 97;  // 7: аккумулятор … календарь
     public static final int POCKET_START = 104;       // 9: видны только карманы тира надетого рюкзака
-    public static final int SLOT_COUNT = 113;
+    public static final int WALLET_CONTENT_START = 113;   // 8: монеты
+    public static final int FLASK_SLOT = 121;
+    public static final int SLOT_COUNT = 122;
 
     /** Группы слотов: от группы зависит, когда слот виден. */
-    public static final int GROUP_BASE = 0, GROUP_WARMTH = 1, GROUP_BACKPACK = 2;
+    public static final int GROUP_BASE = 0, GROUP_WARMTH = 1, GROUP_BACKPACK = 2, GROUP_WALLET = 3, GROUP_BELT = 4;
 
     /** Открытое окно поверх инвентаря (только на клиенте). */
-    public enum Popup { NONE, BACKPACK, DEATHS }
+    public enum Popup { NONE, BACKPACK, WALLET, BELT, CALENDAR, DEATHS }
 
     private static final EquipmentSlot[] ARMOR = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
     private static final ResourceLocation[] ARMOR_ICONS = {InventoryMenu.EMPTY_ARMOR_SLOT_HELMET,
@@ -81,6 +87,8 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
     private final TransientCraftingContainer craftSlots = new TransientCraftingContainer(this, 3, 3);
     private final ResultContainer resultSlots = new ResultContainer();
     private final BackpackHandler backpack;
+    private final WalletHandler wallet;
+    private final BeltHandler belt;
 
     // === Состояние окна на клиенте (экран меняет его, слоты по нему решают, видны ли они) ===
     public boolean warmthVisible;
@@ -92,6 +100,8 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
         this.player = inventory.player;
         this.clientSide = player.level().isClientSide;
         this.backpack = new BackpackHandler(player);
+        this.wallet = new WalletHandler(player);
+        this.belt = new BeltHandler(player);
         PlayerSlots extra = player.getData(ModAttachments.PLAYER_SLOTS);
         IItemHandler vanilla = new InvWrapper(inventory);
         IItemHandler craft = new InvWrapper(craftSlots);
@@ -143,6 +153,12 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
             addSlot(new MenuSlot(backpack, BackpackItem.POCKETS + k, BACKPACK_WIN_X + 8 + 18 * k, BACKPACK_WIN_Y + 177)
                     .group(GROUP_BACKPACK).locked(() -> !backpack.isPresent()).shown(() -> index < visiblePockets()));
         }
+        for (int k = 0; k < CoinItem.TIERS; k++) {
+            addSlot(new MenuSlot(wallet, k, WALLET_WIN_X + 8 + 18 * (k % 4), WALLET_WIN_Y + 21 + 18 * (k / 4))
+                    .group(GROUP_WALLET).locked(() -> !wallet.isPresent()));
+        }
+        addSlot(new MenuSlot(belt, BeltHandler.FLASK, BELT_WIN_X + 8, BELT_WIN_Y + 21)
+                .group(GROUP_BELT).locked(() -> !belt.isPresent()));
 
         addDataSlot(new DataSlot() {
             @Override
@@ -159,6 +175,14 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
 
     public BackpackHandler backpack() {
         return backpack;
+    }
+
+    public WalletHandler wallet() {
+        return wallet;
+    }
+
+    public BeltHandler belt() {
+        return belt;
     }
 
     /** Сколько слотов карманов показывать: по тиру рюкзака, без рюкзака — все (закрытыми). */
@@ -366,6 +390,8 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
             return switch (group) {
                 case GROUP_WARMTH -> warmthVisible && !coveredByPopup(this);
                 case GROUP_BACKPACK -> popup == Popup.BACKPACK;
+                case GROUP_WALLET -> popup == Popup.WALLET;
+                case GROUP_BELT -> popup == Popup.BELT;
                 default -> !coveredByPopup(this);
             };
         }

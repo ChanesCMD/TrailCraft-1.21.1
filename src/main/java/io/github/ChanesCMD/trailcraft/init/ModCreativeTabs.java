@@ -88,6 +88,9 @@ public class ModCreativeTabs {
                         output.accept(ModItems.MEDIUM_POCKET);
                         output.accept(ModItems.LARGE_POCKET);
                         output.accept(ModItems.BELT);
+                        output.accept(ModItems.FLASK);
+                        output.accept(ModItems.WALLET);
+                        ModItems.COINS.forEach(output::accept);
                         output.accept(ModItems.CALENDAR);
                         output.accept(ModItems.ATLAS);
 

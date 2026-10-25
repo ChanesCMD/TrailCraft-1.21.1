@@ -3,6 +3,7 @@ package io.github.ChanesCMD.trailcraft.inventory;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.block.BackpackBlock;
 import io.github.ChanesCMD.trailcraft.block.GraveBlock;
+import io.github.ChanesCMD.trailcraft.client.ClientGear;
 import io.github.ChanesCMD.trailcraft.client.ClientInventoryEvents;
 import io.github.ChanesCMD.trailcraft.init.ModAttachments;
 import io.github.ChanesCMD.trailcraft.init.ModComponents;
@@ -188,6 +189,7 @@ public class InventoryEvents {
         }
         BackpackHandler backpack = new BackpackHandler(player);
         moveFromLockedSlots(player, backpack);
+        syncGear(player, backpack);
         if (player.isCreative()) {
             return;
         }
@@ -230,6 +232,16 @@ public class InventoryEvents {
             if (!rest.isEmpty()) {
                 player.drop(rest, false);
             }
+        }
+    }
+
+    /** Отправляет клиенту, есть ли в рюкзаке атлас и календарь, когда это меняется. */
+    private static void syncGear(ServerPlayer player, BackpackHandler backpack) {
+        int flags = (backpack.has(BackpackItem.ATLAS) ? GearPayload.ATLAS : 0)
+                | (backpack.has(BackpackItem.CALENDAR) ? GearPayload.CALENDAR : 0);
+        if (flags != player.getData(ModAttachments.GEAR_SENT)) {
+            player.setData(ModAttachments.GEAR_SENT, flags);
+            PacketDistributor.sendToPlayer(player, new GearPayload(flags));
         }
     }
 
@@ -289,6 +301,8 @@ public class InventoryEvents {
                     }));
             registrar.playToClient(DeathLogPayloads.Log.TYPE, DeathLogPayloads.Log.STREAM_CODEC,
                     (payload, context) -> context.enqueueWork(() -> ClientInventoryEvents.showDeathLog(payload)));
+            registrar.playToClient(GearPayload.TYPE, GearPayload.STREAM_CODEC,
+                    (payload, context) -> context.enqueueWork(() -> ClientGear.set(payload)));
         }
     }
 

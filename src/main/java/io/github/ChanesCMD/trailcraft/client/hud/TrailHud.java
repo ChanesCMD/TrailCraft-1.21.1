@@ -1,6 +1,9 @@
 package io.github.ChanesCMD.trailcraft.client.hud;
 
+import io.github.ChanesCMD.trailcraft.ServerConfig;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
+import io.github.ChanesCMD.trailcraft.calendar.Calendar;
+import io.github.ChanesCMD.trailcraft.client.ClientGear;
 import io.github.ChanesCMD.trailcraft.client.gui.TrailInventoryScreen;
 import io.github.ChanesCMD.trailcraft.client.voice.VoiceClient;
 import io.github.ChanesCMD.trailcraft.client.voice.VoiceHeads;
@@ -13,6 +16,7 @@ import io.github.ChanesCMD.trailcraft.water.WaterEvents;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffects;
@@ -42,6 +46,7 @@ public class TrailHud {
         event.replaceLayer(VanillaGuiLayers.FOOD_LEVEL, TrailHud::renderFood);
         event.replaceLayer(VanillaGuiLayers.AIR_LEVEL, TrailHud::renderStamina);
         event.registerBelow(VanillaGuiLayers.CHAT, ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "voice_heads"), TrailHud::renderVoiceHeads);
+        event.registerBelow(VanillaGuiLayers.CHAT, ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "map_and_date"), TrailHud::renderMapAndDate);
     }
 
     /**
@@ -60,6 +65,30 @@ public class TrailHud {
         Minecraft mc = Minecraft.getInstance();
         if (!mc.options.hideGui && !(mc.screen instanceof TrailInventoryScreen) && VoiceClient.showHeads()) {
             VoiceHeads.column(g, 6, 20, VoiceClient.heads());
+        }
+    }
+
+    /**
+     * В правом верхнем углу (отступ 6): миникарта 66×66, если в рюкзаке атлас; под ней по правому краю дата
+     * «Год N · Сезон, день» и время, если в рюкзаке календарь (без атласа — дата в самом углу).
+     */
+    private static void renderMapAndDate(GuiGraphics g, DeltaTracker delta) {
+        Minecraft mc = Minecraft.getInstance();
+        Player player = mc.player;
+        if (player == null || mc.options.hideGui || mc.getDebugOverlay().showDebugScreen()) {
+            return;
+        }
+        int right = g.guiWidth() - 6, y = 6;
+        if (ClientGear.hasAtlas()) {
+            Minimap.render(g, right - Minimap.SIZE, y, player);
+            y += Minimap.SIZE + 3;
+        }
+        if (ClientGear.hasCalendar()) {
+            Calendar date = Calendar.of(player.level().getDayTime(), ServerConfig.daysPerSeason());
+            Component line = Component.translatable("gui.trailcraft.hud.date", date.year(),
+                    Component.translatable(date.season().translationKey()), date.dayOfSeason());
+            g.drawString(mc.font, line, right - mc.font.width(line), y, 0xFFFFFFFF, true);
+            g.drawString(mc.font, date.time(), right - mc.font.width(date.time()), y + 10, 0xFFFFFFFF, true);
         }
     }
 

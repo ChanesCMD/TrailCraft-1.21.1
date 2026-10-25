@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:copper_coin",
+    "trailcraft:bronze_coin",
+    "trailcraft:silver_coin",
+    "trailcraft:gold_coin",
+    "trailcraft:platinum_coin",
+    "trailcraft:precious_platinum_coin",
+    "trailcraft:iridium_coin",
+    "trailcraft:precious_iridium_coin"
+  ]
+}

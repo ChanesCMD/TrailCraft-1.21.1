@@ -14,6 +14,8 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+import java.util.Map;
+
 @EventBusSubscriber(modid = TrailCraft.MODID, value = Dist.CLIENT)
 public class ClientInventoryEvents {
 
@@ -31,6 +33,13 @@ public class ClientInventoryEvents {
     public static void showDeathLog(DeathLogPayloads.Log log) {
         if (Minecraft.getInstance().screen instanceof TrailInventoryScreen screen) {
             screen.showDeathLog(log);
+        }
+    }
+
+    /** Сервер прислал заметки календаря — показываем их в открытом инвентаре. */
+    public static void showCalendarNotes(Map<String, String> notes) {
+        if (Minecraft.getInstance().screen instanceof TrailInventoryScreen screen) {
+            screen.showCalendarNotes(notes);
         }
     }
 
