@@ -68,10 +68,16 @@ public class WaterEvents {
         }
     }
 
-    /** Глоток: пустая рука, вода в пределах досягаемости ближе твёрдых блоков, не полный запас. */
+    /**
+     * ПКМ пустой рукой по воде (в пределах досягаемости, ближе твёрдых блоков): глоток, если запас не полный,
+     * и фляга на поясе наполняется доверху — даже при полном запасе воды.
+     */
     private static void drink(ServerPlayer player) {
         Water.Tracker tracker = player.getData(ModAttachments.WATER_TRACKER);
-        if (player.isSpectator() || !player.getMainHandItem().isEmpty() || tracker.drinkCooldown > 0 || get(player) >= Water.MAX) {
+        ItemStack flask = new BeltHandler(player).flask();
+        boolean flaskNeedsWater = !flask.isEmpty() && FlaskItem.water(flask) < Water.FLASK_SIPS;
+        if (player.isSpectator() || !player.getMainHandItem().isEmpty() || tracker.drinkCooldown > 0
+                || get(player) >= Water.MAX && !flaskNeedsWater) {
             return;
         }
         HitResult hit = player.pick(player.blockInteractionRange(), 1, true);
@@ -80,8 +86,13 @@ public class WaterEvents {
             return;
         }
         tracker.drinkCooldown = Water.DRINK_COOLDOWN;
-        set(player, get(player) + Water.DRINK_AMOUNT);
-        playDrinkSound(player);
+        if (get(player) < Water.MAX) {
+            set(player, get(player) + Water.DRINK_AMOUNT);
+            playDrinkSound(player);
+        } else {
+            player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_FILL,
+                    player.getSoundSource(), 1f, 1f);
+        }
         fillFlask(player);
     }
 

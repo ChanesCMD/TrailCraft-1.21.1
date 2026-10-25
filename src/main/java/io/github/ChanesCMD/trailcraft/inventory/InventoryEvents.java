@@ -8,6 +8,8 @@ import io.github.ChanesCMD.trailcraft.client.ClientInventoryEvents;
 import io.github.ChanesCMD.trailcraft.init.ModAttachments;
 import io.github.ChanesCMD.trailcraft.init.ModComponents;
 import io.github.ChanesCMD.trailcraft.item.BackpackItem;
+import io.github.ChanesCMD.trailcraft.item.FlaskItem;
+import io.github.ChanesCMD.trailcraft.water.Water;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -237,8 +239,10 @@ public class InventoryEvents {
 
     /** Отправляет клиенту, есть ли в рюкзаке атлас и календарь, когда это меняется. */
     private static void syncGear(ServerPlayer player, BackpackHandler backpack) {
+        ItemStack flask = new BeltHandler(player).flask();
         int flags = (backpack.has(BackpackItem.ATLAS) ? GearPayload.ATLAS : 0)
-                | (backpack.has(BackpackItem.CALENDAR) ? GearPayload.CALENDAR : 0);
+                | (backpack.has(BackpackItem.CALENDAR) ? GearPayload.CALENDAR : 0)
+                | (!flask.isEmpty() && FlaskItem.water(flask) < Water.FLASK_SIPS ? GearPayload.FLASK : 0);
         if (flags != player.getData(ModAttachments.GEAR_SENT)) {
             player.setData(ModAttachments.GEAR_SENT, flags);
             PacketDistributor.sendToPlayer(player, new GearPayload(flags));

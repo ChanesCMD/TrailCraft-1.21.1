@@ -38,7 +38,7 @@ public class ClientWaterEvents {
 
     private static boolean tryDrink(Player player) {
         if (player != Minecraft.getInstance().player || !player.getMainHandItem().isEmpty()
-                || player.isCreative() || player.isSpectator() || WaterEvents.get(player) >= Water.MAX) {
+                || player.isCreative() || player.isSpectator() || WaterEvents.get(player) >= Water.MAX && !ClientGear.flaskNeedsWater()) {
             return false;
         }
         HitResult hit = player.pick(player.blockInteractionRange(), 1, true);

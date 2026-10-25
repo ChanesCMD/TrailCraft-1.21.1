@@ -6,19 +6,18 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Миникарта 66×66 (ТЗ, раздел 4): 64×64 блока вокруг игрока, север сверху. Карта плавно едет за игроком
- * (позиция с учётом доли тика, см. MapView), игрок всегда в середине — маленькая белая стрелка в 8 направлениях.
+ * Миникарта 66×66 (ТЗ, раздел 4): 64×64 блока вокруг игрока, север сверху, из памяти атласа (MapCache, MapTiles).
+ * Карта плавно едет за игроком (позиция с учётом доли тика), игрок всегда в середине — маленькая белая стрелка
+ * в 8 направлениях.
  */
 public final class Minimap {
     public static final int SIZE = 66;
-    private static final int MAP = SIZE - 2, MARGIN = 16, BUDGET = 1024;
-    private static final MapView VIEW = new MapView("minimap");
+    private static final int MAP = SIZE - 2;
 
     public static void render(GuiGraphics g, int x, int y, Player player, float partialTick) {
         Vec3 pos = player.getPosition(partialTick);
-        VIEW.update(player.level(), pos.x, pos.z, MAP + MARGIN, MAP + MARGIN, BUDGET);
         UiDraw.frame(g, x, y, SIZE, SIZE, 0xFF373737, 0xFFFFFFFF, 0xFF000000);
-        VIEW.draw(g, x + 1, y + 1, MAP, MAP, pos.x, pos.z, 1);
+        MapTiles.draw(g, player.level().dimension().location(), x + 1, y + 1, MAP, MAP, pos.x, pos.z, 1);
         playerMarker(g, x + 1 + MAP / 2, y + 1 + MAP / 2, player.getViewYRot(partialTick));
     }
 

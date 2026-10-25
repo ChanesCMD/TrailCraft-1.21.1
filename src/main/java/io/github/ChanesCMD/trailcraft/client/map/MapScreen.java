@@ -15,19 +15,18 @@ import net.minecraft.world.phys.Vec3;
 /**
  * Полноэкранная карта (макет docs/ui/08_map.png): сверху тёмная полоса с названием, кнопками настроек и закрытия,
  * внизу координаты точки под курсором (или игрока). Нужен атлас в рюкзаке (проверяет кнопка, которая открывает карту).
- * Колесо — плавный масштаб (1, 2, 4 или 8 px на блок), перетаскивание — сдвиг, ПКМ — снова к игроку.
- * Карта плавно следует за игроком (см. MapView). Видно то, что загружено у клиента.
+ * Колесо — плавный масштаб (0,5–8 px на блок), перетаскивание — сдвиг, ПКМ — снова к игроку.
+ * Карта плавно следует за игроком. Видно всё, что атлас запомнил (MapCache), а не только загруженное.
  */
 public class MapScreen extends Screen {
-    private static final int BAR_H = 18, BUTTON = 14, BUDGET = 8192, MARGIN = 16;
-    private static final float[] ZOOMS = {1, 2, 4, 8};
+    private static final int BAR_H = 18, BUTTON = 14;
+    private static final float[] ZOOMS = {0.5f, 1, 2, 4, 8};
     private static final String[] GEAR = {
             "...##.##...", "..#######..", ".##.....##.", "..#..#..#..", "##..###..##",
             "##..###..##", "..#..#..#..", ".##.....##.", "..#######..", "...##.##...", "..........."};
-    private final MapView view = new MapView("map");
-    private int zoomIndex = 1;
+    private int zoomIndex = 2;
     /** Масштаб сейчас: плавно догоняет ZOOMS[zoomIndex]. */
-    private float zoom = ZOOMS[1];
+    private float zoom = ZOOMS[2];
     /** Центр карты в блоках; пока игрок не сдвинул карту, она следует за ним. */
     private double centerX, centerZ;
     private boolean following = true;
@@ -76,11 +75,8 @@ public class MapScreen extends Screen {
             centerX = pos.x;
             centerZ = pos.z;
         }
-        // Текстура покрывает экран при самом мелком масштабе, поэтому при смене масштаба не пересоздаётся
-        view.update(player.level(), centerX, centerZ, Mth.ceil(width / ZOOMS[0]) + MARGIN, Mth.ceil(mapHeight() / ZOOMS[0]) + MARGIN, BUDGET);
-
         g.fill(0, BAR_H, width, height, 0xFF000000);
-        view.draw(g, 0, BAR_H, width, mapHeight(), centerX, centerZ, zoom);
+        MapTiles.draw(g, player.level().dimension().location(), 0, BAR_H, width, mapHeight(), centerX, centerZ, zoom);
         double midX = width / 2.0, midY = BAR_H + mapHeight() / 2.0;
         int px = (int) Math.round(midX + (pos.x - centerX) * zoom), py = (int) Math.round(midY + (pos.z - centerZ) * zoom);
         if (py >= BAR_H) {
@@ -109,7 +105,7 @@ public class MapScreen extends Screen {
             bz = player.getBlockZ();
         }
         g.drawString(font, Component.translatable("gui.trailcraft.map.coords", bx, bz), 8, height - 14, 0xFFFFFFFF, true);
-        BlockPos surface = MapTexture.surfaceAt(player.level(), bx, bz);
+        BlockPos surface = MapSampler.surfaceAt(player.level(), bx, bz);
         if (surface != null) {
             Component biome = player.level().getBiome(surface).unwrapKey()
                     .map(key -> (Component) Component.translatable(Util.makeDescriptionId("biome", key.location())))
@@ -195,12 +191,6 @@ public class MapScreen extends Screen {
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         zoomIndex = Mth.clamp(zoomIndex + (int) Math.signum(scrollY), 0, ZOOMS.length - 1);
         return true;
-    }
-
-    @Override
-    public void removed() {
-        view.close();
-        super.removed();
     }
 
     @Override

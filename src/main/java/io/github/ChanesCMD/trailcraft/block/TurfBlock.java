@@ -24,6 +24,8 @@ import java.util.function.Supplier;
  * при свете от 9 сам зарастает соседние блоки почвы своим дёрном (каждая почва — своим) и ванильную землю — травой.
  */
 public class TurfBlock extends Block {
+    /** Попыток зарасти соседей за случайный тик: у ванильной травы 4, у дёрна втрое больше (быстрее зарастает). */
+    private static final int SPREAD_ATTEMPTS = 12;
     private static final List<TurfBlock> ALL = new ArrayList<>();
     private static Map<Block, Block> turfBySoil;
 
@@ -77,7 +79,7 @@ public class TurfBlock extends Block {
         if (!level.isAreaLoaded(pos, 3) || level.getMaxLocalRawBrightness(pos.above()) < 9) {
             return;
         }
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < SPREAD_ATTEMPTS; i++) {
             BlockPos target = pos.offset(random.nextInt(3) - 1, random.nextInt(5) - 3, random.nextInt(3) - 1);
             Block turf = turfFor(level.getBlockState(target).getBlock());
             if (turf != null && canSpreadTo(turf.defaultBlockState(), level, target)) {

@@ -18,5 +18,10 @@ public final class ClientGear {
         return (flags & GearPayload.CALENDAR) != 0;
     }
 
+    /** На поясе не полная фляга. */
+    public static boolean flaskNeedsWater() {
+        return (flags & GearPayload.FLASK) != 0;
+    }
+
     private ClientGear() {}
 }

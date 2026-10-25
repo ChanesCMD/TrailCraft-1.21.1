@@ -1,0 +1,148 @@
+package io.github.ChanesCMD.trailcraft.client.map;
+
+import com.mojang.blaze3d.platform.NativeImage;
+import io.github.ChanesCMD.trailcraft.TrailCraft;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Отрисовка карты плитками 64×64 блока (как регионы у Xaero's Minimap): плитка — своя текстура, которая
+ * заполняется из MapCache, когда там меняются её чанки. Сдвиг и масштаб — только смещение при отрисовке,
+ * поэтому карта двигается плавно и без фризов. Общие для миникарты и большой карты.
+ */
+public final class MapTiles {
+    /** Плитка: 4×4 чанка. */
+    public static final int CHUNKS = 4, SIZE = CHUNKS * 16;
+    private static final int MAX_TILES = 512, PAINT_BUDGET = 24;
+    private static final Map<Long, Tile> TILES = new HashMap<>();
+    private static ResourceLocation dimension;
+    private static int nextId;
+    private static long frame;
+
+    private static final class Tile {
+        final ResourceLocation location = ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "map_tile_" + nextId++);
+        final DynamicTexture texture = new DynamicTexture(SIZE, SIZE, true);
+        boolean dirty = true, painted;
+        long lastUsed;
+
+        Tile() {
+            Minecraft.getInstance().getTextureManager().register(location, texture);
+        }
+    }
+
+    /** Чанки плитки (tx, tz) изменились — перерисовать при следующем показе. */
+    public static void invalidate(ResourceLocation dim, int tx, int tz) {
+        Tile tile = dim.equals(dimension) ? TILES.get(key(tx, tz)) : null;
+        if (tile != null) {
+            tile.dirty = true;
+        }
+    }
+
+    /**
+     * Рисует карту в прямоугольнике экрана (x, y, w, h): точка мира (centerX, centerZ) — в его середине,
+     * scale — пикселей интерфейса на блок. Неисследованное прозрачно.
+     */
+    public static void draw(GuiGraphics g, ResourceLocation dim, int x, int y, int w, int h, double centerX, double centerZ, float scale) {
+        if (!dim.equals(dimension)) {
+            clear();
+            dimension = dim;
+        }
+        frame++;
+        double halfW = w / 2.0 / scale, halfH = h / 2.0 / scale;
+        int tx0 = Math.floorDiv(Mth.floor(centerX - halfW), SIZE), tx1 = Math.floorDiv(Mth.floor(centerX + halfW), SIZE);
+        int tz0 = Math.floorDiv(Mth.floor(centerZ - halfH), SIZE), tz1 = Math.floorDiv(Mth.floor(centerZ + halfH), SIZE);
+        // Сначала дорисовываем плитки ближе к центру
+        List<long[]> visible = new ArrayList<>();
+        for (int tz = tz0; tz <= tz1; tz++) {
+            for (int tx = tx0; tx <= tx1; tx++) {
+                visible.add(new long[]{tx, tz});
+            }
+        }
+        double ctx = centerX / SIZE - 0.5, ctz = centerZ / SIZE - 0.5;
+        visible.sort(Comparator.comparingDouble(t -> (t[0] - ctx) * (t[0] - ctx) + (t[1] - ctz) * (t[1] - ctz)));
+        int budget = PAINT_BUDGET;
+
+        g.enableScissor(x, y, x + w, y + h);
+        g.pose().pushPose();
+        g.pose().translate(x + w / 2f, y + h / 2f, 0);
+        g.pose().scale(scale, scale, 1);
+        for (long[] t : visible) {
+            int tx = (int) t[0], tz = (int) t[1];
+            Tile tile = TILES.computeIfAbsent(key(tx, tz), k -> new Tile());
+            tile.lastUsed = frame;
+            if (tile.dirty && budget > 0) {
+                paint(tile, tx, tz);
+                budget--;
+            }
+            if (tile.painted) {
+                g.pose().pushPose();
+                g.pose().translate((float) (tx * SIZE - centerX), (float) (tz * SIZE - centerZ), 0);
+                g.blit(tile.location, 0, 0, 0, 0, SIZE, SIZE, SIZE, SIZE);
+                g.pose().popPose();
+            }
+        }
+        g.pose().popPose();
+        g.disableScissor();
+        evict();
+    }
+
+    private static void paint(Tile tile, int tx, int tz) {
+        NativeImage image = tile.texture.getPixels();
+        if (image == null) {
+            return;
+        }
+        for (int j = 0; j < CHUNKS; j++) {
+            for (int i = 0; i < CHUNKS; i++) {
+                int[] colors = MapCache.chunk(dimension, tx * CHUNKS + i, tz * CHUNKS + j);
+                for (int lz = 0; lz < 16; lz++) {
+                    for (int lx = 0; lx < 16; lx++) {
+                        image.setPixelRGBA(i * 16 + lx, j * 16 + lz, colors == null ? 0 : colors[lz * 16 + lx]);
+                    }
+                }
+            }
+        }
+        tile.texture.upload();
+        tile.dirty = false;
+        tile.painted = true;
+    }
+
+    /** Лишние плитки, которых давно не было на экране, освобождаются. */
+    private static void evict() {
+        if (TILES.size() <= MAX_TILES) {
+            return;
+        }
+        List<Map.Entry<Long, Tile>> entries = new ArrayList<>(TILES.entrySet());
+        entries.sort(Comparator.comparingLong(e -> e.getValue().lastUsed));
+        for (int i = 0; i < entries.size() - MAX_TILES; i++) {
+            Tile tile = entries.get(i).getValue();
+            if (tile.lastUsed == frame) {
+                break;
+            }
+            Minecraft.getInstance().getTextureManager().release(tile.location);
+            TILES.remove(entries.get(i).getKey());
+        }
+    }
+
+    public static void clear() {
+        for (Tile tile : TILES.values()) {
+            Minecraft.getInstance().getTextureManager().release(tile.location);
+        }
+        TILES.clear();
+        dimension = null;
+    }
+
+    private static long key(int tx, int tz) {
+        return (long) tx << 32 | (tz & 0xFFFFFFFFL);
+    }
+
+    private MapTiles() {}
+}
