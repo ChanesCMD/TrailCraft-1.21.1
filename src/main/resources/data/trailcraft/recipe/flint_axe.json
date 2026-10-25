@@ -10,8 +10,7 @@
     }
   },
   "pattern": [
-    "FF",
-    "FS",
+    "F ",
     " S"
   ],
   "result": {

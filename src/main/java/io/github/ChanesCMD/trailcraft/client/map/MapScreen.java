@@ -84,7 +84,7 @@ public class MapScreen extends Screen {
         double midX = width / 2.0, midY = BAR_H + mapHeight() / 2.0;
         int px = (int) Math.round(midX + (pos.x - centerX) * zoom), py = (int) Math.round(midY + (pos.z - centerZ) * zoom);
         if (py >= BAR_H) {
-            Minimap.playerMarker(g, px, py, player.getDirection());
+            Minimap.playerMarker(g, px, py, player.getViewYRot(partialTick));
         }
 
         // Полоса сверху: название, настройки, закрыть

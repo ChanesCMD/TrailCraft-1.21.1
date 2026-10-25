@@ -4,6 +4,7 @@ import net.minecraft.util.ColorRGBA;
 import net.minecraft.world.level.block.Block;
 import io.github.ChanesCMD.trailcraft.block.PebbleBlock;
 import io.github.ChanesCMD.trailcraft.block.BackpackBlock;
+import io.github.ChanesCMD.trailcraft.block.TurfBlock;
 import io.github.ChanesCMD.trailcraft.block.GraveBlock;
 import io.github.ChanesCMD.trailcraft.block.ChoppingStumpBlock;
 import net.minecraft.world.level.block.ColoredFallingBlock;
@@ -85,33 +86,33 @@ public class ModBlocks {
     public static final DeferredBlock<Block> PEAT = BLOCKS.registerSimpleBlock("peat",
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).strength(0.5f).sound(SoundType.GRAVEL));
 
-    // === ТРАВЯНЫЕ ПАРЫ (9 блоков) ===
-    public static final DeferredBlock<Block> ZHELTOZEM_GRASS = BLOCKS.registerSimpleBlock("zheltozem_grass",
-            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW).strength(0.5f).sound(SoundType.GRASS));
+    // === ТРАВЯНЫЕ ПАРЫ (9 блоков): дёрн на почве, зарастает соседнюю почву и отмирает под блоком (TurfBlock) ===
+    public static final DeferredBlock<Block> ZHELTOZEM_GRASS = BLOCKS.registerBlock("zheltozem_grass", props -> new TurfBlock(props, ZHELTOZEM),
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW).strength(0.5f).sound(SoundType.GRASS).randomTicks());
 
-    public static final DeferredBlock<Block> BUROZEM_GRASS = BLOCKS.registerSimpleBlock("burozem_grass",
-            BlockBehaviour.Properties.of().mapColor(MapColor.DIRT).strength(0.5f).sound(SoundType.GRASS));
+    public static final DeferredBlock<Block> BUROZEM_GRASS = BLOCKS.registerBlock("burozem_grass", props -> new TurfBlock(props, BUROZEM),
+            BlockBehaviour.Properties.of().mapColor(MapColor.DIRT).strength(0.5f).sound(SoundType.GRASS).randomTicks());
 
-    public static final DeferredBlock<Block> CHERNOZEM_GRASS = BLOCKS.registerSimpleBlock("chernozem_grass",
-            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(0.5f).sound(SoundType.GRASS));
+    public static final DeferredBlock<Block> CHERNOZEM_GRASS = BLOCKS.registerBlock("chernozem_grass", props -> new TurfBlock(props, CHERNOZEM),
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(0.5f).sound(SoundType.GRASS).randomTicks());
 
-    public static final DeferredBlock<Block> LOAM_GRASS = BLOCKS.registerSimpleBlock("loam_grass",
-            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).strength(0.5f).sound(SoundType.GRASS));
+    public static final DeferredBlock<Block> LOAM_GRASS = BLOCKS.registerBlock("loam_grass", props -> new TurfBlock(props, LOAM),
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).strength(0.5f).sound(SoundType.GRASS).randomTicks());
 
-    public static final DeferredBlock<Block> CLAY_WHITE_GRASS = BLOCKS.registerSimpleBlock("clay_white_grass",
-            BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).strength(0.6f).sound(SoundType.GRASS));
+    public static final DeferredBlock<Block> CLAY_WHITE_GRASS = BLOCKS.registerBlock("clay_white_grass", props -> new TurfBlock(props, CLAY_WHITE),
+            BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).strength(0.6f).sound(SoundType.GRASS).randomTicks());
 
-    public static final DeferredBlock<Block> CLAY_BLUE_GRASS = BLOCKS.registerSimpleBlock("clay_blue_grass",
-            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).strength(0.6f).sound(SoundType.GRASS));
+    public static final DeferredBlock<Block> CLAY_BLUE_GRASS = BLOCKS.registerBlock("clay_blue_grass", props -> new TurfBlock(props, CLAY_BLUE),
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).strength(0.6f).sound(SoundType.GRASS).randomTicks());
 
-    public static final DeferredBlock<Block> CLAY_RED_GRASS = BLOCKS.registerSimpleBlock("clay_red_grass",
-            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).strength(0.6f).sound(SoundType.GRASS));
+    public static final DeferredBlock<Block> CLAY_RED_GRASS = BLOCKS.registerBlock("clay_red_grass", props -> new TurfBlock(props, CLAY_RED),
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).strength(0.6f).sound(SoundType.GRASS).randomTicks());
 
-    public static final DeferredBlock<Block> CLAY_GRAY_GRASS = BLOCKS.registerSimpleBlock("clay_gray_grass",
-            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(0.6f).sound(SoundType.GRASS));
+    public static final DeferredBlock<Block> CLAY_GRAY_GRASS = BLOCKS.registerBlock("clay_gray_grass", props -> new TurfBlock(props, CLAY_GRAY),
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(0.6f).sound(SoundType.GRASS).randomTicks());
 
-    public static final DeferredBlock<Block> PEAT_GRASS = BLOCKS.registerSimpleBlock("peat_grass",
-            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).strength(0.5f).sound(SoundType.GRASS));
+    public static final DeferredBlock<Block> PEAT_GRASS = BLOCKS.registerBlock("peat_grass", props -> new TurfBlock(props, PEAT),
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).strength(0.5f).sound(SoundType.GRASS).randomTicks());
 
     // === ПЕСОК (4 блока) ===
     public static final DeferredBlock<Block> SAND_WHITE = BLOCKS.registerBlock("sand_white",

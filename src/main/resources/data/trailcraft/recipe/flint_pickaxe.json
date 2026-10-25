@@ -10,9 +10,7 @@
     }
   },
   "pattern": [
-    "FFF",
-    " S ",
-    " S "
+    "FS"
   ],
   "result": {
     "id": "trailcraft:flint_pickaxe",
