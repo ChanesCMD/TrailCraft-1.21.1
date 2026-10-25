@@ -542,7 +542,7 @@
   "message.trailcraft.grave.locked": "Grave of %s. Opens for everyone in %s",
   "message.trailcraft.backpack.no_space": "No free slot to take the backpack",
   "gui.trailcraft.backpack": "Backpack",
-  "gui.trailcraft.backpack.battery": "Stamina",
+  "gui.trailcraft.backpack.battery": "Energy",
   "gui.trailcraft.backpack.solar": "Solar panel",
   "gui.trailcraft.backpack.mana": "Mana tablet",
   "gui.trailcraft.backpack.sleeping": "Sleeping bag / tent",

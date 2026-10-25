@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import io.github.ChanesCMD.trailcraft.block.entity.BackpackBlockEntity;
 import io.github.ChanesCMD.trailcraft.item.BackpackItem;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
@@ -32,6 +33,8 @@ import javax.annotation.Nullable;
 public class BackpackBlock extends BaseEntityBlock {
     public static final MapCodec<BackpackBlock> CODEC = simpleCodec(BackpackBlock::new);
     private static final VoxelShape SHAPE = Block.box(3, 0, 4, 13, 12, 12);
+    /** Как далеко от игрока искать место для выброшенного рюкзака. */
+    private static final int SEARCH_RADIUS = 3;
 
     public BackpackBlock(Properties properties) {
         super(properties);
@@ -91,20 +94,45 @@ public class BackpackBlock extends BaseEntityBlock {
         super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
-    /** Ставит выброшенный рюкзак на землю у ног игрока (или на блок выше). @return false, если места нет */
+    /**
+     * Ставит выброшенный рюкзак на землю у ног игрока, а если там занято (например, другим рюкзаком) —
+     * в ближайшее свободное место на твёрдой опоре в радиусе SEARCH_RADIUS. @return false, если места нет
+     */
     public static boolean placeOnGround(Level level, BlockPos feet, ItemStack stack) {
         if (!(stack.getItem() instanceof BlockItem item)) {
             return false;
         }
-        for (BlockPos pos : new BlockPos[]{feet, feet.above()}) {
-            if (level.getBlockState(pos).canBeReplaced() && level.getBlockState(pos).getFluidState().isEmpty()) {
-                level.setBlock(pos, item.getBlock().defaultBlockState(), Block.UPDATE_ALL);
-                if (level.getBlockEntity(pos) instanceof BackpackBlockEntity backpack) {
-                    backpack.setStack(stack.copyWithCount(1));
-                    return true;
-                }
-            }
+        BlockPos pos = findSpot(level, feet);
+        if (pos == null) {
+            return false;
+        }
+        level.setBlock(pos, item.getBlock().defaultBlockState(), Block.UPDATE_ALL);
+        if (level.getBlockEntity(pos) instanceof BackpackBlockEntity backpack) {
+            backpack.setStack(stack.copyWithCount(1));
+            return true;
         }
         return false;
+    }
+
+    /** Ближайшая к ногам позиция без жидкости, которую можно занять и под которой есть опора (как для факела). */
+    @Nullable
+    private static BlockPos findSpot(Level level, BlockPos feet) {
+        BlockPos best = null;
+        double bestDistance = Double.MAX_VALUE;
+        for (BlockPos pos : BlockPos.betweenClosed(feet.offset(-SEARCH_RADIUS, -SEARCH_RADIUS, -SEARCH_RADIUS),
+                feet.offset(SEARCH_RADIUS, SEARCH_RADIUS, SEARCH_RADIUS))) {
+            double distance = pos.distSqr(feet);
+            if (distance >= bestDistance || level.isOutsideBuildHeight(pos)) {
+                continue;
+            }
+            BlockState state = level.getBlockState(pos);
+            BlockPos below = pos.below();
+            if (state.canBeReplaced() && state.getFluidState().isEmpty()
+                    && Block.canSupportCenter(level, below, Direction.UP)) {
+                best = pos.immutable();
+                bestDistance = distance;
+            }
+        }
+        return best;
     }
 }

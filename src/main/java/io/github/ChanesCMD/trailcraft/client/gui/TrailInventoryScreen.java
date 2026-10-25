@@ -9,8 +9,6 @@ import io.github.ChanesCMD.trailcraft.inventory.DeathRecord;
 import io.github.ChanesCMD.trailcraft.inventory.TrailInventoryMenu;
 import io.github.ChanesCMD.trailcraft.inventory.TrailInventoryMenu.MenuSlot;
 import io.github.ChanesCMD.trailcraft.inventory.TrailInventoryMenu.Popup;
-import io.github.ChanesCMD.trailcraft.stamina.Stamina;
-import io.github.ChanesCMD.trailcraft.stamina.StaminaEvents;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
@@ -274,8 +272,9 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
             boolean bar = BAR_COLORS[i] != 0;
             g.drawString(font, Component.translatable("gui.trailcraft.backpack." + BACKPACK_ROWS[i]), px + 29, rowY + (bar ? 1 : 5), UiDraw.LABEL, false);
             if (bar) {
-                // Первая шкала — выносливость. TODO: мана, когда появится планшет маны
-                float fill = i == 0 ? StaminaEvents.get(playerInventory.player) / Stamina.MAX : 0;
+                // Первая шкала — энергия (электричество) аккумулятора, вторая — мана.
+                // TODO: заряд аккумулятора и мана планшета, когда появятся эти предметы
+                float fill = 0;
                 int barW = BACKPACK_W - 38;
                 UiDraw.frame(g, px + 29, rowY + 10, barW, 6, 0xFF373737, 0xFFFFFFFF, 0xFF555555);
                 g.fill(px + 30, rowY + 11, px + 30 + Math.round((barW - 2) * fill), rowY + 15, BAR_COLORS[i]);
