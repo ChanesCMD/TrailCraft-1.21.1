@@ -87,6 +87,9 @@ public class ModCreativeTabs {
                         output.accept(ModItems.SMALL_POCKET);
                         output.accept(ModItems.MEDIUM_POCKET);
                         output.accept(ModItems.LARGE_POCKET);
+                        output.accept(ModItems.BELT);
+                        output.accept(ModItems.CALENDAR);
+                        output.accept(ModItems.ATLAS);
 
                         // Песок (4)
                         output.accept(ModBlocks.SAND_WHITE);

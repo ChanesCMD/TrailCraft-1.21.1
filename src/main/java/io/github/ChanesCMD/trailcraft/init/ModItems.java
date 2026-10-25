@@ -122,6 +122,14 @@ public class ModItems {
     public static final DeferredItem<BackpackItem> TACTICAL_BACKPACK = ITEMS.registerItem("tactical_backpack",
             props -> new BackpackItem(ModBlocks.TACTICAL_BACKPACK.get(), props.stacksTo(1), BackpackItem.TACTICAL_POCKETS));
 
+    // === СНАРЯЖЕНИЕ ИГРОКА ===
+    /** Календарь: кладётся в слот календаря рюкзака (кнопка календаря в инвентаре, дата в HUD). */
+    public static final DeferredItem<Item> CALENDAR = ITEMS.registerItem("calendar", props -> new Item(props.stacksTo(1)));
+    /** Атлас: кладётся в слот атласа рюкзака (миникарта в HUD). */
+    public static final DeferredItem<Item> ATLAS = ITEMS.registerItem("atlas", props -> new Item(props.stacksTo(1)));
+    /** Пояс: носится в слоте пояса, при смерти остаётся у игрока. Окно пояса (подсумки, фляга, связь) пока не сделано. */
+    public static final DeferredItem<Item> BELT = ITEMS.registerItem("belt", props -> new Item(props.stacksTo(1)));
+
     // === КАРМАНЫ РЮКЗАКА ===
     public static final DeferredItem<PocketItem> SMALL_POCKET = ITEMS.registerItem("small_pocket",
             props -> new PocketItem(props.stacksTo(16), BackpackItem.SMALL_POCKET_SLOTS));
