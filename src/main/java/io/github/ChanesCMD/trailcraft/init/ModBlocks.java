@@ -233,9 +233,10 @@ public class ModBlocks {
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(0.2f).sound(SoundType.STONE).noCollission().noOcclusion().pushReaction(PushReaction.DESTROY));
 
     // === РЮКЗАК И МОГИЛА ===
-    /** Тестовый рюкзак, стоящий на земле (выброшенный). Предмет — ModItems.TEST_BACKPACK. */
-    public static final DeferredBlock<Block> TEST_BACKPACK = BLOCKS.registerBlock("test_backpack", BackpackBlock::new,
-            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).strength(0.5f).sound(SoundType.WOOL).noOcclusion().pushReaction(PushReaction.DESTROY));
+    /** Рюкзаки, стоящие на земле (выброшенные). Предметы — одноимённые в ModItems. */
+    public static final DeferredBlock<Block> DUFFEL_BACKPACK = registerBackpack("duffel_backpack", MapColor.COLOR_GREEN);
+    public static final DeferredBlock<Block> LEATHER_BACKPACK = registerBackpack("leather_backpack", MapColor.COLOR_BROWN);
+    public static final DeferredBlock<Block> TACTICAL_BACKPACK = registerBackpack("tactical_backpack", MapColor.COLOR_GRAY);
 
     /** Могила с вещами умершего игрока. Не взрывается и не сдвигается поршнем. */
     public static final DeferredBlock<Block> GRAVE = BLOCKS.registerBlock("grave", GraveBlock::new,
@@ -261,4 +262,9 @@ public class ModBlocks {
 
     public static final DeferredBlock<Block> GRASS_TALL = BLOCKS.registerBlock("grass_tall",
             props -> new GrassPlantBlock(props, 14), plantProps());
+
+    private static DeferredBlock<Block> registerBackpack(String name, MapColor color) {
+        return BLOCKS.registerBlock(name, BackpackBlock::new,
+                BlockBehaviour.Properties.of().mapColor(color).strength(0.5f).sound(SoundType.WOOL).noOcclusion().pushReaction(PushReaction.DESTROY));
+    }
 }

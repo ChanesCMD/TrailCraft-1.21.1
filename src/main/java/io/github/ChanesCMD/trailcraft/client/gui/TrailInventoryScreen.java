@@ -262,7 +262,7 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         }
     }
 
-    /** Окно рюкзака 126×201 (ТЗ 3.1). */
+    /** Окно рюкзака 176×201 (ТЗ 3.1). */
     private void renderBackpack(GuiGraphics g) {
         int px = BACKPACK_WIN_X, py = BACKPACK_WIN_Y;
         UiDraw.panel(g, px, py, BACKPACK_W, BACKPACK_H);
@@ -276,12 +276,13 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
             if (bar) {
                 // Первая шкала — выносливость. TODO: мана, когда появится планшет маны
                 float fill = i == 0 ? StaminaEvents.get(playerInventory.player) / Stamina.MAX : 0;
-                UiDraw.frame(g, px + 29, rowY + 10, 88, 6, 0xFF373737, 0xFFFFFFFF, 0xFF555555);
-                g.fill(px + 30, rowY + 11, px + 30 + Math.round(86 * fill), rowY + 15, BAR_COLORS[i]);
+                int barW = BACKPACK_W - 38;
+                UiDraw.frame(g, px + 29, rowY + 10, barW, 6, 0xFF373737, 0xFFFFFFFF, 0xFF555555);
+                g.fill(px + 30, rowY + 11, px + 30 + Math.round((barW - 2) * fill), rowY + 15, BAR_COLORS[i]);
             }
         }
         g.drawString(font, Component.translatable("gui.trailcraft.backpack.pockets"), px + 7, py + 166, UiDraw.LABEL, false);
-        for (int k = 0; k < 6; k++) {
+        for (int k = 0; k < menu.visiblePockets(); k++) {
             drawSlotFrame(g, px + 7 + 18 * k, py + 176, !present);
         }
         renderPopupItems(g);
@@ -300,7 +301,7 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         g.pose().pushPose();
         g.pose().translate(0, 0, Z_POPUP_ITEMS);
         for (Slot slot : menu.slots) {
-            if (slot instanceof MenuSlot s && s.group() == GROUP_BACKPACK) {
+            if (slot instanceof MenuSlot s && s.group() == GROUP_BACKPACK && slot.isActive()) {
                 ItemStack stack = slot.getItem();
                 g.renderItem(stack, slot.x, slot.y);
                 g.renderItemDecorations(font, stack, slot.x, slot.y);

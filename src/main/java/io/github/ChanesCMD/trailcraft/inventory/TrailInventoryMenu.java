@@ -48,8 +48,8 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
     public static final int BOTTOM_Y = 147, WALLET_X = 29, BELT_X = 47, BACKPACK_X = 65, OFFHAND_X = 83;
     public static final int MAIN_X = 107, MAIN_Y = 35, HOTBAR_Y = 147;
     public static final int CRAFT_X = 279, CRAFT_Y = 35, RESULT_X = 363, RESULT_Y = 53;
-    /** Окно рюкзака 126×201 над слотом рюкзака: левый край = левый край слота, низ на 2 px выше слота. */
-    public static final int BACKPACK_W = 126, BACKPACK_H = 201;
+    /** Окно рюкзака 176×201 над слотом рюкзака: левый край = левый край слота, низ на 2 px выше слота. */
+    public static final int BACKPACK_W = 176, BACKPACK_H = 201;
     public static final int BACKPACK_WIN_X = BACKPACK_X, BACKPACK_WIN_Y = BOTTOM_Y - 2 - BACKPACK_H;
 
     // === Номера слотов меню ===
@@ -63,8 +63,8 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
     public static final int MAIN_START = 34;          // 54: содержимое рюкзака
     public static final int HOTBAR_START = 88;        // 9
     public static final int BACKPACK_UTILITY_START = 97;  // 7: аккумулятор … календарь
-    public static final int POCKET_START = 104;       // 6
-    public static final int SLOT_COUNT = 110;
+    public static final int POCKET_START = 104;       // 9: видны только карманы тира надетого рюкзака
+    public static final int SLOT_COUNT = 113;
 
     /** Группы слотов: от группы зависит, когда слот виден. */
     public static final int GROUP_BASE = 0, GROUP_WARMTH = 1, GROUP_BACKPACK = 2;
@@ -138,9 +138,10 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
             addSlot(new MenuSlot(backpack, BackpackItem.BATTERY + i, BACKPACK_WIN_X + 8, BACKPACK_WIN_Y + 21 + 21 * i)
                     .group(GROUP_BACKPACK).locked(() -> !backpack.isPresent()));
         }
-        for (int k = 0; k < 6; k++) {
+        for (int k = 0; k < BackpackItem.MAX_POCKETS; k++) {
+            int index = k;
             addSlot(new MenuSlot(backpack, BackpackItem.POCKETS + k, BACKPACK_WIN_X + 8 + 18 * k, BACKPACK_WIN_Y + 177)
-                    .group(GROUP_BACKPACK).locked(() -> !backpack.isPresent()));
+                    .group(GROUP_BACKPACK).locked(() -> !backpack.isPresent()).shown(() -> index < visiblePockets()));
         }
 
         addDataSlot(new DataSlot() {
@@ -158,6 +159,11 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
 
     public BackpackHandler backpack() {
         return backpack;
+    }
+
+    /** Сколько слотов карманов показывать: по тиру рюкзака, без рюкзака — все (закрытыми). */
+    public int visiblePockets() {
+        return backpack.isPresent() ? backpack.pockets() : BackpackItem.MAX_POCKETS;
     }
 
     public boolean hasWorkbench() {
@@ -304,6 +310,8 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
         private ResourceLocation icon;
         private boolean cosmetic;
         private boolean noBackpack;
+        @Nullable
+        private BooleanSupplier shown;
 
         MenuSlot(IItemHandler handler, int index, int x, int y) {
             super(handler, index, x, y);
@@ -337,6 +345,12 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
             return this;
         }
 
+        /** Слот виден только при выполнении условия. */
+        MenuSlot shown(BooleanSupplier shown) {
+            this.shown = shown;
+            return this;
+        }
+
         public int group() {
             return group;
         }
@@ -348,6 +362,7 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
         @Override
         public boolean isActive() {
             if (!clientSide) return true;
+            if (shown != null && !shown.getAsBoolean()) return false;
             return switch (group) {
                 case GROUP_WARMTH -> warmthVisible && !coveredByPopup(this);
                 case GROUP_BACKPACK -> popup == Popup.BACKPACK;

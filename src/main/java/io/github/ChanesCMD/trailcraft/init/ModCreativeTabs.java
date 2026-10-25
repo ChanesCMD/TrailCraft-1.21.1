@@ -81,7 +81,12 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.SHALE_PEBBLE);
                         output.accept(ModItems.FLINT);
                         output.accept(ModItems.CHOPPING_STUMP);
-                        output.accept(ModItems.TEST_BACKPACK);
+                        output.accept(ModItems.DUFFEL_BACKPACK);
+                        output.accept(ModItems.LEATHER_BACKPACK);
+                        output.accept(ModItems.TACTICAL_BACKPACK);
+                        output.accept(ModItems.SMALL_POCKET);
+                        output.accept(ModItems.MEDIUM_POCKET);
+                        output.accept(ModItems.LARGE_POCKET);
 
                         // Песок (4)
                         output.accept(ModBlocks.SAND_WHITE);

@@ -51,6 +51,12 @@ public class BackpackHandler implements IItemHandlerModifiable {
         return owner.getItem() instanceof BackpackItem backpack ? backpack.capacity(list) : 0;
     }
 
+    /** Сколько слотов под карманы у надетого рюкзака. */
+    public int pockets() {
+        items();
+        return owner.getItem() instanceof BackpackItem backpack ? backpack.pockets() : 0;
+    }
+
     public boolean has(int slot) {
         return isPresent() && !items.get(slot).isEmpty();
     }
@@ -80,7 +86,8 @@ public class BackpackHandler implements IItemHandlerModifiable {
 
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
-        return isPresent() && (slot >= BackpackItem.MAIN_SIZE || slot < capacity()) && BackpackItem.accepts(slot, stack);
+        if (!isPresent() || slot >= BackpackItem.POCKETS + pockets()) return false;
+        return (slot >= BackpackItem.MAIN_SIZE || slot < capacity()) && BackpackItem.accepts(slot, stack);
     }
 
     @Override

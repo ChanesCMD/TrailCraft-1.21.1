@@ -5,6 +5,7 @@ import net.minecraft.world.item.DiggerItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tiers;
 import io.github.ChanesCMD.trailcraft.item.BackpackItem;
+import io.github.ChanesCMD.trailcraft.item.PocketItem;
 import io.github.ChanesCMD.trailcraft.item.BranchStickItem;
 import io.github.ChanesCMD.trailcraft.item.TurfCutterItem;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -113,9 +114,21 @@ public class ModItems {
     public static final DeferredItem<BlockItem> CHOPPING_STUMP = ITEMS.registerSimpleBlockItem("chopping_stump", ModBlocks.CHOPPING_STUMP);
 
     // === РЮКЗАКИ ===
-    /** Тестовый рюкзак: открывает все 54 слота основного инвентаря. TODO: уточнить тиры рюкзаков. */
-    public static final DeferredItem<BackpackItem> TEST_BACKPACK = ITEMS.registerItem("test_backpack",
-            props -> new BackpackItem(ModBlocks.TEST_BACKPACK.get(), props.stacksTo(1), BackpackItem.MAIN_SIZE));
+    /** Тир 1 — армейский вещмешок, тир 2 — кожаный рюкзак, тир 3 — большой тактический. Отличаются числом карманов. */
+    public static final DeferredItem<BackpackItem> DUFFEL_BACKPACK = ITEMS.registerItem("duffel_backpack",
+            props -> new BackpackItem(ModBlocks.DUFFEL_BACKPACK.get(), props.stacksTo(1), BackpackItem.DUFFEL_POCKETS));
+    public static final DeferredItem<BackpackItem> LEATHER_BACKPACK = ITEMS.registerItem("leather_backpack",
+            props -> new BackpackItem(ModBlocks.LEATHER_BACKPACK.get(), props.stacksTo(1), BackpackItem.LEATHER_POCKETS));
+    public static final DeferredItem<BackpackItem> TACTICAL_BACKPACK = ITEMS.registerItem("tactical_backpack",
+            props -> new BackpackItem(ModBlocks.TACTICAL_BACKPACK.get(), props.stacksTo(1), BackpackItem.TACTICAL_POCKETS));
+
+    // === КАРМАНЫ РЮКЗАКА ===
+    public static final DeferredItem<PocketItem> SMALL_POCKET = ITEMS.registerItem("small_pocket",
+            props -> new PocketItem(props.stacksTo(16), BackpackItem.SMALL_POCKET_SLOTS));
+    public static final DeferredItem<PocketItem> MEDIUM_POCKET = ITEMS.registerItem("medium_pocket",
+            props -> new PocketItem(props.stacksTo(16), BackpackItem.MEDIUM_POCKET_SLOTS));
+    public static final DeferredItem<PocketItem> LARGE_POCKET = ITEMS.registerItem("large_pocket",
+            props -> new PocketItem(props.stacksTo(16), BackpackItem.LARGE_POCKET_SLOTS));
 
     // === КРЕМЕНЬ ===
     /** Новый кремень: ставится на землю как камушек (блок flint_pebble) и выпадает из него. */
