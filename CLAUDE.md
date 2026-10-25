@@ -26,8 +26,9 @@
   рюкзак `BackpackHandler`, кошелёк `WalletHandler` (монеты `item/CoinItem.java`, сами меняются 10 к 1), пояс
   `BeltHandler` (фляга `item/FlaskItem.java`, вода в компоненте `trailcraft:water`, питьё и наполнение — `water/WaterEvents.java`).
 - Календарь: время — `calendar/Calendar.java`, заметки — `calendar/CalendarNotes.java` (attachment у игрока), окно —
-  в `TrailInventoryScreen` (листается по сезонам). Карты — `client/map/`: общая текстура `MapTexture` (цвета ванильной
-  карты, только загруженные чанки), миникарта `Minimap` (в HUD вместе с датой, `TrailHud`), полноэкранная `MapScreen`; что лежит в рюкзаке
+  в `TrailInventoryScreen` (листается по сезонам). Карты — `client/map/`: текстура `MapTexture` (без травы и цветов,
+  цвета блоков и биома, только загруженные чанки), плавное движение `MapView` (сдвиг картинки, дорисовка краёв),
+  миникарта `Minimap` (в HUD вместе с датой, `TrailHud`), полноэкранная `MapScreen`; что лежит в рюкзаке
   (атлас, календарь) сервер шлёт клиенту `inventory/GearPayload.java` → `client/ClientGear.java`, потому что слоты
   игрока сами на клиент не синхронизируются.
 - GUI scale 4 (480×270 на 1080p): панель инвентаря опускается так, чтобы над ней влезало окно рюкзака, окно календаря

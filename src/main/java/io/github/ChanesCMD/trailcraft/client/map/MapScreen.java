@@ -1,74 +1,42 @@
 package io.github.ChanesCMD.trailcraft.client.map;
 
 import io.github.ChanesCMD.trailcraft.client.gui.UiDraw;
+import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * Полноэкранная карта (макет docs/ui/08_map.png): сверху тёмная полоса с названием, кнопками настроек и закрытия,
  * внизу координаты точки под курсором (или игрока). Нужен атлас в рюкзаке (проверяет кнопка, которая открывает карту).
- * Колесо — масштаб (1, 2, 4 или 8 px на блок), ЛКМ с перетаскиванием — сдвиг, ПКМ — снова к игроку.
- * Видно то, что загружено у клиента. Текстура перерисовывается понемногу каждый кадр (ROWS_BUDGET блоков).
+ * Колесо — плавный масштаб (1, 2, 4 или 8 px на блок), перетаскивание — сдвиг, ПКМ — снова к игроку.
+ * Карта плавно следует за игроком (см. MapView). Видно то, что загружено у клиента.
  */
 public class MapScreen extends Screen {
-    private static final int BAR_H = 18, BUTTON = 14, ROWS_BUDGET = 16384;
-    private static final int[] ZOOMS = {1, 2, 4, 8};
+    private static final int BAR_H = 18, BUTTON = 14, BUDGET = 8192, MARGIN = 16;
+    private static final float[] ZOOMS = {1, 2, 4, 8};
     private static final String[] GEAR = {
             "...##.##...", "..#######..", ".##.....##.", "..#..#..#..", "##..###..##",
             "##..###..##", "..#..#..#..", ".##.....##.", "..#######..", "...##.##...", "..........."};
-    private final MapTexture texture = new MapTexture("map");
+    private final MapView view = new MapView("map");
     private int zoomIndex = 1;
+    /** Масштаб сейчас: плавно догоняет ZOOMS[zoomIndex]. */
+    private float zoom = ZOOMS[1];
     /** Центр карты в блоках; пока игрок не сдвинул карту, она следует за ним. */
     private double centerX, centerZ;
     private boolean following = true;
-    /** Область, нарисованная в текстуре (левый верхний блок), и сколько строк уже перерисовано. */
-    private int left, top, row;
     private boolean dragging;
+    private long lastFrame;
 
     public MapScreen() {
         super(Component.translatable("gui.trailcraft.map"));
     }
 
-    @Override
-    protected void init() {
-        super.init();
-        if (minecraft.player != null && following) {
-            centerX = minecraft.player.getX();
-            centerZ = minecraft.player.getZ();
-        }
-        restart();
-    }
-
-    private int zoom() {
-        return ZOOMS[zoomIndex];
-    }
-
     private int mapHeight() {
         return height - BAR_H;
-    }
-
-    /** Заново привязывает текстуру к центру карты и начинает перерисовку с первой строки (старое видно до неё). */
-    private void restart() {
-        texture.resize(Mth.ceil(width / (float) zoom()) + 1, Mth.ceil(mapHeight() / (float) zoom()) + 1);
-        left = Mth.floor(centerX) - texture.width() / 2;
-        top = Mth.floor(centerZ) - texture.height() / 2;
-        row = 0;
-    }
-
-    @Override
-    public void tick() {
-        Player player = minecraft.player;
-        if (player != null && following && !dragging) {
-            centerX = player.getX();
-            centerZ = player.getZ();
-            // Игрок ушёл далеко от середины нарисованного — привязать заново
-            if (Math.abs(Mth.floor(centerX) - (left + texture.width() / 2)) > 8 || Math.abs(Mth.floor(centerZ) - (top + texture.height() / 2)) > 8) {
-                restart();
-            }
-        }
     }
 
     @Override
@@ -77,25 +45,28 @@ public class MapScreen extends Screen {
         if (player == null) {
             return;
         }
-        // Понемногу перерисовываем: за кадр — ROWS_BUDGET блоков, потом по кругу
-        int rows = Math.max(1, ROWS_BUDGET / Math.max(1, texture.width()));
-        texture.paint(player.level(), left, top, row, row + rows);
-        row += rows;
-        if (row >= texture.height()) {
-            row = 0;
-        }
-        texture.upload();
+        // Плавный масштаб: за ~0.15 с догоняет выбранный
+        long now = Util.getMillis();
+        float dt = lastFrame == 0 ? 0 : Math.min(0.1f, (now - lastFrame) / 1000f);
+        lastFrame = now;
+        float target = ZOOMS[zoomIndex];
+        zoom = Math.abs(target - zoom) < 0.01f ? target : zoom + (target - zoom) * Math.min(1, dt * 12);
 
-        int zoom = zoom();
+        Vec3 pos = player.getPosition(partialTick);
+        if (following) {
+            centerX = pos.x;
+            centerZ = pos.z;
+        }
+        // Текстура покрывает экран при самом мелком масштабе, поэтому при смене масштаба не пересоздаётся
+        view.update(player.level(), centerX, centerZ, Mth.ceil(width / ZOOMS[0]) + MARGIN, Mth.ceil(mapHeight() / ZOOMS[0]) + MARGIN, BUDGET);
+
         g.fill(0, BAR_H, width, height, 0xFF000000);
-        // Где на экране блок (left, top): центр карты — в середине области под полосой
-        double originX = width / 2.0 - (centerX - left) * zoom, originY = BAR_H + mapHeight() / 2.0 - (centerZ - top) * zoom;
-        g.enableScissor(0, BAR_H, width, height);
-        g.blit(texture.location(), (int) Math.round(originX), (int) Math.round(originY), texture.width() * zoom, texture.height() * zoom,
-                0, 0, texture.width(), texture.height(), texture.width(), texture.height());
-        int px = (int) Math.round(originX + (player.getX() - left) * zoom), py = (int) Math.round(originY + (player.getZ() - top) * zoom);
-        Minimap.playerMarker(g, px, py, player.getDirection());
-        g.disableScissor();
+        view.draw(g, 0, BAR_H, width, mapHeight(), centerX, centerZ, zoom);
+        double midX = width / 2.0, midY = BAR_H + mapHeight() / 2.0;
+        int px = (int) Math.round(midX + (pos.x - centerX) * zoom), py = (int) Math.round(midY + (pos.z - centerZ) * zoom);
+        if (py >= BAR_H) {
+            Minimap.playerMarker(g, px, py, player.getDirection());
+        }
 
         // Полоса сверху: название, настройки, закрыть
         g.fill(0, 0, width, BAR_H, 0xFF1E1E1E);
@@ -112,8 +83,8 @@ public class MapScreen extends Screen {
         // Координаты внизу слева: точка под курсором, а если курсор не на карте — игрок
         int bx, bz;
         if (mouseY >= BAR_H) {
-            bx = Mth.floor(left + (mouseX - originX) / zoom);
-            bz = Mth.floor(top + (mouseY - originY) / zoom);
+            bx = Mth.floor(centerX + (mouseX - midX) / zoom);
+            bz = Mth.floor(centerZ + (mouseY - midY) / zoom);
         } else {
             bx = player.getBlockX();
             bz = player.getBlockZ();
@@ -166,11 +137,8 @@ public class MapScreen extends Screen {
             dragging = true;
             return true;
         }
-        if (button == 1 && minecraft.player != null) {
+        if (button == 1) {
             following = true;
-            centerX = minecraft.player.getX();
-            centerZ = minecraft.player.getZ();
-            restart();
             return true;
         }
         return super.mouseClicked(mouseX, mouseY, button);
@@ -180,8 +148,8 @@ public class MapScreen extends Screen {
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         if (dragging && button == 0) {
             following = false;
-            centerX -= dragX / zoom();
-            centerZ -= dragY / zoom();
+            centerX -= dragX / zoom;
+            centerZ -= dragY / zoom;
             return true;
         }
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
@@ -191,7 +159,6 @@ public class MapScreen extends Screen {
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if (dragging && button == 0) {
             dragging = false;
-            restart();
             return true;
         }
         return super.mouseReleased(mouseX, mouseY, button);
@@ -199,17 +166,13 @@ public class MapScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-        int next = Mth.clamp(zoomIndex + (int) Math.signum(scrollY), 0, ZOOMS.length - 1);
-        if (next != zoomIndex) {
-            zoomIndex = next;
-            restart();
-        }
+        zoomIndex = Mth.clamp(zoomIndex + (int) Math.signum(scrollY), 0, ZOOMS.length - 1);
         return true;
     }
 
     @Override
     public void removed() {
-        texture.close();
+        view.close();
         super.removed();
     }
 

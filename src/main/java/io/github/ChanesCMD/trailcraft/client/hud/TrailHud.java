@@ -81,7 +81,7 @@ public class TrailHud {
         }
         int right = g.guiWidth() - 6, y = 6;
         if (ClientGear.hasAtlas()) {
-            Minimap.render(g, right - Minimap.SIZE, y, player);
+            Minimap.render(g, right - Minimap.SIZE, y, player, delta.getGameTimeDeltaPartialTick(true));
             y += Minimap.SIZE + 3;
         }
         if (ClientGear.hasCalendar()) {

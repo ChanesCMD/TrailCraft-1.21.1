@@ -20,6 +20,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
@@ -574,11 +575,8 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
                 g.renderItem(stack, slot.x, slot.y);
                 g.renderItemDecorations(font, stack, slot.x, slot.y);
                 if (slot == hoveredSlot) {
-                    // Подсветка поверх предмета (он рисуется на +150)
-                    g.pose().pushPose();
-                    g.pose().translate(0, 0, 160);
-                    g.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, 0x80FFFFFF);
-                    g.pose().popPose();
+                    // Подсветка как в ванилле: без проверки глубины, поверх предмета в слоте, но под предметом на курсоре
+                    g.fill(RenderType.guiOverlay(), slot.x, slot.y, slot.x + 16, slot.y + 16, 0x80FFFFFF);
                 }
             }
         }
