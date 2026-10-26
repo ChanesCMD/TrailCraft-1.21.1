@@ -206,6 +206,60 @@
                 ],
                 "humidity": [
                   -2.0,
+                  0.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -2.0,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:burozem_taiga",
+              "parameters": {
+                "temperature": [
+                  -2.0,
+                  -0.55
+                ],
+                "humidity": [
+                  0.0,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -2.0,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:burozem_forest",
+              "parameters": {
+                "temperature": [
+                  -0.55,
+                  -0.24
+                ],
+                "humidity": [
+                  0.0,
                   2.0
                 ],
                 "continentalness": [
@@ -233,6 +287,33 @@
                 ],
                 "humidity": [
                   -2.0,
+                  0.15
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -2.0,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:chernozem_forest_steppe",
+              "parameters": {
+                "temperature": [
+                  -0.24,
+                  0.02
+                ],
+                "humidity": [
+                  0.15,
                   2.0
                 ],
                 "continentalness": [
@@ -260,6 +341,33 @@
                 ],
                 "humidity": [
                   -0.02,
+                  0.2
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -2.0,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:zheltozem_forest",
+              "parameters": {
+                "temperature": [
+                  0.02,
+                  2.0
+                ],
+                "humidity": [
+                  0.2,
                   2.0
                 ],
                 "continentalness": [
@@ -557,6 +665,60 @@
                 ],
                 "humidity": [
                   -2.0,
+                  0.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:burozem_taiga",
+              "parameters": {
+                "temperature": [
+                  -2.0,
+                  -0.55
+                ],
+                "humidity": [
+                  0.0,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:burozem_forest",
+              "parameters": {
+                "temperature": [
+                  -0.55,
+                  -0.24
+                ],
+                "humidity": [
+                  0.0,
                   2.0
                 ],
                 "continentalness": [
@@ -584,6 +746,33 @@
                 ],
                 "humidity": [
                   -2.0,
+                  0.15
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:chernozem_forest_steppe",
+              "parameters": {
+                "temperature": [
+                  -0.24,
+                  0.02
+                ],
+                "humidity": [
+                  0.15,
                   2.0
                 ],
                 "continentalness": [
@@ -611,6 +800,33 @@
                 ],
                 "humidity": [
                   -0.02,
+                  0.2
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:zheltozem_forest",
+              "parameters": {
+                "temperature": [
+                  0.02,
+                  2.0
+                ],
+                "humidity": [
+                  0.2,
                   2.0
                 ],
                 "continentalness": [

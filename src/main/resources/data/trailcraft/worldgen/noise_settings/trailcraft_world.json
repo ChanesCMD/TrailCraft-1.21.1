@@ -957,7 +957,8 @@
         "if_true": {
           "type": "minecraft:biome",
           "biome_is": [
-            "trailcraft:chernozem_plains"
+            "trailcraft:chernozem_plains",
+            "trailcraft:chernozem_forest_steppe"
           ]
         },
         "then_run": {
@@ -1683,7 +1684,9 @@
         "if_true": {
           "type": "minecraft:biome",
           "biome_is": [
-            "trailcraft:burozem_plains"
+            "trailcraft:burozem_plains",
+            "trailcraft:burozem_forest",
+            "trailcraft:burozem_taiga"
           ]
         },
         "then_run": {
@@ -2409,7 +2412,8 @@
         "if_true": {
           "type": "minecraft:biome",
           "biome_is": [
-            "trailcraft:zheltozem_plains"
+            "trailcraft:zheltozem_plains",
+            "trailcraft:zheltozem_forest"
           ]
         },
         "then_run": {

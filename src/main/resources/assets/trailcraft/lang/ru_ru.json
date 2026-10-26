@@ -748,5 +748,9 @@
   "block.trailcraft.gooseberry_bush": "Куст крыжовника",
   "item.trailcraft.gooseberry": "Крыжовник",
   "block.trailcraft.blackberry_bush": "Куст ежевики",
-  "item.trailcraft.blackberry": "Ежевика"
+  "item.trailcraft.blackberry": "Ежевика",
+  "biome.trailcraft.burozem_forest": "Широколиственный лес",
+  "biome.trailcraft.burozem_taiga": "Тайга",
+  "biome.trailcraft.chernozem_forest_steppe": "Лесостепь",
+  "biome.trailcraft.zheltozem_forest": "Субтропический лес"
 }

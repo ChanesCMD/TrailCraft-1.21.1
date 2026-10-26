@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:random_selector",
+  "config": {
+    "features": [
+      {
+        "feature": "trailcraft:willow_wild_checked",
+        "chance": 0.3333
+      },
+      {
+        "feature": "trailcraft:alder_wild_checked",
+        "chance": 0.3333
+      },
+      {
+        "feature": "trailcraft:white_poplar_wild_checked",
+        "chance": 0.5
+      }
+    ],
+    "default": "trailcraft:pussy_willow_wild_checked"
+  }
+}

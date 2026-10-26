@@ -1,0 +1,13 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "trailcraft:chernozem_forest_steppe"
+  ],
+  "features": [
+    "trailcraft:currant_bush_patch",
+    "trailcraft:gooseberry_bush_patch",
+    "trailcraft:blackberry_bush_patch",
+    "trailcraft:wild_carrot_patch"
+  ],
+  "step": "vegetal_decoration"
+}

@@ -39,13 +39,17 @@ BERRIES = [
     ("blackberry", "Куст ежевики", "Blackberry Bush", "Ежевика", "Blackberries"),
 ]
 
-# Где растут дикие растения: биом -> что в нём растёт. TODO: уточнить биомы.
-# Смородина и крыжовник — умеренные равнины, морошка — самая прохладная (бурозём), ежевика — тёплые и умеренные,
-# картофель — умеренные, морковь — везде на равнинах, джут — тёплая и влажная (жёлтозём).
+# Где растут дикие растения: биом -> что в нём растёт (леса — scripts/gen_forests.py). TODO: уточнить биомы.
+# Смородина и крыжовник — умеренные равнины и леса, морошка — самая прохладная полоса (бурозём, тайга),
+# ежевика — тёплые и умеренные леса и опушки, картофель — умеренные, морковь — равнины, джут — тёплая и влажная (жёлтозём).
 WILD_BY_BIOME = {
-    "burozem": ["currant_bush", "cloudberry_bush", "gooseberry_bush", "blackberry_bush", "wild_carrot", "wild_potato"],
-    "chernozem": ["currant_bush", "gooseberry_bush", "wild_carrot", "wild_potato"],
-    "zheltozem": ["blackberry_bush", "wild_carrot", "wild_jute"],
+    "burozem_plains": ["currant_bush", "cloudberry_bush", "gooseberry_bush", "blackberry_bush", "wild_carrot", "wild_potato"],
+    "burozem_forest": ["currant_bush", "gooseberry_bush", "blackberry_bush"],
+    "burozem_taiga": ["cloudberry_bush", "currant_bush"],
+    "chernozem_plains": ["currant_bush", "gooseberry_bush", "wild_carrot", "wild_potato"],
+    "chernozem_forest_steppe": ["currant_bush", "gooseberry_bush", "blackberry_bush", "wild_carrot"],
+    "zheltozem_plains": ["blackberry_bush", "wild_carrot", "wild_jute"],
+    "zheltozem_forest": ["blackberry_bush"],
 }
 # Пятно: растение, попыток (столько растений максимум), разброс, раз в сколько чанков
 PATCHES = {
@@ -291,15 +295,17 @@ def worldgen():
             "placement": [
                 {"type": "minecraft:rarity_filter", "chance": rarity},
                 {"type": "minecraft:in_square"},
-                {"type": "minecraft:heightmap", "heightmap": "WORLD_SURFACE_WG"},
+                # высота земли до деревьев (WORLD_SURFACE_WG в лесу уже по кронам)
+                {"type": "minecraft:heightmap", "heightmap": "WORLD_SURFACE"},
                 {"type": "minecraft:biome"},
             ],
         })
-    for soil, plants in WILD_BY_BIOME.items():
-        write(f"data/{NS}/neoforge/biome_modifier/wild_plants_{soil}.json", {
+    for biome, plants in WILD_BY_BIOME.items():
+        write(f"data/{NS}/neoforge/biome_modifier/wild_plants_{biome}.json", {
             "type": "neoforge:add_features",
-            "biomes": [f"{NS}:{soil}_plains"],
-            "features": [f"{NS}:{p}_patch" for p in plants],
+            "biomes": [f"{NS}:{biome}"],
+            # во всех биомах в одном порядке (как в PATCHES), иначе игра падает с «Feature order cycle»
+            "features": [f"{NS}:{p}_patch" for p in PATCHES if p in plants],
             "step": "vegetal_decoration",
         })
 

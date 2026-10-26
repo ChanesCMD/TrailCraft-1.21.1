@@ -1,0 +1,12 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "trailcraft:burozem_river",
+    "trailcraft:chernozem_river",
+    "trailcraft:zheltozem_river"
+  ],
+  "features": [
+    "trailcraft:river_trees"
+  ],
+  "step": "vegetal_decoration"
+}

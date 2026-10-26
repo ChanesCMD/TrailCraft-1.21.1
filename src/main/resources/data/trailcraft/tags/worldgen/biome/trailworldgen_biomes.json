@@ -13,6 +13,10 @@
     "trailcraft:desert",
     "trailcraft:red_desert",
     "trailcraft:sea",
-    "trailcraft:arboretum"
+    "trailcraft:arboretum",
+    "trailcraft:burozem_forest",
+    "trailcraft:burozem_taiga",
+    "trailcraft:chernozem_forest_steppe",
+    "trailcraft:zheltozem_forest"
   ]
 }

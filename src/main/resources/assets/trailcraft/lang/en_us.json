@@ -748,5 +748,9 @@
   "block.trailcraft.gooseberry_bush": "Gooseberry Bush",
   "item.trailcraft.gooseberry": "Gooseberries",
   "block.trailcraft.blackberry_bush": "Blackberry Bush",
-  "item.trailcraft.blackberry": "Blackberries"
+  "item.trailcraft.blackberry": "Blackberries",
+  "biome.trailcraft.burozem_forest": "Broadleaf Forest",
+  "biome.trailcraft.burozem_taiga": "Taiga",
+  "biome.trailcraft.chernozem_forest_steppe": "Forest Steppe",
+  "biome.trailcraft.zheltozem_forest": "Subtropical Forest"
 }
