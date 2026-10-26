@@ -80,11 +80,8 @@
   GitHub (`e4steam_version` — тег без «v»).
   MezzConfig GUI (экран настроек JEI; `mezz_config_gui_version`, `mezz_config_version`) — тоже только для запуска из среды
   разработки. Сборка GitHub Actions выполняет `checkDevRuntime`: он проверяет, что все эти зависимости скачиваются.
-- JEI: собственную кнопку-шестерёнку JEI убирает миксин `mixin/JeiIconButtonMixin.java` (`trailcraft.mixins.json`,
-  применяется, только если JEI есть и устроен так же, иначе пропускается). Её функции — в кнопке JEI слева сверху
-  в инвентаре (`client/gui/CornerButtons.java`): клик — настройки (или сообщение в чат с папкой конфигурации,
-  если экрана нет), Ctrl+клик — режим читера, Shift+клик — «список только при поиске»; два последних — рефлексией
-  через `client/gui/JeiBridge.java` (внутренностей JEI нет в API).
+- JEI своя, без вмешательства TrailCraft: кнопки JEI в инвентаре нет, шестерёнку JEI мод не трогает. Экран настроек
+  JEI даёт MezzConfig GUI (только для запуска из среды разработки, см. «Зависимости»).
 - Голосовой чат поверх Simple Voice Chat (необязательная зависимость): плагин `voice/svc/TrailVoicePlugin.java`,
   сервер — `voice/VoiceServer.java` (каналы — скрытые группы SVC, звонки), клиент — `client/voice/VoiceClient.java`,
   окно — `client/gui/VoiceChatWindow.java`, кнопки в углу инвентаря — `client/gui/CornerButtons.java`.
