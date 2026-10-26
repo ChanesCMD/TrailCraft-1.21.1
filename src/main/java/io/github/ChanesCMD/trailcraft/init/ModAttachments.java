@@ -2,10 +2,13 @@ package io.github.ChanesCMD.trailcraft.init;
 
 import com.mojang.serialization.Codec;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
+import io.github.ChanesCMD.trailcraft.inventory.BackpackHandler;
+import io.github.ChanesCMD.trailcraft.inventory.BeltHandler;
 import io.github.ChanesCMD.trailcraft.inventory.DeathRecord;
 import io.github.ChanesCMD.trailcraft.inventory.PlayerSlots;
 import io.github.ChanesCMD.trailcraft.stamina.Stamina;
 import io.github.ChanesCMD.trailcraft.water.Water;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -48,6 +51,12 @@ public final class ModAttachments {
     /** Последнее, что отправлено клиенту в GearPayload (не сохраняется: после входа отправится заново). */
     public static final Supplier<AttachmentType<Integer>> GEAR_SENT = ATTACHMENT_TYPES.register("gear_sent",
             () -> AttachmentType.builder(() -> -1).build());
+
+    /** Слоты надетого рюкзака и пояса для серверных событий: создаются один раз на игрока (не сохраняются). */
+    public static final Supplier<AttachmentType<BackpackHandler>> BACKPACK_HANDLER = ATTACHMENT_TYPES.register("backpack_handler",
+            () -> AttachmentType.builder(holder -> new BackpackHandler((Player) holder)).build());
+    public static final Supplier<AttachmentType<BeltHandler>> BELT_HANDLER = ATTACHMENT_TYPES.register("belt_handler",
+            () -> AttachmentType.builder(holder -> new BeltHandler((Player) holder)).build());
 
     /** Последняя косметика, отправленная клиентам в CosmeticPayload (не сохраняется). */
     public static final Supplier<AttachmentType<List<ItemStack>>> COSMETIC_SENT = ATTACHMENT_TYPES.register("cosmetic_sent",

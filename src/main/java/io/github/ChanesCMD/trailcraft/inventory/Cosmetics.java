@@ -29,13 +29,33 @@ public final class Cosmetics {
         return shown;
     }
 
-    /** Каждый тик: если показываемая косметика изменилась, рассылаем её игроку и всем, кто его видит. */
+    /**
+     * Каждый тик: если показываемая косметика изменилась, рассылаем её игроку и всем, кто его видит.
+     * Сравниваем без копирования, копии делаем только при изменении.
+     */
     static void sync(ServerPlayer player) {
-        List<ItemStack> shown = shown(player);
-        if (!ItemStack.listMatches(shown, player.getData(ModAttachments.COSMETIC_SENT))) {
-            player.setData(ModAttachments.COSMETIC_SENT, shown);
-            PacketDistributor.sendToPlayersTrackingEntityAndSelf(player, new CosmeticPayload(player.getId(), shown));
+        if (!changed(player)) {
+            return;
         }
+        List<ItemStack> shown = shown(player);
+        player.setData(ModAttachments.COSMETIC_SENT, shown);
+        PacketDistributor.sendToPlayersTrackingEntityAndSelf(player, new CosmeticPayload(player.getId(), shown));
+    }
+
+    private static boolean changed(ServerPlayer player) {
+        List<ItemStack> sent = player.getData(ModAttachments.COSMETIC_SENT);
+        if (sent.size() != 4) {
+            return true;
+        }
+        PlayerSlots slots = player.getData(ModAttachments.PLAYER_SLOTS);
+        int toggles = player.getData(ModAttachments.COSMETIC_TOGGLES);
+        for (int i = 0; i < 4; i++) {
+            ItemStack shown = (toggles & (1 << i)) != 0 ? slots.getStackInSlot(PlayerSlots.COSMETIC + i) : ItemStack.EMPTY;
+            if (!ItemStack.matches(shown, sent.get(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Игрок появился в зоне видимости другого — тому нужна его косметика. */

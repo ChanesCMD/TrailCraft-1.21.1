@@ -61,6 +61,7 @@ public final class MapSampler {
         if (player == null || level == null) {
             return;
         }
+        MapCache.tick();
         if (++ticks % SAVE_TICKS == 0) {
             MapCache.save();
         }

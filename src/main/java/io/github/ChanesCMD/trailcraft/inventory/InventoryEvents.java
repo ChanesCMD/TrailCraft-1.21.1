@@ -44,6 +44,8 @@ import java.util.List;
 public class InventoryEvents {
     /** Ванильные слоты 9..35 не используются: основной инвентарь лежит в рюкзаке. */
     private static final int VANILLA_MAIN_START = 9, VANILLA_MAIN_END = 36;
+    /** Как часто (в тиках) раскладывать вещи из закрывшихся слотов рюкзака и слать клиенту GearPayload. */
+    private static final int LOCKED_SLOTS_INTERVAL = 5, GEAR_INTERVAL = 10;
 
     /**
      * Хотбар при смерти остаётся у игрока: откладываем его до того, как ванилла выбросит инвентарь,
@@ -190,10 +192,15 @@ public class InventoryEvents {
         if (!(event.getEntity() instanceof ServerPlayer player) || player.isSpectator()) {
             return;
         }
-        BackpackHandler backpack = new BackpackHandler(player);
-        moveFromLockedSlots(player, backpack);
-        syncGear(player, backpack);
+        BackpackHandler backpack = BackpackHandler.of(player);
         Cosmetics.sync(player);
+        // Редкие проверки: полсекунды задержки не заметны
+        if (player.tickCount % LOCKED_SLOTS_INTERVAL == 0) {
+            moveFromLockedSlots(player, backpack);
+        }
+        if (player.tickCount % GEAR_INTERVAL == 0) {
+            syncGear(player, backpack);
+        }
         if (player.isCreative()) {
             return;
         }
@@ -241,7 +248,7 @@ public class InventoryEvents {
 
     /** Отправляет клиенту, есть ли в рюкзаке атлас и календарь, когда это меняется. */
     private static void syncGear(ServerPlayer player, BackpackHandler backpack) {
-        ItemStack flask = new BeltHandler(player).flask();
+        ItemStack flask = BeltHandler.of(player).flask();
         int flags = (backpack.has(BackpackItem.ATLAS) ? GearPayload.ATLAS : 0)
                 | (backpack.has(BackpackItem.CALENDAR) ? GearPayload.CALENDAR : 0)
                 | (!flask.isEmpty() && FlaskItem.water(flask) < Water.FLASK_SIPS ? GearPayload.FLASK : 0);
@@ -280,7 +287,7 @@ public class InventoryEvents {
         if (!offhand.isEmpty() && fits(offhand, stack)) {
             return true;
         }
-        return new BackpackHandler(player).insertMain(stack, true).getCount() < stack.getCount();
+        return BackpackHandler.of(player).insertMain(stack, true).getCount() < stack.getCount();
     }
 
     private static boolean fits(ItemStack slot, ItemStack stack) {

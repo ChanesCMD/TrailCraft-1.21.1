@@ -74,7 +74,7 @@ public class WaterEvents {
      */
     private static void drink(ServerPlayer player) {
         Water.Tracker tracker = player.getData(ModAttachments.WATER_TRACKER);
-        ItemStack flask = new BeltHandler(player).flask();
+        ItemStack flask = BeltHandler.of(player).flask();
         boolean flaskNeedsWater = !flask.isEmpty() && FlaskItem.water(flask) < Water.FLASK_SIPS;
         if (player.isSpectator() || !player.getMainHandItem().isEmpty() || tracker.drinkCooldown > 0
                 || get(player) >= Water.MAX && !flaskNeedsWater) {
@@ -102,7 +102,7 @@ public class WaterEvents {
         if (player.isSpectator() || tracker.drinkCooldown > 0 || get(player) >= Water.MAX) {
             return;
         }
-        BeltHandler belt = new BeltHandler(player);
+        BeltHandler belt = BeltHandler.of(player);
         int sips = FlaskItem.water(belt.flask());
         if (sips <= 0) {
             return;
@@ -115,7 +115,7 @@ public class WaterEvents {
 
     /** Наполняет флягу на поясе доверху (игрок в воде или пьёт воду ПКМ). */
     private static void fillFlask(ServerPlayer player) {
-        BeltHandler belt = new BeltHandler(player);
+        BeltHandler belt = BeltHandler.of(player);
         ItemStack flask = belt.flask();
         if (!flask.isEmpty() && FlaskItem.water(flask) < Water.FLASK_SIPS) {
             belt.setFlaskWater(Water.FLASK_SIPS);

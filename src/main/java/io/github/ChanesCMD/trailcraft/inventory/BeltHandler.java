@@ -14,6 +14,11 @@ public class BeltHandler extends ContentsHandler {
         super(player, SIZE);
     }
 
+    /** Общий экземпляр игрока (сам замечает, что пояс сменился), чтобы не создавать новый каждый тик. */
+    public static BeltHandler of(Player player) {
+        return player.getData(ModAttachments.BELT_HANDLER);
+    }
+
     @Override
     protected ItemStack holder() {
         return player.getData(ModAttachments.PLAYER_SLOTS).getStackInSlot(PlayerSlots.BELT);

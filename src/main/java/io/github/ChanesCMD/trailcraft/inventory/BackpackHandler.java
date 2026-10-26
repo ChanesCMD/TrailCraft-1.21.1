@@ -1,5 +1,6 @@
 package io.github.ChanesCMD.trailcraft.inventory;
 
+import io.github.ChanesCMD.trailcraft.init.ModAttachments;
 import io.github.ChanesCMD.trailcraft.item.BackpackItem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -8,6 +9,11 @@ import net.minecraft.world.item.ItemStack;
 public class BackpackHandler extends ContentsHandler {
     public BackpackHandler(Player player) {
         super(player, BackpackItem.SIZE);
+    }
+
+    /** Общий экземпляр игрока (сам замечает, что рюкзак сменился), чтобы не создавать новый каждый тик. */
+    public static BackpackHandler of(Player player) {
+        return player.getData(ModAttachments.BACKPACK_HANDLER);
     }
 
     @Override
