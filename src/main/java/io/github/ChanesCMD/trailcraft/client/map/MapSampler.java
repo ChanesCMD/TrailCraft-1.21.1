@@ -49,11 +49,13 @@ public final class MapSampler {
     @SubscribeEvent
     public static void onLogin(ClientPlayerNetworkEvent.LoggingIn event) {
         MapCache.open();
+        Waypoints.open();
     }
 
     @SubscribeEvent
     public static void onLogout(ClientPlayerNetworkEvent.LoggingOut event) {
         MapCache.close();
+        Waypoints.close();
         MapTiles.clear();
         QUEUE.clear();
         queueLevel = null;

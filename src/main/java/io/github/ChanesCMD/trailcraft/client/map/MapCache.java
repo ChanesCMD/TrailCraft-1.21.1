@@ -153,6 +153,11 @@ public final class MapCache {
         }
     }
 
+    /** Папка памяти этого мира или сервера (в ней же лежат путевые точки) или null вне мира. */
+    public static Path worldRoot() {
+        return root;
+    }
+
     /** Вход в мир: память этого мира или сервера. */
     public static void open() {
         close();

@@ -6,16 +6,25 @@ import io.github.ChanesCMD.trailcraft.client.ClientGear;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import io.github.ChanesCMD.trailcraft.client.map.Waypoints.Waypoint;
+import io.github.ChanesCMD.trailcraft.map.MapTeleport;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.network.PacketDistributor;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Полноэкранная карта (макет docs/ui/08_map.png): сверху тёмная полоса с названием, кнопками настроек и закрытия,
  * внизу координаты точки под курсором (или игрока). Нужен атлас в рюкзаке (проверяет кнопка, которая открывает карту).
- * Колесо — плавный масштаб (0,5–8 px на блок), перетаскивание — сдвиг, ПКМ — снова к игроку.
+ * Колесо — плавный масштаб (0,5–8 px на блок), перетаскивание — сдвиг, кнопка в полосе сверху — снова к игроку,
+ * ПКМ — контекстное меню: путевые точки (добавить, изменить, удалить) и телепорт на точку для админов.
  * Карта плавно следует за игроком. Видно всё, что атлас запомнил (MapCache), а не только загруженное.
  */
 public class MapScreen extends Screen {
@@ -32,6 +41,16 @@ public class MapScreen extends Screen {
     private boolean following = true;
     private boolean dragging;
     private long lastFrame;
+    /** Контекстное меню (ПКМ): пункт без действия — заголовок. Пока оно открыто, список не пуст. */
+    private final List<MenuItem> menu = new ArrayList<>();
+    private int menuX, menuY, menuW;
+
+    private record MenuItem(Component label, @Nullable Runnable action) {}
+
+    private static final int ITEM_H = 12;
+    private static final String[] TARGET = {
+            "....###....", "..##.#.##..", ".#...#...#.", ".#...#...#.", "#....#....#", "#####.#####",
+            "#....#....#", ".#...#...#.", ".#...#...#.", "..##.#.##..", "....###...."};
 
     public MapScreen() {
         super(Component.translatable("gui.trailcraft.map"));
@@ -78,6 +97,16 @@ public class MapScreen extends Screen {
         g.fill(0, BAR_H, width, height, 0xFF000000);
         MapTiles.draw(g, player.level().dimension().location(), 0, BAR_H, width, mapHeight(), centerX, centerZ, zoom);
         double midX = width / 2.0, midY = BAR_H + mapHeight() / 2.0;
+        ResourceLocation dimension = player.level().dimension().location();
+        Waypoint hovered = menu.isEmpty() ? waypointAt(dimension, mouseX, mouseY) : null;
+        g.enableScissor(0, BAR_H, width, height);
+        for (Waypoint waypoint : Waypoints.inDimension(dimension)) {
+            int sx = screenX(waypoint.x() + 0.5), sy = screenY(waypoint.z() + 0.5);
+            if (sx > -100 && sx < width + 100 && sy > BAR_H - 10 && sy < height + 10) {
+                drawWaypoint(g, sx, sy, waypoint, waypoint == hovered);
+            }
+        }
+        g.disableScissor();
         int px = (int) Math.round(midX + (pos.x - centerX) * zoom), py = (int) Math.round(midY + (pos.z - centerZ) * zoom);
         if (py >= BAR_H) {
             Minimap.playerMarker(g, px, py, player.getViewYRot(partialTick));
@@ -86,7 +115,9 @@ public class MapScreen extends Screen {
         // Полоса сверху: название, настройки, закрыть
         g.fill(0, 0, width, BAR_H, 0xFF1E1E1E);
         g.drawString(font, title, 8, (BAR_H - 8) / 2, 0xFFFFFFFF, false);
-        int closeX = width - 4 - BUTTON, gearX = closeX - 4 - BUTTON, by = (BAR_H - BUTTON) / 2;
+        int closeX = width - 4 - BUTTON, gearX = closeX - 4 - BUTTON, followX = gearX - 4 - BUTTON, by = (BAR_H - BUTTON) / 2;
+        button(g, followX, by, mouseX, mouseY);
+        icon(g, followX + 2, by + 2, TARGET);
         button(g, gearX, by, mouseX, mouseY);
         icon(g, gearX + 2, by + 2, GEAR);
         button(g, closeX, by, mouseX, mouseY);
@@ -116,7 +147,14 @@ public class MapScreen extends Screen {
         Component hint = Component.translatable("gui.trailcraft.map.hint");
         g.drawString(font, hint, width - 8 - font.width(hint), height - 14, 0xFFC0C0C0, true);
 
-        if (isOver(mouseX, mouseY, gearX, by)) {
+        if (!menu.isEmpty()) {
+            renderMenu(g, mouseX, mouseY);
+        } else if (hovered != null) {
+            g.renderComponentTooltip(font, List.of(Component.literal(hovered.name()),
+                    Component.literal("X: " + hovered.x() + "  Y: " + hovered.y() + "  Z: " + hovered.z())), mouseX, mouseY);
+        } else if (isOver(mouseX, mouseY, followX, by)) {
+            g.renderTooltip(font, Component.translatable("gui.trailcraft.map.follow"), mouseX, mouseY);
+        } else if (isOver(mouseX, mouseY, gearX, by)) {
             g.renderTooltip(font, Component.translatable("gui.trailcraft.map.settings"), mouseX, mouseY);
         } else if (isOver(mouseX, mouseY, closeX, by)) {
             g.renderTooltip(font, Component.translatable("gui.trailcraft.map.close"), mouseX, mouseY);
@@ -142,18 +180,146 @@ public class MapScreen extends Screen {
         }
     }
 
+    private int screenX(double worldX) {
+        return (int) Math.round(width / 2.0 + (worldX - centerX) * zoom);
+    }
+
+    private int screenY(double worldZ) {
+        return (int) Math.round(BAR_H + mapHeight() / 2.0 + (worldZ - centerZ) * zoom);
+    }
+
+    /** Ближайшая к курсору путевая точка в пределах 6 px или null. */
+    @Nullable
+    private Waypoint waypointAt(ResourceLocation dimension, double mouseX, double mouseY) {
+        if (mouseY < BAR_H) {
+            return null;
+        }
+        Waypoint best = null;
+        double bestDistance = 6 * 6 + 1;
+        for (Waypoint waypoint : Waypoints.inDimension(dimension)) {
+            double dx = mouseX - screenX(waypoint.x() + 0.5), dy = mouseY - screenY(waypoint.z() + 0.5);
+            if (dx * dx + dy * dy < bestDistance) {
+                best = waypoint;
+                bestDistance = dx * dx + dy * dy;
+            }
+        }
+        return best;
+    }
+
+    /** Ромб 7×7 цвета точки в чёрной обводке и название справа. */
+    private void drawWaypoint(GuiGraphics g, int sx, int sy, Waypoint waypoint, boolean hovered) {
+        for (int i = 0; i < 7; i++) {
+            int half = 3 - Math.abs(i - 3);
+            g.fill(sx - half - 1, sy - 3 + i, sx + half + 2, sy - 2 + i, 0xFF000000);
+        }
+        g.fill(sx, sy - 4, sx + 1, sy - 3, 0xFF000000);
+        g.fill(sx, sy + 4, sx + 1, sy + 5, 0xFF000000);
+        for (int i = 0; i < 7; i++) {
+            int half = 3 - Math.abs(i - 3);
+            g.fill(sx - half, sy - 3 + i, sx + half + 1, sy - 2 + i, 0xFF000000 | waypoint.color());
+        }
+        g.drawString(font, waypoint.name(), sx + 7, sy - 4, hovered ? 0xFFFFFF55 : 0xFFFFFFFF, true);
+    }
+
+    /** Открывает меню в точке экрана: у путевой точки — изменить, удалить, телепорт; на пустом месте — добавить метку, телепорт. */
+    private void openMenu(double mouseX, double mouseY) {
+        Player player = minecraft.player;
+        if (player == null) {
+            return;
+        }
+        ResourceLocation dimension = player.level().dimension().location();
+        Waypoint waypoint = waypointAt(dimension, mouseX, mouseY);
+        boolean admin = player.hasPermissions(2);
+        menu.clear();
+        if (waypoint != null) {
+            menu.add(new MenuItem(Component.literal(waypoint.name()), null));
+            menu.add(new MenuItem(Component.translatable("gui.trailcraft.map.menu.edit"),
+                    () -> minecraft.setScreen(new WaypointScreen(this, waypoint, false))));
+            menu.add(new MenuItem(Component.translatable("gui.trailcraft.map.menu.delete"), () -> Waypoints.remove(waypoint)));
+            if (admin) {
+                menu.add(new MenuItem(Component.translatable("gui.trailcraft.map.menu.teleport"), () -> teleport(waypoint.x(), waypoint.z())));
+            }
+        } else {
+            int bx = Mth.floor(centerX + (mouseX - width / 2.0) / zoom), bz = Mth.floor(centerZ + (mouseY - (BAR_H + mapHeight() / 2.0)) / zoom);
+            BlockPos surface = MapSampler.surfaceAt(player.level(), bx, bz);
+            Waypoint fresh = new Waypoint(Component.translatable("gui.trailcraft.waypoint.default", Waypoints.count() + 1).getString(),
+                    dimension, bx, surface != null ? surface.getY() + 1 : player.getBlockY(), bz,
+                    Waypoints.COLORS[Waypoints.count() % Waypoints.COLORS.length]);
+            menu.add(new MenuItem(Component.translatable("gui.trailcraft.map.coords", bx, bz), null));
+            menu.add(new MenuItem(Component.translatable("gui.trailcraft.map.menu.add"),
+                    () -> minecraft.setScreen(new WaypointScreen(this, fresh, true))));
+            if (admin) {
+                menu.add(new MenuItem(Component.translatable("gui.trailcraft.map.menu.teleport"), () -> teleport(bx, bz)));
+            }
+        }
+        menuW = 12;
+        for (MenuItem item : menu) {
+            menuW = Math.max(menuW, font.width(item.label()) + 12);
+        }
+        menuX = Mth.clamp((int) mouseX, 2, Math.max(2, width - menuW - 2));
+        menuY = Mth.clamp((int) mouseY, BAR_H, Math.max(BAR_H, height - menu.size() * ITEM_H - 6));
+    }
+
+    /** Сервер сам проверит права и подберёт высоту; карта закрывается. */
+    private void teleport(int x, int z) {
+        PacketDistributor.sendToServer(new MapTeleport.Payload(x, z));
+        onClose();
+    }
+
+    private int menuItemAt(double mouseX, double mouseY) {
+        if (mouseX < menuX || mouseX >= menuX + menuW || mouseY < menuY + 2) {
+            return -1;
+        }
+        int index = (int) (mouseY - menuY - 2) / ITEM_H;
+        return index < menu.size() ? index : -1;
+    }
+
+    private boolean insideMenu(double mouseX, double mouseY) {
+        return mouseX >= menuX && mouseX < menuX + menuW && mouseY >= menuY && mouseY < menuY + menu.size() * ITEM_H + 4;
+    }
+
+    private void renderMenu(GuiGraphics g, int mouseX, int mouseY) {
+        UiDraw.frame(g, menuX, menuY, menuW, menu.size() * ITEM_H + 4, 0xFF000000, 0xFF555555, 0xFF1E1E1E);
+        int hovered = menuItemAt(mouseX, mouseY);
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem item = menu.get(i);
+            int y = menuY + 2 + i * ITEM_H;
+            if (i == hovered && item.action() != null) {
+                g.fill(menuX + 1, y, menuX + menuW - 1, y + ITEM_H, 0xFF3A3A6A);
+            }
+            g.drawString(font, item.label(), menuX + 6, y + 2, item.action() == null ? 0xFFAAAAAA : 0xFFFFFFFF, false);
+        }
+    }
+
     private boolean isOver(double mouseX, double mouseY, int x, int y) {
         return mouseX >= x && mouseX < x + BUTTON && mouseY >= y && mouseY < y + BUTTON;
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (!menu.isEmpty()) {
+            int item = menuItemAt(mouseX, mouseY);
+            Runnable action = button == 0 && item >= 0 ? menu.get(item).action() : null;
+            boolean inside = insideMenu(mouseX, mouseY);
+            menu.clear();
+            if (action != null) {
+                action.run();
+                return true;
+            }
+            if (inside || button != 1) {
+                return true; // клик по заголовку или мимо меню только закрывает его
+            }
+        }
         int closeX = width - 4 - BUTTON, by = (BAR_H - BUTTON) / 2;
         if (button == 0 && isOver(mouseX, mouseY, closeX, by)) {
             onClose();
             return true;
         }
-        int gearX = closeX - 4 - BUTTON;
+        int gearX = closeX - 4 - BUTTON, followX = gearX - 4 - BUTTON;
+        if (button == 0 && isOver(mouseX, mouseY, followX, by)) {
+            following = true;
+            return true;
+        }
         if (button == 0 && isOver(mouseX, mouseY, gearX, by)) {
             minecraft.setScreen(new MapSettingsScreen(this));
             return true;
@@ -166,7 +332,7 @@ public class MapScreen extends Screen {
             return true;
         }
         if (button == 1) {
-            following = true;
+            openMenu(mouseX, mouseY);
             return true;
         }
         return super.mouseClicked(mouseX, mouseY, button);
@@ -194,12 +360,17 @@ public class MapScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        menu.clear();
         zoomIndex = Mth.clamp(zoomIndex + (int) Math.signum(scrollY), 0, ZOOMS.length - 1);
         return true;
     }
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == 256 && !menu.isEmpty()) {
+            menu.clear();
+            return true;
+        }
         if (MapKeys.MAP.matches(keyCode, scanCode)) {
             onClose();
             return true;
