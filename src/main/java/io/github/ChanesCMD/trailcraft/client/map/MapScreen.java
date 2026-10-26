@@ -153,8 +153,13 @@ public class MapScreen extends Screen {
             onClose();
             return true;
         }
+        int gearX = closeX - 4 - BUTTON;
+        if (button == 0 && isOver(mouseX, mouseY, gearX, by)) {
+            minecraft.setScreen(new MapSettingsScreen(this));
+            return true;
+        }
         if (mouseY < BAR_H) {
-            return true; // настройки карты пока не сделаны (подсказка «Скоро»)
+            return true;
         }
         if (button == 0) {
             dragging = true;

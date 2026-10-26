@@ -81,8 +81,8 @@ public class TrailHud {
         }
         int right = g.guiWidth() - 6, y = 6;
         if (ClientGear.hasAtlas()) {
-            Minimap.render(g, right - Minimap.SIZE, y, player, delta.getGameTimeDeltaPartialTick(true));
-            y += Minimap.SIZE + 3;
+            Minimap.render(g, right - Minimap.size(), y, player, delta.getGameTimeDeltaPartialTick(true));
+            y += Minimap.size() + 3;
             // Под миникартой — биом, где стоит игрок
             Component biome = player.level().getBiome(player.blockPosition()).unwrapKey()
                     .map(key -> (Component) Component.translatable(Util.makeDescriptionId("biome", key.location())))

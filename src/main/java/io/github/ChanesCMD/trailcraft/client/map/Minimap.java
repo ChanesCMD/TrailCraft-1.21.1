@@ -1,24 +1,28 @@
 package io.github.ChanesCMD.trailcraft.client.map;
 
+import io.github.ChanesCMD.trailcraft.client.ClientConfig;
 import io.github.ChanesCMD.trailcraft.client.gui.UiDraw;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Миникарта 66×66 (ТЗ, раздел 4): 64×64 блока вокруг игрока, север сверху, из памяти атласа (MapCache, MapTiles).
+ * Миникарта (ТЗ, раздел 4; размер — в настройках карты, по умолчанию 66×66): блоки вокруг игрока, по пикселю на блок, север сверху, из памяти атласа (MapCache, MapTiles).
  * Карта плавно едет за игроком (позиция с учётом доли тика), игрок всегда в середине — маленькая белая стрелка
  * в 8 направлениях.
  */
 public final class Minimap {
-    public static final int SIZE = 66;
-    private static final int MAP = SIZE - 2;
+    /** Размер миникарты сейчас (настройка игрока, по умолчанию 66). */
+    public static int size() {
+        return ClientConfig.minimapSize();
+    }
 
     public static void render(GuiGraphics g, int x, int y, Player player, float partialTick) {
+        int size = size(), map = size - 2;
         Vec3 pos = player.getPosition(partialTick);
-        UiDraw.frame(g, x, y, SIZE, SIZE, 0xFF373737, 0xFFFFFFFF, 0xFF000000);
-        MapTiles.draw(g, player.level().dimension().location(), x + 1, y + 1, MAP, MAP, pos.x, pos.z, 1);
-        playerMarker(g, x + 1 + MAP / 2, y + 1 + MAP / 2, player.getViewYRot(partialTick));
+        UiDraw.frame(g, x, y, size, size, 0xFF373737, 0xFFFFFFFF, 0xFF000000);
+        MapTiles.draw(g, player.level().dimension().location(), x + 1, y + 1, map, map, pos.x, pos.z, 1);
+        playerMarker(g, x + 1 + map / 2, y + 1 + map / 2, player.getViewYRot(partialTick));
     }
 
     /** Стрелка 3×3 на север и на северо-восток; остальные 6 направлений — повороты на 90°. */

@@ -23,19 +23,25 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
  * Атлас запоминает местность: пока он в рюкзаке, загруженные чанки вокруг игрока снимаются в MapCache —
- * сначала ещё не исследованные, а 3×3 чанка у игрока обновляются каждую секунду. По CHUNKS_PER_TICK чанков за тик,
+ * сначала ещё не исследованные, а 7×7 чанков у игрока обновляются каждую секунду; ближние чанки раньше дальних.
+ * По CHUNKS_PER_TICK чанков за тик,
  * чтобы не было фризов. Цвет — как на виде сверху: трава, цветы и прочее без коллизии не рисуются, у травы, листвы
  * и воды цвет биома, склоны светлее или темнее по разнице высот с северным соседом, вода темнее с глубиной.
  */
 @EventBusSubscriber(modid = TrailCraft.MODID, value = Dist.CLIENT)
 public final class MapSampler {
-    private static final int CHUNKS_PER_TICK = 6, SCAN_TICKS = 20, SAVE_TICKS = 1200, MAX_DEPTH = 12;
+    private static final int CHUNKS_PER_TICK = 8, SCAN_TICKS = 20, SAVE_TICKS = 1200, MAX_DEPTH = 12;
+    /** Чанки в этом радиусе от игрока (7×7) обновляются каждую секунду: там меняются постройки, деревья, вода. */
+    private static final int REFRESH_RADIUS = 3;
     private static final Set<Long> QUEUE = new LinkedHashSet<>();
     private static ClientLevel queueLevel;
     private static int ticks;
@@ -75,15 +81,21 @@ public final class MapSampler {
         ResourceLocation dimension = level.dimension().location();
         ChunkPos center = player.chunkPosition();
         if (ticks % SCAN_TICKS == 0) {
+            // Всё загруженное (радиус прорисовки, но не больше, чем сервер прислал): сначала ближние чанки
             int radius = mc.options.getEffectiveRenderDistance();
+            List<long[]> wanted = new ArrayList<>();
             for (int dz = -radius; dz <= radius; dz++) {
                 for (int dx = -radius; dx <= radius; dx++) {
                     int cx = center.x + dx, cz = center.z + dz;
-                    boolean near = Math.abs(dx) <= 1 && Math.abs(dz) <= 1;
-                    if (near || !MapCache.hasChunk(dimension, cx, cz)) {
-                        QUEUE.add(ChunkPos.asLong(cx, cz));
+                    boolean near = Math.abs(dx) <= REFRESH_RADIUS && Math.abs(dz) <= REFRESH_RADIUS;
+                    if ((near || !MapCache.hasChunk(dimension, cx, cz)) && level.hasChunk(cx, cz)) {
+                        wanted.add(new long[]{ChunkPos.asLong(cx, cz), (long) dx * dx + (long) dz * dz});
                     }
                 }
+            }
+            wanted.sort(Comparator.comparingLong(entry -> entry[1]));
+            for (long[] entry : wanted) {
+                QUEUE.add(entry[0]);
             }
         }
         Iterator<Long> it = QUEUE.iterator();

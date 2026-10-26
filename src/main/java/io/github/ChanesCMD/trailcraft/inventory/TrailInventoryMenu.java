@@ -282,6 +282,8 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
                 return ItemStack.EMPTY;
             }
             slot.onQuickCraft(stack, copy);
+        } else if (index >= MAIN_START && index < inventoryEnd && moveToGear(stack)) {
+            // Атлас, календарь и другие служебные предметы рюкзака, фляга, кошелёк и пояс — сразу в свои слоты
         } else if (index >= MAIN_START && index < inventoryEnd) {
             int armor = switch (player.getEquipmentSlotForItem(copy)) {
                 case HEAD -> ARMOR_START;
@@ -318,6 +320,29 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
             player.drop(stack, false);
         }
         return copy;
+    }
+
+    /**
+     * Shift-клик по предмету из рюкзака или хотбара: если он подходит в свободный служебный слот рюкзака (атлас,
+     * календарь, аккумулятор…), флягу на поясе, кошелёк или пояс, он уходит туда. Закрытые слоты (нет рюкзака
+     * или пояса) не принимают.
+     */
+    private boolean moveToGear(ItemStack stack) {
+        int before = stack.getCount();
+        for (int i = 0; i < 7 && !stack.isEmpty(); i++) {
+            moveToGearSlot(stack, BACKPACK_UTILITY_START + i);
+        }
+        moveToGearSlot(stack, FLASK_SLOT);
+        moveToGearSlot(stack, WALLET_SLOT);
+        moveToGearSlot(stack, BELT_SLOT);
+        return stack.getCount() != before;
+    }
+
+    private void moveToGearSlot(ItemStack stack, int index) {
+        Slot slot = slots.get(index);
+        if (!stack.isEmpty() && !slot.hasItem() && slot.mayPlace(stack)) {
+            moveItemStackTo(stack, index, index + 1, false);
+        }
     }
 
     /**

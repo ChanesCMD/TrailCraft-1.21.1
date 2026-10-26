@@ -80,7 +80,6 @@ public class BranchStickItem extends BlockItem {
             tooltip.add(Component.translatable("tooltip.trailcraft.rubs", rubs, RUBS_NEEDED).withStyle(ChatFormatting.GRAY));
         }
         tooltip.add(Component.translatable("tooltip.trailcraft.branch.process", RUBS_NEEDED).withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("tooltip.trailcraft.branch.place").withStyle(ChatFormatting.GRAY));
         super.appendHoverText(stack, context, tooltip, flag);
     }
 }
