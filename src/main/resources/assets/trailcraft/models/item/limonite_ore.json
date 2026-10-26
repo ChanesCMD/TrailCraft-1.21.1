@@ -1,0 +1,11 @@
+{
+  "parent": "trailcraft:block/ore/limonite/limestone_1",
+  "overrides": [
+    {
+      "predicate": {
+        "trailcraft:rock": 0.1
+      },
+      "model": "trailcraft:block/ore/limonite/chalk_1"
+    }
+  ]
+}

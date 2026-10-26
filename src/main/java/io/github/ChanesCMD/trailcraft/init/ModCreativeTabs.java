@@ -6,6 +6,8 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
+import io.github.ChanesCMD.trailcraft.ore.Ore;
+import io.github.ChanesCMD.trailcraft.ore.Rock;
 
 public class ModCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
@@ -118,6 +120,7 @@ public class ModCreativeTabs {
                         // Палки
                         output.accept(ModItems.STICK_BRANCH);
                         output.accept(ModItems.STICK_PROCESSED);
+                        output.accept(ModItems.FIRESTARTER);
 
                         // Инструменты и предметы (ModTools)
                         for (var item : ModTools.ITEMS) {
@@ -128,6 +131,26 @@ public class ModCreativeTabs {
                         output.accept(ModItems.METAL_SCRAP);
                         output.accept(ModItems.PAPER_SCRAPS);
                         output.accept(ModItems.PLASTIC_WASTE);
+                    }).build());
+
+    /** Руды (каждая во всех своих породах), то, что с них падает, уголь, шихта и слитки. */
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TRAILCRAFT_ORES_TAB =
+            CREATIVE_MODE_TABS.register("trailcraft_ores_tab", () -> CreativeModeTab.builder()
+                    .title(Component.translatable("itemGroup.trailcraft_ores"))
+                    .icon(() -> ModOres.BLOCK_ITEMS.get(Ore.MALACHITE).get().getDefaultInstance())
+                    .displayItems((parameters, output) -> {
+                        for (Ore ore : Ore.values()) {
+                            for (Rock rock : ore.rocks) {
+                                output.accept(ModOres.BLOCKS.get(ore).get().stack(rock));
+                            }
+                        }
+                        for (Ore ore : Ore.values()) {
+                            output.accept(ModOres.DROPS.get(ore));
+                        }
+                        output.accept(ModOres.CHARCOAL);
+                        output.accept(ModOres.TIN_BRONZE_MIX);
+                        output.accept(ModOres.BISMUTH_BRONZE_MIX);
+                        ModOres.INGOTS.forEach(output::accept);
                     }).build());
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TRAILCRAFT_WOOD_TAB =

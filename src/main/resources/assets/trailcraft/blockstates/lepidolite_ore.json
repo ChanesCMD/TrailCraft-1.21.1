@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "rock=granite": [
+      {
+        "model": "trailcraft:block/ore/lepidolite/granite_1"
+      },
+      {
+        "model": "trailcraft:block/ore/lepidolite/granite_2"
+      },
+      {
+        "model": "trailcraft:block/ore/lepidolite/granite_3"
+      }
+    ],
+    "rock=gray_granite": [
+      {
+        "model": "trailcraft:block/ore/lepidolite/gray_granite_1"
+      },
+      {
+        "model": "trailcraft:block/ore/lepidolite/gray_granite_2"
+      },
+      {
+        "model": "trailcraft:block/ore/lepidolite/gray_granite_3"
+      }
+    ]
+  }
+}

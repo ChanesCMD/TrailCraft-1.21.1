@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "rock=gray_granite": [
+      {
+        "model": "trailcraft:block/ore/native_gold/gray_granite_1"
+      },
+      {
+        "model": "trailcraft:block/ore/native_gold/gray_granite_2"
+      },
+      {
+        "model": "trailcraft:block/ore/native_gold/gray_granite_3"
+      }
+    ],
+    "rock=andesite": [
+      {
+        "model": "trailcraft:block/ore/native_gold/andesite_1"
+      },
+      {
+        "model": "trailcraft:block/ore/native_gold/andesite_2"
+      },
+      {
+        "model": "trailcraft:block/ore/native_gold/andesite_3"
+      }
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "rock=limestone": [
+      {
+        "model": "trailcraft:block/ore/bauxite/limestone_1"
+      },
+      {
+        "model": "trailcraft:block/ore/bauxite/limestone_2"
+      },
+      {
+        "model": "trailcraft:block/ore/bauxite/limestone_3"
+      }
+    ],
+    "rock=basalt": [
+      {
+        "model": "trailcraft:block/ore/bauxite/basalt_1"
+      },
+      {
+        "model": "trailcraft:block/ore/bauxite/basalt_2"
+      },
+      {
+        "model": "trailcraft:block/ore/bauxite/basalt_3"
+      }
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "rock=gray_granite": [
+      {
+        "model": "trailcraft:block/ore/cassiterite/gray_granite_1"
+      },
+      {
+        "model": "trailcraft:block/ore/cassiterite/gray_granite_2"
+      },
+      {
+        "model": "trailcraft:block/ore/cassiterite/gray_granite_3"
+      }
+    ],
+    "rock=granite": [
+      {
+        "model": "trailcraft:block/ore/cassiterite/granite_1"
+      },
+      {
+        "model": "trailcraft:block/ore/cassiterite/granite_2"
+      },
+      {
+        "model": "trailcraft:block/ore/cassiterite/granite_3"
+      }
+    ]
+  }
+}

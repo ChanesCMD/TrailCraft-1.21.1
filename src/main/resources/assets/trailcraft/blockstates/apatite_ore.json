@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "rock=gabbro": [
+      {
+        "model": "trailcraft:block/ore/apatite/gabbro_1"
+      },
+      {
+        "model": "trailcraft:block/ore/apatite/gabbro_2"
+      },
+      {
+        "model": "trailcraft:block/ore/apatite/gabbro_3"
+      }
+    ],
+    "rock=marble": [
+      {
+        "model": "trailcraft:block/ore/apatite/marble_1"
+      },
+      {
+        "model": "trailcraft:block/ore/apatite/marble_2"
+      },
+      {
+        "model": "trailcraft:block/ore/apatite/marble_3"
+      }
+    ]
+  }
+}

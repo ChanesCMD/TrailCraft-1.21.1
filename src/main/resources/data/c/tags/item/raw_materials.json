@@ -1,0 +1,20 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:raw_malachite",
+    "trailcraft:raw_native_copper",
+    "trailcraft:raw_tetrahedrite",
+    "trailcraft:raw_hematite",
+    "trailcraft:raw_magnetite",
+    "trailcraft:raw_limonite",
+    "trailcraft:raw_sphalerite",
+    "trailcraft:raw_cassiterite",
+    "trailcraft:raw_native_bismuth",
+    "trailcraft:raw_galena",
+    "trailcraft:raw_native_gold",
+    "trailcraft:raw_pentlandite",
+    "trailcraft:raw_lepidolite",
+    "trailcraft:raw_bauxite",
+    "trailcraft:raw_nepheline"
+  ]
+}

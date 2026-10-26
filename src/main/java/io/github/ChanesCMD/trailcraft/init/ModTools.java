@@ -27,7 +27,11 @@ public final class ModTools {
 
     static {
         for (Material m : Material.values()) {
-            if (m == Material.FLINT || m.isMetal()) {
+            if (m == Material.FLINT) {
+                // Кремнёвая кирка добывает только свой список блоков (гравий и начальные руды), см. MINEABLE_WITH_FLINT_PICKAXE
+                reg(m.id + "_pickaxe", p -> new DiggerItem(m.tier, ModTiers.MINEABLE_WITH_FLINT_PICKAXE,
+                        p.attributes(DiggerItem.createAttributes(m.tier, ModTiers.PICKAXE_DAMAGE, ModTiers.PICKAXE_SPEED))));
+            } else if (m.isMetal()) {
                 reg(m.id + "_pickaxe", p -> new PickaxeItem(m.tier,
                         p.attributes(DiggerItem.createAttributes(m.tier, ModTiers.PICKAXE_DAMAGE, ModTiers.PICKAXE_SPEED))));
             }

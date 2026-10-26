@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "rock=sandstone": [
+      {
+        "model": "trailcraft:block/ore/hematite/sandstone_1"
+      },
+      {
+        "model": "trailcraft:block/ore/hematite/sandstone_2"
+      },
+      {
+        "model": "trailcraft:block/ore/hematite/sandstone_3"
+      }
+    ],
+    "rock=shale": [
+      {
+        "model": "trailcraft:block/ore/hematite/shale_1"
+      },
+      {
+        "model": "trailcraft:block/ore/hematite/shale_2"
+      },
+      {
+        "model": "trailcraft:block/ore/hematite/shale_3"
+      }
+    ]
+  }
+}

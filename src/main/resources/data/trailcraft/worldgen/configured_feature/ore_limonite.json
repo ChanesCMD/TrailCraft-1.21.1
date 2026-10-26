@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:ore",
+  "config": {
+    "size": 9,
+    "discard_chance_on_air_exposure": 0.0,
+    "targets": [
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "trailcraft:limestone"
+        },
+        "state": {
+          "Name": "trailcraft:limonite_ore",
+          "Properties": {
+            "rock": "limestone"
+          }
+        }
+      },
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "trailcraft:chalk"
+        },
+        "state": {
+          "Name": "trailcraft:limonite_ore",
+          "Properties": {
+            "rock": "chalk"
+          }
+        }
+      }
+    ]
+  }
+}

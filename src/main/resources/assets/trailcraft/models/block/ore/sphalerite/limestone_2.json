@@ -1,0 +1,7 @@
+{
+  "parent": "trailcraft:block/ore_layered",
+  "textures": {
+    "rock": "trailcraft:block/limestone",
+    "ore": "trailcraft:block/ore/sphalerite/limestone_2"
+  }
+}

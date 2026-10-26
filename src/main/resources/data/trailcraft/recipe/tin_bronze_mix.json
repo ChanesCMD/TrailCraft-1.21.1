@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:copper_ingot"
+    },
+    {
+      "item": "minecraft:copper_ingot"
+    },
+    {
+      "item": "minecraft:copper_ingot"
+    },
+    {
+      "item": "trailcraft:tin_ingot"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:tin_bronze_mix",
+    "count": 4
+  }
+}

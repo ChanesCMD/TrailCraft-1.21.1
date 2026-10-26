@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "rock=gabbro": [
+      {
+        "model": "trailcraft:block/ore/pentlandite/gabbro_1"
+      },
+      {
+        "model": "trailcraft:block/ore/pentlandite/gabbro_2"
+      },
+      {
+        "model": "trailcraft:block/ore/pentlandite/gabbro_3"
+      }
+    ],
+    "rock=basalt": [
+      {
+        "model": "trailcraft:block/ore/pentlandite/basalt_1"
+      },
+      {
+        "model": "trailcraft:block/ore/pentlandite/basalt_2"
+      },
+      {
+        "model": "trailcraft:block/ore/pentlandite/basalt_3"
+      }
+    ]
+  }
+}

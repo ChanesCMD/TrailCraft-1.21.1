@@ -1,0 +1,7 @@
+{
+  "parent": "trailcraft:block/ore_layered",
+  "textures": {
+    "rock": "trailcraft:block/granite",
+    "ore": "trailcraft:block/ore/lepidolite/granite_1"
+  }
+}

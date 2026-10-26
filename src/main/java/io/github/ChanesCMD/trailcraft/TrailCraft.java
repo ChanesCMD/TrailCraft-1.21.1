@@ -14,6 +14,7 @@ import io.github.ChanesCMD.trailcraft.init.ModCreativeTabs;
 import io.github.ChanesCMD.trailcraft.init.ModFeatures;
 import io.github.ChanesCMD.trailcraft.init.ModItems;
 import io.github.ChanesCMD.trailcraft.init.ModMenus;
+import io.github.ChanesCMD.trailcraft.init.ModOres;
 import io.github.ChanesCMD.trailcraft.init.ModTools;
 import io.github.ChanesCMD.trailcraft.init.ModWood;
 
@@ -27,6 +28,8 @@ public class TrailCraft {
         ModWood.init();
         // Инструменты регистрируются в статическом блоке ModTools
         ModTools.init();
+        // Руды, слитки и шихта регистрируются в статическом блоке ModOres
+        ModOres.init();
 
         // Регистрируем блоки и предметы
         ModBlocks.BLOCKS.register(modEventBus);

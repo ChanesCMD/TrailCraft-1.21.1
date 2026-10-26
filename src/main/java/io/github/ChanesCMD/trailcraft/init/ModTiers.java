@@ -24,6 +24,13 @@ public final class ModTiers {
     public static final TagKey<Block> INCORRECT_FOR_COPPER_TOOL =
             TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "incorrect_for_copper_tool"));
 
+    /**
+     * Что добывает кремнёвая кирка: только гравий и начальные руды (каменный уголь, медные руды, апатит).
+     * Породу она не берёт: копает медленно, как рукой, и ничего не выбивает.
+     */
+    public static final TagKey<Block> MINEABLE_WITH_FLINT_PICKAXE =
+            TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "mineable/flint_pickaxe"));
+
     // === УРОВНИ МАТЕРИАЛОВ: тег «не добывает», прочность, скорость, урон, зачаровываемость, ремонт ===
     // Кремень, кость и аметист добывают как камень (полные брёвна — нет, см. incorrect_for_stone_tool).
     public static final Tier FLINT = new SimpleTier(BlockTags.INCORRECT_FOR_STONE_TOOL, 100, 4.0f, 1.0f, 5,
@@ -35,9 +42,10 @@ public final class ModTiers {
     /** Медь: между камнем и железом. */
     public static final Tier COPPER = new SimpleTier(INCORRECT_FOR_COPPER_TOOL, 190, 5.0f, 1.5f, 5,
             () -> Ingredient.of(Items.COPPER_INGOT));
-    // TODO: уточнить — бронзового и стального слитка пока нет, ремонт в наковальне отключён
+    /** Бронза — оловянная или висмутовая (тэг c:ingots/bronze). */
     public static final Tier BRONZE = new SimpleTier(BlockTags.INCORRECT_FOR_IRON_TOOL, 220, 5.5f, 2.0f, 12,
-            () -> Ingredient.EMPTY);
+            () -> Ingredient.of(ModTags.BRONZE_INGOTS));
+    // TODO: уточнить — стального слитка пока нет, ремонт в наковальне отключён
     /** Сталь: между железом и алмазом. TODO: уточнить, добывает ли она блоки алмазного уровня. */
     public static final Tier STEEL = new SimpleTier(BlockTags.INCORRECT_FOR_IRON_TOOL, 700, 7.0f, 2.5f, 14,
             () -> Ingredient.EMPTY);

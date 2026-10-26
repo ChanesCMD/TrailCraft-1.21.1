@@ -1,0 +1,10 @@
+{
+  "values": {
+    "trailcraft:bituminous_coal": {
+      "burn_time": 1600
+    },
+    "trailcraft:charcoal": {
+      "burn_time": 1600
+    }
+  }
+}

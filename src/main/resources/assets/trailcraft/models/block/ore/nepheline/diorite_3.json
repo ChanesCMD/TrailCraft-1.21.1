@@ -1,0 +1,7 @@
+{
+  "parent": "trailcraft:block/ore_layered",
+  "textures": {
+    "rock": "trailcraft:block/diorite",
+    "ore": "trailcraft:block/ore/nepheline/diorite_3"
+  }
+}

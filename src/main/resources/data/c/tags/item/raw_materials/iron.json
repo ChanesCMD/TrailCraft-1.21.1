@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:raw_hematite",
+    "trailcraft:raw_magnetite",
+    "trailcraft:raw_limonite"
+  ]
+}

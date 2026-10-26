@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:malachite_ore",
+    "trailcraft:native_copper_ore",
+    "trailcraft:tetrahedrite_ore"
+  ]
+}

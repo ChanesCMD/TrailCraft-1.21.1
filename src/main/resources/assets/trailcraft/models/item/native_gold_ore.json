@@ -1,0 +1,11 @@
+{
+  "parent": "trailcraft:block/ore/native_gold/gray_granite_1",
+  "overrides": [
+    {
+      "predicate": {
+        "trailcraft:rock": 0.1
+      },
+      "model": "trailcraft:block/ore/native_gold/andesite_1"
+    }
+  ]
+}

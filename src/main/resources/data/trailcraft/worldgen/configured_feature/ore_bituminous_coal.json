@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:ore",
+  "config": {
+    "size": 14,
+    "discard_chance_on_air_exposure": 0.0,
+    "targets": [
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "trailcraft:sandstone"
+        },
+        "state": {
+          "Name": "trailcraft:bituminous_coal_ore",
+          "Properties": {
+            "rock": "sandstone"
+          }
+        }
+      },
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "trailcraft:limestone"
+        },
+        "state": {
+          "Name": "trailcraft:bituminous_coal_ore",
+          "Properties": {
+            "rock": "limestone"
+          }
+        }
+      }
+    ]
+  }
+}

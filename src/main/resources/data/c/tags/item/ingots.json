@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:tin_ingot",
+    "trailcraft:lead_ingot",
+    "trailcraft:bismuth_ingot",
+    "trailcraft:nickel_ingot",
+    "trailcraft:lithium_ingot",
+    "trailcraft:aluminum_ingot",
+    "trailcraft:tin_bronze_ingot",
+    "trailcraft:bismuth_bronze_ingot"
+  ]
+}

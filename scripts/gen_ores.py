@@ -1,0 +1,334 @@
+"""
+Генерирует JSON для руд, слитков, огнива и костра: модели, блокстейты, лут, тэги, рецепты, генерацию в мире, переводы.
+Таблица руд та же, что в src/main/java/.../ore/Ore.java — меняя руду, поменяйте её в обоих местах.
+
+Запуск из корня проекта:  python scripts/gen_ores.py
+Скрипт перезаписывает только свои файлы; в общие тэги и переводы добавляет свои строки, не трогая чужие.
+Текстуры (оверлеи руд textures/block/ore/<руда>/<порода>_<n>.png и иконки предметов) он не рисует.
+"""
+import json
+import os
+
+ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "main", "resources")
+NS = "trailcraft"
+VARIANTS = 3  # текстур на пару «руда — порода»
+
+# id, элемент, кирка (any/stone/iron), кремнёвая кирка берёт?, что падает, сколько, породы,
+# генерация: попыток на чанк, размер жилы, высота от и до; названия ru / en (блок, то, что падает)
+ORES = [
+    ("bituminous_coal", "coal", "any", True, "bituminous_coal", 2, 4, ["sandstone", "limestone"], 10, 14, 0, 200,
+     "Залежь каменного угля", "Bituminous Coal Deposit", "Каменный уголь", "Bituminous Coal"),
+    ("malachite", "copper", "stone", True, "raw_malachite", 2, 4, ["limestone", "dolomite"], 8, 9, -10, 160,
+     "Малахит", "Malachite", "Кусок малахита", "Raw Malachite"),
+    ("native_copper", "copper", "stone", True, "raw_native_copper", 1, 1, ["basalt", "gabbro"], 6, 8, -64, 64,
+     "Самородная медь", "Native Copper", "Кусок самородной меди", "Raw Native Copper"),
+    ("tetrahedrite", "copper", "stone", True, "raw_tetrahedrite", 2, 4, ["andesite", "granite"], 6, 8, -64, 120,
+     "Тетраэдрит", "Tetrahedrite", "Кусок тетраэдрита", "Raw Tetrahedrite"),
+    ("hematite", "iron", "stone", False, "raw_hematite", 1, 1, ["sandstone", "shale"], 8, 9, 20, 200,
+     "Гематит", "Hematite", "Кусок гематита", "Raw Hematite"),
+    ("magnetite", "iron", "stone", False, "raw_magnetite", 1, 1, ["diorite", "marble"], 6, 9, -64, 120,
+     "Магнетит", "Magnetite", "Кусок магнетита", "Raw Magnetite"),
+    ("limonite", "iron", "any", False, "raw_limonite", 2, 4, ["limestone", "chalk"], 8, 9, 40, 200,
+     "Лимонит", "Limonite", "Кусок лимонита", "Raw Limonite"),
+    ("sphalerite", "zinc", "stone", False, "raw_sphalerite", 2, 4, ["dolomite", "limestone"], 6, 8, -10, 120,
+     "Сфалерит", "Sphalerite", "Кусок сфалерита", "Raw Sphalerite"),
+    ("cassiterite", "tin", "stone", False, "raw_cassiterite", 2, 4, ["gray_granite", "granite"], 4, 7, -64, 80,
+     "Касситерит", "Cassiterite", "Кусок касситерита", "Raw Cassiterite"),
+    ("native_bismuth", "bismuth", "stone", False, "raw_native_bismuth", 1, 1, ["granite", "marble"], 4, 6, -64, 100,
+     "Самородный висмут", "Native Bismuth", "Кусок самородного висмута", "Raw Native Bismuth"),
+    ("galena", "lead", "stone", False, "raw_galena", 2, 4, ["limestone", "marble"], 5, 8, -10, 140,
+     "Галенит", "Galena", "Кусок галенита", "Raw Galena"),
+    ("native_gold", "gold", "iron", False, "raw_native_gold", 1, 1, ["gray_granite", "andesite"], 3, 5, -64, 40,
+     "Самородное золото", "Native Gold", "Кусок самородного золота", "Raw Native Gold"),
+    ("pentlandite", "nickel", "iron", False, "raw_pentlandite", 1, 1, ["gabbro", "basalt"], 4, 6, -64, 20,
+     "Пентландит", "Pentlandite", "Кусок пентландита", "Raw Pentlandite"),
+    ("lepidolite", "lithium", "stone", False, "raw_lepidolite", 1, 1, ["granite", "gray_granite"], 3, 6, -64, 60,
+     "Лепидолит", "Lepidolite", "Кусок лепидолита", "Raw Lepidolite"),
+    ("bauxite", "aluminum", "any", False, "raw_bauxite", 2, 4, ["limestone", "basalt"], 5, 9, 30, 200,
+     "Боксит", "Bauxite", "Кусок боксита", "Raw Bauxite"),
+    ("nepheline", "aluminum", "stone", False, "raw_nepheline", 2, 4, ["diorite", "gray_granite"], 4, 7, -64, 80,
+     "Нефелин", "Nepheline", "Кусок нефелина", "Raw Nepheline"),
+    ("apatite", "apatite", "stone", True, "apatite", 2, 4, ["gabbro", "marble"], 5, 7, -40, 120,
+     "Апатитовая руда", "Apatite Ore", "Апатит", "Apatite"),
+]
+
+# Во что плавится на костре то, что падает с руды
+SMELT = {
+    "raw_malachite": "minecraft:copper_ingot", "raw_native_copper": "minecraft:copper_ingot",
+    "raw_tetrahedrite": "minecraft:copper_ingot",
+    "raw_hematite": "minecraft:iron_ingot", "raw_magnetite": "minecraft:iron_ingot", "raw_limonite": "minecraft:iron_ingot",
+    "raw_sphalerite": "create:zinc_ingot", "raw_cassiterite": f"{NS}:tin_ingot", "raw_native_bismuth": f"{NS}:bismuth_ingot",
+    "raw_galena": f"{NS}:lead_ingot", "raw_native_gold": "minecraft:gold_ingot", "raw_pentlandite": f"{NS}:nickel_ingot",
+    "raw_lepidolite": f"{NS}:lithium_ingot", "raw_bauxite": f"{NS}:aluminum_ingot", "raw_nepheline": f"{NS}:aluminum_ingot",
+    "tin_bronze_mix": f"{NS}:tin_bronze_ingot", "bismuth_bronze_mix": f"{NS}:bismuth_bronze_ingot",
+}
+
+# Свои слитки: id, тэг c:ingots/..., ru, en
+INGOTS = [
+    ("tin_ingot", "tin", "Оловянный слиток", "Tin Ingot"),
+    ("lead_ingot", "lead", "Свинцовый слиток", "Lead Ingot"),
+    ("bismuth_ingot", "bismuth", "Висмутовый слиток", "Bismuth Ingot"),
+    ("nickel_ingot", "nickel", "Никелевый слиток", "Nickel Ingot"),
+    ("lithium_ingot", "lithium", "Литиевый слиток", "Lithium Ingot"),
+    ("aluminum_ingot", "aluminum", "Алюминиевый слиток", "Aluminum Ingot"),
+    ("tin_bronze_ingot", "bronze", "Слиток оловянной бронзы", "Tin Bronze Ingot"),
+    ("bismuth_bronze_ingot", "bronze", "Слиток висмутовой бронзы", "Bismuth Bronze Ingot"),
+]
+OTHER_ITEMS = [
+    ("tin_bronze_mix", "Шихта оловянной бронзы", "Tin Bronze Mix"),
+    ("bismuth_bronze_mix", "Шихта висмутовой бронзы", "Bismuth Bronze Mix"),
+    ("charcoal", "Древесный уголь", "Charcoal"),
+    ("firestarter", "Огниво", "Firestarter"),
+]
+GRAVELS = [f"{NS}:{r}_gravel" for r in ["andesite", "basalt", "chalk", "diorite", "dolomite", "gabbro", "granite",
+                                         "gray_granite", "limestone", "marble", "sandstone", "shale"]]
+WOODS = ["oak", "birch", "acacia", "sakura", "eucalyptus", "chestnut", "thuja", "pine", "fir", "spruce", "white_poplar",
+         "ebony", "maple", "cedar", "willow", "lilac", "palm", "ironwood", "aspen", "linden", "pussy_willow", "walnut",
+         "alder"]
+
+LANG = {
+    "itemGroup.trailcraft_ores": ("TrailCraft: Руды", "TrailCraft: Ores"),
+    "tooltip.trailcraft.ore.rock": ("Порода: %s", "Rock: %s"),
+    "tooltip.trailcraft.firestarter": ("Бросьте на землю тонкое бревно (%s) и ветки (%s), наведитесь на них и зажмите ПКМ",
+                                       "Drop a thin log (%s) and branches (%s) on the ground, aim at them and hold RMB"),
+    "message.trailcraft.firestarter.need_fuel": ("Для костра на земле нужны тонкое бревно (%s) и ветки (%s)",
+                                                 "A campfire needs a thin log (%s) and branches (%s) on the ground"),
+    "message.trailcraft.firestarter.no_place": ("Здесь костёр не разжечь", "Can't light a campfire here"),
+}
+
+
+def path(*parts):
+    return os.path.join(ROOT, *parts)
+
+
+def write(rel, data):
+    p = path(*rel.split("/"))
+    os.makedirs(os.path.dirname(p), exist_ok=True)
+    with open(p, "w", encoding="utf-8", newline="\n") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+
+
+def read(rel, default=None):
+    p = path(*rel.split("/"))
+    if not os.path.exists(p):
+        return default
+    with open(p, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def tag(kind, tag_id, add=(), remove=()):
+    """Добавляет (и убирает) значения в тэге, сохраняя остальные."""
+    ns, name = tag_id.split(":")
+    rel = f"data/{ns}/tags/{kind}/{name}.json"
+    data = read(rel, {"replace": False, "values": []})
+    values = [v for v in data["values"] if v not in remove]
+    for v in add:
+        if v not in values:
+            values.append(v)
+    data["values"] = values
+    write(rel, data)
+
+
+def item_model(item_id):
+    write(f"assets/{NS}/models/item/{item_id}.json",
+          {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/{item_id}"}})
+
+
+def ore_models():
+    write(f"assets/{NS}/models/block/ore_layered.json", {
+        "parent": "minecraft:block/block",
+        "render_type": "minecraft:cutout_mipped",
+        "textures": {"particle": "#rock"},
+        "elements": [
+            {"from": [0, 0, 0], "to": [16, 16, 16],
+             "faces": {d: {"texture": "#" + layer, "cullface": d} for d in ["down", "up", "north", "south", "west", "east"]}}
+            for layer in ("rock", "ore")
+        ],
+    })
+    for o in ORES:
+        ore, rocks = o[0], o[7]
+        variants = {}
+        for rock in rocks:
+            models = []
+            for n in range(1, VARIANTS + 1):
+                model = f"{NS}:block/ore/{ore}/{rock}_{n}"
+                write(f"assets/{NS}/models/block/ore/{ore}/{rock}_{n}.json", {
+                    "parent": f"{NS}:block/ore_layered",
+                    "textures": {"rock": f"{NS}:block/{rock}", "ore": f"{NS}:block/ore/{ore}/{rock}_{n}"},
+                })
+                models.append({"model": model})
+            variants[f"rock={rock}"] = models
+        write(f"assets/{NS}/blockstates/{ore}_ore.json", {"variants": variants})
+        # Предмет: порода по свойству trailcraft:rock (номер породы × 0,1, см. ClientOres)
+        write(f"assets/{NS}/models/item/{ore}_ore.json", {
+            "parent": f"{NS}:block/ore/{ore}/{rocks[0]}_1",
+            "overrides": [{"predicate": {f"{NS}:rock": round(i * 0.1, 1)}, "model": f"{NS}:block/ore/{ore}/{rock}_1"}
+                          for i, rock in enumerate(rocks) if i > 0],
+        })
+        item_model(o[4])
+
+
+SILK_TOUCH = {"condition": "minecraft:match_tool", "predicate": {"predicates": {"minecraft:enchantments": [
+    {"enchantments": "minecraft:silk_touch", "levels": {"min": 1}}]}}}
+
+
+def loot():
+    for o in ORES:
+        ore, drop, lo, hi = o[0], o[4], o[5], o[6]
+        block = f"{NS}:{ore}_ore"
+        functions = []
+        if (lo, hi) != (1, 1):
+            functions.append({"function": "minecraft:set_count", "add": False,
+                              "count": {"type": "minecraft:uniform", "min": lo, "max": hi}})
+        functions += [{"function": "minecraft:apply_bonus", "enchantment": "minecraft:fortune", "formula": "minecraft:ore_drops"},
+                      {"function": "minecraft:explosion_decay"}]
+        write(f"data/{NS}/loot_table/blocks/{ore}_ore.json", {
+            "type": "minecraft:block",
+            "pools": [{"rolls": 1, "bonus_rolls": 0, "entries": [{"type": "minecraft:alternatives", "children": [
+                # Шёлковое касание: сам блок, порода сохраняется в предмете
+                {"type": "minecraft:item", "name": block, "conditions": [SILK_TOUCH],
+                 "functions": [{"function": "minecraft:copy_state", "block": block, "properties": ["rock"]}]},
+                {"type": "minecraft:item", "name": f"{NS}:{drop}", "functions": functions},
+            ]}]}],
+            "random_sequence": f"{NS}:blocks/{ore}_ore",
+        })
+    # Костёр: с шёлковым касанием — сам костёр, иначе свой древесный уголь вместо ванильного
+    write("data/minecraft/loot_table/blocks/campfire.json", {
+        "type": "minecraft:block",
+        "pools": [{"rolls": 1, "bonus_rolls": 0, "entries": [{"type": "minecraft:alternatives", "children": [
+            {"type": "minecraft:item", "name": "minecraft:campfire", "conditions": [SILK_TOUCH]},
+            {"type": "minecraft:item", "name": f"{NS}:charcoal", "conditions": [{"condition": "minecraft:survives_explosion"}]},
+        ]}]}],
+        "random_sequence": "minecraft:blocks/campfire",
+    })
+
+
+def tags():
+    blocks = [f"{NS}:{o[0]}_ore" for o in ORES]
+    tag("block", "minecraft:mineable/pickaxe", add=blocks + GRAVELS)
+    tag("block", "minecraft:mineable/shovel", remove=GRAVELS)
+    tag("block", "minecraft:needs_stone_tool", add=[f"{NS}:{o[0]}_ore" for o in ORES if o[2] == "stone"])
+    tag("block", "minecraft:needs_iron_tool", add=[f"{NS}:{o[0]}_ore" for o in ORES if o[2] == "iron"])
+    tag("block", f"{NS}:mineable/flint_pickaxe", add=GRAVELS + [f"{NS}:{o[0]}_ore" for o in ORES if o[3]])
+    for kind in ("block", "item"):
+        tag(kind, "c:ores", add=blocks)
+        tag(kind, f"{NS}:ores", add=blocks)
+        for o in ORES:
+            tag(kind, f"c:ores/{o[1]}", add=[f"{NS}:{o[0]}_ore"])
+    raws = [o for o in ORES if o[4].startswith("raw_")]
+    tag("item", "c:raw_materials", add=[f"{NS}:{o[4]}" for o in raws])
+    for o in raws:
+        tag("item", f"c:raw_materials/{o[1]}", add=[f"{NS}:{o[4]}"])
+    tag("item", "c:ingots", add=[f"{NS}:{i[0]}" for i in INGOTS])
+    for i in INGOTS:
+        tag("item", f"c:ingots/{i[1]}", add=[f"{NS}:{i[0]}"])
+    # Цинк — слиток Create; запись необязательная, на случай если Create сам его в тэг не положил
+    data = read("data/c/tags/item/ingots/zinc.json", {"replace": False, "values": []})
+    if not any(isinstance(v, dict) and v.get("id") == "create:zinc_ingot" for v in data["values"]):
+        data["values"].append({"id": "create:zinc_ingot", "required": False})
+    write("data/c/tags/item/ingots/zinc.json", data)
+    tag("item", "minecraft:coals", add=[f"{NS}:bituminous_coal", f"{NS}:charcoal"])
+    tag("item", f"{NS}:thin_logs", add=[f"{NS}:thin_{w}_log" for w in WOODS])
+
+
+def recipes():
+    for src, result in SMELT.items():
+        write(f"data/{NS}/recipe/campfire/{result.split(':')[1]}_from_{src}.json", {
+            "type": "minecraft:campfire_cooking", "category": "misc", "cookingtime": 600, "experience": 0.7,
+            "ingredient": {"item": f"{NS}:{src}"}, "result": {"id": result, "count": 1},
+        })
+    write(f"data/{NS}/recipe/campfire/charcoal_from_thin_logs.json", {
+        "type": "minecraft:campfire_cooking", "category": "misc", "cookingtime": 600, "experience": 0.15,
+        "ingredient": {"tag": f"{NS}:thin_logs"}, "result": {"id": f"{NS}:charcoal", "count": 1},
+    })
+    write(f"data/{NS}/recipe/tin_bronze_mix.json", {
+        "type": "minecraft:crafting_shapeless", "category": "misc",
+        "ingredients": [{"item": "minecraft:copper_ingot"}] * 3 + [{"item": f"{NS}:tin_ingot"}],
+        "result": {"id": f"{NS}:tin_bronze_mix", "count": 4},
+    })
+    write(f"data/{NS}/recipe/bismuth_bronze_mix.json", {
+        "type": "minecraft:crafting_shapeless", "category": "misc",
+        "ingredients": [{"item": "minecraft:copper_ingot"}] * 2 + [{"item": f"{NS}:bismuth_ingot"}, {"tag": "c:ingots/zinc"}],
+        "result": {"id": f"{NS}:bismuth_bronze_mix", "count": 4},
+    })
+    write(f"data/{NS}/recipe/firestarter.json", {
+        "type": "minecraft:crafting_shaped", "category": "equipment",
+        "key": {"S": {"item": f"{NS}:stick_processed"}}, "pattern": ["S ", " S"],
+        "result": {"id": f"{NS}:firestarter", "count": 1},
+    })
+    write(f"data/{NS}/recipe/bronze_pickaxe.json", {
+        "type": "minecraft:crafting_shaped", "category": "equipment",
+        "key": {"B": {"tag": "c:ingots/bronze"}, "S": {"item": f"{NS}:stick_processed"}},
+        "pattern": ["BBB", " S ", " S "],
+        "result": {"id": f"{NS}:bronze_pickaxe", "count": 1},
+    })
+    # Печи пока нет: плавят на костре
+    furnace = path("data", NS, "recipe", "bootstrap_furnace.json")
+    if os.path.exists(furnace):
+        os.remove(furnace)
+    write("data/neoforge/data_maps/item/furnace_fuels.json", {"values": {
+        f"{NS}:bituminous_coal": {"burn_time": 1600}, f"{NS}:charcoal": {"burn_time": 1600}}})
+
+
+def worldgen():
+    features = []
+    for o in ORES:
+        ore, rocks, count, size, lo, hi = o[0], o[7], o[8], o[9], o[10], o[11]
+        write(f"data/{NS}/worldgen/configured_feature/ore_{ore}.json", {
+            "type": "minecraft:ore",
+            "config": {"size": size, "discard_chance_on_air_exposure": 0.0, "targets": [
+                {"target": {"predicate_type": "minecraft:block_match", "block": f"{NS}:{rock}"},
+                 "state": {"Name": f"{NS}:{ore}_ore", "Properties": {"rock": rock}}} for rock in rocks]},
+        })
+        write(f"data/{NS}/worldgen/placed_feature/ore_{ore}.json", {
+            "feature": f"{NS}:ore_{ore}",
+            "placement": [
+                {"type": "minecraft:count", "count": count},
+                {"type": "minecraft:in_square"},
+                {"type": "minecraft:height_range", "height": {"type": "minecraft:uniform",
+                                                              "min_inclusive": {"absolute": lo},
+                                                              "max_inclusive": {"absolute": hi}}},
+                {"type": "minecraft:biome"},
+            ],
+        })
+        features.append(f"{NS}:ore_{ore}")
+    write(f"data/{NS}/neoforge/biome_modifier/ores.json", {
+        "type": "neoforge:add_features", "biomes": f"#{NS}:trailworldgen_biomes",
+        "features": features, "step": "underground_ores",
+    })
+
+
+def lang():
+    entries = dict(LANG)
+    for o in ORES:
+        entries[f"block.{NS}.{o[0]}_ore"] = (o[12], o[13])
+        entries[f"item.{NS}.{o[4]}"] = (o[14], o[15])
+    for i in INGOTS:
+        entries[f"item.{NS}.{i[0]}"] = (i[2], i[3])
+    for i in OTHER_ITEMS:
+        entries[f"item.{NS}.{i[0]}"] = (i[1], i[2])
+    for code, k in (("ru_ru", 0), ("en_us", 1)):
+        rel = f"assets/{NS}/lang/{code}.json"
+        data = read(rel)
+        for key, names in entries.items():
+            data[key] = names[k]
+        write(rel, data)
+
+
+def items():
+    for i in INGOTS:
+        item_model(i[0])
+    for i in OTHER_ITEMS:
+        item_model(i[0])
+
+
+if __name__ == "__main__":
+    ore_models()
+    items()
+    loot()
+    tags()
+    recipes()
+    worldgen()
+    lang()
+    print("ok")

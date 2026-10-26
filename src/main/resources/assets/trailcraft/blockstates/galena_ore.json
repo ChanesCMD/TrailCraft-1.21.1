@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "rock=limestone": [
+      {
+        "model": "trailcraft:block/ore/galena/limestone_1"
+      },
+      {
+        "model": "trailcraft:block/ore/galena/limestone_2"
+      },
+      {
+        "model": "trailcraft:block/ore/galena/limestone_3"
+      }
+    ],
+    "rock=marble": [
+      {
+        "model": "trailcraft:block/ore/galena/marble_1"
+      },
+      {
+        "model": "trailcraft:block/ore/galena/marble_2"
+      },
+      {
+        "model": "trailcraft:block/ore/galena/marble_3"
+      }
+    ]
+  }
+}

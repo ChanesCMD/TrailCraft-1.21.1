@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:ore",
+  "config": {
+    "size": 6,
+    "discard_chance_on_air_exposure": 0.0,
+    "targets": [
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "trailcraft:granite"
+        },
+        "state": {
+          "Name": "trailcraft:native_bismuth_ore",
+          "Properties": {
+            "rock": "granite"
+          }
+        }
+      },
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "trailcraft:marble"
+        },
+        "state": {
+          "Name": "trailcraft:native_bismuth_ore",
+          "Properties": {
+            "rock": "marble"
+          }
+        }
+      }
+    ]
+  }
+}

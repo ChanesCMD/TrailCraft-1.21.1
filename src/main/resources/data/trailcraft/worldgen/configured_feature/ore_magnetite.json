@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:ore",
+  "config": {
+    "size": 9,
+    "discard_chance_on_air_exposure": 0.0,
+    "targets": [
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "trailcraft:diorite"
+        },
+        "state": {
+          "Name": "trailcraft:magnetite_ore",
+          "Properties": {
+            "rock": "diorite"
+          }
+        }
+      },
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "trailcraft:marble"
+        },
+        "state": {
+          "Name": "trailcraft:magnetite_ore",
+          "Properties": {
+            "rock": "marble"
+          }
+        }
+      }
+    ]
+  }
+}

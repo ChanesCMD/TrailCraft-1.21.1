@@ -1,0 +1,11 @@
+{
+  "parent": "trailcraft:block/ore/native_copper/basalt_1",
+  "overrides": [
+    {
+      "predicate": {
+        "trailcraft:rock": 0.1
+      },
+      "model": "trailcraft:block/ore/native_copper/gabbro_1"
+    }
+  ]
+}

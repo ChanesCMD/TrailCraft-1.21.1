@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "rock=sandstone": [
+      {
+        "model": "trailcraft:block/ore/bituminous_coal/sandstone_1"
+      },
+      {
+        "model": "trailcraft:block/ore/bituminous_coal/sandstone_2"
+      },
+      {
+        "model": "trailcraft:block/ore/bituminous_coal/sandstone_3"
+      }
+    ],
+    "rock=limestone": [
+      {
+        "model": "trailcraft:block/ore/bituminous_coal/limestone_1"
+      },
+      {
+        "model": "trailcraft:block/ore/bituminous_coal/limestone_2"
+      },
+      {
+        "model": "trailcraft:block/ore/bituminous_coal/limestone_3"
+      }
+    ]
+  }
+}

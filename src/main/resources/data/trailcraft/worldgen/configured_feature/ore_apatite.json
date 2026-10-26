@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:ore",
+  "config": {
+    "size": 7,
+    "discard_chance_on_air_exposure": 0.0,
+    "targets": [
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "trailcraft:gabbro"
+        },
+        "state": {
+          "Name": "trailcraft:apatite_ore",
+          "Properties": {
+            "rock": "gabbro"
+          }
+        }
+      },
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "trailcraft:marble"
+        },
+        "state": {
+          "Name": "trailcraft:apatite_ore",
+          "Properties": {
+            "rock": "marble"
+          }
+        }
+      }
+    ]
+  }
+}

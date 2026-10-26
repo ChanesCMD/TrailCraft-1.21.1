@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "rock=granite": [
+      {
+        "model": "trailcraft:block/ore/native_bismuth/granite_1"
+      },
+      {
+        "model": "trailcraft:block/ore/native_bismuth/granite_2"
+      },
+      {
+        "model": "trailcraft:block/ore/native_bismuth/granite_3"
+      }
+    ],
+    "rock=marble": [
+      {
+        "model": "trailcraft:block/ore/native_bismuth/marble_1"
+      },
+      {
+        "model": "trailcraft:block/ore/native_bismuth/marble_2"
+      },
+      {
+        "model": "trailcraft:block/ore/native_bismuth/marble_3"
+      }
+    ]
+  }
+}

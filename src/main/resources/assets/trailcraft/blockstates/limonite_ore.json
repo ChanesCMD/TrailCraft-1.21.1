@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "rock=limestone": [
+      {
+        "model": "trailcraft:block/ore/limonite/limestone_1"
+      },
+      {
+        "model": "trailcraft:block/ore/limonite/limestone_2"
+      },
+      {
+        "model": "trailcraft:block/ore/limonite/limestone_3"
+      }
+    ],
+    "rock=chalk": [
+      {
+        "model": "trailcraft:block/ore/limonite/chalk_1"
+      },
+      {
+        "model": "trailcraft:block/ore/limonite/chalk_2"
+      },
+      {
+        "model": "trailcraft:block/ore/limonite/chalk_3"
+      }
+    ]
+  }
+}

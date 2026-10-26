@@ -1,6 +1,7 @@
 package io.github.ChanesCMD.trailcraft;
 
 import io.github.ChanesCMD.trailcraft.client.ClientConfig;
+import io.github.ChanesCMD.trailcraft.client.ClientOres;
 import io.github.ChanesCMD.trailcraft.client.DevInstance;
 import net.minecraft.client.Minecraft;
 import net.neoforged.fml.config.ModConfig;
@@ -35,6 +36,7 @@ public class TrailCraftClient {
 
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
+        event.enqueueWork(ClientOres::registerItemProperties);
         // Some client setup code
         TrailCraft.LOGGER.info("HELLO FROM CLIENT SETUP");
         TrailCraft.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());

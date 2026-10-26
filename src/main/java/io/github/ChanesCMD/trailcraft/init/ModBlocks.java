@@ -135,54 +135,54 @@ public class ModBlocks {
     public static final DeferredBlock<Block> SILT = BLOCKS.registerSimpleBlock("silt",
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(0.5f).sound(SoundType.GRAVEL));
 
-    // === ГРАВИЙ ИЗ ПОРОД (12 блоков, падает как обычный гравий) ===
+    // === ГРАВИЙ ИЗ ПОРОД (12 блоков, падает как обычный гравий; добывается только киркой) ===
     public static final DeferredBlock<Block> ANDESITE_GRAVEL = BLOCKS.registerBlock("andesite_gravel",
             props -> new ColoredFallingBlock(new ColorRGBA(0x838382), props),
-            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.6f).sound(SoundType.GRAVEL));
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.6f).sound(SoundType.GRAVEL).requiresCorrectToolForDrops());
 
     public static final DeferredBlock<Block> BASALT_GRAVEL = BLOCKS.registerBlock("basalt_gravel",
             props -> new ColoredFallingBlock(new ColorRGBA(0x46464B), props),
-            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(0.6f).sound(SoundType.GRAVEL));
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(0.6f).sound(SoundType.GRAVEL).requiresCorrectToolForDrops());
 
     public static final DeferredBlock<Block> CHALK_GRAVEL = BLOCKS.registerBlock("chalk_gravel",
             props -> new ColoredFallingBlock(new ColorRGBA(0xE2E1DB), props),
-            BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).strength(0.6f).sound(SoundType.GRAVEL));
+            BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).strength(0.6f).sound(SoundType.GRAVEL).requiresCorrectToolForDrops());
 
     public static final DeferredBlock<Block> DIORITE_GRAVEL = BLOCKS.registerBlock("diorite_gravel",
             props -> new ColoredFallingBlock(new ColorRGBA(0xB4B4B4), props),
-            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.6f).sound(SoundType.GRAVEL));
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.6f).sound(SoundType.GRAVEL).requiresCorrectToolForDrops());
 
     public static final DeferredBlock<Block> DOLOMITE_GRAVEL = BLOCKS.registerBlock("dolomite_gravel",
             props -> new ColoredFallingBlock(new ColorRGBA(0xCBC5BA), props),
-            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.6f).sound(SoundType.GRAVEL));
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.6f).sound(SoundType.GRAVEL).requiresCorrectToolForDrops());
 
     public static final DeferredBlock<Block> GABBRO_GRAVEL = BLOCKS.registerBlock("gabbro_gravel",
             props -> new ColoredFallingBlock(new ColorRGBA(0x414644), props),
-            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.6f).sound(SoundType.GRAVEL));
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.6f).sound(SoundType.GRAVEL).requiresCorrectToolForDrops());
 
     public static final DeferredBlock<Block> GRANITE_GRAVEL = BLOCKS.registerBlock("granite_gravel",
             props -> new ColoredFallingBlock(new ColorRGBA(0x966958), props),
-            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.6f).sound(SoundType.GRAVEL));
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.6f).sound(SoundType.GRAVEL).requiresCorrectToolForDrops());
 
     public static final DeferredBlock<Block> GRAY_GRANITE_GRAVEL = BLOCKS.registerBlock("gray_granite_gravel",
             props -> new ColoredFallingBlock(new ColorRGBA(0x5B5553), props),
-            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.6f).sound(SoundType.GRAVEL));
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.6f).sound(SoundType.GRAVEL).requiresCorrectToolForDrops());
 
     public static final DeferredBlock<Block> LIMESTONE_GRAVEL = BLOCKS.registerBlock("limestone_gravel",
             props -> new ColoredFallingBlock(new ColorRGBA(0xCFC39A), props),
-            BlockBehaviour.Properties.of().mapColor(MapColor.SAND).strength(0.6f).sound(SoundType.GRAVEL));
+            BlockBehaviour.Properties.of().mapColor(MapColor.SAND).strength(0.6f).sound(SoundType.GRAVEL).requiresCorrectToolForDrops());
 
     public static final DeferredBlock<Block> MARBLE_GRAVEL = BLOCKS.registerBlock("marble_gravel",
             props -> new ColoredFallingBlock(new ColorRGBA(0xC1C4C9), props),
-            BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).strength(0.6f).sound(SoundType.GRAVEL));
+            BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).strength(0.6f).sound(SoundType.GRAVEL).requiresCorrectToolForDrops());
 
     public static final DeferredBlock<Block> SANDSTONE_GRAVEL = BLOCKS.registerBlock("sandstone_gravel",
             props -> new ColoredFallingBlock(new ColorRGBA(0xB9996F), props),
-            BlockBehaviour.Properties.of().mapColor(MapColor.SAND).strength(0.6f).sound(SoundType.GRAVEL));
+            BlockBehaviour.Properties.of().mapColor(MapColor.SAND).strength(0.6f).sound(SoundType.GRAVEL).requiresCorrectToolForDrops());
 
     public static final DeferredBlock<Block> SHALE_GRAVEL = BLOCKS.registerBlock("shale_gravel",
             props -> new ColoredFallingBlock(new ColorRGBA(0x575B62), props),
-            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.6f).sound(SoundType.GRAVEL));
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.6f).sound(SoundType.GRAVEL).requiresCorrectToolForDrops());
 
     // === КАМЕШКИ (12 блоков, 3x5x2 пикселя) ===
     public static final DeferredBlock<Block> ANDESITE_PEBBLE = BLOCKS.registerBlock("andesite_pebble", PebbleBlock::new,

@@ -1,0 +1,24 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#trailcraft:trailworldgen_biomes",
+  "features": [
+    "trailcraft:ore_bituminous_coal",
+    "trailcraft:ore_malachite",
+    "trailcraft:ore_native_copper",
+    "trailcraft:ore_tetrahedrite",
+    "trailcraft:ore_hematite",
+    "trailcraft:ore_magnetite",
+    "trailcraft:ore_limonite",
+    "trailcraft:ore_sphalerite",
+    "trailcraft:ore_cassiterite",
+    "trailcraft:ore_native_bismuth",
+    "trailcraft:ore_galena",
+    "trailcraft:ore_native_gold",
+    "trailcraft:ore_pentlandite",
+    "trailcraft:ore_lepidolite",
+    "trailcraft:ore_bauxite",
+    "trailcraft:ore_nepheline",
+    "trailcraft:ore_apatite"
+  ],
+  "step": "underground_ores"
+}

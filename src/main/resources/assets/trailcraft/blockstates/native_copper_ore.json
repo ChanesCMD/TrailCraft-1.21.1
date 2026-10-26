@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "rock=basalt": [
+      {
+        "model": "trailcraft:block/ore/native_copper/basalt_1"
+      },
+      {
+        "model": "trailcraft:block/ore/native_copper/basalt_2"
+      },
+      {
+        "model": "trailcraft:block/ore/native_copper/basalt_3"
+      }
+    ],
+    "rock=gabbro": [
+      {
+        "model": "trailcraft:block/ore/native_copper/gabbro_1"
+      },
+      {
+        "model": "trailcraft:block/ore/native_copper/gabbro_2"
+      },
+      {
+        "model": "trailcraft:block/ore/native_copper/gabbro_3"
+      }
+    ]
+  }
+}

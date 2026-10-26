@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "S": {
+      "item": "trailcraft:stick_processed"
+    }
+  },
+  "pattern": [
+    "S ",
+    " S"
+  ],
+  "result": {
+    "id": "trailcraft:firestarter",
+    "count": 1
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:ore",
+  "config": {
+    "size": 8,
+    "discard_chance_on_air_exposure": 0.0,
+    "targets": [
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "trailcraft:andesite"
+        },
+        "state": {
+          "Name": "trailcraft:tetrahedrite_ore",
+          "Properties": {
+            "rock": "andesite"
+          }
+        }
+      },
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "trailcraft:granite"
+        },
+        "state": {
+          "Name": "trailcraft:tetrahedrite_ore",
+          "Properties": {
+            "rock": "granite"
+          }
+        }
+      }
+    ]
+  }
+}

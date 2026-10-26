@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "rock=andesite": [
+      {
+        "model": "trailcraft:block/ore/tetrahedrite/andesite_1"
+      },
+      {
+        "model": "trailcraft:block/ore/tetrahedrite/andesite_2"
+      },
+      {
+        "model": "trailcraft:block/ore/tetrahedrite/andesite_3"
+      }
+    ],
+    "rock=granite": [
+      {
+        "model": "trailcraft:block/ore/tetrahedrite/granite_1"
+      },
+      {
+        "model": "trailcraft:block/ore/tetrahedrite/granite_2"
+      },
+      {
+        "model": "trailcraft:block/ore/tetrahedrite/granite_3"
+      }
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:ore",
+  "config": {
+    "size": 8,
+    "discard_chance_on_air_exposure": 0.0,
+    "targets": [
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "trailcraft:basalt"
+        },
+        "state": {
+          "Name": "trailcraft:native_copper_ore",
+          "Properties": {
+            "rock": "basalt"
+          }
+        }
+      },
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "trailcraft:gabbro"
+        },
+        "state": {
+          "Name": "trailcraft:native_copper_ore",
+          "Properties": {
+            "rock": "gabbro"
+          }
+        }
+      }
+    ]
+  }
+}

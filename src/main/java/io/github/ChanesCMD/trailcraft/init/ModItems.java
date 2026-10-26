@@ -10,6 +10,7 @@ import io.github.ChanesCMD.trailcraft.item.CoinItem;
 import io.github.ChanesCMD.trailcraft.item.FlaskItem;
 import io.github.ChanesCMD.trailcraft.item.WalletItem;
 import io.github.ChanesCMD.trailcraft.item.BranchStickItem;
+import io.github.ChanesCMD.trailcraft.item.FirestarterItem;
 import io.github.ChanesCMD.trailcraft.item.TurfCutterItem;
 import net.neoforged.neoforge.registries.DeferredItem;
 import java.util.ArrayList;
@@ -115,6 +116,9 @@ public class ModItems {
     public static final DeferredItem<BranchStickItem> STICK_BRANCH = ITEMS.registerItem("stick_branch",
             props -> new BranchStickItem(ModBlocks.FALLEN_BRANCH.get(), props));
     public static final DeferredItem<Item> STICK_PROCESSED = ITEMS.registerSimpleItem("stick_processed");
+    /** Огниво: разжигает костёр из выброшенных тонкого бревна и 4 веток (FirestarterItem). */
+    public static final DeferredItem<FirestarterItem> FIRESTARTER = ITEMS.registerItem("firestarter",
+            props -> new FirestarterItem(props.durability(FirestarterItem.DURABILITY)));
 
     // === ПЕНЬ ДЛЯ РУБКИ ===
     public static final DeferredItem<BlockItem> CHOPPING_STUMP = ITEMS.registerSimpleBlockItem("chopping_stump", ModBlocks.CHOPPING_STUMP);

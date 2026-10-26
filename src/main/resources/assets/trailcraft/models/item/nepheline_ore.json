@@ -1,0 +1,11 @@
+{
+  "parent": "trailcraft:block/ore/nepheline/diorite_1",
+  "overrides": [
+    {
+      "predicate": {
+        "trailcraft:rock": 0.1
+      },
+      "model": "trailcraft:block/ore/nepheline/gray_granite_1"
+    }
+  ]
+}

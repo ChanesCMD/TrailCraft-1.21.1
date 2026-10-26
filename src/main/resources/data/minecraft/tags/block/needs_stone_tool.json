@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:malachite_ore",
+    "trailcraft:native_copper_ore",
+    "trailcraft:tetrahedrite_ore",
+    "trailcraft:hematite_ore",
+    "trailcraft:magnetite_ore",
+    "trailcraft:sphalerite_ore",
+    "trailcraft:cassiterite_ore",
+    "trailcraft:native_bismuth_ore",
+    "trailcraft:galena_ore",
+    "trailcraft:lepidolite_ore",
+    "trailcraft:nepheline_ore",
+    "trailcraft:apatite_ore"
+  ]
+}

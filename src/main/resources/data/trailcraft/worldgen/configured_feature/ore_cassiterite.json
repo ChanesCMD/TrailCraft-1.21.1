@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:ore",
+  "config": {
+    "size": 7,
+    "discard_chance_on_air_exposure": 0.0,
+    "targets": [
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "trailcraft:gray_granite"
+        },
+        "state": {
+          "Name": "trailcraft:cassiterite_ore",
+          "Properties": {
+            "rock": "gray_granite"
+          }
+        }
+      },
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "trailcraft:granite"
+        },
+        "state": {
+          "Name": "trailcraft:cassiterite_ore",
+          "Properties": {
+            "rock": "granite"
+          }
+        }
+      }
+    ]
+  }
+}

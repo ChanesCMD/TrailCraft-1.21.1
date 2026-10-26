@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "category": "misc",
+  "cookingtime": 600,
+  "experience": 0.15,
+  "ingredient": {
+    "tag": "trailcraft:thin_logs"
+  },
+  "result": {
+    "id": "trailcraft:charcoal",
+    "count": 1
+  }
+}

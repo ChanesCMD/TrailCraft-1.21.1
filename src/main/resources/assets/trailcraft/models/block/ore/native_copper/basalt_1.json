@@ -1,0 +1,7 @@
+{
+  "parent": "trailcraft:block/ore_layered",
+  "textures": {
+    "rock": "trailcraft:block/basalt",
+    "ore": "trailcraft:block/ore/native_copper/basalt_1"
+  }
+}

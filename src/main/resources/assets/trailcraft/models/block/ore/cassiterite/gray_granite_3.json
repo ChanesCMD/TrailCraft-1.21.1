@@ -1,0 +1,7 @@
+{
+  "parent": "trailcraft:block/ore_layered",
+  "textures": {
+    "rock": "trailcraft:block/gray_granite",
+    "ore": "trailcraft:block/ore/cassiterite/gray_granite_3"
+  }
+}

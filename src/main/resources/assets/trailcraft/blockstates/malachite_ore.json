@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "rock=limestone": [
+      {
+        "model": "trailcraft:block/ore/malachite/limestone_1"
+      },
+      {
+        "model": "trailcraft:block/ore/malachite/limestone_2"
+      },
+      {
+        "model": "trailcraft:block/ore/malachite/limestone_3"
+      }
+    ],
+    "rock=dolomite": [
+      {
+        "model": "trailcraft:block/ore/malachite/dolomite_1"
+      },
+      {
+        "model": "trailcraft:block/ore/malachite/dolomite_2"
+      },
+      {
+        "model": "trailcraft:block/ore/malachite/dolomite_3"
+      }
+    ]
+  }
+}

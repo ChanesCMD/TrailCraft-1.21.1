@@ -1,0 +1,11 @@
+{
+  "parent": "trailcraft:block/ore/pentlandite/gabbro_1",
+  "overrides": [
+    {
+      "predicate": {
+        "trailcraft:rock": 0.1
+      },
+      "model": "trailcraft:block/ore/pentlandite/basalt_1"
+    }
+  ]
+}

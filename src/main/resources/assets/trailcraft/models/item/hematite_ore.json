@@ -1,0 +1,11 @@
+{
+  "parent": "trailcraft:block/ore/hematite/sandstone_1",
+  "overrides": [
+    {
+      "predicate": {
+        "trailcraft:rock": 0.1
+      },
+      "model": "trailcraft:block/ore/hematite/shale_1"
+    }
+  ]
+}

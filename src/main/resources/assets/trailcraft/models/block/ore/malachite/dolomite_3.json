@@ -1,0 +1,7 @@
+{
+  "parent": "trailcraft:block/ore_layered",
+  "textures": {
+    "rock": "trailcraft:block/dolomite",
+    "ore": "trailcraft:block/ore/malachite/dolomite_3"
+  }
+}

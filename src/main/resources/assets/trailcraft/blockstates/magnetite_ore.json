@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "rock=diorite": [
+      {
+        "model": "trailcraft:block/ore/magnetite/diorite_1"
+      },
+      {
+        "model": "trailcraft:block/ore/magnetite/diorite_2"
+      },
+      {
+        "model": "trailcraft:block/ore/magnetite/diorite_3"
+      }
+    ],
+    "rock=marble": [
+      {
+        "model": "trailcraft:block/ore/magnetite/marble_1"
+      },
+      {
+        "model": "trailcraft:block/ore/magnetite/marble_2"
+      },
+      {
+        "model": "trailcraft:block/ore/magnetite/marble_3"
+      }
+    ]
+  }
+}
