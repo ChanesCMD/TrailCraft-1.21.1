@@ -25,6 +25,7 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -43,6 +44,8 @@ public final class MapSampler {
     /** Чанки в этом радиусе от игрока (7×7) обновляются каждую секунду: там меняются постройки, деревья, вода. */
     private static final int REFRESH_RADIUS = 3;
     private static final Set<Long> QUEUE = new LinkedHashSet<>();
+    /** Загруженные чанки, в которых почти нет данных (пустота, ещё не заполненные чанки): на карту не пишутся и не перепроверяются каждую секунду. */
+    private static final Set<Long> EMPTY = new HashSet<>();
     private static ClientLevel queueLevel;
     private static int ticks;
 
@@ -58,6 +61,7 @@ public final class MapSampler {
         Waypoints.close();
         MapTiles.clear();
         QUEUE.clear();
+        EMPTY.clear();
         queueLevel = null;
     }
 
@@ -78,6 +82,7 @@ public final class MapSampler {
         }
         if (level != queueLevel) {
             QUEUE.clear();
+            EMPTY.clear();
             queueLevel = level;
         }
         ResourceLocation dimension = level.dimension().location();
@@ -90,8 +95,9 @@ public final class MapSampler {
                 for (int dx = -radius; dx <= radius; dx++) {
                     int cx = center.x + dx, cz = center.z + dz;
                     boolean near = Math.abs(dx) <= REFRESH_RADIUS && Math.abs(dz) <= REFRESH_RADIUS;
-                    if ((near || !MapCache.hasChunk(dimension, cx, cz)) && level.hasChunk(cx, cz)) {
-                        wanted.add(new long[]{ChunkPos.asLong(cx, cz), (long) dx * dx + (long) dz * dz});
+                    long key = ChunkPos.asLong(cx, cz);
+                    if ((near || !EMPTY.contains(key) && !MapCache.hasChunk(dimension, cx, cz)) && level.hasChunk(cx, cz)) {
+                        wanted.add(new long[]{key, (long) dx * dx + (long) dz * dz});
                     }
                 }
             }
@@ -106,10 +112,28 @@ public final class MapSampler {
             it.remove();
             int cx = ChunkPos.getX(key), cz = ChunkPos.getZ(key);
             if (level.hasChunk(cx, cz)) {
-                MapCache.putChunk(dimension, cx, cz, sample(level, cx, cz));
+                int[] colors = sample(level, cx, cz);
+                if (mostlyEmpty(colors)) {
+                    // Чанк пока пуст: старые данные карты не затираем и новых чёрных пятен не создаём
+                    EMPTY.add(key);
+                } else {
+                    EMPTY.remove(key);
+                    MapCache.putChunk(dimension, cx, cz, colors);
+                }
                 done++;
             }
         }
+    }
+
+    /** Больше половины точек без данных (нет блоков вообще). */
+    private static boolean mostlyEmpty(int[] colors) {
+        int empty = 0;
+        for (int color : colors) {
+            if (color == 0) {
+                empty++;
+            }
+        }
+        return empty > colors.length / 2;
     }
 
     /** Цвета 16×16 загруженного чанка. */

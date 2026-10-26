@@ -5,8 +5,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.neoforged.fml.ModList;
+import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
 import java.util.ArrayList;
@@ -14,7 +18,10 @@ import java.util.List;
 
 /**
  * Кнопки в левом верхнем углу экрана инвентаря (ТЗ, раздел 6): 14×14 на (4,4) с шагом 16, иконки 10×10.
- * JEI — только если он установлен. Карта — если в рюкзаке атлас. Приваты и гайдбук пока заглушки «Скоро».
+ * JEI — только если он установлен; это вместо шестерёнки самого JEI (её убирает миксин): клик — настройки JEI
+ * (экран настроек или, если его нет, сообщение в чат с папкой конфигурации, как делала шестерёнка), Ctrl+клик — режим
+ * читера, Shift+клик — «список предметов только при поиске». Карта — если в рюкзаке атлас. Приваты и гайдбук пока
+ * заглушки «Скоро».
  */
 public final class CornerButtons {
     public static final int X = 4, Y = 4, SIZE = 14, STEP = 16;
@@ -42,7 +49,7 @@ public final class CornerButtons {
     public static List<Entry> create(Screen parent, Runnable voice) {
         List<Entry> list = new ArrayList<>();
         if (ModList.get().isLoaded("jei")) {
-            list.add(new Entry("jei", MAGNIFIER, () -> openJeiConfig(parent)));
+            list.add(new Entry("jei", MAGNIFIER, () -> jeiClick(parent)));
         }
         list.add(new Entry("map", MAP, CornerButtons::openMap));
         list.add(new Entry("voice", MIC, voice));
@@ -51,12 +58,49 @@ public final class CornerButtons {
         return list;
     }
 
-    /** Настройки JEI — его экран конфигурации из списка модов. */
-    private static void openJeiConfig(Screen parent) {
+    /** Что делала шестерёнка JEI: Ctrl — режим читера, Shift — список только при поиске, иначе настройки. */
+    private static void jeiClick(Screen parent) {
         Minecraft mc = Minecraft.getInstance();
-        ModList.get().getModContainerById("jei")
-                .flatMap(container -> container.getCustomExtension(IConfigScreenFactory.class).map(f -> f.createScreen(container, parent)))
-                .ifPresentOrElse(mc::setScreen, CornerButtons::soon);
+        if (Screen.hasControlDown()) {
+            if (JeiBridge.toggleCheatMode()) {
+                message("message.trailcraft.jei.cheat." + (JeiBridge.cheatMode() ? "on" : "off"));
+            } else {
+                soon();
+            }
+        } else if (Screen.hasShiftDown()) {
+            if (JeiBridge.toggleHideWhenNotSearching()) {
+                message("message.trailcraft.jei.hide." + (Boolean.TRUE.equals(JeiBridge.hideWhenNotSearching()) ? "on" : "off"));
+            } else {
+                soon();
+            }
+        } else {
+            ModList.get().getModContainerById("jei")
+                    .flatMap(container -> container.getCustomExtension(IConfigScreenFactory.class).map(f -> f.createScreen(container, parent)))
+                    .ifPresentOrElse(mc::setScreen, CornerButtons::jeiConfigMessage);
+        }
+    }
+
+    /** Экрана настроек у JEI нет: как и шестерёнка JEI, пишем в чат ссылку на мод с экраном и папку конфигурации. */
+    private static void jeiConfigMessage() {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) {
+            return;
+        }
+        Component link = Component.translatable("jei.message.mezzConfigGui").setStyle(Style.EMPTY
+                .withColor(ChatFormatting.DARK_BLUE).withUnderlined(true)
+                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.curseforge.com/minecraft/mc-mods/mezzconfiggui")));
+        Component folder = Component.translatable("jei.message.config.folder").setStyle(Style.EMPTY
+                .withColor(ChatFormatting.WHITE).withUnderlined(true)
+                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE,
+                        FMLPaths.CONFIGDIR.get().resolve("jei").toAbsolutePath().toString())));
+        mc.player.displayClientMessage(link.copy().append("\n").append(folder), false);
+    }
+
+    private static void message(String key) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player != null) {
+            mc.player.displayClientMessage(Component.translatable(key), true);
+        }
     }
 
     private static void openMap() {
@@ -95,10 +139,27 @@ public final class CornerButtons {
             g.fill(x + 2, Y + 2, x + SIZE - 1, Y + SIZE - 1, 0xFF555555);
             g.fill(x + 2, Y + 2, x + SIZE - 2, Y + SIZE - 2, lit ? 0xFFB0B0D8 : UiDraw.PANEL);
             icon(g, x + 2, Y + 2, entries.get(i).icon());
+            if (entries.get(i).id().equals("jei") && JeiBridge.cheatMode()) {
+                g.fill(x + SIZE - 5, Y + SIZE - 5, x + SIZE - 2, Y + SIZE - 2, 0xFFD83A3A); // режим читера включён
+            }
         }
         if (hover >= 0) {
-            g.renderTooltip(font, Component.translatable("gui.trailcraft.button." + entries.get(hover).id()), mouseX, mouseY);
+            g.renderComponentTooltip(font, tooltip(entries.get(hover)), mouseX, mouseY);
         }
+    }
+
+    /** Подсказка кнопки; у JEI ещё и что делают Ctrl и Shift, и включённые режимы. */
+    private static List<Component> tooltip(Entry entry) {
+        List<Component> lines = new ArrayList<>();
+        lines.add(Component.translatable("gui.trailcraft.button." + entry.id()));
+        if (entry.id().equals("jei")) {
+            lines.add(Component.translatable("gui.trailcraft.button.jei.cheat").withStyle(ChatFormatting.GRAY));
+            lines.add(Component.translatable("gui.trailcraft.button.jei.hide").withStyle(ChatFormatting.GRAY));
+            if (JeiBridge.cheatMode()) {
+                lines.add(Component.translatable("gui.trailcraft.button.jei.cheat.on").withStyle(ChatFormatting.RED));
+            }
+        }
+        return lines;
     }
 
     private static void icon(GuiGraphics g, int x, int y, String[] pattern) {

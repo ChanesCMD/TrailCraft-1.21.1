@@ -97,6 +97,7 @@ public final class MapTiles {
             g.pose().mulPose(Axis.ZP.rotationDegrees(rotation));
         }
         g.pose().scale(scale, scale, 1);
+        Matrix4f matrix = g.pose().last().pose();
         for (long[] t : visible) {
             int tx = (int) t[0], tz = (int) t[1];
             Tile tile = TILES.computeIfAbsent(key(tx, tz), k -> new Tile());
@@ -106,14 +107,7 @@ public final class MapTiles {
                 budget--;
             }
             if (tile.painted) {
-                g.pose().pushPose();
-                g.pose().translate((float) (tx * SIZE - centerX), (float) (tz * SIZE - centerZ), 0);
-                if (alpha < 1) {
-                    blitTranslucent(g, tile.location, alpha);
-                } else {
-                    g.blit(tile.location, 0, 0, 0, 0, SIZE, SIZE, SIZE, SIZE);
-                }
-                g.pose().popPose();
+                blitTile(matrix, tile.location, tx, tz, centerX, centerZ, alpha);
             }
         }
         g.pose().popPose();
@@ -121,18 +115,23 @@ public final class MapTiles {
         evict();
     }
 
-    /** Плитка с общей прозрачностью alpha: GuiGraphics.blit цвет не применяет, поэтому квадрат рисуется с цветом в вершинах. */
-    private static void blitTranslucent(GuiGraphics g, ResourceLocation texture, float alpha) {
-        Matrix4f matrix = g.pose().last().pose();
+    /**
+     * Рисует плитку квадратом с углами в блоках относительно центра карты и с цветом в вершинах (так работает
+     * прозрачность: GuiGraphics.blit цвет не применяет). Общий угол двух соседних плиток вычисляется одним и тем же
+     * выражением и даёт одинаковое число, поэтому между плитками не остаётся щелей, как бы ни был сдвинут масштаб.
+     */
+    private static void blitTile(Matrix4f matrix, ResourceLocation texture, int tx, int tz, double centerX, double centerZ, float alpha) {
+        float x0 = (float) (tx * SIZE - centerX), x1 = (float) ((tx + 1) * SIZE - centerX);
+        float z0 = (float) (tz * SIZE - centerZ), z1 = (float) ((tz + 1) * SIZE - centerZ);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.setShaderTexture(0, texture);
         BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        buffer.addVertex(matrix, 0, 0, 0).setUv(0, 0).setColor(1f, 1f, 1f, alpha);
-        buffer.addVertex(matrix, 0, SIZE, 0).setUv(0, 1).setColor(1f, 1f, 1f, alpha);
-        buffer.addVertex(matrix, SIZE, SIZE, 0).setUv(1, 1).setColor(1f, 1f, 1f, alpha);
-        buffer.addVertex(matrix, SIZE, 0, 0).setUv(1, 0).setColor(1f, 1f, 1f, alpha);
+        buffer.addVertex(matrix, x0, z0, 0).setUv(0, 0).setColor(1f, 1f, 1f, alpha);
+        buffer.addVertex(matrix, x0, z1, 0).setUv(0, 1).setColor(1f, 1f, 1f, alpha);
+        buffer.addVertex(matrix, x1, z1, 0).setUv(1, 1).setColor(1f, 1f, 1f, alpha);
+        buffer.addVertex(matrix, x1, z0, 0).setUv(1, 0).setColor(1f, 1f, 1f, alpha);
         BufferUploader.drawWithShader(buffer.buildOrThrow());
     }
 

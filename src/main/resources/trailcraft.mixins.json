@@ -1,0 +1,12 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "io.github.ChanesCMD.trailcraft.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "JeiIconButtonMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}

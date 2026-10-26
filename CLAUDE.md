@@ -37,7 +37,8 @@
 - Календарь: время — `calendar/Calendar.java`, заметки — `calendar/CalendarNotes.java` (attachment у игрока), окно —
   в `TrailInventoryScreen` (листается по сезонам). Карты — `client/map/`: атлас запоминает местность на клиенте —
   `MapSampler` снимает загруженные чанки (без травы и цветов, цвета блоков и биома) в `MapCache` (по регионам на диске,
-  .minecraft/trailcraft/maps/<мир>/<измерение>/; цвета — номера в палитре региона, чтение и запись — в фоновом потоке), рисуется плитками 64×64 из памяти — `MapTiles`;
+  .minecraft/trailcraft/maps/<мир>/<измерение>/; цвета — номера в палитре региона, чтение и запись — в фоновом потоке), рисуется плитками 64×64 из памяти — `MapTiles` (углы соседних плиток считаются одним выражением, иначе между ними щели);
+  чанки, где почти нет данных, на карту не пишутся (`MapSampler.EMPTY`);
   клавиша карты M (Ь) — `MapKeys`, миникарта `Minimap` (в HUD вместе с датой, `TrailHud`), полноэкранная `MapScreen`,
   её настройки (шестерёнка; миникарта вкл/выкл, угол экрана, размер, непрозрачность, поворот по взгляду, биом,
   масштаб (0,5 / 1 / 2), координаты, показ даты/времени — `ClientConfig.MINIMAP_*`, `DATE_MODE`) — `MapSettingsScreen`;
@@ -77,6 +78,11 @@
 - Зависимости: Create — обязательная (`neoforge.mods.toml`, версии Create, Ponder, Flywheel, Registrate — в
   `gradle.properties`); e4steam (игра через Steam) — только для запуска из среды разработки, jar берётся из релизов
   GitHub (`e4steam_version` — тег без «v»).
+- JEI: собственную кнопку-шестерёнку JEI убирает миксин `mixin/JeiIconButtonMixin.java` (`trailcraft.mixins.json`,
+  применяется, только если JEI есть и устроен так же, иначе пропускается). Её функции — в кнопке JEI слева сверху
+  в инвентаре (`client/gui/CornerButtons.java`): клик — настройки (или сообщение в чат с папкой конфигурации,
+  если экрана нет), Ctrl+клик — режим читера, Shift+клик — «список только при поиске»; два последних — рефлексией
+  через `client/gui/JeiBridge.java` (внутренностей JEI нет в API).
 - Голосовой чат поверх Simple Voice Chat (необязательная зависимость): плагин `voice/svc/TrailVoicePlugin.java`,
   сервер — `voice/VoiceServer.java` (каналы — скрытые группы SVC, звонки), клиент — `client/voice/VoiceClient.java`,
   окно — `client/gui/VoiceChatWindow.java`, кнопки в углу инвентаря — `client/gui/CornerButtons.java`.
