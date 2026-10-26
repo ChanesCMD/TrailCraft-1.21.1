@@ -5,6 +5,7 @@ import io.github.ChanesCMD.trailcraft.item.SpearItem;
 import io.github.ChanesCMD.trailcraft.item.TieredToolItem;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.DiggerItem;
+import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.ShovelItem;
@@ -17,8 +18,10 @@ import java.util.function.Function;
 
 /**
  * Инструменты и предметы из ТЗ, часть 2 (52 предмета). Имя в реестре = имя текстуры.
- * Кирка, топор, лопата — кремень и металлы; нож и копьё — все материалы; серп, коса, пила, кусачки — металлы.
- * Кремнёвая «лопата» (flint_shovel) в игре называется «Кремнёвая мотыга».
+ * Кирка, топор, лопата — кремень и металлы; тяпка — кремень, кость и металлы; нож и копьё — все материалы;
+ * серп, коса, пила, кусачки — металлы.
+ * Кремнёвая «лопата» (flint_shovel) в игре называется «Кремнёвая мотыга». Тяпки (*_hoe) — ванильные мотыги:
+ * вспахивают землю, а жёлтозём, бурозём и чернозём — в свои грядки (farm/FarmEvents).
  * TODO: уточнить, заменять ли ванильные железные инструменты (сейчас свои рядом с ванильными).
  */
 public final class ModTools {
@@ -45,6 +48,12 @@ public final class ModTools {
             if (m == Material.FLINT || m.isMetal()) {
                 reg(m.id + "_shovel", p -> new ShovelItem(m.tier,
                         p.attributes(DiggerItem.createAttributes(m.tier, ModTiers.SHOVEL_DAMAGE, ModTiers.SHOVEL_SPEED))));
+            }
+        }
+        for (Material m : Material.values()) {
+            if (m.hasHoe()) {
+                reg(m.id + "_hoe", p -> new HoeItem(m.tier,
+                        p.attributes(DiggerItem.createAttributes(m.tier, m.hoeDamage(), m.hoeSpeed))));
             }
         }
         for (Material m : Material.values()) {

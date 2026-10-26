@@ -7,6 +7,11 @@ import io.github.ChanesCMD.trailcraft.block.BackpackBlock;
 import io.github.ChanesCMD.trailcraft.block.TurfBlock;
 import io.github.ChanesCMD.trailcraft.block.GraveBlock;
 import io.github.ChanesCMD.trailcraft.block.ChoppingStumpBlock;
+import io.github.ChanesCMD.trailcraft.block.BerryBushBlock;
+import io.github.ChanesCMD.trailcraft.block.GardenBedBlock;
+import io.github.ChanesCMD.trailcraft.block.JuteCropBlock;
+import io.github.ChanesCMD.trailcraft.farm.Farm;
+import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.ColoredFallingBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -113,6 +118,14 @@ public class ModBlocks {
 
     public static final DeferredBlock<Block> PEAT_GRASS = BLOCKS.registerBlock("peat_grass", props -> new TurfBlock(props, PEAT),
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).strength(0.5f).sound(SoundType.GRASS).randomTicks());
+
+    // === ГРЯДКИ (3 блока): вспахиваются тяпкой из почвы или дёрна, без воды пересыхают в свою почву (GardenBedBlock) ===
+    public static final DeferredBlock<Block> ZHELTOZEM_FARMLAND = registerFarmland("zheltozem_farmland", ZHELTOZEM,
+            Farm.ZHELTOZEM_GROWTH, MapColor.COLOR_YELLOW);
+    public static final DeferredBlock<Block> BUROZEM_FARMLAND = registerFarmland("burozem_farmland", BUROZEM,
+            Farm.BUROZEM_GROWTH, MapColor.DIRT);
+    public static final DeferredBlock<Block> CHERNOZEM_FARMLAND = registerFarmland("chernozem_farmland", CHERNOZEM,
+            Farm.CHERNOZEM_GROWTH, MapColor.COLOR_BLACK);
 
     // === ПЕСОК (4 блока) ===
     public static final DeferredBlock<Block> SAND_WHITE = BLOCKS.registerBlock("sand_white",
@@ -263,6 +276,47 @@ public class ModBlocks {
 
     public static final DeferredBlock<Block> GRASS_TALL = BLOCKS.registerBlock("grass_tall",
             props -> new GrassPlantBlock(props, 14), plantProps());
+
+    // === ДИКИЕ РАСТЕНИЯ ===
+    /** Ягодные кусты: ПКМ по кусту с ягодами — ягоды, сломанный куст даёт ветки. Морошка низкая. */
+    public static final DeferredBlock<Block> CURRANT_BUSH = BLOCKS.registerBlock("currant_bush",
+            props -> new BerryBushBlock(props, ModItems.CURRANT, 16), bushProps());
+    public static final DeferredBlock<Block> CLOUDBERRY_BUSH = BLOCKS.registerBlock("cloudberry_bush",
+            props -> new BerryBushBlock(props, ModItems.CLOUDBERRY, 9), bushProps());
+    public static final DeferredBlock<Block> GOOSEBERRY_BUSH = BLOCKS.registerBlock("gooseberry_bush",
+            props -> new BerryBushBlock(props, ModItems.GOOSEBERRY, 16), bushProps());
+    public static final DeferredBlock<Block> BLACKBERRY_BUSH = BLOCKS.registerBlock("blackberry_bush",
+            props -> new BerryBushBlock(props, ModItems.BLACKBERRY, 16), bushProps());
+
+    /** Дикие морковь и картофель: с них падают ванильные морковь и картофель (сажаются только на грядку). */
+    public static final DeferredBlock<Block> WILD_CARROT = BLOCKS.registerBlock("wild_carrot",
+            props -> new GrassPlantBlock(props, 14), wildPlantProps());
+    public static final DeferredBlock<Block> WILD_POTATO = BLOCKS.registerBlock("wild_potato",
+            props -> new GrassPlantBlock(props, 12), wildPlantProps());
+
+    /** Дикий джут: в два блока высотой, с нижней половины падают джут и семена джута. */
+    public static final DeferredBlock<Block> WILD_JUTE = BLOCKS.registerBlock("wild_jute", DoublePlantBlock::new, wildPlantProps());
+    /** Посаженный джут (из семян, на грядке). Своего предмета нет: ставится и выпадает как семена (jute_seeds). */
+    public static final DeferredBlock<Block> JUTE_CROP = BLOCKS.registerBlock("jute_crop", JuteCropBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollission().instabreak().sound(SoundType.CROP)
+                    .pushReaction(PushReaction.DESTROY));
+
+    private static BlockBehaviour.Properties bushProps() {
+        return BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).strength(0.2f).randomTicks().noCollission()
+                .sound(SoundType.SWEET_BERRY_BUSH).pushReaction(PushReaction.DESTROY);
+    }
+
+    private static BlockBehaviour.Properties wildPlantProps() {
+        return BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollission().instabreak().sound(SoundType.GRASS)
+                .pushReaction(PushReaction.DESTROY);
+    }
+
+    private static DeferredBlock<Block> registerFarmland(String name, DeferredBlock<Block> soil, float growthSpeed, MapColor color) {
+        return BLOCKS.registerBlock(name, props -> new GardenBedBlock(props, soil, growthSpeed),
+                BlockBehaviour.Properties.of().mapColor(color).randomTicks().strength(0.6f).sound(SoundType.GRAVEL)
+                        .isViewBlocking((state, level, pos) -> true).isSuffocating((state, level, pos) -> true)
+                        .pushReaction(PushReaction.DESTROY));
+    }
 
     private static DeferredBlock<Block> registerBackpack(String name, MapColor color) {
         return BLOCKS.registerBlock(name, BackpackBlock::new,

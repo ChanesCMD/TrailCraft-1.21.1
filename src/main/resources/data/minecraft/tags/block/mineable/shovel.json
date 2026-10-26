@@ -23,6 +23,9 @@
     "trailcraft:sand_yellow",
     "trailcraft:sand_gray",
     "trailcraft:sand_red",
-    "trailcraft:silt"
+    "trailcraft:silt",
+    "trailcraft:zheltozem_farmland",
+    "trailcraft:burozem_farmland",
+    "trailcraft:chernozem_farmland"
   ]
 }

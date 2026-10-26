@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "trailcraft:block/wild_jute_bottom"
+    },
+    "half=upper": {
+      "model": "trailcraft:block/wild_jute_top"
+    }
+  }
+}

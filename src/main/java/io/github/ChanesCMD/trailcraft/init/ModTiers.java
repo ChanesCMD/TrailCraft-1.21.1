@@ -50,33 +50,48 @@ public final class ModTiers {
     public static final Tier STEEL = new SimpleTier(BlockTags.INCORRECT_FOR_IRON_TOOL, 700, 7.0f, 2.5f, 14,
             () -> Ingredient.EMPTY);
 
-    /** Материалы инструментов. Железо — ванильный уровень. Топоры у каждого материала свои (урон, скорость атаки). */
+    /**
+     * Материалы инструментов. Железо — ванильный уровень. Топоры у каждого материала свои (урон, скорость атаки),
+     * у тяпок своя скорость атаки (урон у тяпки всегда 1, как у ванильной мотыги, см. hoeDamage).
+     */
     public enum Material {
         // Копья: кремень и кость — как каменное копьё 1.21.11, медь и железо — как ванильные, сталь — как алмазное.
-        FLINT("flint", ModTiers.FLINT, 7.0f, -3.2f, new SpearStats(2, 1.33f, 0.82f, 0.7f, 4.5f, 13, 9.0f, 13.75f)),
-        BONE("bone", ModTiers.BONE, 7.0f, -3.2f, new SpearStats(2, 1.33f, 0.82f, 0.7f, 4.5f, 13, 9.0f, 13.75f)),
-        AMETHYST("amethyst", ModTiers.AMETHYST, 7.0f, -3.2f, new SpearStats(2, 1.25f, 0.82f, 0.65f, 4.25f, 12.5f, 8.5f, 13.0f)),
-        COPPER("copper", ModTiers.COPPER, 6.5f, -3.15f, new SpearStats(2, 1.18f, 0.82f, 0.65f, 4.0f, 12, 8.25f, 12.5f)),
-        BRONZE("bronze", ModTiers.BRONZE, 6.0f, -3.1f, new SpearStats(3, 1.1f, 0.9f, 0.62f, 3.25f, 11.5f, 7.5f, 12.0f)),
-        IRON("iron", Tiers.IRON, 6.0f, -3.1f, new SpearStats(3, 1.05f, 0.95f, 0.6f, 2.5f, 11, 6.75f, 11.25f)),
-        STEEL("steel", ModTiers.STEEL, 5.5f, -3.0f, new SpearStats(4, 0.95f, 1.075f, 0.5f, 3.0f, 10, 6.5f, 10.0f));
+        FLINT("flint", ModTiers.FLINT, 7.0f, -3.2f, -2.0f, new SpearStats(2, 1.33f, 0.82f, 0.7f, 4.5f, 13, 9.0f, 13.75f)),
+        BONE("bone", ModTiers.BONE, 7.0f, -3.2f, -2.0f, new SpearStats(2, 1.33f, 0.82f, 0.7f, 4.5f, 13, 9.0f, 13.75f)),
+        AMETHYST("amethyst", ModTiers.AMETHYST, 7.0f, -3.2f, -1.5f, new SpearStats(2, 1.25f, 0.82f, 0.65f, 4.25f, 12.5f, 8.5f, 13.0f)),
+        COPPER("copper", ModTiers.COPPER, 6.5f, -3.15f, -1.5f, new SpearStats(2, 1.18f, 0.82f, 0.65f, 4.0f, 12, 8.25f, 12.5f)),
+        BRONZE("bronze", ModTiers.BRONZE, 6.0f, -3.1f, -1.0f, new SpearStats(3, 1.1f, 0.9f, 0.62f, 3.25f, 11.5f, 7.5f, 12.0f)),
+        IRON("iron", Tiers.IRON, 6.0f, -3.1f, -1.0f, new SpearStats(3, 1.05f, 0.95f, 0.6f, 2.5f, 11, 6.75f, 11.25f)),
+        STEEL("steel", ModTiers.STEEL, 5.5f, -3.0f, -0.5f, new SpearStats(4, 0.95f, 1.075f, 0.5f, 3.0f, 10, 6.5f, 10.0f));
 
         public final String id;
         public final Tier tier;
         public final float axeDamage, axeSpeed;
+        public final float hoeSpeed;
         public final SpearStats spear;
 
-        Material(String id, Tier tier, float axeDamage, float axeSpeed, SpearStats spear) {
+        Material(String id, Tier tier, float axeDamage, float axeSpeed, float hoeSpeed, SpearStats spear) {
             this.id = id;
             this.tier = tier;
             this.axeDamage = axeDamage;
             this.axeSpeed = axeSpeed;
+            this.hoeSpeed = hoeSpeed;
             this.spear = spear;
         }
 
         /** Металлы: из них делают серпы, косы, пилы и кусачки. */
         public boolean isMetal() {
             return this == COPPER || this == BRONZE || this == IRON || this == STEEL;
+        }
+
+        /** Тяпки: кремнёвая, костяная и металлические. */
+        public boolean hasHoe() {
+            return this == FLINT || this == BONE || isMetal();
+        }
+
+        /** Урон тяпки — минус прибавка уровня, чтобы в сумме вышла 1 (как у ванильных мотыг). */
+        public float hoeDamage() {
+            return -tier.getAttackDamageBonus();
         }
     }
 

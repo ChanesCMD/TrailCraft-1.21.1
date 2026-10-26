@@ -54,6 +54,11 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.CLAY_GRAY_GRASS);
                         output.accept(ModBlocks.PEAT_GRASS);
 
+                        // Грядки (3)
+                        output.accept(ModItems.ZHELTOZEM_FARMLAND);
+                        output.accept(ModItems.BUROZEM_FARMLAND);
+                        output.accept(ModItems.CHERNOZEM_FARMLAND);
+
                         // Гравий (12)
                         output.accept(ModBlocks.ANDESITE_GRAVEL);
                         output.accept(ModBlocks.BASALT_GRAVEL);
@@ -109,6 +114,22 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.GRASS_MEDIUM);
                         output.accept(ModBlocks.GRASS_SMALL);
                         output.accept(ModBlocks.GRASS_TALL);
+
+                        // Дикие растения, ягоды, джут
+                        output.accept(ModItems.CURRANT_BUSH);
+                        output.accept(ModItems.CLOUDBERRY_BUSH);
+                        output.accept(ModItems.GOOSEBERRY_BUSH);
+                        output.accept(ModItems.BLACKBERRY_BUSH);
+                        output.accept(ModItems.CURRANT);
+                        output.accept(ModItems.CLOUDBERRY);
+                        output.accept(ModItems.GOOSEBERRY);
+                        output.accept(ModItems.BLACKBERRY);
+                        output.accept(ModItems.WILD_CARROT);
+                        output.accept(ModItems.WILD_POTATO);
+                        output.accept(ModItems.WILD_JUTE);
+                        output.accept(ModItems.JUTE);
+                        output.accept(ModItems.JUTE_SEEDS);
+                        output.accept(ModItems.ROPE);
 
                         // Предметы
                         output.accept(ModItems.TURF_CUTTER);

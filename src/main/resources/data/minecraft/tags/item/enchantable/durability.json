@@ -46,6 +46,12 @@
     "trailcraft:copper_cutters",
     "trailcraft:bronze_cutters",
     "trailcraft:iron_cutters",
-    "trailcraft:steel_cutters"
+    "trailcraft:steel_cutters",
+    "trailcraft:flint_hoe",
+    "trailcraft:bone_hoe",
+    "trailcraft:copper_hoe",
+    "trailcraft:bronze_hoe",
+    "trailcraft:iron_hoe",
+    "trailcraft:steel_hoe"
   ]
 }

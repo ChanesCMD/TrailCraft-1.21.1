@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_farmland",
+  "textures": {
+    "dirt": "trailcraft:block/chernozem",
+    "top": "trailcraft:block/chernozem_farmland_moist"
+  }
+}

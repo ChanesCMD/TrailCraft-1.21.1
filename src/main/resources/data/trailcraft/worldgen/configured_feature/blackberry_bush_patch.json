@@ -1,0 +1,61 @@
+{
+  "type": "minecraft:random_patch",
+  "config": {
+    "tries": 3,
+    "xz_spread": 2,
+    "y_spread": 1,
+    "feature": {
+      "feature": {
+        "type": "minecraft:simple_block",
+        "config": {
+          "to_place": {
+            "type": "minecraft:weighted_state_provider",
+            "entries": [
+              {
+                "weight": 1,
+                "data": {
+                  "Name": "trailcraft:blackberry_bush",
+                  "Properties": {
+                    "age": "1"
+                  }
+                }
+              },
+              {
+                "weight": 1,
+                "data": {
+                  "Name": "trailcraft:blackberry_bush",
+                  "Properties": {
+                    "age": "2"
+                  }
+                }
+              },
+              {
+                "weight": 2,
+                "data": {
+                  "Name": "trailcraft:blackberry_bush",
+                  "Properties": {
+                    "age": "3"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "placement": [
+        {
+          "type": "minecraft:block_predicate_filter",
+          "predicate": {
+            "type": "minecraft:matching_blocks",
+            "blocks": [
+              "minecraft:air",
+              "trailcraft:grass_small",
+              "trailcraft:grass_medium",
+              "trailcraft:grass_tall"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

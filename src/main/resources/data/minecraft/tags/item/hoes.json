@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:flint_hoe",
+    "trailcraft:bone_hoe",
+    "trailcraft:copper_hoe",
+    "trailcraft:bronze_hoe",
+    "trailcraft:iron_hoe",
+    "trailcraft:steel_hoe"
+  ]
+}

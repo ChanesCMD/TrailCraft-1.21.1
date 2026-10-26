@@ -1,0 +1,12 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "trailcraft:zheltozem_plains"
+  ],
+  "features": [
+    "trailcraft:blackberry_bush_patch",
+    "trailcraft:wild_carrot_patch",
+    "trailcraft:wild_jute_patch"
+  ],
+  "step": "vegetal_decoration"
+}

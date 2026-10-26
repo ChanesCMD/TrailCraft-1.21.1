@@ -1,0 +1,15 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "trailcraft:burozem_plains"
+  ],
+  "features": [
+    "trailcraft:currant_bush_patch",
+    "trailcraft:cloudberry_bush_patch",
+    "trailcraft:gooseberry_bush_patch",
+    "trailcraft:blackberry_bush_patch",
+    "trailcraft:wild_carrot_patch",
+    "trailcraft:wild_potato_patch"
+  ],
+  "step": "vegetal_decoration"
+}

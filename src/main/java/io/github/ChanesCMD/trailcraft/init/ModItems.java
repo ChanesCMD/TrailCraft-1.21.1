@@ -2,7 +2,9 @@ package io.github.ChanesCMD.trailcraft.init;
 
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DiggerItem;
+import net.minecraft.world.item.DoubleHighBlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.item.Tiers;
 import io.github.ChanesCMD.trailcraft.item.BackpackItem;
 import io.github.ChanesCMD.trailcraft.item.PocketItem;
@@ -13,6 +15,7 @@ import io.github.ChanesCMD.trailcraft.item.BranchStickItem;
 import io.github.ChanesCMD.trailcraft.item.FirestarterItem;
 import io.github.ChanesCMD.trailcraft.item.HammerItem;
 import io.github.ChanesCMD.trailcraft.item.TurfCutterItem;
+import io.github.ChanesCMD.trailcraft.farm.Farm;
 import net.neoforged.neoforge.registries.DeferredItem;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +61,11 @@ public class ModItems {
     public static final DeferredItem<BlockItem> CLAY_GRAY_GRASS = ITEMS.registerSimpleBlockItem("clay_gray_grass", ModBlocks.CLAY_GRAY_GRASS);
     public static final DeferredItem<BlockItem> PEAT_GRASS = ITEMS.registerSimpleBlockItem("peat_grass", ModBlocks.PEAT_GRASS);
 
+    // === ГРЯДКИ (3): в выживании вспахиваются тяпкой из почвы или дёрна ===
+    public static final DeferredItem<BlockItem> ZHELTOZEM_FARMLAND = ITEMS.registerSimpleBlockItem("zheltozem_farmland", ModBlocks.ZHELTOZEM_FARMLAND);
+    public static final DeferredItem<BlockItem> BUROZEM_FARMLAND = ITEMS.registerSimpleBlockItem("burozem_farmland", ModBlocks.BUROZEM_FARMLAND);
+    public static final DeferredItem<BlockItem> CHERNOZEM_FARMLAND = ITEMS.registerSimpleBlockItem("chernozem_farmland", ModBlocks.CHERNOZEM_FARMLAND);
+
     // === ПЕСОК (4) ===
     public static final DeferredItem<BlockItem> SAND_WHITE = ITEMS.registerSimpleBlockItem("sand_white", ModBlocks.SAND_WHITE);
     public static final DeferredItem<BlockItem> SAND_YELLOW = ITEMS.registerSimpleBlockItem("sand_yellow", ModBlocks.SAND_YELLOW);
@@ -71,6 +79,30 @@ public class ModItems {
     public static final DeferredItem<BlockItem> GRASS_MEDIUM = ITEMS.registerSimpleBlockItem("grass_medium", ModBlocks.GRASS_MEDIUM);
     public static final DeferredItem<BlockItem> GRASS_SMALL = ITEMS.registerSimpleBlockItem("grass_small", ModBlocks.GRASS_SMALL);
     public static final DeferredItem<BlockItem> GRASS_TALL = ITEMS.registerSimpleBlockItem("grass_tall", ModBlocks.GRASS_TALL);
+
+    // === ДИКИЕ РАСТЕНИЯ (в выживании растут сами: с кустов падают ветки, с моркови и картофеля — морковь и картофель) ===
+    public static final DeferredItem<BlockItem> CURRANT_BUSH = ITEMS.registerSimpleBlockItem("currant_bush", ModBlocks.CURRANT_BUSH);
+    public static final DeferredItem<BlockItem> CLOUDBERRY_BUSH = ITEMS.registerSimpleBlockItem("cloudberry_bush", ModBlocks.CLOUDBERRY_BUSH);
+    public static final DeferredItem<BlockItem> GOOSEBERRY_BUSH = ITEMS.registerSimpleBlockItem("gooseberry_bush", ModBlocks.GOOSEBERRY_BUSH);
+    public static final DeferredItem<BlockItem> BLACKBERRY_BUSH = ITEMS.registerSimpleBlockItem("blackberry_bush", ModBlocks.BLACKBERRY_BUSH);
+    public static final DeferredItem<BlockItem> WILD_CARROT = ITEMS.registerSimpleBlockItem("wild_carrot", ModBlocks.WILD_CARROT);
+    public static final DeferredItem<BlockItem> WILD_POTATO = ITEMS.registerSimpleBlockItem("wild_potato", ModBlocks.WILD_POTATO);
+    public static final DeferredItem<DoubleHighBlockItem> WILD_JUTE = ITEMS.registerItem("wild_jute",
+            props -> new DoubleHighBlockItem(ModBlocks.WILD_JUTE.get(), props));
+
+    // === ЯГОДЫ (еда, Farm.BERRY_FOOD) ===
+    public static final DeferredItem<Item> CURRANT = ITEMS.registerItem("currant", props -> new Item(props.food(Farm.BERRY_FOOD)));
+    public static final DeferredItem<Item> CLOUDBERRY = ITEMS.registerItem("cloudberry", props -> new Item(props.food(Farm.BERRY_FOOD)));
+    public static final DeferredItem<Item> GOOSEBERRY = ITEMS.registerItem("gooseberry", props -> new Item(props.food(Farm.BERRY_FOOD)));
+    public static final DeferredItem<Item> BLACKBERRY = ITEMS.registerItem("blackberry", props -> new Item(props.food(Farm.BERRY_FOOD)));
+
+    // === ДЖУТ ===
+    /** Волокно джута: из трёх — верёвка. */
+    public static final DeferredItem<Item> JUTE = ITEMS.registerSimpleItem("jute");
+    /** Семена джута: сажаются только на грядку (блок jute_crop). */
+    public static final DeferredItem<ItemNameBlockItem> JUTE_SEEDS = ITEMS.registerItem("jute_seeds",
+            props -> new ItemNameBlockItem(ModBlocks.JUTE_CROP.get(), props));
+    public static final DeferredItem<Item> ROPE = ITEMS.registerSimpleItem("rope");
 
     // === ПРЕДМЕТЫ ===
     public static final DeferredItem<Item> CLAY_BALL_WHITE = ITEMS.registerSimpleItem("clay_ball_white");

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_farmland",
+  "textures": {
+    "dirt": "trailcraft:block/zheltozem",
+    "top": "trailcraft:block/zheltozem_farmland_moist"
+  }
+}

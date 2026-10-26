@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "J": {
+      "item": "trailcraft:jute"
+    }
+  },
+  "pattern": [
+    "J",
+    "J",
+    "J"
+  ],
+  "result": {
+    "id": "trailcraft:rope",
+    "count": 1
+  }
+}
