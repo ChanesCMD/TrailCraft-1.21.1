@@ -78,6 +78,8 @@
 - Зависимости: Create — обязательная (`neoforge.mods.toml`, версии Create, Ponder, Flywheel, Registrate — в
   `gradle.properties`); e4steam (игра через Steam) — только для запуска из среды разработки, jar берётся из релизов
   GitHub (`e4steam_version` — тег без «v»).
+  MezzConfig GUI (экран настроек JEI; `mezz_config_gui_version`, `mezz_config_version`) — тоже только для запуска из среды
+  разработки. Сборка GitHub Actions выполняет `checkDevRuntime`: он проверяет, что все эти зависимости скачиваются.
 - JEI: собственную кнопку-шестерёнку JEI убирает миксин `mixin/JeiIconButtonMixin.java` (`trailcraft.mixins.json`,
   применяется, только если JEI есть и устроен так же, иначе пропускается). Её функции — в кнопке JEI слева сверху
   в инвентаре (`client/gui/CornerButtons.java`): клик — настройки (или сообщение в чат с папкой конфигурации,

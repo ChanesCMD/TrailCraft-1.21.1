@@ -190,6 +190,10 @@ dependencies {
     compileOnly("dev.engine-room.flywheel:flywheel-neoforge-api-${minecraft_version}:${flywheel_version}")
     runtimeOnly("dev.engine-room.flywheel:flywheel-neoforge-${minecraft_version}:${flywheel_version}")
     implementation("com.tterrag.registrate:Registrate:${registrate_version}")
+    // MezzConfig GUI: экран настроек JEI (и других модов на MezzConfig); только для запуска из среды разработки.
+    // MezzConfig нужен ему во время работы; версии те же, что у JEI для 1.21.1
+    localRuntime "net.mezzdev.config:mezz_config_gui-${minecraft_version}-neoforge:mc${minecraft_version}-${mezz_config_gui_version}"
+    localRuntime "net.mezzdev.config:mezz_config-${minecraft_version}-neoforge:${mezz_config_version}"
     // e4steam: только для запуска из среды разработки (у игроков необязателен)
     localRuntime "e4steam:e4steam-neoforge-mc1.20.2-26.3:${e4steam_version}"
     // Голосовой чат: API для компиляции, сам мод — для запуска из среды разработки (у игроков он необязателен)
@@ -210,6 +214,13 @@ dependencies {
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+}
+
+// Проверка, что всё для запуска из среды разработки скачивается (play.bat): иначе ошибка всплывёт только на ПК автора
+tasks.register('checkDevRuntime') {
+    description = 'Resolves the dev run classpath, fails if a dev-only dependency cannot be downloaded'
+    inputs.files(configurations.runtimeClasspath)
+    doLast {}
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
