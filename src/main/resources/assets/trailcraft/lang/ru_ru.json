@@ -582,6 +582,7 @@
   "gui.trailcraft.map.settings.date.date": "только дата",
   "gui.trailcraft.map.settings.date.time": "только время",
   "gui.trailcraft.map.settings.date.off": "скрыта",
+  "gui.trailcraft.map.settings.zoom": "Масштаб",
   "gui.trailcraft.map.close": "Закрыть",
   "gui.trailcraft.map.hint": "Колесо — масштаб, перетаскивание — сдвиг, ПКМ — к себе",
   "key.trailcraft.map": "Карта",

@@ -108,6 +108,8 @@ neoForge {
             client()
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+            // play.bat по этому файлу находит и закрывает уже запущенную копию игры (см. client/DevInstance.java)
+            systemProperty 'trailcraft.pidFile', file('run/trailcraft-game.pid').getAbsolutePath()
         }
 
         server {

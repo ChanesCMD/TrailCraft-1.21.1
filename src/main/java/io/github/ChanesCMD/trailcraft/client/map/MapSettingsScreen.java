@@ -3,6 +3,7 @@ package io.github.ChanesCMD.trailcraft.client.map;
 import io.github.ChanesCMD.trailcraft.client.ClientConfig;
 import io.github.ChanesCMD.trailcraft.client.ClientConfig.Corner;
 import io.github.ChanesCMD.trailcraft.client.ClientConfig.DateMode;
+import io.github.ChanesCMD.trailcraft.client.ClientConfig.Zoom;
 import io.github.ChanesCMD.trailcraft.client.gui.UiDraw;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSliderButton;
@@ -16,13 +17,13 @@ import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
 
 /**
- * Настройки карты (шестерёнка на полноэкранной карте): миникарта — вкл/выкл, угол экрана, размер, непрозрачность,
+ * Настройки карты (шестерёнка на полноэкранной карте): миникарта — вкл/выкл, угол экрана, размер, масштаб, непрозрачность,
  * поворот по взгляду, биом, координаты и что показывать из календаря (дата, время). Миникарта в углу экрана за окном меняется сразу.
  * Значения лежат в ClientConfig и сохраняются при закрытии окна.
  */
 public class MapSettingsScreen extends Screen {
     private static final int COLUMN_W = 130, GAP = 6, PAD = 10, HEAD = 26, ROW = 24;
-    private static final int PANEL_W = 2 * COLUMN_W + GAP + 2 * PAD, PANEL_H = HEAD + 5 * ROW + 4;
+    private static final int PANEL_W = 2 * COLUMN_W + GAP + 2 * PAD, PANEL_H = HEAD + 6 * ROW + 4;
 
     private final Screen parent;
 
@@ -54,24 +55,30 @@ public class MapSettingsScreen extends Screen {
         y += ROW;
         addRenderableWidget(new IntSlider(left, y, COLUMN_W, ClientConfig.MINIMAP_MIN, ClientConfig.MINIMAP_MAX,
                 "gui.trailcraft.map.settings.size", ClientConfig::minimapSize, ClientConfig::setMinimapSize));
-        addRenderableWidget(new IntSlider(right, y, COLUMN_W, 20, 100, "gui.trailcraft.map.settings.opacity",
+        addRenderableWidget(CycleButton.<Zoom>builder(zoom -> Component.literal(zoom.label))
+                .withValues(Zoom.values()).withInitialValue(ClientConfig.minimapZoom())
+                .create(right, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.zoom"),
+                        (button, value) -> ClientConfig.MINIMAP_ZOOM.set(value)));
+
+        y += ROW;
+        addRenderableWidget(new IntSlider(left, y, COLUMN_W, 20, 100, "gui.trailcraft.map.settings.opacity",
                 () -> Math.round(ClientConfig.minimapOpacity() * 100), ClientConfig.MINIMAP_OPACITY::set));
-
-        y += ROW;
         addRenderableWidget(CycleButton.onOffBuilder(ClientConfig.minimapRotate())
-                .create(left, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.rotate"),
+                .create(right, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.rotate"),
                         (button, value) -> ClientConfig.MINIMAP_ROTATE.set(value)));
-        addRenderableWidget(CycleButton.onOffBuilder(ClientConfig.minimapBiome())
-                .create(right, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.biome"),
-                        (button, value) -> ClientConfig.MINIMAP_BIOME.set(value)));
 
         y += ROW;
+        addRenderableWidget(CycleButton.onOffBuilder(ClientConfig.minimapBiome())
+                .create(left, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.biome"),
+                        (button, value) -> ClientConfig.MINIMAP_BIOME.set(value)));
         addRenderableWidget(CycleButton.onOffBuilder(ClientConfig.minimapCoords())
-                .create(left, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.coords"),
+                .create(right, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.coords"),
                         (button, value) -> ClientConfig.MINIMAP_COORDS.set(value)));
+
+        y += ROW;
         addRenderableWidget(CycleButton.<DateMode>builder(mode -> Component.translatable("gui.trailcraft.map.settings.date." + mode.name().toLowerCase(Locale.ROOT)))
                 .withValues(DateMode.values()).withInitialValue(ClientConfig.dateMode())
-                .create(right, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.date"),
+                .create(left, y, 2 * COLUMN_W + GAP, 20, Component.translatable("gui.trailcraft.map.settings.date"),
                         (button, value) -> ClientConfig.DATE_MODE.set(value)));
 
         y += ROW;

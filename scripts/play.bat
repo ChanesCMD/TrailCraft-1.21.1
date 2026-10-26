@@ -14,6 +14,9 @@ if errorlevel 1 (
     if errorlevel 1 echo Update failed ^(no network or the branches diverged^): starting the local version.
 )
 
+rem A second copy of the game in the same run folder would crash: close the one started earlier first.
+if exist "run\trailcraft-game.pid" powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0stop-game.ps1" -PidFile "%CD%\run\trailcraft-game.pid"
+
 echo Starting the game...
 call .\gradlew.bat runClient
 if errorlevel 1 goto :fail

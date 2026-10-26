@@ -46,6 +46,22 @@ public final class ClientConfig {
         }
     }
 
+    /** Масштаб миникарты: пикселей интерфейса на блок. 0,5 — видно вдвое дальше по каждой стороне, 2 — крупнее. */
+    public enum Zoom {
+        HALF(0.5f, "0.5x"), ONE(1f, "1x"), TWO(2f, "2x");
+
+        public final float scale;
+        public final String label;
+
+        Zoom(float scale, String label) {
+            this.scale = scale;
+            this.label = label;
+        }
+    }
+
+    public static final ModConfigSpec.EnumValue<Zoom> MINIMAP_ZOOM = BUILDER
+            .comment("Minimap zoom: HALF (0.5 pixel per block), ONE or TWO.")
+            .defineEnum("minimapZoom", Zoom.ONE);
     public static final ModConfigSpec.EnumValue<DateMode> DATE_MODE = BUILDER
             .comment("What to show from the calendar: FULL (date and time), DATE, TIME or OFF.")
             .defineEnum("dateMode", DateMode.FULL);
@@ -76,6 +92,10 @@ public final class ClientConfig {
 
     public static void setMinimapSize(int size) {
         MINIMAP_SIZE.set(Math.max(MINIMAP_MIN, Math.min(MINIMAP_MAX, size)));
+    }
+
+    public static Zoom minimapZoom() {
+        return SPEC.isLoaded() ? MINIMAP_ZOOM.get() : Zoom.ONE;
     }
 
     public static DateMode dateMode() {
@@ -111,6 +131,7 @@ public final class ClientConfig {
     public static void resetMinimap() {
         MINIMAP_SIZE.set(MINIMAP_DEFAULT);
         DATE_MODE.set(DATE_MODE.getDefault());
+        MINIMAP_ZOOM.set(MINIMAP_ZOOM.getDefault());
         MINIMAP_ENABLED.set(MINIMAP_ENABLED.getDefault());
         MINIMAP_CORNER.set(MINIMAP_CORNER.getDefault());
         MINIMAP_ROTATE.set(MINIMAP_ROTATE.getDefault());

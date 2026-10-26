@@ -582,6 +582,7 @@
   "gui.trailcraft.map.settings.date.date": "date only",
   "gui.trailcraft.map.settings.date.time": "time only",
   "gui.trailcraft.map.settings.date.off": "hidden",
+  "gui.trailcraft.map.settings.zoom": "Zoom",
   "gui.trailcraft.map.close": "Close",
   "gui.trailcraft.map.hint": "Wheel — zoom, drag — move, RMB — back to you",
   "key.trailcraft.map": "Map",

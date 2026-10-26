@@ -8,7 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Миникарта (ТЗ, раздел 4; размер — в настройках карты, по умолчанию 66×66): блоки вокруг игрока, по пикселю на блок, север сверху (или по взгляду игрока, если включён поворот), из памяти атласа (MapCache, MapTiles).
+ * Миникарта (ТЗ, раздел 4; размер — в настройках карты, по умолчанию 66×66): блоки вокруг игрока (масштаб 0,5, 1 или 2 пикселя на блок — в настройках), север сверху (или по взгляду игрока, если включён поворот), из памяти атласа (MapCache, MapTiles).
  * Карта плавно едет за игроком (позиция с учётом доли тика), игрок всегда в середине — маленькая белая стрелка
  * в 8 направлениях.
  */
@@ -33,7 +33,7 @@ public final class Minimap {
         g.fill(x + 1, y + 1, x + size, y + size, withAlpha(0xFFFFFFFF, alpha));
         g.fill(x + 1, y + 1, x + size - 1, y + size - 1, withAlpha(0xFF000000, alpha));
         float rotation = rotate ? 180 - yaw : 0;
-        MapTiles.draw(g, player.level().dimension().location(), x + 1, y + 1, map, map, pos.x, pos.z, 1, rotation, alpha);
+        MapTiles.draw(g, player.level().dimension().location(), x + 1, y + 1, map, map, pos.x, pos.z, ClientConfig.minimapZoom().scale, rotation, alpha);
         int cx = x + 1 + map / 2, cy = y + 1 + map / 2;
         if (rotate) {
             playerMarker(g, cx, cy, 180);
