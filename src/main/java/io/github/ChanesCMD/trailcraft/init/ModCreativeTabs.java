@@ -121,6 +121,7 @@ public class ModCreativeTabs {
                         output.accept(ModItems.STICK_BRANCH);
                         output.accept(ModItems.STICK_PROCESSED);
                         output.accept(ModItems.FIRESTARTER);
+                        output.accept(ModItems.STONE_HAMMER);
 
                         // Инструменты и предметы (ModTools)
                         for (var item : ModTools.ITEMS) {

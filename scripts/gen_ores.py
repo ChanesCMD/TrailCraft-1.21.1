@@ -79,7 +79,10 @@ OTHER_ITEMS = [
     ("bismuth_bronze_mix", "Шихта висмутовой бронзы", "Bismuth Bronze Mix"),
     ("charcoal", "Древесный уголь", "Charcoal"),
     ("firestarter", "Огниво", "Firestarter"),
+    ("stone_hammer", "Каменный молоток", "Stone Hammer"),
 ]
+# Твёрдые камешки — из них молоток
+HARD_PEBBLES = [f"{NS}:{r}_pebble" for r in ["andesite", "basalt", "diorite", "gabbro", "granite", "gray_granite"]]
 GRAVELS = [f"{NS}:{r}_gravel" for r in ["andesite", "basalt", "chalk", "diorite", "dolomite", "gabbro", "granite",
                                          "gray_granite", "limestone", "marble", "sandstone", "shale"]]
 WOODS = ["oak", "birch", "acacia", "sakura", "eucalyptus", "chestnut", "thuja", "pine", "fir", "spruce", "white_poplar",
@@ -130,9 +133,13 @@ def tag(kind, tag_id, add=(), remove=()):
     write(rel, data)
 
 
+# Инструменты держатся в руке как ванильные
+HANDHELD = {"stone_hammer"}
+
+
 def item_model(item_id):
-    write(f"assets/{NS}/models/item/{item_id}.json",
-          {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/{item_id}"}})
+    parent = "minecraft:item/handheld" if item_id in HANDHELD else "minecraft:item/generated"
+    write(f"assets/{NS}/models/item/{item_id}.json", {"parent": parent, "textures": {"layer0": f"{NS}:item/{item_id}"}})
 
 
 def ore_models():
@@ -230,6 +237,7 @@ def tags():
     write("data/c/tags/item/ingots/zinc.json", data)
     tag("item", "minecraft:coals", add=[f"{NS}:bituminous_coal", f"{NS}:charcoal"])
     tag("item", f"{NS}:thin_logs", add=[f"{NS}:thin_{w}_log" for w in WOODS])
+    tag("item", f"{NS}:hard_pebbles", add=HARD_PEBBLES)
 
 
 def recipes():
@@ -242,15 +250,23 @@ def recipes():
         "type": "minecraft:campfire_cooking", "category": "misc", "cookingtime": 600, "experience": 0.15,
         "ingredient": {"tag": f"{NS}:thin_logs"}, "result": {"id": f"{NS}:charcoal", "count": 1},
     })
+    # Шихта бронз: куски руды, раздробленные молотком (молоток остаётся, теряет прочность — HammerItem)
+    hammer = {"item": f"{NS}:stone_hammer"}
     write(f"data/{NS}/recipe/tin_bronze_mix.json", {
         "type": "minecraft:crafting_shapeless", "category": "misc",
-        "ingredients": [{"item": "minecraft:copper_ingot"}] * 3 + [{"item": f"{NS}:tin_ingot"}],
+        "ingredients": [{"tag": "c:raw_materials/copper"}] * 3 + [{"tag": "c:raw_materials/tin"}, hammer],
         "result": {"id": f"{NS}:tin_bronze_mix", "count": 4},
     })
     write(f"data/{NS}/recipe/bismuth_bronze_mix.json", {
         "type": "minecraft:crafting_shapeless", "category": "misc",
-        "ingredients": [{"item": "minecraft:copper_ingot"}] * 2 + [{"item": f"{NS}:bismuth_ingot"}, {"tag": "c:ingots/zinc"}],
+        "ingredients": [{"tag": "c:raw_materials/copper"}] * 2
+                       + [{"tag": "c:raw_materials/bismuth"}, {"tag": "c:raw_materials/zinc"}, hammer],
         "result": {"id": f"{NS}:bismuth_bronze_mix", "count": 4},
+    })
+    write(f"data/{NS}/recipe/stone_hammer.json", {
+        "type": "minecraft:crafting_shaped", "category": "equipment",
+        "key": {"P": {"tag": f"{NS}:hard_pebbles"}, "S": {"item": f"{NS}:stick_processed"}}, "pattern": ["P", "S"],
+        "result": {"id": f"{NS}:stone_hammer", "count": 1},
     })
     write(f"data/{NS}/recipe/firestarter.json", {
         "type": "minecraft:crafting_shaped", "category": "equipment",

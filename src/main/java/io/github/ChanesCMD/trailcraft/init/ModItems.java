@@ -11,6 +11,7 @@ import io.github.ChanesCMD.trailcraft.item.FlaskItem;
 import io.github.ChanesCMD.trailcraft.item.WalletItem;
 import io.github.ChanesCMD.trailcraft.item.BranchStickItem;
 import io.github.ChanesCMD.trailcraft.item.FirestarterItem;
+import io.github.ChanesCMD.trailcraft.item.HammerItem;
 import io.github.ChanesCMD.trailcraft.item.TurfCutterItem;
 import net.neoforged.neoforge.registries.DeferredItem;
 import java.util.ArrayList;
@@ -119,6 +120,9 @@ public class ModItems {
     /** Огниво: разжигает костёр из выброшенных тонкого бревна и 4 веток (FirestarterItem). */
     public static final DeferredItem<FirestarterItem> FIRESTARTER = ITEMS.registerItem("firestarter",
             props -> new FirestarterItem(props.durability(FirestarterItem.DURABILITY)));
+    /** Каменный молоток: твёрдый камешек на обработанной палке, дробит куски руды в шихту бронз (HammerItem). */
+    public static final DeferredItem<HammerItem> STONE_HAMMER = ITEMS.registerItem("stone_hammer",
+            props -> new HammerItem(props.durability(HammerItem.DURABILITY)));
 
     // === ПЕНЬ ДЛЯ РУБКИ ===
     public static final DeferredItem<BlockItem> CHOPPING_STUMP = ITEMS.registerSimpleBlockItem("chopping_stump", ModBlocks.CHOPPING_STUMP);

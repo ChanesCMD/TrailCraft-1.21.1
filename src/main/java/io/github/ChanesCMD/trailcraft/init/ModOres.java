@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Руды (список — {@link Ore}), то, что с них падает, слитки, шихта бронз и древесный уголь.
  * Медь, железо, золото — ванильные слитки, цинк — слиток Create (create:zinc_ingot).
- * Плавятся на костре (рецепты campfire_cooking), шихта бронз смешивается на верстаке.
+ * Плавятся на костре (рецепты campfire_cooking), шихта бронз дробится из кусков руды молотком на верстаке.
  */
 public final class ModOres {
     public static final Map<Ore, DeferredBlock<OreBlock>> BLOCKS = new EnumMap<>(Ore.class);
@@ -38,7 +38,7 @@ public final class ModOres {
     public static final List<DeferredItem<Item>> INGOTS = List.of(TIN_INGOT, LEAD_INGOT, BISMUTH_INGOT, NICKEL_INGOT,
             LITHIUM_INGOT, ALUMINUM_INGOT, TIN_BRONZE_INGOT, BISMUTH_BRONZE_INGOT);
 
-    // === ШИХТА БРОНЗ: смешивается из слитков на верстаке, плавится на костре в слиток бронзы ===
+    // === ШИХТА БРОНЗ: дробится молотком из кусков руды на верстаке, плавится на костре в слиток бронзы ===
     public static final DeferredItem<Item> TIN_BRONZE_MIX = ModItems.ITEMS.registerSimpleItem("tin_bronze_mix");
     public static final DeferredItem<Item> BISMUTH_BRONZE_MIX = ModItems.ITEMS.registerSimpleItem("bismuth_bronze_mix");
 

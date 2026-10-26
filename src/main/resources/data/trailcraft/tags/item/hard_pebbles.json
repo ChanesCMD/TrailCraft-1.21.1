@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:andesite_pebble",
+    "trailcraft:basalt_pebble",
+    "trailcraft:diorite_pebble",
+    "trailcraft:gabbro_pebble",
+    "trailcraft:granite_pebble",
+    "trailcraft:gray_granite_pebble"
+  ]
+}
