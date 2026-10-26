@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:random_selector",
+  "config": {
+    "features": [],
+    "default": "trailcraft:eucalyptus_wild_checked"
+  }
+}

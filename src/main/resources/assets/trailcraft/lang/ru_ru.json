@@ -752,5 +752,18 @@
   "biome.trailcraft.burozem_forest": "Широколиственный лес",
   "biome.trailcraft.burozem_taiga": "Тайга",
   "biome.trailcraft.chernozem_forest_steppe": "Лесостепь",
-  "biome.trailcraft.zheltozem_forest": "Субтропический лес"
+  "block.trailcraft.red_maple_leaves": "Листва красного клёна",
+  "block.trailcraft.red_maple_sapling": "Саженец красного клёна",
+  "biome.trailcraft.pine_forest": "Сосновый бор",
+  "biome.trailcraft.maple_forest": "Кленовый лес",
+  "biome.trailcraft.alder_forest": "Ольшаник",
+  "biome.trailcraft.thuja_forest": "Туевый лес",
+  "biome.trailcraft.walnut_grove": "Ореховая роща",
+  "biome.trailcraft.sakura_grove": "Сакуровая роща",
+  "biome.trailcraft.lilac_grove": "Сиреневая роща",
+  "biome.trailcraft.ironwood_forest": "Лес железного дерева",
+  "biome.trailcraft.acacia_grove": "Акациевая роща",
+  "biome.trailcraft.eucalyptus_forest": "Эвкалиптовый лес",
+  "biome.trailcraft.palm_grove": "Пальмовая роща",
+  "biome.trailcraft.ebony_forest": "Эбеновый лес"
 }

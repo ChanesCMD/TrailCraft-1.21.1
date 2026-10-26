@@ -1,0 +1,11 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "trailcraft:acacia_grove"
+  ],
+  "features": [
+    "trailcraft:wild_carrot_patch",
+    "trailcraft:wild_jute_patch"
+  ],
+  "step": "vegetal_decoration"
+}

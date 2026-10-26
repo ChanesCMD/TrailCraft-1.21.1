@@ -54,9 +54,10 @@ public class ChoppingStumpBlock extends Block {
     private static ModWood.WoodSet woodOf(Block block) {
         if (logToSet == null) {
             logToSet = new HashMap<>();
+            // putIfAbsent: у вариантов листвы (красный клён) брёвна чужие — бревно остаётся за своим видом
             for (ModWood.WoodSet set : ModWood.SETS) {
-                logToSet.put(set.log.get(), set);
-                logToSet.put(set.strippedLog.get(), set);
+                logToSet.putIfAbsent(set.log.get(), set);
+                logToSet.putIfAbsent(set.strippedLog.get(), set);
             }
         }
         return logToSet.get(block);

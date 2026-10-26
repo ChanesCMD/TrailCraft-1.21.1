@@ -40,16 +40,28 @@ BERRIES = [
 ]
 
 # Где растут дикие растения: биом -> что в нём растёт (леса — scripts/gen_forests.py). TODO: уточнить биомы.
-# Смородина и крыжовник — умеренные равнины и леса, морошка — самая прохладная полоса (бурозём, тайга),
-# ежевика — тёплые и умеренные леса и опушки, картофель — умеренные, морковь — равнины, джут — тёплая и влажная (жёлтозём).
+# Смородина и крыжовник — умеренные равнины и леса (смородина — и в сырых), морошка — самая прохладная полоса,
+# ежевика — тёплые и умеренные леса и опушки, картофель — умеренные равнины, морковь — равнины и светлые рощи,
+# джут — жаркие и влажные места (жёлтозём).
 WILD_BY_BIOME = {
     "burozem_plains": ["currant_bush", "cloudberry_bush", "gooseberry_bush", "blackberry_bush", "wild_carrot", "wild_potato"],
+    "burozem_taiga": ["currant_bush", "cloudberry_bush"],
+    "pine_forest": ["currant_bush", "cloudberry_bush"],
     "burozem_forest": ["currant_bush", "gooseberry_bush", "blackberry_bush"],
-    "burozem_taiga": ["cloudberry_bush", "currant_bush"],
+    "maple_forest": ["currant_bush", "gooseberry_bush", "blackberry_bush"],
+    "alder_forest": ["currant_bush", "blackberry_bush"],
+    "thuja_forest": ["currant_bush"],
     "chernozem_plains": ["currant_bush", "gooseberry_bush", "wild_carrot", "wild_potato"],
     "chernozem_forest_steppe": ["currant_bush", "gooseberry_bush", "blackberry_bush", "wild_carrot"],
+    "walnut_grove": ["gooseberry_bush", "blackberry_bush", "wild_carrot"],
     "zheltozem_plains": ["blackberry_bush", "wild_carrot", "wild_jute"],
-    "zheltozem_forest": ["blackberry_bush"],
+    "sakura_grove": ["blackberry_bush", "wild_carrot"],
+    "lilac_grove": ["blackberry_bush", "wild_carrot"],
+    "ironwood_forest": ["blackberry_bush"],
+    "acacia_grove": ["wild_carrot", "wild_jute"],
+    "eucalyptus_forest": ["wild_jute"],
+    "palm_grove": ["wild_jute"],
+    "ebony_forest": ["wild_jute"],
 }
 # Пятно: растение, попыток (столько растений максимум), разброс, раз в сколько чанков
 PATCHES = {

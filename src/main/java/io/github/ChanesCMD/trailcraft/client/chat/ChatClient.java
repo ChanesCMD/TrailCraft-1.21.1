@@ -7,9 +7,11 @@ import io.github.ChanesCMD.trailcraft.client.ClientConfig;
 import io.github.ChanesCMD.trailcraft.voice.CommDevices;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.network.chat.Component;
@@ -134,12 +136,40 @@ public final class ChatClient {
         }
     }
 
+    /**
+     * Кнопка над чатом, которая не забирает фокус у поля ввода. Иначе стрелка вверх (история команд) переводила фокус
+     * на вкладку над полем, а клик по вкладке — на саму вкладку, и набранный текст уже не стирался и не дописывался.
+     */
+    private abstract static class ChatButton extends AbstractWidget {
+        ChatButton(int x, int y, int width, Component message) {
+            super(x, y, width, TAB_H, message);
+        }
+
+        /** Стрелки и Tab обходят кнопку. */
+        @Override
+        public ComponentPath nextFocusPath(FocusNavigationEvent event) {
+            return null;
+        }
+
+        /** Клик срабатывает, но экран не делает кнопку фокусом (для этого нужен ответ true). */
+        @Override
+        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            super.mouseClicked(mouseX, mouseY, button);
+            return false;
+        }
+
+        @Override
+        protected void updateWidgetNarration(NarrationElementOutput output) {
+            defaultButtonNarrationText(output);
+        }
+    }
+
     /** Вкладка канала: тёмная, активная — светлее. */
-    private static class Tab extends AbstractWidget {
+    private static class Tab extends ChatButton {
         private final String channel;
 
         Tab(int x, int y, int width, String channel) {
-            super(x, y, width, TAB_H, Component.literal(channel));
+            super(x, y, width, Component.literal(channel));
             this.channel = channel;
         }
 
@@ -156,19 +186,14 @@ public final class ChatClient {
         public void onClick(double mouseX, double mouseY) {
             activeChannel = channel;
         }
-
-        @Override
-        protected void updateWidgetNarration(NarrationElementOutput output) {
-            defaultButtonNarrationText(output);
-        }
     }
 
     /** Шестерёнка 13×13: открывает настройки чатов. */
-    private static class Gear extends AbstractWidget {
+    private static class Gear extends ChatButton {
         private final ChatScreen parent;
 
         Gear(int x, int y, ChatScreen parent) {
-            super(x, y, TAB_H, TAB_H, Component.translatable("gui.trailcraft.chat.settings"));
+            super(x, y, TAB_H, Component.translatable("gui.trailcraft.chat.settings"));
             this.parent = parent;
         }
 
@@ -186,11 +211,6 @@ public final class ChatClient {
         @Override
         public void onClick(double mouseX, double mouseY) {
             Minecraft.getInstance().setScreen(new ChatSettingsScreen(parent));
-        }
-
-        @Override
-        protected void updateWidgetNarration(NarrationElementOutput output) {
-            defaultButtonNarrationText(output);
         }
     }
 

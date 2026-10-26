@@ -36,7 +36,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-/** 23 вида деревьев: по 16 блоков на вид (бревно, тонкое бревно, древесина, обтёсанные, листва, саженец, доски, ступени, плита, забор, калитка, дверь, люк, кнопка, нажимная плита). */
+/**
+ * 23 вида деревьев: по 16 блоков на вид (бревно, тонкое бревно, древесина, обтёсанные, листва, саженец, доски, ступени, плита, забор, калитка, дверь, люк, кнопка, нажимная плита).
+ * Плюс красный клён: только своя листва и саженец, древесина — клёна (addLeafVariant).
+ */
 public final class ModWood {
     public static final class WoodSet {
         public final String id;
@@ -68,6 +71,7 @@ public final class ModWood {
         add("white_poplar", MapColor.SAND, MapColor.TERRACOTTA_WHITE);
         add("ebony", MapColor.COLOR_BLACK, MapColor.COLOR_BLACK);
         add("maple", MapColor.COLOR_ORANGE, MapColor.COLOR_BROWN);
+        addLeafVariant("red_maple", "maple");
         add("cedar", MapColor.TERRACOTTA_RED, MapColor.TERRACOTTA_ORANGE);
         add("willow", MapColor.COLOR_YELLOW, MapColor.COLOR_GRAY);
         add("lilac", MapColor.COLOR_PURPLE, MapColor.COLOR_BROWN);
@@ -101,14 +105,8 @@ public final class ModWood {
         s.thinLog = reg("thin_" + id + "_log", ThinLogBlock::new, wood(barkColor, 2.0f, 2.0f).noOcclusion().requiresCorrectToolForDrops());
         s.wood = reg(id + "_wood", p -> new StrippableLogBlock(() -> s.strippedWood.get(), p), wood(barkColor, LOG_HARDNESS, 2.0f).requiresCorrectToolForDrops());
 
-        s.leaves = reg(id + "_leaves", LeavesBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).strength(0.2f).randomTicks()
-                .sound(SoundType.GRASS).noOcclusion().isValidSpawn((st, lv, pos, e) -> false).isSuffocating((st, lv, pos) -> false)
-                .isViewBlocking((st, lv, pos) -> false).ignitedByLava().pushReaction(PushReaction.DESTROY));
-
-        ResourceKey<ConfiguredFeature<?, ?>> treeKey = ResourceKey.create(Registries.CONFIGURED_FEATURE, ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, id + "_tree"));
-        TreeGrower grower = new TreeGrower(TrailCraft.MODID + ":" + id, Optional.empty(), Optional.of(treeKey), Optional.empty());
-        s.sapling = reg(id + "_sapling", p -> new SaplingBlock(grower, p), BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollission()
-                .randomTicks().instabreak().sound(SoundType.GRASS).pushReaction(PushReaction.DESTROY));
+        s.leaves = leaves(id);
+        s.sapling = sapling(id);
 
         s.planks = ModBlocks.BLOCKS.registerSimpleBlock(id + "_planks", wood(planksColor, 2.0f, 3.0f));
         s.stairs = reg(id + "_stairs", p -> new StairBlock(s.planks.get().defaultBlockState(), p), wood(planksColor, 2.0f, 3.0f));
@@ -129,6 +127,37 @@ public final class ModWood {
         s.items.add(ModItems.ITEMS.registerItem(id + "_door", p -> new DoubleHighBlockItem(s.door.get(), p)));
         item(s, id + "_trapdoor", s.trapdoor); item(s, id + "_button", s.button); item(s, id + "_pressure_plate", s.plate);
         SETS.add(s);
+    }
+
+    /**
+     * Вид, у которого своя только листва и саженец, а брёвна, доски и всё остальное — от вида baseId.
+     * Его деревья (configured_feature <id>_tree) растут из своего саженца, ствол — из брёвен baseId.
+     */
+    private static void addLeafVariant(String id, String baseId) {
+        WoodSet base = SETS.stream().filter(b -> b.id.equals(baseId)).findFirst().orElseThrow();
+        WoodSet s = new WoodSet(id);
+        s.log = base.log; s.thinLog = base.thinLog; s.strippedLog = base.strippedLog; s.wood = base.wood;
+        s.strippedWood = base.strippedWood; s.planks = base.planks; s.stairs = base.stairs; s.slab = base.slab;
+        s.fence = base.fence; s.gate = base.gate; s.door = base.door; s.trapdoor = base.trapdoor;
+        s.button = base.button; s.plate = base.plate;
+        s.leaves = leaves(id);
+        s.sapling = sapling(id);
+        item(s, id + "_leaves", s.leaves); item(s, id + "_sapling", s.sapling);
+        SETS.add(s);
+    }
+
+    private static DeferredBlock<Block> leaves(String id) {
+        return reg(id + "_leaves", LeavesBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).strength(0.2f).randomTicks()
+                .sound(SoundType.GRASS).noOcclusion().isValidSpawn((st, lv, pos, e) -> false).isSuffocating((st, lv, pos) -> false)
+                .isViewBlocking((st, lv, pos) -> false).ignitedByLava().pushReaction(PushReaction.DESTROY));
+    }
+
+    /** Саженец растит дерево configured_feature trailcraft:<id>_tree. */
+    private static DeferredBlock<Block> sapling(String id) {
+        ResourceKey<ConfiguredFeature<?, ?>> treeKey = ResourceKey.create(Registries.CONFIGURED_FEATURE, ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, id + "_tree"));
+        TreeGrower grower = new TreeGrower(TrailCraft.MODID + ":" + id, Optional.empty(), Optional.of(treeKey), Optional.empty());
+        return reg(id + "_sapling", p -> new SaplingBlock(grower, p), BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollission()
+                .randomTicks().instabreak().sound(SoundType.GRASS).pushReaction(PushReaction.DESTROY));
     }
 
     private static void item(WoodSet s, String name, DeferredBlock<Block> block) {

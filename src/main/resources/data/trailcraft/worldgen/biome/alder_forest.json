@@ -1,13 +1,13 @@
 {
-  "temperature": 0.9,
+  "temperature": 0.55,
   "downfall": 0.9,
   "has_precipitation": true,
   "effects": {
-    "sky_color": 7254527,
+    "sky_color": 7907327,
     "fog_color": 12638463,
     "water_color": 4159204,
     "water_fog_color": 329011,
-    "grass_color": 10335824
+    "grass_color": 6265429
   },
   "carvers": {
     "air": [
@@ -29,7 +29,7 @@
     [],
     [],
     [
-      "trailcraft:zheltozem_forest_trees",
+      "trailcraft:alder_forest_trees",
       "trailcraft:forest_grass_patch",
       "trailcraft:forest_loose_pebbles",
       "trailcraft:forest_fallen_branches"

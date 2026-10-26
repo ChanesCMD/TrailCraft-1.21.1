@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "trailcraft:thuja_forest"
+  ],
+  "features": [
+    "trailcraft:currant_bush_patch"
+  ],
+  "step": "vegetal_decoration"
+}

@@ -1,0 +1,12 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "trailcraft:maple_forest"
+  ],
+  "features": [
+    "trailcraft:currant_bush_patch",
+    "trailcraft:gooseberry_bush_patch",
+    "trailcraft:blackberry_bush_patch"
+  ],
+  "step": "vegetal_decoration"
+}

@@ -1,0 +1,12 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "trailcraft:walnut_grove"
+  ],
+  "features": [
+    "trailcraft:gooseberry_bush_patch",
+    "trailcraft:blackberry_bush_patch",
+    "trailcraft:wild_carrot_patch"
+  ],
+  "step": "vegetal_decoration"
+}

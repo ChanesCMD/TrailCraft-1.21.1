@@ -202,11 +202,38 @@
               "parameters": {
                 "temperature": [
                   -2.0,
-                  -0.24
+                  -0.55
                 ],
                 "humidity": [
                   -2.0,
-                  0.0
+                  -0.2
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -2.0,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:pine_forest",
+              "parameters": {
+                "temperature": [
+                  -2.0,
+                  -0.55
+                ],
+                "humidity": [
+                  -0.2,
+                  0.05
                 ],
                 "continentalness": [
                   -0.15,
@@ -232,8 +259,35 @@
                   -0.55
                 ],
                 "humidity": [
-                  0.0,
+                  0.05,
                   2.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -2.0,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:burozem_plains",
+              "parameters": {
+                "temperature": [
+                  -0.55,
+                  -0.24
+                ],
+                "humidity": [
+                  -2.0,
+                  -0.1
                 ],
                 "continentalness": [
                   -0.15,
@@ -259,7 +313,61 @@
                   -0.24
                 ],
                 "humidity": [
-                  0.0,
+                  -0.1,
+                  0.2
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -2.0,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:maple_forest",
+              "parameters": {
+                "temperature": [
+                  -0.55,
+                  -0.24
+                ],
+                "humidity": [
+                  0.2,
+                  0.45
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -2.0,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:alder_forest",
+              "parameters": {
+                "temperature": [
+                  -0.55,
+                  -0.24
+                ],
+                "humidity": [
+                  0.45,
                   2.0
                 ],
                 "continentalness": [
@@ -314,6 +422,33 @@
                 ],
                 "humidity": [
                   0.15,
+                  0.4
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -2.0,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:walnut_grove",
+              "parameters": {
+                "temperature": [
+                  -0.24,
+                  0.02
+                ],
+                "humidity": [
+                  0.4,
                   2.0
                 ],
                 "continentalness": [
@@ -360,14 +495,149 @@
               }
             },
             {
-              "biome": "trailcraft:zheltozem_forest",
+              "biome": "trailcraft:sakura_grove",
               "parameters": {
                 "temperature": [
                   0.02,
+                  0.25
+                ],
+                "humidity": [
+                  0.2,
+                  0.45
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -2.0,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:ironwood_forest",
+              "parameters": {
+                "temperature": [
+                  0.02,
+                  0.25
+                ],
+                "humidity": [
+                  0.45,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -2.0,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:acacia_grove",
+              "parameters": {
+                "temperature": [
+                  0.25,
+                  0.5
+                ],
+                "humidity": [
+                  0.2,
+                  0.45
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -2.0,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:eucalyptus_forest",
+              "parameters": {
+                "temperature": [
+                  0.25,
+                  0.5
+                ],
+                "humidity": [
+                  0.45,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -2.0,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:palm_grove",
+              "parameters": {
+                "temperature": [
+                  0.5,
                   2.0
                 ],
                 "humidity": [
                   0.2,
+                  0.45
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -2.0,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:ebony_forest",
+              "parameters": {
+                "temperature": [
+                  0.5,
+                  2.0
+                ],
+                "humidity": [
+                  0.45,
                   2.0
                 ],
                 "continentalness": [
@@ -661,11 +931,38 @@
               "parameters": {
                 "temperature": [
                   -2.0,
-                  -0.24
+                  -0.55
                 ],
                 "humidity": [
                   -2.0,
-                  0.0
+                  -0.2
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:pine_forest",
+              "parameters": {
+                "temperature": [
+                  -2.0,
+                  -0.55
+                ],
+                "humidity": [
+                  -0.2,
+                  0.05
                 ],
                 "continentalness": [
                   -0.15,
@@ -691,8 +988,35 @@
                   -0.55
                 ],
                 "humidity": [
-                  0.0,
+                  0.05,
                   2.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:burozem_plains",
+              "parameters": {
+                "temperature": [
+                  -0.55,
+                  -0.24
+                ],
+                "humidity": [
+                  -2.0,
+                  -0.1
                 ],
                 "continentalness": [
                   -0.15,
@@ -718,7 +1042,61 @@
                   -0.24
                 ],
                 "humidity": [
-                  0.0,
+                  -0.1,
+                  0.2
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:maple_forest",
+              "parameters": {
+                "temperature": [
+                  -0.55,
+                  -0.24
+                ],
+                "humidity": [
+                  0.2,
+                  0.45
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:thuja_forest",
+              "parameters": {
+                "temperature": [
+                  -0.55,
+                  -0.24
+                ],
+                "humidity": [
+                  0.45,
                   2.0
                 ],
                 "continentalness": [
@@ -773,6 +1151,33 @@
                 ],
                 "humidity": [
                   0.15,
+                  0.4
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:walnut_grove",
+              "parameters": {
+                "temperature": [
+                  -0.24,
+                  0.02
+                ],
+                "humidity": [
+                  0.4,
                   2.0
                 ],
                 "continentalness": [
@@ -819,14 +1224,149 @@
               }
             },
             {
-              "biome": "trailcraft:zheltozem_forest",
+              "biome": "trailcraft:lilac_grove",
               "parameters": {
                 "temperature": [
                   0.02,
+                  0.25
+                ],
+                "humidity": [
+                  0.2,
+                  0.45
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:ironwood_forest",
+              "parameters": {
+                "temperature": [
+                  0.02,
+                  0.25
+                ],
+                "humidity": [
+                  0.45,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:acacia_grove",
+              "parameters": {
+                "temperature": [
+                  0.25,
+                  0.5
+                ],
+                "humidity": [
+                  0.2,
+                  0.45
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:eucalyptus_forest",
+              "parameters": {
+                "temperature": [
+                  0.25,
+                  0.5
+                ],
+                "humidity": [
+                  0.45,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:palm_grove",
+              "parameters": {
+                "temperature": [
+                  0.5,
                   2.0
                 ],
                 "humidity": [
                   0.2,
+                  0.45
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:ebony_forest",
+              "parameters": {
+                "temperature": [
+                  0.5,
+                  2.0
+                ],
+                "humidity": [
+                  0.45,
                   2.0
                 ],
                 "continentalness": [

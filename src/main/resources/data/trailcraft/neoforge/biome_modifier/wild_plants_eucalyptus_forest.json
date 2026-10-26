@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "trailcraft:eucalyptus_forest"
+  ],
+  "features": [
+    "trailcraft:wild_jute_patch"
+  ],
+  "step": "vegetal_decoration"
+}

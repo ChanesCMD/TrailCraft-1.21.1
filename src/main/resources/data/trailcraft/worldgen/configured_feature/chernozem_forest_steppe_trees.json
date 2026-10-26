@@ -3,10 +3,6 @@
   "config": {
     "features": [
       {
-        "feature": "trailcraft:birch_wild_checked",
-        "chance": 0.3636
-      },
-      {
         "feature": "trailcraft:aspen_wild_checked",
         "chance": 0.4286
       },

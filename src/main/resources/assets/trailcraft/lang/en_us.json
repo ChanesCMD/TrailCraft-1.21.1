@@ -752,5 +752,18 @@
   "biome.trailcraft.burozem_forest": "Broadleaf Forest",
   "biome.trailcraft.burozem_taiga": "Taiga",
   "biome.trailcraft.chernozem_forest_steppe": "Forest Steppe",
-  "biome.trailcraft.zheltozem_forest": "Subtropical Forest"
+  "block.trailcraft.red_maple_leaves": "Red Maple Leaves",
+  "block.trailcraft.red_maple_sapling": "Red Maple Sapling",
+  "biome.trailcraft.pine_forest": "Pine Forest",
+  "biome.trailcraft.maple_forest": "Maple Forest",
+  "biome.trailcraft.alder_forest": "Alder Forest",
+  "biome.trailcraft.thuja_forest": "Thuja Forest",
+  "biome.trailcraft.walnut_grove": "Walnut Grove",
+  "biome.trailcraft.sakura_grove": "Sakura Grove",
+  "biome.trailcraft.lilac_grove": "Lilac Grove",
+  "biome.trailcraft.ironwood_forest": "Ironwood Forest",
+  "biome.trailcraft.acacia_grove": "Acacia Grove",
+  "biome.trailcraft.eucalyptus_forest": "Eucalyptus Forest",
+  "biome.trailcraft.palm_grove": "Palm Grove",
+  "biome.trailcraft.ebony_forest": "Ebony Forest"
 }
