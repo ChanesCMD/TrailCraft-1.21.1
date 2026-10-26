@@ -1,13 +1,14 @@
 package io.github.ChanesCMD.trailcraft.client.map;
 
 import io.github.ChanesCMD.trailcraft.client.ClientConfig;
-import io.github.ChanesCMD.trailcraft.client.gui.UiDraw;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Миникарта (ТЗ, раздел 4; размер — в настройках карты, по умолчанию 66×66): блоки вокруг игрока, по пикселю на блок, север сверху, из памяти атласа (MapCache, MapTiles).
+ * Миникарта (ТЗ, раздел 4; размер — в настройках карты, по умолчанию 66×66): блоки вокруг игрока, по пикселю на блок, север сверху (или по взгляду игрока, если включён поворот), из памяти атласа (MapCache, MapTiles).
  * Карта плавно едет за игроком (позиция с учётом доли тика), игрок всегда в середине — маленькая белая стрелка
  * в 8 направлениях.
  */
@@ -17,12 +18,37 @@ public final class Minimap {
         return ClientConfig.minimapSize();
     }
 
+    /**
+     * Рисует миникарту в (x, y). Непрозрачность и поворот по взгляду — из настроек. При повороте стрелка игрока
+     * всегда смотрит вверх, а север показывает красная буква N на краю.
+     */
     public static void render(GuiGraphics g, int x, int y, Player player, float partialTick) {
         int size = size(), map = size - 2;
+        float alpha = ClientConfig.minimapOpacity();
+        boolean rotate = ClientConfig.minimapRotate();
+        float yaw = player.getViewYRot(partialTick);
         Vec3 pos = player.getPosition(partialTick);
-        UiDraw.frame(g, x, y, size, size, 0xFF373737, 0xFFFFFFFF, 0xFF000000);
-        MapTiles.draw(g, player.level().dimension().location(), x + 1, y + 1, map, map, pos.x, pos.z, 1);
-        playerMarker(g, x + 1 + map / 2, y + 1 + map / 2, player.getViewYRot(partialTick));
+        // Рамка: тёмная сверху-слева, светлая снизу-справа, чёрная подложка — всё с непрозрачностью карты
+        g.fill(x, y, x + size, y + size, withAlpha(0xFF373737, alpha));
+        g.fill(x + 1, y + 1, x + size, y + size, withAlpha(0xFFFFFFFF, alpha));
+        g.fill(x + 1, y + 1, x + size - 1, y + size - 1, withAlpha(0xFF000000, alpha));
+        float rotation = rotate ? 180 - yaw : 0;
+        MapTiles.draw(g, player.level().dimension().location(), x + 1, y + 1, map, map, pos.x, pos.z, 1, rotation, alpha);
+        int cx = x + 1 + map / 2, cy = y + 1 + map / 2;
+        if (rotate) {
+            playerMarker(g, cx, cy, 180);
+            double angle = Math.toRadians(rotation), radius = map / 2.0 - 6;
+            Font font = Minecraft.getInstance().font;
+            g.drawString(font, "N", (int) Math.round(cx + Math.sin(angle) * radius) - font.width("N") / 2,
+                    (int) Math.round(cy - Math.cos(angle) * radius) - 4, 0xFFFF5555, true);
+        } else {
+            playerMarker(g, cx, cy, yaw);
+        }
+    }
+
+    /** Цвет с прозрачностью, умноженной на alpha. */
+    private static int withAlpha(int argb, float alpha) {
+        return Math.round((argb >>> 24) * alpha) << 24 | argb & 0xFFFFFF;
     }
 
     /** Стрелка 3×3 на север и на северо-восток; остальные 6 направлений — повороты на 90°. */

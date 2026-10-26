@@ -1,6 +1,7 @@
 package io.github.ChanesCMD.trailcraft.client.map;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.math.Axis;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -52,12 +53,22 @@ public final class MapTiles {
      * scale — пикселей интерфейса на блок. Неисследованное прозрачно.
      */
     public static void draw(GuiGraphics g, ResourceLocation dim, int x, int y, int w, int h, double centerX, double centerZ, float scale) {
+        draw(g, dim, x, y, w, h, centerX, centerZ, scale, 0, 1);
+    }
+
+    /**
+     * То же, но карта повёрнута на rotation градусов по часовой стрелке вокруг своей середины (у миникарты —
+     * по взгляду игрока) и нарисована с непрозрачностью alpha. Обрезается по прямоугольнику, как и без поворота.
+     */
+    public static void draw(GuiGraphics g, ResourceLocation dim, int x, int y, int w, int h, double centerX, double centerZ, float scale,
+                            float rotation, float alpha) {
         if (!dim.equals(dimension)) {
             clear();
             dimension = dim;
         }
         frame++;
-        double halfW = w / 2.0 / scale, halfH = h / 2.0 / scale;
+        // Повёрнутой карте нужен запас до диагонали, чтобы углы не оставались пустыми
+        double halfW = (rotation == 0 ? w : Math.hypot(w, h)) / 2.0 / scale, halfH = (rotation == 0 ? h : Math.hypot(w, h)) / 2.0 / scale;
         int tx0 = Math.floorDiv(Mth.floor(centerX - halfW), SIZE), tx1 = Math.floorDiv(Mth.floor(centerX + halfW), SIZE);
         int tz0 = Math.floorDiv(Mth.floor(centerZ - halfH), SIZE), tz1 = Math.floorDiv(Mth.floor(centerZ + halfH), SIZE);
         // Сначала дорисовываем плитки ближе к центру
@@ -74,7 +85,13 @@ public final class MapTiles {
         g.enableScissor(x, y, x + w, y + h);
         g.pose().pushPose();
         g.pose().translate(x + w / 2f, y + h / 2f, 0);
+        if (rotation != 0) {
+            g.pose().mulPose(Axis.ZP.rotationDegrees(rotation));
+        }
         g.pose().scale(scale, scale, 1);
+        if (alpha < 1) {
+            g.setColor(1, 1, 1, alpha);
+        }
         for (long[] t : visible) {
             int tx = (int) t[0], tz = (int) t[1];
             Tile tile = TILES.computeIfAbsent(key(tx, tz), k -> new Tile());
@@ -91,6 +108,9 @@ public final class MapTiles {
             }
         }
         g.pose().popPose();
+        if (alpha < 1) {
+            g.setColor(1, 1, 1, 1);
+        }
         g.disableScissor();
         evict();
     }

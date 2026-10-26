@@ -3,6 +3,7 @@ package io.github.ChanesCMD.trailcraft.client.hud;
 import io.github.ChanesCMD.trailcraft.ServerConfig;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.calendar.Calendar;
+import io.github.ChanesCMD.trailcraft.client.ClientConfig;
 import io.github.ChanesCMD.trailcraft.client.ClientGear;
 import io.github.ChanesCMD.trailcraft.client.map.Minimap;
 import io.github.ChanesCMD.trailcraft.client.gui.TrailInventoryScreen;
@@ -28,6 +29,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * HUD по ТЗ (раздел 4): вместо сердечек — еда (морковки), над ней вместо брони — выносливость, вместо еды — вода,
@@ -59,19 +63,25 @@ public class TrailHud {
     }
 
     /**
-     * Головы голосового чата у левого края (x=6, y=20+20·i), когда в нём хотя бы двое.
-     * Пока открыт инвентарь, головы нарисованы там (слева от панели), а здесь их нет.
+     * Головы голосового чата у левого края (x=6, y=20+20·i), когда в нём хотя бы двое; если миникарта или дата стоят
+     * в левом верхнем углу — правее них. Пока открыт инвентарь, головы нарисованы там (слева от панели), а здесь их нет.
      */
     private static void renderVoiceHeads(GuiGraphics g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         if (!mc.options.hideGui && !(mc.screen instanceof TrailInventoryScreen) && VoiceClient.showHeads()) {
-            VoiceHeads.column(g, 6, 20, VoiceClient.heads());
+            int x = 6;
+            if (ClientConfig.minimapCorner() == ClientConfig.Corner.TOP_LEFT) {
+                boolean map = ClientGear.hasAtlas() && ClientConfig.minimapEnabled();
+                x += Math.max(map ? Minimap.size() : 0, ClientGear.hasCalendar() || ClientGear.hasAtlas() ? 110 : 0) + 6;
+            }
+            VoiceHeads.column(g, x, 20, VoiceClient.heads());
         }
     }
 
     /**
-     * В правом верхнем углу (отступ 6): миникарта 66×66, если в рюкзаке атлас; под ней по правому краю дата
-     * «Год N · Сезон, день» и время, если в рюкзаке календарь (без атласа — дата в самом углу).
+     * Миникарта (если в рюкзаке атлас и она включена) в выбранном углу экрана (отступ 6); рядом с ней строки:
+     * биом и координаты (с атласом, если включены), дата «Год N · Сезон, день» и время (с календарём). В верхних
+     * углах строки под картой, в нижних над ней; в правых углах прижаты к правому краю.
      */
     private static void renderMapAndDate(GuiGraphics g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
@@ -79,23 +89,36 @@ public class TrailHud {
         if (player == null || mc.options.hideGui || mc.getDebugOverlay().showDebugScreen()) {
             return;
         }
-        int right = g.guiWidth() - 6, y = 6;
-        if (ClientGear.hasAtlas()) {
-            Minimap.render(g, right - Minimap.size(), y, player, delta.getGameTimeDeltaPartialTick(true));
-            y += Minimap.size() + 3;
-            // Под миникартой — биом, где стоит игрок
-            Component biome = player.level().getBiome(player.blockPosition()).unwrapKey()
+        ClientConfig.Corner corner = ClientConfig.minimapCorner();
+        boolean atlas = ClientGear.hasAtlas(), showMap = atlas && ClientConfig.minimapEnabled();
+        int size = Minimap.size();
+        List<Component> lines = new ArrayList<>();
+        if (atlas && ClientConfig.minimapBiome()) {
+            lines.add(player.level().getBiome(player.blockPosition()).unwrapKey()
                     .map(key -> (Component) Component.translatable(Util.makeDescriptionId("biome", key.location())))
-                    .orElse(Component.empty());
-            g.drawString(mc.font, biome, right - mc.font.width(biome), y, 0xFFFFFFFF, true);
-            y += 10;
+                    .orElse(Component.empty()));
+        }
+        if (atlas && ClientConfig.minimapCoords()) {
+            lines.add(Component.translatable("gui.trailcraft.map.coords", player.getBlockX(), player.getBlockZ()));
         }
         if (ClientGear.hasCalendar()) {
             Calendar date = Calendar.of(player.level().getDayTime(), ServerConfig.daysPerSeason());
-            Component line = Component.translatable("gui.trailcraft.hud.date", date.year(),
-                    Component.translatable(date.season().translationKey()), date.dayOfSeason());
-            g.drawString(mc.font, line, right - mc.font.width(line), y, 0xFFFFFFFF, true);
-            g.drawString(mc.font, date.time(), right - mc.font.width(date.time()), y + 10, 0xFFFFFFFF, true);
+            lines.add(Component.translatable("gui.trailcraft.hud.date", date.year(),
+                    Component.translatable(date.season().translationKey()), date.dayOfSeason()));
+            lines.add(Component.literal(date.time()));
+        }
+        int textH = lines.size() * 10, gap = showMap && textH > 0 ? 3 : 0;
+        int blockH = (showMap ? size : 0) + gap + textH;
+        int top = corner.bottom() ? g.guiHeight() - 6 - blockH : 6;
+        int mapY = corner.bottom() ? top + textH + gap : top;
+        int textY = corner.bottom() ? top : top + (showMap ? size : 0) + gap;
+        int right = g.guiWidth() - 6;
+        if (showMap) {
+            Minimap.render(g, corner.left() ? 6 : right - size, mapY, player, delta.getGameTimeDeltaPartialTick(true));
+        }
+        for (int i = 0; i < lines.size(); i++) {
+            Component line = lines.get(i);
+            g.drawString(mc.font, line, corner.left() ? 6 : right - mc.font.width(line), textY + i * 10, 0xFFFFFFFF, true);
         }
     }
 
