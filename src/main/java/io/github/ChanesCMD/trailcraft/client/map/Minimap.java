@@ -37,10 +37,12 @@ public final class Minimap {
         int cx = x + 1 + map / 2, cy = y + 1 + map / 2;
         if (rotate) {
             playerMarker(g, cx, cy, 180);
-            double angle = Math.toRadians(rotation), radius = map / 2.0 - 6;
+            // Север идёт по периметру квадрата: направление растягивается до края, а не до окружности
+            double angle = Math.toRadians(rotation), dx = Math.sin(angle), dy = -Math.cos(angle);
+            double reach = (map / 2.0 - 5) / Math.max(Math.abs(dx), Math.abs(dy));
             Font font = Minecraft.getInstance().font;
-            g.drawString(font, "N", (int) Math.round(cx + Math.sin(angle) * radius) - font.width("N") / 2,
-                    (int) Math.round(cy - Math.cos(angle) * radius) - 4, 0xFFFF5555, true);
+            g.drawString(font, "N", (int) Math.round(cx + dx * reach) - font.width("N") / 2,
+                    (int) Math.round(cy + dy * reach) - 4, 0xFFFF5555, true);
         } else {
             playerMarker(g, cx, cy, yaw);
         }

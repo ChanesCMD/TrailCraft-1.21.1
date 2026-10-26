@@ -33,6 +33,22 @@ public final class ClientConfig {
         }
     }
 
+    /** Что показывать из календаря рядом с миникартой (нужен календарь в рюкзаке). */
+    public enum DateMode {
+        FULL, DATE, TIME, OFF;
+
+        public boolean showDate() {
+            return this == FULL || this == DATE;
+        }
+
+        public boolean showTime() {
+            return this == FULL || this == TIME;
+        }
+    }
+
+    public static final ModConfigSpec.EnumValue<DateMode> DATE_MODE = BUILDER
+            .comment("What to show from the calendar: FULL (date and time), DATE, TIME or OFF.")
+            .defineEnum("dateMode", DateMode.FULL);
     public static final ModConfigSpec.BooleanValue MINIMAP_ENABLED = BUILDER
             .comment("Show the minimap (the date and captions stay).")
             .define("minimapEnabled", true);
@@ -62,6 +78,10 @@ public final class ClientConfig {
         MINIMAP_SIZE.set(Math.max(MINIMAP_MIN, Math.min(MINIMAP_MAX, size)));
     }
 
+    public static DateMode dateMode() {
+        return SPEC.isLoaded() ? DATE_MODE.get() : DateMode.FULL;
+    }
+
     public static boolean minimapEnabled() {
         return !SPEC.isLoaded() || MINIMAP_ENABLED.get();
     }
@@ -87,9 +107,10 @@ public final class ClientConfig {
         return SPEC.isLoaded() ? MINIMAP_OPACITY.get() / 100f : 1f;
     }
 
-    /** Все настройки миникарты — по умолчанию. */
+    /** Все настройки миникарты и даты — по умолчанию. */
     public static void resetMinimap() {
         MINIMAP_SIZE.set(MINIMAP_DEFAULT);
+        DATE_MODE.set(DATE_MODE.getDefault());
         MINIMAP_ENABLED.set(MINIMAP_ENABLED.getDefault());
         MINIMAP_CORNER.set(MINIMAP_CORNER.getDefault());
         MINIMAP_ROTATE.set(MINIMAP_ROTATE.getDefault());

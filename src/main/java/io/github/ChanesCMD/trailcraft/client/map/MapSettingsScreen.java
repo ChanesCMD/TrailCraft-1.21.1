@@ -2,6 +2,7 @@ package io.github.ChanesCMD.trailcraft.client.map;
 
 import io.github.ChanesCMD.trailcraft.client.ClientConfig;
 import io.github.ChanesCMD.trailcraft.client.ClientConfig.Corner;
+import io.github.ChanesCMD.trailcraft.client.ClientConfig.DateMode;
 import io.github.ChanesCMD.trailcraft.client.gui.UiDraw;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSliderButton;
@@ -16,7 +17,7 @@ import java.util.function.IntSupplier;
 
 /**
  * Настройки карты (шестерёнка на полноэкранной карте): миникарта — вкл/выкл, угол экрана, размер, непрозрачность,
- * поворот по взгляду, биом и координаты рядом с ней. Миникарта в углу экрана за окном меняется сразу.
+ * поворот по взгляду, биом, координаты и что показывать из календаря (дата, время). Миникарта в углу экрана за окном меняется сразу.
  * Значения лежат в ClientConfig и сохраняются при закрытии окна.
  */
 public class MapSettingsScreen extends Screen {
@@ -68,15 +69,19 @@ public class MapSettingsScreen extends Screen {
         addRenderableWidget(CycleButton.onOffBuilder(ClientConfig.minimapCoords())
                 .create(left, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.coords"),
                         (button, value) -> ClientConfig.MINIMAP_COORDS.set(value)));
+        addRenderableWidget(CycleButton.<DateMode>builder(mode -> Component.translatable("gui.trailcraft.map.settings.date." + mode.name().toLowerCase(Locale.ROOT)))
+                .withValues(DateMode.values()).withInitialValue(ClientConfig.dateMode())
+                .create(right, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.date"),
+                        (button, value) -> ClientConfig.DATE_MODE.set(value)));
+
+        y += ROW;
         addRenderableWidget(Button.builder(Component.translatable("gui.trailcraft.map.settings.reset"), b -> {
                     ClientConfig.resetMinimap();
                     rebuildWidgets();
                 })
-                .bounds(right, y, COLUMN_W, 20).build());
-
-        y += ROW;
+                .bounds(left, y, COLUMN_W, 20).build());
         addRenderableWidget(Button.builder(Component.translatable("gui.trailcraft.map.settings.done"), b -> onClose())
-                .bounds(left, y, 2 * COLUMN_W + GAP, 20).build());
+                .bounds(right, y, COLUMN_W, 20).build());
     }
 
     @Override

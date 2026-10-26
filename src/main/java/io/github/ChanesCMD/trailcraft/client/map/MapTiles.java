@@ -1,13 +1,21 @@
 package io.github.ChanesCMD.trailcraft.client.map;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferUploader;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -89,9 +97,6 @@ public final class MapTiles {
             g.pose().mulPose(Axis.ZP.rotationDegrees(rotation));
         }
         g.pose().scale(scale, scale, 1);
-        if (alpha < 1) {
-            g.setColor(1, 1, 1, alpha);
-        }
         for (long[] t : visible) {
             int tx = (int) t[0], tz = (int) t[1];
             Tile tile = TILES.computeIfAbsent(key(tx, tz), k -> new Tile());
@@ -103,16 +108,32 @@ public final class MapTiles {
             if (tile.painted) {
                 g.pose().pushPose();
                 g.pose().translate((float) (tx * SIZE - centerX), (float) (tz * SIZE - centerZ), 0);
-                g.blit(tile.location, 0, 0, 0, 0, SIZE, SIZE, SIZE, SIZE);
+                if (alpha < 1) {
+                    blitTranslucent(g, tile.location, alpha);
+                } else {
+                    g.blit(tile.location, 0, 0, 0, 0, SIZE, SIZE, SIZE, SIZE);
+                }
                 g.pose().popPose();
             }
         }
         g.pose().popPose();
-        if (alpha < 1) {
-            g.setColor(1, 1, 1, 1);
-        }
         g.disableScissor();
         evict();
+    }
+
+    /** Плитка с общей прозрачностью alpha: GuiGraphics.blit цвет не применяет, поэтому квадрат рисуется с цветом в вершинах. */
+    private static void blitTranslucent(GuiGraphics g, ResourceLocation texture, float alpha) {
+        Matrix4f matrix = g.pose().last().pose();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+        RenderSystem.setShaderTexture(0, texture);
+        BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        buffer.addVertex(matrix, 0, 0, 0).setUv(0, 0).setColor(1f, 1f, 1f, alpha);
+        buffer.addVertex(matrix, 0, SIZE, 0).setUv(0, 1).setColor(1f, 1f, 1f, alpha);
+        buffer.addVertex(matrix, SIZE, SIZE, 0).setUv(1, 1).setColor(1f, 1f, 1f, alpha);
+        buffer.addVertex(matrix, SIZE, 0, 0).setUv(1, 0).setColor(1f, 1f, 1f, alpha);
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
     }
 
     private static void paint(Tile tile, int tx, int tz) {

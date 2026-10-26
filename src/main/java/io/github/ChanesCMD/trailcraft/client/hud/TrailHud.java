@@ -101,11 +101,16 @@ public class TrailHud {
         if (atlas && ClientConfig.minimapCoords()) {
             lines.add(Component.translatable("gui.trailcraft.map.coords", player.getBlockX(), player.getBlockZ()));
         }
-        if (ClientGear.hasCalendar()) {
+        ClientConfig.DateMode dateMode = ClientConfig.dateMode();
+        if (ClientGear.hasCalendar() && dateMode != ClientConfig.DateMode.OFF) {
             Calendar date = Calendar.of(player.level().getDayTime(), ServerConfig.daysPerSeason());
-            lines.add(Component.translatable("gui.trailcraft.hud.date", date.year(),
-                    Component.translatable(date.season().translationKey()), date.dayOfSeason()));
-            lines.add(Component.literal(date.time()));
+            if (dateMode.showDate()) {
+                lines.add(Component.translatable("gui.trailcraft.hud.date", date.year(),
+                        Component.translatable(date.season().translationKey()), date.dayOfSeason()));
+            }
+            if (dateMode.showTime()) {
+                lines.add(Component.literal(date.time()));
+            }
         }
         int textH = lines.size() * 10, gap = showMap && textH > 0 ? 3 : 0;
         int blockH = (showMap ? size : 0) + gap + textH;
