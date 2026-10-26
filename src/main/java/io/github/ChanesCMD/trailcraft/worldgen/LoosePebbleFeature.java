@@ -1,8 +1,8 @@
 package io.github.ChanesCMD.trailcraft.worldgen;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import io.github.ChanesCMD.trailcraft.block.PebbleBlock;
 import io.github.ChanesCMD.trailcraft.init.ModBlocks;
@@ -33,7 +33,8 @@ public class LoosePebbleFeature extends Feature<NoneFeatureConfiguration> {
     /** Насколько быстро падает шанс породы с глубиной (в блоках). */
     private static final double DEPTH_FALLOFF = 16.0;
 
-    private static final Map<Block, Block> ROCK_TO_PEBBLE = new HashMap<>();
+    /** Генерация мира идёт в нескольких потоках, поэтому ConcurrentHashMap (обычный HashMap там может сломаться). */
+    private static final Map<Block, Block> ROCK_TO_PEBBLE = new ConcurrentHashMap<>();
 
     public LoosePebbleFeature() {
         super(NoneFeatureConfiguration.CODEC);

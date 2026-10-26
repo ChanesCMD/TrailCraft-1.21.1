@@ -7,6 +7,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.LevelResource;
 import org.slf4j.Logger;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -17,19 +19,28 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 /**
  * Память карты на клиенте: цвета исследованных чанков (16×16, формат NativeImage, 0 — неизвестно). Хранится по
  * регионам 32×32 чанка в .minecraft/trailcraft/maps/<мир>/<измерение>/r.X.Z.dat; регион читается с диска при первом
- * обращении, изменённые сохраняются раз в минуту и при выходе из мира.
+ * обращении, изменённые сохраняются раз в минуту (в отдельном потоке, чтобы не было фризов) и при выходе из мира.
  */
 public final class MapCache {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final int REGION = 32, FORMAT = 1;
     private static final Map<ResourceLocation, Map<Long, Region>> DIMENSIONS = new HashMap<>();
     private static Path root;
+    /** Запись регионов на диск — по очереди в одном фоновом потоке. Массивы цветов после записи в кэш не меняются. */
+    private static final ExecutorService SAVER = Executors.newSingleThreadExecutor(task -> {
+        Thread thread = new Thread(task, "TrailCraft map saver");
+        thread.setDaemon(true);
+        return thread;
+    });
 
     private static final class Region {
         final Map<Integer, int[]> chunks = new HashMap<>();
@@ -45,6 +56,13 @@ public final class MapCache {
     /** Выход из мира: сохранить изменения и забыть. */
     public static void close() {
         save();
+        try {
+            SAVER.submit(() -> {}).get(); // дождаться записи, чтобы при следующем входе прочитать свежие файлы
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            LOGGER.warn("Map saving failed", e);
+        }
         DIMENSIONS.clear();
         root = null;
     }
@@ -68,7 +86,7 @@ public final class MapCache {
         }
     }
 
-    /** Сохраняет изменённые регионы. */
+    /** Сохраняет изменённые регионы в фоне (копия списка чанков, сами массивы общие). */
     public static void save() {
         if (root == null) {
             return;
@@ -78,7 +96,9 @@ public final class MapCache {
                 Region region = entry.getValue();
                 if (region.dirty) {
                     region.dirty = false;
-                    write(file(dimension.getKey(), (int) (entry.getKey() >> 32), (int) (long) entry.getKey()), region);
+                    Path file = file(dimension.getKey(), (int) (entry.getKey() >> 32), (int) (long) entry.getKey());
+                    Map<Integer, int[]> chunks = new HashMap<>(region.chunks);
+                    SAVER.execute(() -> write(file, chunks));
                 }
             }
         }
@@ -105,7 +125,7 @@ public final class MapCache {
         if (!Files.isRegularFile(file)) {
             return region;
         }
-        try (InputStream raw = Files.newInputStream(file); DataInputStream in = new DataInputStream(new GZIPInputStream(raw))) {
+        try (InputStream raw = Files.newInputStream(file); DataInputStream in = new DataInputStream(new BufferedInputStream(new GZIPInputStream(raw)))) {
             if (in.readInt() != FORMAT) {
                 return region;
             }
@@ -124,13 +144,13 @@ public final class MapCache {
         return region;
     }
 
-    private static void write(Path file, Region region) {
+    private static void write(Path file, Map<Integer, int[]> chunks) {
         try {
             Files.createDirectories(file.getParent());
-            try (OutputStream raw = Files.newOutputStream(file); DataOutputStream out = new DataOutputStream(new GZIPOutputStream(raw))) {
+            try (OutputStream raw = Files.newOutputStream(file); DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new GZIPOutputStream(raw)))) {
                 out.writeInt(FORMAT);
-                out.writeInt(region.chunks.size());
-                for (Map.Entry<Integer, int[]> chunk : region.chunks.entrySet()) {
+                out.writeInt(chunks.size());
+                for (Map.Entry<Integer, int[]> chunk : chunks.entrySet()) {
                     out.writeShort(chunk.getKey());
                     for (int color : chunk.getValue()) {
                         out.writeInt(color);

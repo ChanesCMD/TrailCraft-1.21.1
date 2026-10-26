@@ -43,6 +43,33 @@ repositories {
         }
         filter { includeGroup "de.maxhenkel.voicechat" }
     }
+    // Create и его библиотеки (Ponder, Flywheel)
+    maven {
+        name = "CreateMod"
+        url = "https://maven.createmod.net"
+    }
+    // Registrate (нужен Create)
+    maven {
+        name = "Devos"
+        url = "https://mvn.devos.one/snapshots"
+    }
+    maven {
+        name = "IThundxr"
+        url = "https://maven.ithundxr.dev/snapshots"
+    }
+    // e4steam: игра с друзьями через Steam. Берётся прямо из релизов GitHub (файл
+    // e4steam-neoforge-mc1.20.2-26.3-v<версия>.jar в релизе v<версия>)
+    exclusiveContent {
+        forRepository {
+            ivy {
+                name = "e4steam GitHub releases"
+                url = "https://github.com/Kamilhik/e4steam/releases/download/"
+                patternLayout { artifact "v[revision]/[module]-v[revision].[ext]" }
+                metadataSources { artifact() }
+            }
+        }
+        filter { includeGroup "e4steam" }
+    }
     // Моды с Modrinth (Seed Viewer, Genesis)
     exclusiveContent {
         forRepository {
@@ -155,6 +182,14 @@ dependencies {
     localRuntime "maven.modrinth:seed-viewer:${seed_viewer_version}"
     localRuntime "maven.modrinth:genesis-world-previewer-pregenerator:${genesis_version}"
     localRuntime "maven.modrinth:architectury-api:${architectury_version}"
+    // Create — обязательная зависимость мода (в neoforge.mods.toml type="required")
+    implementation("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
+    implementation("net.createmod.ponder:ponder-neoforge:${ponder_version}+mc${minecraft_version}")
+    compileOnly("dev.engine-room.flywheel:flywheel-neoforge-api-${minecraft_version}:${flywheel_version}")
+    runtimeOnly("dev.engine-room.flywheel:flywheel-neoforge-${minecraft_version}:${flywheel_version}")
+    implementation("com.tterrag.registrate:Registrate:${registrate_version}")
+    // e4steam: только для запуска из среды разработки (у игроков необязателен)
+    localRuntime "e4steam:e4steam-neoforge-mc1.20.2-26.3:${e4steam_version}"
     // Голосовой чат: API для компиляции, сам мод — для запуска из среды разработки (у игроков он необязателен)
     compileOnly "de.maxhenkel.voicechat:voicechat-api:${voicechat_api_version}"
     localRuntime "maven.modrinth:simple-voice-chat:${voicechat_version}"

@@ -88,6 +88,14 @@ TrailCraft is a mix of everything I have ever wanted in one place, and it is gro
     ordering="NONE"
     side="BOTH"
 
+# Create: обязателен
+[[dependencies.${mod_id}]]
+    modId="create"
+    type="required"
+    versionRange="[6.0.10,6.1.0)"
+    ordering="NONE"
+    side="BOTH"
+
 # Голосовой чат: необязателен, без него каналы, звонки и головы просто не работают
 [[dependencies.${mod_id}]]
     modId="voicechat"

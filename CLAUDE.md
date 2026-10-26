@@ -34,7 +34,7 @@
 - Календарь: время — `calendar/Calendar.java`, заметки — `calendar/CalendarNotes.java` (attachment у игрока), окно —
   в `TrailInventoryScreen` (листается по сезонам). Карты — `client/map/`: атлас запоминает местность на клиенте —
   `MapSampler` снимает загруженные чанки (без травы и цветов, цвета блоков и биома) в `MapCache` (по регионам на диске,
-  .minecraft/trailcraft/maps/<мир>/<измерение>/), рисуется плитками 64×64 из памяти — `MapTiles`;
+  .minecraft/trailcraft/maps/<мир>/<измерение>/, запись — в фоновом потоке), рисуется плитками 64×64 из памяти — `MapTiles`;
   клавиша карты M (Ь) — `MapKeys`, миникарта `Minimap` (в HUD вместе с датой, `TrailHud`), полноэкранная `MapScreen`; что лежит в рюкзаке
   (атлас, календарь) сервер шлёт клиенту `inventory/GearPayload.java` → `client/ClientGear.java`, потому что слоты
   игрока сами на клиент не синхронизируются.
@@ -63,6 +63,9 @@
   Вода (жажда, как голод) — `water/Water.java` (числа), `water/WaterEvents.java`, питьё — `client/ClientWaterEvents.java`.
   Модульное HP — интерфейс `health/BodyHealth.java`, пока по общему здоровью (системы частей тела ещё нет).
 - Креатив: `client/ClientCreativeEvents.java` прячет ванильные слоты 9..35 во вкладке «Инвентарь».
+- Зависимости: Create — обязательная (`neoforge.mods.toml`, версии Create, Ponder, Flywheel, Registrate — в
+  `gradle.properties`); e4steam (игра через Steam) — только для запуска из среды разработки, jar берётся из релизов
+  GitHub (`e4steam_version` — тег без «v»).
 - Голосовой чат поверх Simple Voice Chat (необязательная зависимость): плагин `voice/svc/TrailVoicePlugin.java`,
   сервер — `voice/VoiceServer.java` (каналы — скрытые группы SVC, звонки), клиент — `client/voice/VoiceClient.java`,
   окно — `client/gui/VoiceChatWindow.java`, кнопки в углу инвентаря — `client/gui/CornerButtons.java`.
