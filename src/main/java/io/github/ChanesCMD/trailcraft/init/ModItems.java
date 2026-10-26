@@ -111,8 +111,9 @@ public class ModItems {
     public static final DeferredItem<BlockItem> SHALE_PEBBLE = ITEMS.registerSimpleBlockItem("shale_pebble", ModBlocks.SHALE_PEBBLE);
 
     // === ПАЛКИ ===
-    /** Обычная ветка: 3 раза ПКМ по породе, и получается обработанная палка. */
-    public static final DeferredItem<BranchStickItem> STICK_BRANCH = ITEMS.registerItem("stick_branch", BranchStickItem::new);
+    /** Обычная ветка: 3 раза ПКМ по породе, и получается обработанная палка; кладётся на землю (блок fallen_branch). */
+    public static final DeferredItem<BranchStickItem> STICK_BRANCH = ITEMS.registerItem("stick_branch",
+            props -> new BranchStickItem(ModBlocks.FALLEN_BRANCH.get(), props));
     public static final DeferredItem<Item> STICK_PROCESSED = ITEMS.registerSimpleItem("stick_processed");
 
     // === ПЕНЬ ДЛЯ РУБКИ ===

@@ -221,7 +221,7 @@ public class ModBlocks {
     public static final DeferredBlock<Block> SHALE_PEBBLE = BLOCKS.registerBlock("shale_pebble", PebbleBlock::new,
             BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.2f).sound(SoundType.STONE).noCollission().noOcclusion().pushReaction(PushReaction.DESTROY));
 
-    /** Упавшая ветка на земле. Своего предмета нет: при разрушении выпадает ветка (stick_branch). */
+    /** Упавшая ветка на земле. Своего предмета нет: ставится и выпадает как ветка (stick_branch). */
     public static final DeferredBlock<Block> FALLEN_BRANCH = BLOCKS.registerBlock("fallen_branch", PebbleBlock::new,
             BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instabreak().sound(SoundType.WOOD).noCollission().noOcclusion().ignitedByLava().pushReaction(PushReaction.DESTROY));
 

@@ -12,6 +12,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -21,22 +22,29 @@ import net.minecraft.world.level.block.Block;
 
 /**
  * Обычная ветка. Если ПКМ по породе 3 раза, из одной ветки получается обработанная палка.
+ * ПКМ по другому блоку (или с Shift по породе) — ветка кладётся на землю блоком fallen_branch.
  * Счётчик хранится на отдельной ветке: при ПКМ одна ветка из стака получает +1 и переносится в другой слот,
  * остальные ветки в руке не меняются. Ветки с одинаковым счётчиком складываются вместе.
  */
-public class BranchStickItem extends Item {
+public class BranchStickItem extends BlockItem {
     public static final int RUBS_NEEDED = 3;
 
-    public BranchStickItem(Item.Properties properties) {
-        super(properties);
+    public BranchStickItem(Block fallenBranch, Item.Properties properties) {
+        super(fallenBranch, properties);
+    }
+
+    /** Название — своё («Ветка»), а не блока на земле. */
+    @Override
+    public String getDescriptionId() {
+        return getOrCreateDescriptionId();
     }
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
-        if (!level.getBlockState(pos).is(ModTags.ROCKS)) {
-            return InteractionResult.PASS;
+        if (!level.getBlockState(pos).is(ModTags.ROCKS) || context.isSecondaryUseActive()) {
+            return super.useOn(context);
         }
         if (!level.isClientSide) {
             ItemStack held = context.getItemInHand();
@@ -71,5 +79,8 @@ public class BranchStickItem extends Item {
         if (rubs > 0) {
             tooltip.add(Component.translatable("tooltip.trailcraft.rubs", rubs, RUBS_NEEDED).withStyle(ChatFormatting.GRAY));
         }
+        tooltip.add(Component.translatable("tooltip.trailcraft.branch.process", RUBS_NEEDED).withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("tooltip.trailcraft.branch.place").withStyle(ChatFormatting.GRAY));
+        super.appendHoverText(stack, context, tooltip, flag);
     }
 }
