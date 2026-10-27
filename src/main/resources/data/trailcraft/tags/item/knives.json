@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:flint_knife",
+    "trailcraft:bone_knife",
+    "trailcraft:amethyst_knife",
+    "trailcraft:copper_knife",
+    "trailcraft:bronze_knife",
+    "trailcraft:iron_knife",
+    "trailcraft:steel_knife"
+  ]
+}

@@ -24,11 +24,14 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
+import net.minecraft.world.level.levelgen.Heightmap;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Самородок на поверхности, а под ним, в верхних слоях, большая жила его руды (VEIN_MIN..VEIN_MAX блоков).
+ * Россыпь самородков на поверхности (3–7 штук, чаще 3–5, в радиусе SCATTER от первого), а под ней, в верхних
+ * слоях, большая жила их руды (VEIN_MIN..VEIN_MAX блоков).
  * Жила заменяет любой твёрдый природный блок; порода руды — та, что заменена, если она подходит руде, иначе первая
  * порода руды. Фича вызывается в каждом чанке, но ставится ровно в одном чанке каждой клетки CELL×CELL чанков
  * (4 сектора 9×9): чанк выбирается по сиду мира, клетке и руде, не ближе MARGIN к краю клетки — так места
@@ -40,6 +43,9 @@ public class NuggetDepositFeature extends Feature<NuggetDepositFeature.Config> {
     private static final int DEPTH_MIN = 3, DEPTH_MAX = 8;
     private static final int RADIUS = 3;
     private static final int CELL = 18, MARGIN = 3;
+    /** Самородков на поверхности: 3–5 в 80 % случаев, иначе 6–7; разброс от первого — до SCATTER блоков. */
+    private static final int NUGGETS_MIN = 3, NUGGETS_COMMON_MAX = 5, NUGGETS_MAX = 7, SCATTER = 3;
+    private static final float NUGGETS_COMMON = 0.8f;
 
     /** @param ore id руды из {@link Ore} (например, malachite) */
     public record Config(String ore) implements FeatureConfiguration {
@@ -63,17 +69,38 @@ public class NuggetDepositFeature extends Feature<NuggetDepositFeature.Config> {
         if (!isChosenChunk(level.getSeed(), new ChunkPos(pos), ore)) {
             return false;
         }
+        if (!placeNugget(level, ore, pos)) {
+            return false;
+        }
+        int count = random.nextFloat() < NUGGETS_COMMON
+                ? NUGGETS_MIN + random.nextInt(NUGGETS_COMMON_MAX - NUGGETS_MIN + 1)
+                : NUGGETS_COMMON_MAX + 1 + random.nextInt(NUGGETS_MAX - NUGGETS_COMMON_MAX);
+        // остальные самородки — рядом на земле (до 4 попыток на каждый)
+        for (int placed = 1, tries = 0; placed < count && tries < count * 4; tries++) {
+            int x = pos.getX() + random.nextInt(2 * SCATTER + 1) - SCATTER;
+            int z = pos.getZ() + random.nextInt(2 * SCATTER + 1) - SCATTER;
+            BlockPos at = new BlockPos(x, level.getHeight(Heightmap.Types.OCEAN_FLOOR, x, z), z);
+            if (Math.abs(at.getY() - pos.getY()) <= 3 && placeNugget(level, ore, at)) {
+                placed++;
+            }
+        }
+        placeVein(level, random, ore, pos.below().below(DEPTH_MIN + random.nextInt(DEPTH_MAX - DEPTH_MIN + 1)));
+        return true;
+    }
+
+    /** Самородок на земле: место пустое (или вода), под ним твёрдый верх, не листва и не брёвна. */
+    private static boolean placeNugget(WorldGenLevel level, Ore ore, BlockPos pos) {
         BlockState here = level.getBlockState(pos);
         boolean water = here.is(Blocks.WATER) && here.getFluidState().isSource();
         BlockPos below = pos.below();
         BlockState ground = level.getBlockState(below);
         if (!here.isAir() && !water || !ground.isFaceSturdy(level, below, Direction.UP)
-                || ground.is(BlockTags.LEAVES) || ground.is(BlockTags.LOGS) || ground.is(ModTags.THIN_LOG_BLOCKS)) {
+                || ground.is(BlockTags.LEAVES) || ground.is(BlockTags.LOGS) || ground.is(ModTags.THIN_LOG_BLOCKS)
+                || ground.getBlock() instanceof PebbleBlock) {
             return false;
         }
         BlockState nugget = ModOres.NUGGET_BLOCKS.get(ore).get().defaultBlockState().setValue(PebbleBlock.WATERLOGGED, water);
         level.setBlock(pos, nugget, Block.UPDATE_CLIENTS);
-        placeVein(level, random, ore, below.below(DEPTH_MIN + random.nextInt(DEPTH_MAX - DEPTH_MIN + 1)));
         return true;
     }
 

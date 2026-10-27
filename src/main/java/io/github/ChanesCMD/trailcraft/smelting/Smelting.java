@@ -85,6 +85,34 @@ public final class Smelting {
         MELTS.put(ResourceLocation.parse(id), Map.of(metal, 1.0));
     }
 
+    /** Предметы, которые плавятся в чистый металл metal (для JEI). */
+    public static List<Item> sources(Metal metal) {
+        List<Item> items = new ArrayList<>();
+        MELTS.forEach((id, parts) -> {
+            if (parts.size() == 1 && parts.containsKey(metal)) {
+                Item item = BuiltInRegistries.ITEM.get(id);
+                if (item != Items.AIR) {
+                    items.add(item);
+                }
+            }
+        });
+        items.sort(java.util.Comparator.comparing(i -> BuiltInRegistries.ITEM.getKey(i).toString()));
+        return items;
+    }
+
+    /** Все предметы, которые кладутся в кувшин (для JEI). */
+    public static List<Item> meltables() {
+        List<Item> items = new ArrayList<>();
+        for (ResourceLocation id : MELTS.keySet()) {
+            Item item = BuiltInRegistries.ITEM.get(id);
+            if (item != Items.AIR) {
+                items.add(item);
+            }
+        }
+        items.sort(java.util.Comparator.comparing(i -> BuiltInRegistries.ITEM.getKey(i).toString()));
+        return items;
+    }
+
     /** Плавится ли предмет в малой сыродутной печи (можно ли положить его в кувшин). */
     public static boolean melts(ItemStack stack) {
         return !stack.isEmpty() && MELTS.containsKey(BuiltInRegistries.ITEM.getKey(stack.getItem()));

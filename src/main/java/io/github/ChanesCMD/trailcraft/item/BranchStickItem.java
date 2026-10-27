@@ -21,13 +21,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
 /**
- * Обычная ветка. Если ПКМ по породе 3 раза, из одной ветки получается обработанная палка.
+ * Обычная ветка. Если ПКМ по породе RUBS_NEEDED (15) раз, из одной ветки получается обработанная палка.
  * ПКМ по другому блоку (или с Shift по породе) — ветка кладётся на землю блоком fallen_branch.
  * Счётчик хранится на отдельной ветке: при ПКМ одна ветка из стака получает +1 и переносится в другой слот,
  * остальные ветки в руке не меняются. Ветки с одинаковым счётчиком складываются вместе.
  */
 public class BranchStickItem extends BlockItem {
-    public static final int RUBS_NEEDED = 3;
+    public static final int RUBS_NEEDED = 15;
 
     public BranchStickItem(Block fallenBranch, Item.Properties properties) {
         super(fallenBranch, properties);

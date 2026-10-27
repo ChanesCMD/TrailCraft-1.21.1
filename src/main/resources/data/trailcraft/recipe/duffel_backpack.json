@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "trailcraft:rope"
+    },
+    {
+      "item": "trailcraft:cloth"
+    },
+    {
+      "item": "trailcraft:cloth"
+    },
+    {
+      "item": "trailcraft:cloth"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:duffel_backpack",
+    "count": 1
+  }
+}

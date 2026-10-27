@@ -156,6 +156,8 @@ public class ModCreativeTabs {
                         for (var bricks : ModSmelting.BRICK_BLOCK_ITEMS.values()) {
                             output.accept(bricks);
                         }
+                        output.accept(ModItems.CLOTH_BLANK);
+                        output.accept(ModItems.CLOTH);
                         output.accept(ModSmelting.STRAW);
                         output.accept(ModSmelting.REINFORCED_BRICK);
                         output.accept(ModSmelting.SMALL_BLOOMERY_ITEM);

@@ -1,20 +1,15 @@
 package io.github.ChanesCMD.trailcraft.smelting;
 
 import io.github.ChanesCMD.trailcraft.init.ModComponents;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.Level;
-
-import java.util.List;
 
 /**
  * Кувшин (как малый сосуд в TerraFirmaCraft): ПКМ в правой руке — окно на 4 слота, туда кладут куски руды, шихту и
@@ -51,24 +46,5 @@ public class JugItem extends Item {
             player.openMenu(new SimpleMenuProvider((id, inventory, p) -> new JugMenu(id, inventory), stack.getHoverName()));
         }
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        NonNullList<ItemStack> items = contents(stack);
-        int units = Smelting.units(items);
-        if (units == 0) {
-            tooltip.add(Component.translatable("tooltip.trailcraft.jug.empty").withStyle(ChatFormatting.GRAY));
-            return;
-        }
-        for (ItemStack item : items) {
-            if (!item.isEmpty()) {
-                tooltip.add(Component.literal(item.getCount() + " × ").append(item.getHoverName()).withStyle(ChatFormatting.GRAY));
-            }
-        }
-        for (ItemStack ingot : Smelting.result(items)) {
-            tooltip.add(Component.translatable("tooltip.trailcraft.jug.result", ingot.getCount(), ingot.getHoverName())
-                    .withStyle(ChatFormatting.GOLD));
-        }
     }
 }

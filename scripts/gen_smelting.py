@@ -52,13 +52,24 @@ LANG = {
     "item.trailcraft.jug": ("Кувшин", "Jug"),
     "block.trailcraft.small_bloomery": ("Малая сыродутная печь", "Small Bloomery"),
     "tooltip.trailcraft.clay_mold": ("ПКМ — выбрать, что вылепить", "Right-click to choose what to shape"),
-    "tooltip.trailcraft.jug.empty": ("Пусто. ПКМ — положить руду, шихту или слитки",
-                                     "Empty. Right-click to add ore, mix or ingots"),
     "tooltip.trailcraft.jug.result": ("Выплавится: %s × %s", "Will smelt: %s × %s"),
-    "gui.trailcraft.jug.hint": ("Руда, шихта, слитки — до 16 в слоте", "Ore, mix, ingots: up to 16 per slot"),
-    "gui.trailcraft.jug.no_iron": ("Железо в малой печи не плавится", "Iron doesn't melt in a small bloomery"),
     "gui.trailcraft.clay_mold": ("Слепок из глины", "Clay Mold"),
     "gui.trailcraft.clay_mold.hint": ("Выберите форму", "Choose a shape"),
+    "item.trailcraft.cloth_blank": ("Тканевая заготовка", "Cloth Blank"),
+    "jei.trailcraft.small_bloomery": ("Малая сыродутная печь", "Small Bloomery"),
+    "jei.trailcraft.handwork": ("Ручная работа", "Handwork"),
+    "jei.trailcraft.bloomery.one": ("В кувшине, в печи с углём: 1 предмет — 1 слиток", "In a jug, in a bloomery with coal: 1 item = 1 ingot"),
+    "jei.trailcraft.bloomery.alloy": ("Сплав прямо в кувшине: доли металлов как у сплава", "Alloy right in the jug: metal shares as in the alloy"),
+    "jei.trailcraft.bloomery.mix": ("Шихта сплава плавится сразу в сплав", "Alloy mix melts straight into the alloy"),
+    "jei.trailcraft.branch": ("ПКМ веткой по породе %s раз", "Right-click a rock with a branch %s times"),
+    "jei.trailcraft.cloth": ("Заготовка и палка в руках, зажать ПКМ; палка вернётся с шансом %s %%", "Blank and stick in hands, hold right-click; the stick returns with a %s %% chance"),
+    "jei.trailcraft.clay_mold": ("ПКМ слепком — выбрать форму", "Right-click the mold to choose a shape"),
+    "jei.trailcraft.straw": ("Срезать траву ножом, серпом или косой", "Cut grass with a knife, sickle or scythe"),
+    "jei.trailcraft.leaves_branch": ("С листвы падает ветка: 5 %, ножом 15 %", "Leaves drop a branch: 5 %, with a knife 15 %"),
+    "jei.trailcraft.chopping": ("Бревно на пне — удар топором: 2 тонких бревна", "Log on a chopping stump, hit with an axe: 2 thin logs"),
+    "jei.trailcraft.campfire": ("Бросить на землю, зажать ПКМ огнивом", "Drop on the ground, hold right-click with a firestarter"),
+    "item.trailcraft.cloth": ("Тканевое полотно", "Cloth"),
+    "tooltip.trailcraft.cloth_blank": ("В другой руке обработанная палка — зажать ПКМ", "Hold right-click with a processed stick in the other hand"),
 }
 
 
@@ -260,6 +271,46 @@ def bloomery_faces():
     return side, top, front, front_on
 
 
+JUTE = (191, 163, 102)       # тканевая заготовка и полотно — цвет джута
+STICK = (120, 86, 48)
+
+
+def cloth_blank():
+    """Тканевая заготовка: обработанная палка по диагонали, посередине намотан толстый слой джута."""
+    rnd = random.Random(21)
+    im = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    for t in range(2, 15):  # палка
+        im.putpixel((t, 15 - t), shade(STICK, 1.1 if t % 3 else 0.85) + (255,))
+    for y in range(16):
+        for x in range(16):
+            u, v = x - (15 - y), x + (15 - y) - 15  # v — вдоль палки, u — поперёк
+            if abs(v) <= 4 and abs(u) <= 3 - (abs(v) == 4):
+                k = (1.15 if u < 0 else 0.8 if u > 1 else 1.0) * (0.88 if (v + u) % 3 == 0 else 1.0)
+                im.putpixel((x, y), shade(JUTE, k * rnd.uniform(0.95, 1.04)) + (255,))
+    return im
+
+
+def cloth():
+    """Тканевое полотно: сложенный кусок рогожи с переплетением нитей, нижний край загнут."""
+    rnd = random.Random(22)
+    im = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    for y in range(3, 14):
+        for x in range(2, 14):
+            k = 1.08 if (x + y) % 2 == 0 else 0.9          # переплетение
+            if y == 3 or x == 2:
+                k *= 1.12
+            if y == 13 or x == 13:
+                k *= 0.72
+            if y >= 11:
+                k *= 0.85                                    # загнутый край
+            im.putpixel((x, y), shade(JUTE, k * rnd.uniform(0.96, 1.03)) + (255,))
+    for x in range(2, 14):
+        im.putpixel((x, 11), shade(JUTE, 0.62) + (255,))
+    for x, y in ((14, 5), (14, 8), (1, 7)):                  # торчащие нитки
+        im.putpixel((x, y), shade(JUTE, 0.9) + (255,))
+    return im
+
+
 def textures():
     for clay, (color, *_rest) in CLAYS.items():
         png(f"block/bricks_{clay}", brick_wall(color, random.Random(sum(map(ord, clay)))))
@@ -269,6 +320,8 @@ def textures():
     png("item/clay_mold", lump(MOLD_CLAY, 1))
     png("item/unfired_jug", jug(RAW_CLAY, 2))
     png("item/jug", jug(FIRED_JUG, 2))
+    png("item/cloth_blank", cloth_blank())
+    png("item/cloth", cloth())
     side, top, front, front_on = bloomery_faces()
     png("block/small_bloomery_side", side)
     png("block/small_bloomery_top", top)
@@ -298,7 +351,7 @@ def assets():
         write(f"assets/{NS}/blockstates/bricks_{clay}.json", {"variants": {"": {"model": f"{NS}:block/bricks_{clay}"}}})
         write(f"assets/{NS}/models/item/bricks_{clay}.json", {"parent": f"{NS}:block/bricks_{clay}"})
         simple_loot(f"bricks_{clay}")
-    for name in ("straw", "reinforced_brick", "clay_mold", "unfired_jug", "jug"):
+    for name in ("straw", "reinforced_brick", "clay_mold", "unfired_jug", "jug", "cloth_blank", "cloth"):
         item_model(name)
     for lit in ("", "_on"):
         write(f"assets/{NS}/models/block/small_bloomery{lit}.json", {
@@ -345,6 +398,16 @@ def data():
     write(f"data/{NS}/recipe/campfire/jug.json", {
         "type": "minecraft:campfire_cooking", "category": "misc", "cookingtime": 600, "experience": 0.3,
         "ingredient": {"item": f"{NS}:unfired_jug"}, "result": {"id": f"{NS}:jug", "count": 1}})
+    # Ткань: заготовка — 3 джута и обработанная палка; полотно ткут в руках (item/ClothBlankItem);
+    # армейский вещмешок — верёвка и 3 полотна
+    write(f"data/{NS}/recipe/cloth_blank.json", {
+        "type": "minecraft:crafting_shapeless", "category": "misc",
+        "ingredients": [{"item": f"{NS}:jute"}] * 3 + [{"item": f"{NS}:stick_processed"}],
+        "result": {"id": f"{NS}:cloth_blank", "count": 1}})
+    write(f"data/{NS}/recipe/duffel_backpack.json", {
+        "type": "minecraft:crafting_shapeless", "category": "equipment",
+        "ingredients": [{"item": f"{NS}:rope"}] + [{"item": f"{NS}:cloth"}] * 3,
+        "result": {"id": f"{NS}:duffel_backpack", "count": 1}})
     # Кремнёвый нож — срезать траву на солому: кремень над обработанной палкой
     write(f"data/{NS}/recipe/flint_knife.json", {
         "type": "minecraft:crafting_shaped", "category": "equipment",

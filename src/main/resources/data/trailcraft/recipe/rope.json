@@ -1,15 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "minecraft:crafting_shapeless",
   "category": "misc",
-  "key": {
-    "J": {
+  "ingredients": [
+    {
+      "item": "trailcraft:jute"
+    },
+    {
+      "item": "trailcraft:jute"
+    },
+    {
       "item": "trailcraft:jute"
     }
-  },
-  "pattern": [
-    "J",
-    "J",
-    "J"
   ],
   "result": {
     "id": "trailcraft:rope",

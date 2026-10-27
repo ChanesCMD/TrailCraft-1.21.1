@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "trailcraft:jute"
+    },
+    {
+      "item": "trailcraft:jute"
+    },
+    {
+      "item": "trailcraft:jute"
+    },
+    {
+      "item": "trailcraft:stick_processed"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:cloth_blank",
+    "count": 1
+  }
+}

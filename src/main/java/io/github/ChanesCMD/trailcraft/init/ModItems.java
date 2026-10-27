@@ -12,6 +12,7 @@ import io.github.ChanesCMD.trailcraft.item.CoinItem;
 import io.github.ChanesCMD.trailcraft.item.FlaskItem;
 import io.github.ChanesCMD.trailcraft.item.WalletItem;
 import io.github.ChanesCMD.trailcraft.item.BranchStickItem;
+import io.github.ChanesCMD.trailcraft.item.ClothBlankItem;
 import io.github.ChanesCMD.trailcraft.item.FirestarterItem;
 import io.github.ChanesCMD.trailcraft.item.HammerItem;
 import io.github.ChanesCMD.trailcraft.item.TurfCutterItem;
@@ -103,6 +104,10 @@ public class ModItems {
     public static final DeferredItem<ItemNameBlockItem> JUTE_SEEDS = ITEMS.registerItem("jute_seeds",
             props -> new ItemNameBlockItem(ModBlocks.JUTE_CROP.get(), props));
     public static final DeferredItem<Item> ROPE = ITEMS.registerSimpleItem("rope");
+    /** Тканевая заготовка: 3 джута и обработанная палка; с палкой в другой руке ПКМ — тканевое полотно. */
+    public static final DeferredItem<ClothBlankItem> CLOTH_BLANK = ITEMS.registerItem("cloth_blank", ClothBlankItem::new);
+    /** Тканевое полотно: 3 полотна и верёвка — армейский вещмешок. */
+    public static final DeferredItem<Item> CLOTH = ITEMS.registerSimpleItem("cloth");
 
     // === ПРЕДМЕТЫ ===
     public static final DeferredItem<Item> CLAY_BALL_WHITE = ITEMS.registerSimpleItem("clay_ball_white");

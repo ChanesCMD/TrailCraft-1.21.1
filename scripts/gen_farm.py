@@ -275,7 +275,11 @@ def recipes():
     for m, material, pattern, *_ in HOES:
         if material:
             shaped(f"{m}_hoe", pattern, {"M": ingredient(material), "S": {"item": f"{NS}:stick_processed"}}, f"{NS}:{m}_hoe")
-    shaped("rope", ["J", "J", "J"], {"J": {"item": f"{NS}:jute"}}, f"{NS}:rope")
+    # верёвка — 3 джута в любом порядке, влезает в сетку 2×2 инвентаря
+    write(f"data/{NS}/recipe/rope.json", {
+        "type": "minecraft:crafting_shapeless", "category": "misc",
+        "ingredients": [{"item": f"{NS}:jute"}] * 3, "result": {"id": f"{NS}:rope", "count": 1},
+    })
 
 
 # ============================== ГЕНЕРАЦИЯ ==============================
