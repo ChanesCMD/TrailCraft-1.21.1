@@ -26,6 +26,8 @@
 - Второй `play.bat` сам закрывает уже запущенную игру (иначе вторая копия в той же папке `run` падает): игра пишет PID и
   время запуска в `run/trailcraft-game.pid` (`client/DevInstance.java`, путь — свойство `trailcraft.pidFile` из
   `build.gradle`), `scripts/stop-game.ps1` сначала закрывает окно игры (мир сохраняется), через 30 с убивает процесс.
+- Папка модов для PojavLauncher — `pojav/mods` (TrailCraft, Create, Ponder, Flywheel, Registrate): собирает задача
+  `pojavMods`, после push в `main` с изменениями кода её пересобирает и коммитит workflow `.github/workflows/pojav.yml`.
 - В bat-файлах только ASCII: путь к проекту содержит кириллицу, а cmd ломает строки с UTF-8.
 - Внешний вид (позы, модели в руке) проверялся временным клиентским автотестом: заходит в мир, снимает скриншоты
   `Screenshot.grab`, камера — невидимая стойка для брони сбоку. Такой тест в репозиторий не коммитится.
