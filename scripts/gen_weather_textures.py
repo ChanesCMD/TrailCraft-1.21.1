@@ -42,8 +42,19 @@ def rain_drop(variant):
     return im
 
 
+def line(im, x0, y0, x1, y1, a):
+    """Отрезок по точкам (шаг полпикселя)."""
+    n = max(1, int(math.hypot(x1 - x0, y1 - y0) * 2))
+    for i in range(n + 1):
+        t = i / n
+        put(im, int(round(x0 + (x1 - x0) * t)), int(round(y0 + (y1 - y0) * t)), a)
+
+
 def snow_flake(variant):
-    """Снежинки 8×8: комочек, крестик, шестилучевая звёздочка, пушинка."""
+    """Снежинки: 0–3 — 8×8 (комочек, крестик, шестилучевая звёздочка, пушинка); 4–9 — 9×9 с центром в пикселе 4
+    (звезда с веточками, шестигранная пластинка, восьмилучевая звезда, иголка, крупа, ромбик)."""
+    if variant >= 4:
+        return snow_flake_big(variant)
     im = img(8, 8)
     if variant == 0:
         for x, y, a in [(3, 3, 1), (4, 3, 1), (3, 4, 1), (4, 4, 1), (2, 3, .5), (5, 4, .5), (3, 2, .5), (4, 5, .5)]:
@@ -66,6 +77,62 @@ def snow_flake(variant):
             for x in range(8):
                 d = math.hypot(x - 3.5, y - 3.5)
                 put(im, x, y, max(0.0, 1 - d / 3.2) ** 1.5)
+    return im
+
+
+def snow_flake_big(variant):
+    im = img(9, 9)
+    c = 4
+    if variant == 4:
+        # шестилучевая звезда с веточками на концах лучей
+        for k in range(6):
+            ang = k * math.pi / 3 + math.pi / 6
+            ex, ey = c + math.cos(ang) * 4, c + math.sin(ang) * 4
+            line(im, c, c, ex, ey, 0.9)
+            mx, my = c + math.cos(ang) * 2.6, c + math.sin(ang) * 2.6
+            for side in (-1, 1):
+                b = ang + side * math.pi / 3
+                line(im, mx, my, mx + math.cos(b) * 1.3, my + math.sin(b) * 1.3, 0.6)
+        put(im, c, c, 1)
+    elif variant == 5:
+        # шестигранная пластинка: плотный край, полупрозрачная середина
+        corners = [(c + math.cos(k * math.pi / 3) * 3.6, c + math.sin(k * math.pi / 3) * 3.6) for k in range(6)]
+        for y in range(9):
+            for x in range(9):
+                d = math.hypot(x - c, y - c)
+                ang = math.atan2(y - c, x - c) % (math.pi / 3) - math.pi / 6
+                r = 3.6 * math.cos(math.pi / 6) / math.cos(ang)
+                if d <= r - 0.6:
+                    put(im, x, y, 0.35)
+        for k in range(6):
+            line(im, *corners[k], *corners[(k + 1) % 6], 0.95)
+        put(im, c, c, 0.8)
+    elif variant == 6:
+        # восьмилучевая звезда: длинный крест и короткие диагонали
+        line(im, c, 0, c, 8, 0.85)
+        line(im, 0, c, 8, c, 0.85)
+        line(im, c - 2, c - 2, c + 2, c + 2, 0.7)
+        line(im, c - 2, c + 2, c + 2, c - 2, 0.7)
+        put(im, c, c, 1)
+    elif variant == 7:
+        # иголка (столбик): частица крутится, поэтому иголка летит под разными углами
+        line(im, c - 3, c + 2, c + 3, c - 2, 0.9)
+        for x, y in ((c - 3, c + 2), (c + 3, c - 2)):
+            put(im, x, y, 1)
+    elif variant == 8:
+        # крупа: плотный шарик с мягким краем
+        for y in range(9):
+            for x in range(9):
+                d = math.hypot(x - c, y - c)
+                put(im, x, y, 1.0 if d < 1.2 else max(0.0, 1 - (d - 1.2) / 1.6) * 0.7)
+    else:
+        # ромбик с крестом внутри
+        for k in range(4):
+            a0, a1 = k * math.pi / 2, (k + 1) * math.pi / 2
+            line(im, c + math.cos(a0) * 4, c + math.sin(a0) * 4, c + math.cos(a1) * 4, c + math.sin(a1) * 4, 0.85)
+        line(im, c, c - 2, c, c + 2, 0.6)
+        line(im, c - 2, c, c + 2, c, 0.6)
+        put(im, c, c, 1)
     return im
 
 
@@ -130,7 +197,7 @@ def dust_mote(variant):
 # имя частицы -> (функция, число кадров/вариантов)
 SPRITES = {
     "rain_drop": (rain_drop, 3),
-    "snow_flake": (snow_flake, 4),
+    "snow_flake": (snow_flake, 10),
     "rain_splash": (rain_splash, 4),
     "rain_ripple": (rain_ripple, 4),
     "dust_mote": (dust_mote, 3),
@@ -172,15 +239,18 @@ def main():
             f.write("\n")
         preview_rows.append((name, row))
 
-    cell = 40
-    sheet = Image.new("RGBA", (8 + 4 * (cell * 2 + 8), 8 + len(preview_rows) * (cell * 2 + 8)), (34, 40, 52, 255))
-    for r, (name, row) in enumerate(preview_rows):
+    # превью: по 5 картинок в строке, длинные наборы (снежинки) переносятся на следующую строку
+    cell, cols = 40, 5
+    lines = [(name, row[i:i + cols]) for name, row in preview_rows for i in range(0, len(row), cols)]
+    step = cell * 2 + 8
+    sheet = Image.new("RGBA", (8 + cols * step, 8 + len(lines) * step), (34, 40, 52, 255))
+    for r, (name, row) in enumerate(lines):
         for i, im in enumerate(row):
             big = tint(im, PREVIEW_TINT[name])
             k = max(1, min((cell * 2) // im.width, (cell * 2) // im.height))
             big = big.resize((im.width * k, im.height * k), Image.NEAREST)
-            x = 8 + i * (cell * 2 + 8) + (cell * 2 - big.width) // 2
-            y = 8 + r * (cell * 2 + 8) + (cell * 2 - big.height) // 2
+            x = 8 + i * step + (cell * 2 - big.width) // 2
+            y = 8 + r * step + (cell * 2 - big.height) // 2
             sheet.alpha_composite(big, (x, y))
     sheet.save(os.path.join(ROOT, "docs", "textures", "weather_particles.png"))
 

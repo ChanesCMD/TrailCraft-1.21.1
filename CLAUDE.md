@@ -106,7 +106,8 @@
   `RainRippleParticle`, крона задерживает 70 % капель), снежинки (`SnowFlakeParticle`) и в жарких биомах без осадков
   (пустыни) вместо дождя — пыльную бурю (`DustMoteParticle`, цвет — цвет земли); в дождь/снег/бурю туман ближе, в бурю —
   цвета пыли. Ветер — `WeatherWind` (только от времени мира, у всех игроков одинаковый, сильнее в дождь и грозу).
-  Ванильную текстуру дождя и снега убирает `mixin/LevelRendererMixin` (звук дождя остаётся). Типы частиц —
+  Ванильную текстуру дождя и снега и ванильные брызги убирает `mixin/LevelRendererMixin` (звук дождя остаётся),
+  ванильные капли с листвы заменяет своими `mixin/LeavesBlockClientMixin` (`WeatherParticles.leafDrip`); снежинок 10 видов. Типы частиц —
   `init/ModParticles.java`; текстуры и `particles/*.json` пишет `scripts/gen_weather_textures.py` (превью —
   `docs/textures/weather_particles.png`). Вкл/выкл и плотность — `ClientConfig.WEATHER_PARTICLES`, `WEATHER_DENSITY`.
   Временный биом `trailcraft:winter_test` (копия буроземной равнины с температурой −0,5, в генерацию не входит) — чтобы

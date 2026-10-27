@@ -8,9 +8,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.FogType;
 import net.minecraft.world.phys.Vec3;
@@ -43,6 +46,9 @@ public final class WeatherParticles {
     static final float SNOW_SHARE = 0.35f, DUST_SHARE = 0.6f;
     /** Скорость падения капли и снежинки (блоков/тик) и снос ветром на единицу силы ветра. */
     static final float RAIN_FALL = 0.95f, RAIN_DRIFT = 0.45f, SNOW_FALL = 0.07f, SNOW_DRIFT = 0.12f;
+    /** Капля с листвы: шанс 1 из стольких за animateTick (как у ванильной) и скорость падения. */
+    static final int LEAF_DRIP_CHANCE = 15;
+    static final float LEAF_DRIP_FALL = 0.3f;
     /** Биом без осадков с температурой выше этой — пустыня: вместо дождя пыльная буря. */
     static final float DUST_TEMPERATURE = 1.0f;
     /** Насколько сгущается туман: в дождь/снег, в грозу дополнительно, в пыльную бурю. */
@@ -116,6 +122,24 @@ public final class WeatherParticles {
                 }
             }
         }
+    }
+
+    /**
+     * Капля с листвы в дождь — как ванильная (так же часто и только над пустотой), но своя: медленная полоса,
+     * которая разбивается брызгами о землю.
+     */
+    public static void leafDrip(Level level, BlockPos pos, RandomSource random) {
+        if (random.nextInt(LEAF_DRIP_CHANCE) != 0 || !level.isRainingAt(pos.above())) {
+            return;
+        }
+        BlockPos below = pos.below();
+        BlockState state = level.getBlockState(below);
+        if (state.canOcclude() && state.isFaceSturdy(level, below, Direction.UP)) {
+            return;
+        }
+        Minecraft.getInstance().particleEngine.createParticle(ModParticles.RAIN_DROP.get(),
+                pos.getX() + random.nextDouble(), pos.getY() - 0.05, pos.getZ() + random.nextDouble(),
+                0, -LEAF_DRIP_FALL, 0);
     }
 
     private static void spawn(Minecraft mc, net.minecraft.core.particles.ParticleOptions type,
