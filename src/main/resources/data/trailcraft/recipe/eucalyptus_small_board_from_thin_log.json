@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "trailcraft:thin_eucalyptus_log"
+    },
+    {
+      "tag": "trailcraft:saws"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:eucalyptus_small_board",
+    "count": 1
+  }
+}

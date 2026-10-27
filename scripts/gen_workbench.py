@@ -1,7 +1,7 @@
 """Малые доски и верстаки из досок каждой породы (ModWood: <порода>_small_board, <порода>_crafting_table).
 
 Пишет: текстуры (из текстуры досок своей породы: верх с рамкой и сеткой, бока с инструментами; малая доска —
-по шаблону), модели, блокстейты, лут, тэги, рецепты (доски + пила → 2 малые доски; 4 малые доски → верстак),
+по шаблону), модели, блокстейты, лут, тэги, рецепты (доски + пила → 4 малые доски, тонкое бревно + пила → 1; 4 малые доски → верстак),
 переводы. Убирает ванильный верстак из 4 любых досок (bootstrap_crafting_table). Нужен Pillow.
 Запуск: python scripts/gen_workbench.py
 """
@@ -185,7 +185,11 @@ def data():
         write(f"data/{NS}/recipe/{wood}_small_board.json", {
             "type": "minecraft:crafting_shapeless", "category": "building",
             "ingredients": [{"item": f"{NS}:{wood}_planks"}, {"tag": f"{NS}:saws"}],
-            "result": {"id": f"{NS}:{wood}_small_board", "count": 2}})
+            "result": {"id": f"{NS}:{wood}_small_board", "count": 4}})
+        write(f"data/{NS}/recipe/{wood}_small_board_from_thin_log.json", {
+            "type": "minecraft:crafting_shapeless", "category": "building",
+            "ingredients": [{"item": f"{NS}:thin_{wood}_log"}, {"tag": f"{NS}:saws"}],
+            "result": {"id": f"{NS}:{wood}_small_board", "count": 1}})
         write(f"data/{NS}/recipe/{wood}_crafting_table.json", {
             "type": "minecraft:crafting_shaped", "category": "misc",
             "key": {"#": {"item": f"{NS}:{wood}_small_board"}}, "pattern": ["##", "##"],
