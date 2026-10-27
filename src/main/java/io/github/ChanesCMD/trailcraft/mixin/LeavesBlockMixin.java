@@ -27,9 +27,9 @@ import java.util.OptionalInt;
  */
 @Mixin(LeavesBlock.class)
 public abstract class LeavesBlockMixin extends Block {
-    /** Множитель скорости в листве: по горизонтали вдвое медленнее, падение — заметно медленнее. */
+    /** Множитель скорости в листве: по горизонтали 3/4 обычной, падение — заметно медленнее. */
     @Unique
-    private static final Vec3 trailcraft$SLOWDOWN = new Vec3(0.5, 0.35, 0.5);
+    private static final Vec3 trailcraft$SLOWDOWN = new Vec3(0.75, 0.525, 0.75);
 
     private LeavesBlockMixin(Properties properties) {
         super(properties);

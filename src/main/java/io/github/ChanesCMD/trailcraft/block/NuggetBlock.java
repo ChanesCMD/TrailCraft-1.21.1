@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Самородок на земле: лежит и подбирается как кремень (PebbleBlock). ВРЕМЕННО — с блок-сущностью, чтобы клиент рисовал
- * над ним столб высотой 10 блоков (client/NuggetMarkerRenderer) и было видно, где они появляются; потом сущность убрать.
+ * над ним столб высотой 40 блоков (client/NuggetMarkerRenderer) и было видно, где они появляются; потом сущность убрать.
  */
 public class NuggetBlock extends PebbleBlock implements EntityBlock {
     public static final MapCodec<NuggetBlock> CODEC = simpleCodec(NuggetBlock::new);

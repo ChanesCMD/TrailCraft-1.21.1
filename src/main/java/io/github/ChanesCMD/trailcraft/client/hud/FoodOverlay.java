@@ -25,7 +25,7 @@ import java.util.Locale;
  */
 @EventBusSubscriber(modid = TrailCraft.MODID, value = Dist.CLIENT)
 public final class FoodOverlay {
-    private static final int SATURATION = 0xFFFFD84A, BAR = 0x80000000;
+    private static final int SATURATION = 0xFFFFD84A, BAR = 0x68000000;
     /** Ванильный порог истощения: на 4 снимается единица насыщения или еды. */
     private static final float EXHAUSTION_MAX = 4;
     private static float exhaustion, thirst;
@@ -40,9 +40,7 @@ public final class FoodOverlay {
     static void renderThirst(GuiGraphics g, int right, int y, int step) {
         int width = 9 * step + 9;
         int left = Math.round((1 - Mth.clamp(thirst, 0, 1)) * width);
-        if (left > 0) {
-            g.fill(right - left, y, right, y + 9, BAR);
-        }
+        bar(g, right - left, y, right);
     }
 
     /** Ряд из 10 морковок слева направо с левого края x, верх — y. */
@@ -52,9 +50,7 @@ public final class FoodOverlay {
         float saturation = food.getSaturationLevel();
         int width = 9 * step + 9;
         int left = Math.round((1 - Mth.clamp(exhaustion / EXHAUSTION_MAX, 0, 1)) * width);
-        if (left > 0) {
-            g.fill(x, y, x + left, y + 9, BAR);
-        }
+        bar(g, x, y, x + left);
         for (int i = 0; i < 10; i++) {
             HudIcons.draw(g, x + i * step, y, HudIcons.FOOD, colors, Mth.clamp(level - 2 * i, 0, 2));
         }
@@ -78,6 +74,16 @@ public final class FoodOverlay {
         if (nextSaturation > saturation) {
             drawSaturation(g, x, y, step, nextSaturation, alpha << 24 | SATURATION & 0xFFFFFF);
         }
+    }
+
+    /** Полоска высотой 9 со скруглёнными углами (без угловых пикселей). */
+    private static void bar(GuiGraphics g, int x1, int y, int x2) {
+        if (x2 - x1 < 3) {
+            return;
+        }
+        g.fill(x1 + 1, y, x2 - 1, y + 1, BAR);
+        g.fill(x1, y + 1, x2, y + 8, BAR);
+        g.fill(x1 + 1, y + 8, x2 - 1, y + 9, BAR);
     }
 
     private static void drawSaturation(GuiGraphics g, int x, int y, int step, float saturation, int color) {

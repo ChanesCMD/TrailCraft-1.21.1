@@ -24,7 +24,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
  * чтобы проверить генерацию (см. NuggetBlock).
  */
 public class NuggetMarkerRenderer implements BlockEntityRenderer<NuggetMarkerBlockEntity> {
-    private static final float HEIGHT = 10;
+    private static final float HEIGHT = 40;
     private final BlockRenderDispatcher blocks;
 
     public NuggetMarkerRenderer(BlockEntityRendererProvider.Context context) {
