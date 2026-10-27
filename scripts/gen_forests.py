@@ -11,6 +11,7 @@
 """
 import json
 import os
+import re
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "main", "resources")
 NS = "trailcraft"
@@ -369,6 +370,24 @@ def leaf_variants():
 LAKES, VEGETAL = 1, 9  # индексы шагов lakes и vegetal_decoration в списке features биома
 
 
+# Цвет воды: пресная (реки, озёра, суша) чуть светлее ванильной 3F76E4, морская (море и его берега *_shore) — ещё светлее
+WATER_FRESH, WATER_SEA = 0x4E81E6, 0x5E8CE8
+SEA_BIOMES = {"sea", "burozem_shore", "chernozem_shore", "zheltozem_shore"}
+
+
+def water_colors():
+    """Меняет только число water_color, не переписывая файл (у морей и берегов своё оформление JSON)."""
+    folder = os.path.join(ROOT, "data", NS, "worldgen", "biome")
+    for name in sorted(os.listdir(folder)):
+        color = WATER_SEA if name[:-len(".json")] in SEA_BIOMES else WATER_FRESH
+        p = os.path.join(folder, name)
+        with open(p, encoding="utf-8") as f:
+            text = f.read()
+        text = re.sub(r'("water_color":\s*)\d+', lambda m: m.group(1) + str(color), text, count=1)
+        with open(p, "w", encoding="utf-8", newline="\n") as f:
+            f.write(text)
+
+
 def biomes():
     # одинокие деревья на равнинах — первыми в шаге (до травы, камешков и веток); старые слои plains_* заменяются
     for plains in PLAINS:
@@ -595,6 +614,7 @@ if __name__ == "__main__":
     tree_variants()
     trees()
     biomes()
+    water_colors()
     layout()
     sakura_hill()
     surface()

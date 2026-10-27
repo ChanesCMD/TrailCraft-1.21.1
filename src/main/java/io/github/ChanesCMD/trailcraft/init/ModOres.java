@@ -1,7 +1,7 @@
 package io.github.ChanesCMD.trailcraft.init;
 
 import io.github.ChanesCMD.trailcraft.block.OreBlock;
-import io.github.ChanesCMD.trailcraft.block.NuggetBlock;
+import io.github.ChanesCMD.trailcraft.block.PebbleBlock;
 import io.github.ChanesCMD.trailcraft.item.OreBlockItem;
 import io.github.ChanesCMD.trailcraft.ore.Ore;
 import net.minecraft.world.item.BlockItem;
@@ -74,7 +74,7 @@ public final class ModOres {
             DROPS.put(ore, ModItems.ITEMS.registerSimpleItem(ore.dropId));
         }
         for (Ore ore : NUGGET_ORES) {
-            DeferredBlock<Block> block = ModBlocks.BLOCKS.registerBlock(ore.id + "_nugget", NuggetBlock::new,
+            DeferredBlock<Block> block = ModBlocks.BLOCKS.registerBlock(ore.id + "_nugget", PebbleBlock::new,
                     BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(0.2f).sound(SoundType.STONE)
                             .noCollission().noOcclusion().pushReaction(PushReaction.DESTROY));
             NUGGET_BLOCKS.put(ore, block);
