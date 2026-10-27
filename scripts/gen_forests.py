@@ -576,11 +576,73 @@ def sakura_hill():
     write(rel, data)
 
 
+def caves():
+    """Пещеры как в ванильном мире с 1.18: «сырные» полости, «спагетти», «лапша», входы с поверхности и колонны.
+    Это ветка ванильного overworld final_density 1.21.1 (в noise_settings пещеры были вырезаны): она подставляется
+    вместо голого рельефа trailcraft:sloped_cheese внутри интерполяции, а «лапша» — через min поверх всего. Повторный
+    запуск ничего не меняет. Правила поверхности (почва, песок, снег) действуют только выше предварительной
+    поверхности (above_preliminary_surface, как в ванили), иначе почва и трава ложились бы на пол пещер."""
+    cheese = f"{NS}:sloped_cheese"
+    caves_branch = {
+        "type": "minecraft:range_choice", "input": cheese, "min_inclusive": -1000000.0, "max_exclusive": 1.5625,
+        # у поверхности — только входы в пещеры
+        "when_in_range": {"type": "minecraft:min", "argument1": cheese, "argument2": {
+            "type": "minecraft:mul", "argument1": 5.0, "argument2": "minecraft:overworld/caves/entrances"}},
+        # глубже — сыр, спагетти и колонны
+        "when_out_of_range": {"type": "minecraft:max", "argument1": {"type": "minecraft:min", "argument1": {
+            "type": "minecraft:min",
+            "argument1": {"type": "minecraft:add",
+                          "argument1": {"type": "minecraft:mul", "argument1": 4.0, "argument2": {
+                              "type": "minecraft:square", "argument": {"type": "minecraft:noise",
+                                                                       "noise": "minecraft:cave_layer",
+                                                                       "xz_scale": 1.0, "y_scale": 8.0}}},
+                          "argument2": {"type": "minecraft:add",
+                                        "argument1": {"type": "minecraft:clamp", "min": -1.0, "max": 1.0, "input": {
+                                            "type": "minecraft:add", "argument1": 0.27, "argument2": {
+                                                "type": "minecraft:noise", "noise": "minecraft:cave_cheese",
+                                                "xz_scale": 1.0, "y_scale": 0.6666666666666666}}},
+                                        "argument2": {"type": "minecraft:clamp", "min": 0.0, "max": 0.5, "input": {
+                                            "type": "minecraft:add", "argument1": 1.5, "argument2": {
+                                                "type": "minecraft:mul", "argument1": -0.64, "argument2": cheese}}}}},
+            "argument2": "minecraft:overworld/caves/entrances"},
+            "argument2": {"type": "minecraft:add", "argument1": "minecraft:overworld/caves/spaghetti_2d",
+                          "argument2": "minecraft:overworld/caves/spaghetti_roughness_function"}},
+            "argument2": {"type": "minecraft:range_choice", "input": "minecraft:overworld/caves/pillars",
+                          "min_inclusive": -1000000.0, "max_exclusive": 0.03, "when_in_range": -1000000.0,
+                          "when_out_of_range": "minecraft:overworld/caves/pillars"}},
+    }
+    rel = f"data/{NS}/worldgen/noise_settings/trailcraft_world.json"
+    data = read(rel)
+    router = data["noise_router"]
+    if "minecraft:overworld/caves/noodle" not in json.dumps(router["final_density"]):
+        def put_caves(o):
+            if isinstance(o, dict):
+                return {k: caves_branch if v == cheese else put_caves(v) for k, v in o.items()}
+            return o
+        router["final_density"] = {"type": "minecraft:min", "argument1": put_caves(router["final_density"]),
+                                   "argument2": "minecraft:overworld/caves/noodle"}
+    rules = data["surface_rule"]["sequence"]
+    if not any(r.get("if_true", {}).get("type") == "minecraft:above_preliminary_surface" for r in rules):
+        # первое правило — коренная порода (бедрок), последнее — слои пород: они действуют везде
+        data["surface_rule"]["sequence"] = [rules[0], {
+            "type": "minecraft:condition", "if_true": {"type": "minecraft:above_preliminary_surface"},
+            "then_run": {"type": "minecraft:sequence", "sequence": rules[1:-1]}}, rules[-1]]
+    write(rel, data)
+
+
+def surface_rules(data):
+    """Список правил поверхности, где лежат правила биомов (внутри условия above_preliminary_surface, см. caves())."""
+    for r in data["surface_rule"]["sequence"]:
+        if r.get("if_true", {}).get("type") == "minecraft:above_preliminary_surface":
+            return r["then_run"]["sequence"]
+    return data["surface_rule"]["sequence"]
+
+
 def surface():
     """Под лесом та же почва, что на равнине: правило равнины действует на равнину и все леса этой почвы."""
     rel = f"data/{NS}/worldgen/noise_settings/trailcraft_world.json"
     data = read(rel)
-    for rule in data["surface_rule"]["sequence"]:
+    for rule in surface_rules(data):
         cond = rule.get("if_true", {})
         if cond.get("type") != "minecraft:biome":
             continue
@@ -622,6 +684,7 @@ if __name__ == "__main__":
     water_colors()
     layout()
     sakura_hill()
+    caves()
     surface()
     tag("worldgen/biome", f"{NS}:trailworldgen_biomes", [f"{NS}:{b}" for b in FORESTS],
         [f"{NS}:{b}" for b in REMOVED_BIOMES])
