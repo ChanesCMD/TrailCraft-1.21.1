@@ -110,7 +110,7 @@
                         "type": "minecraft:quarter_negative",
                         "argument": {
                           "type": "minecraft:mul",
-                          "argument1": "minecraft:overworld/depth",
+                          "argument1": "trailcraft:overworld_depth",
                           "argument2": {
                             "type": "minecraft:cache_2d",
                             "argument": "minecraft:overworld/factor"
@@ -165,7 +165,7 @@
                       "argument2": {
                         "type": "minecraft:add",
                         "argument1": 0.078125,
-                        "argument2": "minecraft:overworld/sloped_cheese"
+                        "argument2": "trailcraft:sloped_cheese"
                       }
                     }
                   }

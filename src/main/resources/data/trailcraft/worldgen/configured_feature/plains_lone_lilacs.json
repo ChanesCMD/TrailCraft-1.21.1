@@ -2,6 +2,6 @@
   "type": "minecraft:random_selector",
   "config": {
     "features": [],
-    "default": "trailcraft:lilac_wild_checked"
+    "default": "trailcraft:young_lilac_wild_checked"
   }
 }

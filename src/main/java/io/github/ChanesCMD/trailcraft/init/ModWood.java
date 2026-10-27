@@ -33,6 +33,7 @@ import net.neoforged.neoforge.registries.DeferredItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -49,6 +50,9 @@ public final class ModWood {
     }
 
     public static final List<WoodSet> SETS = new ArrayList<>();
+
+    /** Деревья из четырёх саженцев квадратом 2×2: порода -> configured_feature (реликтовый эвкалипт — ствол 2×2). */
+    private static final Map<String, String> MEGA_TREES = Map.of("eucalyptus", "relict_eucalyptus_tree");
 
     /**
      * Прочность обычных брёвен и древесины: в 2 раза больше прежней (2.0), добываются вдвое дольше.
@@ -152,12 +156,16 @@ public final class ModWood {
                 .isViewBlocking((st, lv, pos) -> false).ignitedByLava().pushReaction(PushReaction.DESTROY));
     }
 
-    /** Саженец растит дерево configured_feature trailcraft:<id>_tree. */
+    /** Саженец растит дерево configured_feature trailcraft:<id>_tree, четыре саженца квадратом — дерево из MEGA_TREES. */
     private static DeferredBlock<Block> sapling(String id) {
-        ResourceKey<ConfiguredFeature<?, ?>> treeKey = ResourceKey.create(Registries.CONFIGURED_FEATURE, ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, id + "_tree"));
-        TreeGrower grower = new TreeGrower(TrailCraft.MODID + ":" + id, Optional.empty(), Optional.of(treeKey), Optional.empty());
+        Optional<ResourceKey<ConfiguredFeature<?, ?>>> mega = Optional.ofNullable(MEGA_TREES.get(id)).map(ModWood::feature);
+        TreeGrower grower = new TreeGrower(TrailCraft.MODID + ":" + id, mega, Optional.of(feature(id + "_tree")), Optional.empty());
         return reg(id + "_sapling", p -> new SaplingBlock(grower, p), BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollission()
                 .randomTicks().instabreak().sound(SoundType.GRASS).pushReaction(PushReaction.DESTROY));
+    }
+
+    private static ResourceKey<ConfiguredFeature<?, ?>> feature(String name) {
+        return ResourceKey.create(Registries.CONFIGURED_FEATURE, ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, name));
     }
 
     private static void item(WoodSet s, String name, DeferredBlock<Block> block) {

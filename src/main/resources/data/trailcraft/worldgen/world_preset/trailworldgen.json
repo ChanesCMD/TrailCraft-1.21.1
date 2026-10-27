@@ -630,33 +630,6 @@
               }
             },
             {
-              "biome": "trailcraft:eucalyptus_forest",
-              "parameters": {
-                "temperature": [
-                  0.5,
-                  2.0
-                ],
-                "humidity": [
-                  0.45,
-                  0.55
-                ],
-                "continentalness": [
-                  -0.15,
-                  2.0
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  -2.0,
-                  -0.09
-                ],
-                "offset": 0.0
-              }
-            },
-            {
               "biome": "trailcraft:ebony_forest",
               "parameters": {
                 "temperature": [
@@ -664,7 +637,7 @@
                   2.0
                 ],
                 "humidity": [
-                  0.55,
+                  0.45,
                   2.0
                 ],
                 "continentalness": [
@@ -1710,33 +1683,6 @@
               }
             },
             {
-              "biome": "trailcraft:eucalyptus_forest",
-              "parameters": {
-                "temperature": [
-                  0.5,
-                  2.0
-                ],
-                "humidity": [
-                  0.45,
-                  0.55
-                ],
-                "continentalness": [
-                  -0.15,
-                  2.0
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  0.09,
-                  2.0
-                ],
-                "offset": 0.0
-              }
-            },
-            {
               "biome": "trailcraft:ebony_forest",
               "parameters": {
                 "temperature": [
@@ -1744,7 +1690,7 @@
                   2.0
                 ],
                 "humidity": [
-                  0.55,
+                  0.45,
                   2.0
                 ],
                 "continentalness": [

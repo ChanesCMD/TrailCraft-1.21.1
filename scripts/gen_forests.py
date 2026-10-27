@@ -26,7 +26,7 @@ SAVANNA_NOISE = 0.3
 # водопои (необязательно). Слой деревьев: (имя, {порода: вес}, густота). Густота: ("count", n) — n попыток на чанк;
 # ("noise", ниже, выше, порог) — столько попыток там, где шум биома ниже / выше порога (пятна размером в сотню блоков);
 # ("rarity", n) — одно дерево раз в n чанков. Деревья не касаются друг друга, поэтому реальная густота ниже.
-# Порода — дерево <порода>_wild_checked (relict_eucalyptus — эвкалипт со стволом 2×2).
+# Порода — дерево <порода>_wild_checked (или вариант из TREE_VARIANTS).
 # Слои ставятся по порядку: крупные деревья — первым слоем, пока им есть место.
 # Водопои: (порог шума, раз в n чанков) — маленькие озёра только там, где шум биома выше порога.
 FORESTS = {
@@ -94,10 +94,11 @@ FORESTS = {
         soil="zheltozem", ru="Лес железного дерева", en="Ironwood Forest", temperature=0.85, downfall=0.9, grass=0x8FB04E,
         trees=[("trees", {"ironwood": 1}, ("count", 8))],
         mobs=[]),
-    # 70% площади — редкие акации, 30% — густые пятна с водопоями
+    # 70% площади — редкие акации (одна на ~3 чанка), 30% — густые пятна с водопоями
     "savanna": dict(
         soil="zheltozem", ru="Саванна", en="Savanna", temperature=1.0, downfall=0.6, grass=0xB8B653,
-        trees=[("trees", {"acacia": 1}, ("noise", 1, 8, SAVANNA_NOISE))],
+        trees=[("trees", {"acacia": 1}, ("noise", 0, 8, SAVANNA_NOISE)),
+               ("lone_trees", {"acacia": 1}, ("rarity", 3))],
         water=(SAVANNA_NOISE, 5),
         mobs=[("minecraft:rabbit", 4, 2, 3)]),
     # реликтовые эвкалипты (ствол 2×2) — примерно 30% деревьев
@@ -113,7 +114,7 @@ FORESTS = {
         mobs=[]),
     "ebony_forest": dict(
         soil="zheltozem", ru="Эбеновый лес", en="Ebony Forest", temperature=1.1, downfall=0.95, grass=0x7FAE45,
-        trees=[("trees", {"ebony": 1}, ("count", 2))],
+        trees=[("trees", {"ebony": 1}, ("count", 1))],
         mobs=[]),
 }
 # Больше не генерируются: скрипт удаляет их файлы и убирает их из тэга и переводов
@@ -121,10 +122,19 @@ REMOVED_BIOMES = ["zheltozem_forest", "acacia_grove", "palm_grove"]
 
 # Одинокие деревья посреди равнин (всех трёх почв): имя слоя, {порода: вес}, густота (как у лесов)
 PLAINS_TREES = [
-    ("lone_lilacs", {"lilac": 1}, ("rarity", 16)),
+    ("lone_lilacs", {"young_lilac": 1}, ("rarity", 16)),
     ("lone_pussy_willows", {"pussy_willow": 1}, ("rarity", 16)),
 ]
 PLAINS = ["burozem_plains", "chernozem_plains", "zheltozem_plains"]
+
+# Варианты деревьев на древесине породы: имя -> порода, форма, доля старых. Скрипт пишет <имя>_wild_tree и
+# <имя>_wild_checked (растёт там же, где саженец породы). Из саженцев: <имя>_tree для имён из SAPLING_TREES —
+# реликтовый эвкалипт растёт из 4 саженцев эвкалипта квадратом 2×2 (ModWood.MEGA_TREES), сразу большим.
+TREE_VARIANTS = {
+    "relict_eucalyptus": ("eucalyptus", "relict_eucalyptus", 1.0),
+    "young_lilac": ("lilac", "sakura", 0.0),  # только молодая, из тонких брёвен
+}
+SAPLING_TREES = ["relict_eucalyptus"]
 
 # Пойменные деревья на берегах рек (редко): порода: вес, попыток на чанк
 RIVER_TREES = {"willow": 3, "alder": 2, "white_poplar": 2, "pussy_willow": 2}
@@ -154,8 +164,7 @@ H_PINE, H_TAIGA = -0.2, 0.05                    # бурозём холодны�
 H_BROADLEAF, H_BIRCH, H_MAPLE, H_WET = -0.1, -0.03, 0.2, 0.45  # бурозём умеренный: равнина | березняк |
 #                                                 широколиственный | кленовый | ольшаник, туя
 H_FOREST_STEPPE, H_WALNUT = 0.15, 0.4           # чернозём: равнина | лесостепь | ореховая роща
-H_ZHELTOZEM_FOREST = 0.2                        # жёлтозём: пустыни | равнина | саванна | эвкалипт (влажнее H_WET)
-H_EBONY = 0.55                                  # тропики: эвкалипт | эбеновый лес (самое влажное — редко)
+H_ZHELTOZEM_FOREST = 0.2                        # жёлтозём: пустыни | равнина | саванна | эвкалипт, эбен (влажнее H_WET)
 H_DESERT, H_SHORE = -0.02, -0.14
 # Континентальность: море | прибрежная полоса | суша; странность около 0 — реки, по знаку странности — пары биомов
 C_SEA, C_COAST = -0.19, -0.15
@@ -166,6 +175,11 @@ W_BANK = 0.09    # |странность| от W_RIVER до W_BANK — поло�
 W_GROVE = 0.92
 # Сакура — на возвышенностях: |странность| около 2/3 (пики рельефа), эрозия низкая, но не горы, вдали от моря
 W_SAKURA, E_SAKURA, C_SAKURA = (0.62, 0.72), (-0.5, -0.25), -0.05
+SAKURA = dict(t=(T_ZHELTOZEM, T_SUBTROPIC), h=(H_DESERT, 2.0), c=(C_SAKURA, 2.0), e=E_SAKURA, w=W_SAKURA)
+# Под сакуровой рощей земля поднята на SAKURA_HILL блоков (sakura_hill()); за краем биома — склон: подъём сходит на нет,
+# когда параметр уходит за границу биома на SAKURA_PAD (склон обычно шириной 10–30 блоков)
+SAKURA_HILL = 9
+SAKURA_PAD = dict(t=0.02, h=0.03, c=0.03, e=0.06, w=0.09)
 
 
 def path(*parts):
@@ -263,6 +277,19 @@ def water_holes(biome, level, rarity):
             {"type": "minecraft:biome"},
         ],
     })
+
+
+def tree_variants():
+    for name, (wood, shape, old) in TREE_VARIANTS.items():
+        tree = {"type": f"{NS}:trail_tree", "config": {"wood": wood, "shape": shape, "old_chance": old}}
+        write(f"data/{NS}/worldgen/configured_feature/{name}_wild_tree.json", tree)
+        if name in SAPLING_TREES:
+            write(f"data/{NS}/worldgen/configured_feature/{name}_tree.json", tree)
+        write(f"data/{NS}/worldgen/placed_feature/{name}_wild_checked.json", {
+            "feature": f"{NS}:{name}_wild_tree",
+            "placement": [{"type": "minecraft:block_predicate_filter", "predicate": {
+                "type": "minecraft:would_survive", "state": {"Name": f"{NS}:{wood}_sapling"}}}],
+        })
 
 
 def plains_tree_layers():
@@ -415,8 +442,7 @@ def layout_entries():
         ("zheltozem_plains", HOT, (H_DESERT, H_ZHELTOZEM_FOREST), INLAND),
         ("savanna", HOT, (H_ZHELTOZEM_FOREST, H_WET), INLAND),
         ("eucalyptus_forest", SUBTROPIC, (H_WET, 2.0), INLAND),
-        ("eucalyptus_forest", TROPIC, (H_WET, H_EBONY), INLAND),
-        ("ebony_forest", TROPIC, (H_EBONY, 2.0), INLAND),
+        ("ebony_forest", TROPIC, (H_WET, 2.0), INLAND),
         ("desert", DESERT, (-2.0, H_DESERT), INLAND),
         ("red_desert", RED, (-2.0, H_DESERT), INLAND),
         # прибрежная полоса: где сухо — берег (пляж), где влажно — равнины
@@ -444,7 +470,7 @@ def layout_entries():
         # маленькие рощи посреди равнины: сирень при странности > 0, железное дерево при < 0
         (("ironwood_forest", "lilac_grove"), WARM_GROVES, (H_DESERT, 2.0), INLAND, ALL, (W_GROVE, 2.0)),
         # сакура — на возвышенностях
-        ("sakura_grove", WARM_GROVES, (H_DESERT, 2.0), (C_SAKURA, 2.0), E_SAKURA, W_SAKURA),
+        ("sakura_grove", *(SAKURA[k] for k in "thcew")),
     ]
     boxes = [(b, (t, h, c, ALL, AW)) for b, t, h, c in grid]
     for b, *hole in patches:
@@ -464,6 +490,65 @@ def layout():
     rel = f"data/{NS}/worldgen/world_preset/trailworldgen.json"
     data = read(rel)
     data["dimensions"]["minecraft:overworld"]["generator"]["biome_source"]["biomes"] = layout_entries()
+    write(rel, data)
+
+
+def sakura_hill():
+    """Возвышенность под сакуровой рощей. Рельеф от биома не зависит (его считает noise_router), поэтому подъём —
+    функция плотности на тех же шумах климата: 1 внутри коробки параметров сакуры, 0 за её краем дальше SAKURA_PAD.
+    Она прибавляется к overworld/depth (глубина меняется на 1/128 за блок, подъём n блоков — n / 128) в копии ванильного
+    overworld/sloped_cheese; поле depth самого noise_router (по нему выбираются биомы) остаётся ванильным."""
+    def shifted(noise):
+        return {"type": "minecraft:shifted_noise", "noise": noise, "xz_scale": 0.25, "y_scale": 0.0,
+                "shift_x": "minecraft:shift_x", "shift_y": "minecraft:zero", "shift_z": "minecraft:shift_z"}
+
+    def ramp(x, k, b):  # clamp(k·x + b, 0, 1)
+        return {"type": "minecraft:clamp", "min": 0.0, "max": 1.0,
+                "input": {"type": "minecraft:add", "argument1": {"type": "minecraft:mul", "argument1": k, "argument2": x},
+                          "argument2": b}}
+    inputs = dict(t=shifted("minecraft:temperature"), h=shifted("minecraft:vegetation"), c="minecraft:overworld/continents",
+                  e="minecraft:overworld/erosion", w={"type": "minecraft:abs", "argument": "minecraft:overworld/ridges"})
+    ramps = []
+    for key, (lo, hi) in SAKURA.items():
+        pad = SAKURA_PAD[key]
+        if lo > -2.0:  # 1 при x >= lo, 0 при x <= lo - pad
+            ramps.append(ramp(inputs[key], 1 / pad, (pad - lo) / pad))
+        if hi < 2.0:   # 1 при x <= hi, 0 при x >= hi + pad
+            ramps.append(ramp(inputs[key], -1 / pad, (hi + pad) / pad))
+    mask = ramps[0]
+    for r in ramps[1:]:
+        mask = {"type": "minecraft:min", "argument1": mask, "argument2": r}
+    d = f"data/{NS}/worldgen/density_function"
+    write(f"{d}/sakura_hill.json", {"type": "minecraft:flat_cache", "argument": {
+        "type": "minecraft:mul", "argument1": SAKURA_HILL / 128, "argument2": mask}})
+    write(f"{d}/overworld_depth.json", {"type": "minecraft:add", "argument1": "minecraft:overworld/depth",
+                                        "argument2": f"{NS}:sakura_hill"})
+    # копия ванильного overworld/sloped_cheese 1.21.1, глубина — своя
+    write(f"{d}/sloped_cheese.json", {
+        "type": "minecraft:add",
+        "argument1": {"type": "minecraft:mul", "argument1": 4.0, "argument2": {
+            "type": "minecraft:quarter_negative", "argument": {
+                "type": "minecraft:mul",
+                "argument1": {"type": "minecraft:add", "argument1": f"{NS}:overworld_depth", "argument2": {
+                    "type": "minecraft:mul", "argument1": "minecraft:overworld/jaggedness", "argument2": {
+                        "type": "minecraft:half_negative", "argument": {
+                            "type": "minecraft:noise", "noise": "minecraft:jagged", "xz_scale": 1500.0, "y_scale": 0.0}}}},
+                "argument2": "minecraft:overworld/factor"}}},
+        "argument2": "minecraft:overworld/base_3d_noise",
+    })
+
+    def swap(o, old, new):
+        if isinstance(o, dict):
+            return {k: swap(v, old, new) for k, v in o.items()}
+        if isinstance(o, list):
+            return [swap(v, old, new) for v in o]
+        return new if o == old else o
+    rel = f"data/{NS}/worldgen/noise_settings/trailcraft_world.json"
+    data = read(rel)
+    router = data["noise_router"]
+    router["final_density"] = swap(router["final_density"], "minecraft:overworld/sloped_cheese", f"{NS}:sloped_cheese")
+    router["initial_density_without_jaggedness"] = swap(router["initial_density_without_jaggedness"],
+                                                        "minecraft:overworld/depth", f"{NS}:overworld_depth")
     write(rel, data)
 
 
@@ -507,9 +592,11 @@ def lang():
 if __name__ == "__main__":
     remove_old()
     leaf_variants()
+    tree_variants()
     trees()
     biomes()
     layout()
+    sakura_hill()
     surface()
     tag("worldgen/biome", f"{NS}:trailworldgen_biomes", [f"{NS}:{b}" for b in FORESTS],
         [f"{NS}:{b}" for b in REMOVED_BIOMES])

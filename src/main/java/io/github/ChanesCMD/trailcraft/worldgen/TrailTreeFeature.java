@@ -120,6 +120,20 @@ public class TrailTreeFeature extends Feature<TrailTreeConfig> {
             }
         }
 
+        /** Цепочка листвы от a до b, где соседние блоки касаются гранями (иначе листва не держится за ствол и не ставится). */
+        void leafPath(BlockPos a, BlockPos b) {
+            int x = a.getX(), y = a.getY(), z = a.getZ();
+            leaf(a);
+            int guard = 0;
+            while ((x != b.getX() || y != b.getY() || z != b.getZ()) && guard++ < 64) {
+                int dx = b.getX() - x, dy = b.getY() - y, dz = b.getZ() - z;
+                if (Math.abs(dx) >= Math.abs(dz) && Math.abs(dx) >= Math.abs(dy)) x += Integer.signum(dx);
+                else if (Math.abs(dz) >= Math.abs(dy)) z += Integer.signum(dz);
+                else y += Integer.signum(dy);
+                leaf(new BlockPos(x, y, z));
+            }
+        }
+
         void put(BlockPos p, boolean full, Direction.Axis axis) {
             if (full) fullLog(p, axis); else thinLog(p);
         }
@@ -343,7 +357,7 @@ public class TrailTreeFeature extends Feature<TrailTreeConfig> {
             return true;
         }
 
-        /** Пальма: изогнутый ствол, наверху листья-веера. */
+        /** Пальма: изогнутый ствол, наверху листья-веера, с их концов свисают короткие пряди. */
         boolean palm() {
             int h = old ? 8 + r.nextInt(5) : 3 + r.nextInt(2);
             if (!trunkFree(3)) return false;
@@ -357,14 +371,17 @@ public class TrailTreeFeature extends Feature<TrailTreeConfig> {
                 prev = p;
             }
             BlockPos top = prev;
-            leaf(top.above());
-            int fronds = old ? 7 : 5, len = old ? 4 : 2;
+            BlockPos crown = top.above();
+            leaf(crown);
+            if (old) leaf(crown.above());
+            int fronds = old ? 7 : 5, len = old ? 3 : 2;
             for (int i = 0; i < fronds; i++) {
                 double a = i * Math.PI * 2 / fronds + r.nextDouble() * 0.3;
-                for (int k = 1; k <= len; k++) {
-                    int droop = k >= len - 1 ? -1 : 0;
-                    leaf(top.offset((int) Math.round(Math.cos(a) * k), 1 + droop, (int) Math.round(Math.sin(a) * k)));
-                }
+                BlockPos tip = top.offset((int) Math.round(Math.cos(a) * len), 1, (int) Math.round(Math.sin(a) * len));
+                leafPath(crown, tip);
+                // с конца листа свисает прядь, как у ивы, но короче (слишком далёкую от ствола листву commit не ставит)
+                int hang = 1 + r.nextInt(old ? 3 : 2);
+                for (int k = 1; k <= hang; k++) leaf(tip.below(k));
             }
             return true;
         }
