@@ -369,17 +369,31 @@ def worldgen():
 
 
 def nuggets():
-    """Самородок на земле: общая форма block/nugget_shape (пишет scripts/gen_nugget_models.py), своя текстура."""
+    """
+    Самородок на земле: формы block/nugget_shape_<n> (пишет scripts/gen_nugget_models.py), у каждой руды — своя
+    текстура; блокстейт случайно выбирает форму и поворот.
+    """
+    folder = path("assets", NS, "models", "block")
+    shapes = sorted(int(f[len("nugget_shape_"):-5]) for f in os.listdir(folder)
+                    if f.startswith("nugget_shape_") and f.endswith(".json"))
     for ore, _, _, _ in NUGGETS:
         block = f"{ore}_nugget"
         for v in "abcd":  # старые модели по образцу кремня
             old = path("assets", NS, "models", "block", f"{block}_{v}.json")
             if os.path.exists(old):
                 os.remove(old)
-        write(f"assets/{NS}/models/block/{block}.json", {
-            "parent": f"{NS}:block/nugget_shape",
-            "textures": {"particle": f"{NS}:block/{block}", "all": f"{NS}:block/{block}"}})
-        variants = [{"model": f"{NS}:block/{block}", **({"y": y} if y else {})} for y in (0, 90, 180, 270)]
+        old = path("assets", NS, "models", "block", f"{block}.json")
+        if os.path.exists(old):
+            os.remove(old)
+        for f in os.listdir(folder):
+            if f.startswith(f"{block}_") and f.endswith(".json"):
+                os.remove(os.path.join(folder, f))
+        variants = []
+        for n in shapes:
+            write(f"assets/{NS}/models/block/{block}_{n}.json", {
+                "parent": f"{NS}:block/nugget_shape_{n}",
+                "textures": {"particle": f"{NS}:block/{block}", "all": f"{NS}:block/{block}"}})
+            variants += [{"model": f"{NS}:block/{block}_{n}", **({"y": y} if y else {})} for y in (0, 90, 180, 270)]
         write(f"assets/{NS}/blockstates/{block}.json", {"variants": {"": variants}})
         item_model(block)
         write(f"data/{NS}/loot_table/blocks/{block}.json", {

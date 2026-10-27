@@ -1,0 +1,7 @@
+{
+  "parent": "trailcraft:block/nugget_shape_13",
+  "textures": {
+    "particle": "trailcraft:block/native_copper_nugget",
+    "all": "trailcraft:block/native_copper_nugget"
+  }
+}

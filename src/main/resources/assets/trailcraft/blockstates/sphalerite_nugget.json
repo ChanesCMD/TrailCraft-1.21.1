@@ -2,18 +2,48 @@
   "variants": {
     "": [
       {
-        "model": "trailcraft:block/sphalerite_nugget"
+        "model": "trailcraft:block/sphalerite_nugget_13"
       },
       {
-        "model": "trailcraft:block/sphalerite_nugget",
+        "model": "trailcraft:block/sphalerite_nugget_13",
         "y": 90
       },
       {
-        "model": "trailcraft:block/sphalerite_nugget",
+        "model": "trailcraft:block/sphalerite_nugget_13",
         "y": 180
       },
       {
-        "model": "trailcraft:block/sphalerite_nugget",
+        "model": "trailcraft:block/sphalerite_nugget_13",
+        "y": 270
+      },
+      {
+        "model": "trailcraft:block/sphalerite_nugget_15"
+      },
+      {
+        "model": "trailcraft:block/sphalerite_nugget_15",
+        "y": 90
+      },
+      {
+        "model": "trailcraft:block/sphalerite_nugget_15",
+        "y": 180
+      },
+      {
+        "model": "trailcraft:block/sphalerite_nugget_15",
+        "y": 270
+      },
+      {
+        "model": "trailcraft:block/sphalerite_nugget_17"
+      },
+      {
+        "model": "trailcraft:block/sphalerite_nugget_17",
+        "y": 90
+      },
+      {
+        "model": "trailcraft:block/sphalerite_nugget_17",
+        "y": 180
+      },
+      {
+        "model": "trailcraft:block/sphalerite_nugget_17",
         "y": 270
       }
     ]

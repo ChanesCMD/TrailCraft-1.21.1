@@ -1,5 +1,5 @@
 {
-  "parent": "trailcraft:block/nugget_shape",
+  "parent": "trailcraft:block/nugget_shape_15",
   "textures": {
     "particle": "trailcraft:block/tetrahedrite_nugget",
     "all": "trailcraft:block/tetrahedrite_nugget"

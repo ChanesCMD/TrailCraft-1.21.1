@@ -1,8 +1,10 @@
 """
 Модель самородка на земле (общая для всех руд, текстура — #all) и превью 20 вариантов формы (11–20 — на основе «Крупинок»).
 
-Запуск из корня проекта:  python scripts/gen_nugget_models.py [--shape 1..20]   (нужен Pillow)
-В игру идёт выбранный вариант (по умолчанию SHAPE) — models/block/nugget_shape.json; лист с 3D-превью всех вариантов —
+Запуск из корня проекта:  python scripts/gen_nugget_models.py [--shape 13,15,17]   (нужен Pillow)
+В игру идут выбранные варианты (по умолчанию CHOSEN) — models/block/nugget_shape_<n>.json, самородок на земле случайно
+принимает одну из них (блокстейт пишет scripts/gen_ores.py — после смены вариантов перезапустить и его);
+лист с 3D-превью всех вариантов —
 docs/textures/nugget_models.png (на текстуре самородной меди и малахита).
 """
 import json
@@ -15,7 +17,7 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 ASSETS = os.path.join(ROOT, "src", "main", "resources", "assets", "trailcraft")
 DOCS = os.path.join(ROOT, "docs", "textures")
-SHAPE = 1
+CHOSEN = [13, 15, 17]
 
 # Варианты: список кубоидов (from, to в пикселях блока) и поворот вокруг вертикали (−45…45, шаг 22,5)
 SHAPES = {
@@ -168,17 +170,22 @@ def preview():
             tile = ground.copy()
             tile.alpha_composite(render(n, texture, cell))
             sheet.alpha_composite(tile, (x, y + label + i * cell))
-        draw.text((x + 8, y + 5), f"{n}. {SHAPES[n][0]}" + ("  (в игре)" if n == chosen else ""),
+        draw.text((x + 8, y + 5), f"{n}. {SHAPES[n][0]}" + ("  (в игре)" if n in chosen else ""),
                   fill=(255, 255, 255, 255), font=font)
     sheet.save(os.path.join(DOCS, "nugget_models.png"))
 
 
 if __name__ == "__main__":
-    chosen = SHAPE
+    chosen = CHOSEN
     if "--shape" in sys.argv:
-        chosen = int(sys.argv[sys.argv.index("--shape") + 1])
-    with open(os.path.join(ASSETS, "models", "block", "nugget_shape.json"), "w", encoding="utf-8", newline="\n") as f:
-        json.dump(model(chosen), f, indent=2)
-        f.write("\n")
+        chosen = [int(n) for n in sys.argv[sys.argv.index("--shape") + 1].split(",")]
+    folder = os.path.join(ASSETS, "models", "block")
+    for name in os.listdir(folder):
+        if name == "nugget_shape.json" or name.startswith("nugget_shape_"):
+            os.remove(os.path.join(folder, name))
+    for n in chosen:
+        with open(os.path.join(folder, f"nugget_shape_{n}.json"), "w", encoding="utf-8", newline="\n") as f:
+            json.dump(model(n), f, indent=2)
+            f.write("\n")
     preview()
     print("ok")

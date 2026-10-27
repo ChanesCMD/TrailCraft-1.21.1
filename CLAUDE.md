@@ -106,8 +106,9 @@
   (жила заменяет только свои породы), `placed_feature/ore_*.json`, `neoforge/biome_modifier/ores.json`.
   Самородки (`ModOres.NUGGETS`, блок-камешек `<руда>_nugget` как кремень) лежат над большой жилой своей руды
   (`worldgen/NuggetDepositFeature.java`, 15–25 блоков в 3–8 блоках под поверхностью, заменяет любой твёрдый природный
-  блок); их JSON — таблица `NUGGETS` в `scripts/gen_ores.py`, общая форма `models/block/nugget_shape.json` — 20 вариантов (11–20 — на основе «Крупинок»)
-  в `scripts/gen_nugget_models.py` (превью — `docs/textures/nugget_models.png`, выбрать: `--shape N`). ВРЕМЕННО, для
+  блок); их JSON — таблица `NUGGETS` в `scripts/gen_ores.py`, формы — 20 вариантов (11–20 — на основе «Крупинок»)
+  в `scripts/gen_nugget_models.py` (превью — `docs/textures/nugget_models.png`); в игре 13, 15, 17 (`nugget_shape_<n>`,
+  блокстейт выбирает случайно; другие: `--shape 1,2,3`, потом `gen_ores.py`). ВРЕМЕННО, для
   проверки генерации: у самородка блок-сущность, над ним рисуется столб из его руды высотой 40 блоков
   (`block/NuggetBlock.java`, `client/NuggetMarkerRenderer.java`) — потом убрать. Текстуры кусков руды, самородков и шихты —
   `scripts/gen_ore_textures.py` (формы — по ванильным кускам золота, железа, меди и образцу автора).
