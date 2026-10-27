@@ -371,6 +371,17 @@ def assets():
     simple_loot("small_bloomery")
 
 
+# Рюкзак из крафта — сразу с одним карманом своего тира в первом слоте под карманы (BackpackItem.POCKETS = 61)
+BACKPACK_POCKETS = {"duffel_backpack": "small_pocket", "leather_backpack": "medium_pocket",
+                    "tactical_backpack": "large_pocket"}
+POCKETS_SLOT = 61
+
+
+def backpack_result(backpack):
+    return {"id": f"{NS}:{backpack}", "count": 1, "components": {f"{NS}:contents": [
+        {"slot": POCKETS_SLOT, "item": {"id": f"{NS}:{BACKPACK_POCKETS[backpack]}", "count": 1}}]}}
+
+
 def data():
     clay_balls = [f"{NS}:clay_ball_{c}" for c in CLAYS]
     tag("item", f"{NS}:clay_balls", clay_balls)
@@ -407,7 +418,7 @@ def data():
     write(f"data/{NS}/recipe/duffel_backpack.json", {
         "type": "minecraft:crafting_shapeless", "category": "equipment",
         "ingredients": [{"item": f"{NS}:rope"}] + [{"item": f"{NS}:cloth"}] * 3,
-        "result": {"id": f"{NS}:duffel_backpack", "count": 1}})
+        "result": backpack_result("duffel_backpack")})
     # Кремнёвый нож — срезать траву на солому: кремень над обработанной палкой
     write(f"data/{NS}/recipe/flint_knife.json", {
         "type": "minecraft:crafting_shaped", "category": "equipment",

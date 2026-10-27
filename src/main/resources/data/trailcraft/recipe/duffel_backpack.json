@@ -17,6 +17,17 @@
   ],
   "result": {
     "id": "trailcraft:duffel_backpack",
-    "count": 1
+    "count": 1,
+    "components": {
+      "trailcraft:contents": [
+        {
+          "slot": 61,
+          "item": {
+            "id": "trailcraft:small_pocket",
+            "count": 1
+          }
+        }
+      ]
+    }
   }
 }
