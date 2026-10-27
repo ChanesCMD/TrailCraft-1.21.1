@@ -63,8 +63,9 @@ public class RainDropParticle extends TextureSheetParticle {
             remove();
             return;
         }
-        move(xd, yd, zd);
-        if (onGround || stoppedByCollision) {
+        double dx = xd, dy = yd, dz = zd;
+        move(dx, dy, dz);
+        if (onGround || blocked(x - xo, y - yo, z - zo, dx, dy, dz)) {
             splash(ModParticles.RAIN_SPLASH.get(), y);
             remove();
             return;
@@ -94,6 +95,11 @@ public class RainDropParticle extends TextureSheetParticle {
             zd *= 0.15;
             yd = -0.35 - random.nextFloat() * 0.15;
         }
+    }
+
+    /** Частица упёрлась в блок: сдвинулась меньше, чем просили (поле stoppedByCollision у Particle закрыто). */
+    static boolean blocked(double movedX, double movedY, double movedZ, double dx, double dy, double dz) {
+        return Math.abs(movedX - dx) > 1.0E-5 || Math.abs(movedY - dy) > 1.0E-5 || Math.abs(movedZ - dz) > 1.0E-5;
     }
 
     private void splash(SimpleParticleType type, double atY) {

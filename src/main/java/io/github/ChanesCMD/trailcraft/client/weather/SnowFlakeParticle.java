@@ -55,11 +55,12 @@ public class SnowFlakeParticle extends TextureSheetParticle {
         }
         float sway = Mth.sin(age * swaySpeed + swayPhase) * 0.012f;
         roll += spin;
-        move(xd + sway, yd, zd + Mth.cos(age * swaySpeed * 0.7f + swayPhase) * 0.008f);
+        double dx = xd + sway, dy = yd, dz = zd + Mth.cos(age * swaySpeed * 0.7f + swayPhase) * 0.008f;
+        move(dx, dy, dz);
         BlockPos pos = BlockPos.containing(x, y, z);
         if (!level.getFluidState(pos).isEmpty()) {
             remove();
-        } else if (onGround || stoppedByCollision) {
+        } else if (onGround || RainDropParticle.blocked(x - xo, y - yo, z - zo, dx, dy, dz)) {
             landed = true;
             lifetime = age + LIE_TICKS;
         }
