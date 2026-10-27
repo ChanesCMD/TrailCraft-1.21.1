@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageType;
 
 /**
- * Вода (жажда) работает как голод: тратится со временем, быстрее при беге и прыжках; на нуле — урон, как от голода.
+ * Вода (жажда) работает как голод: тратится со временем, быстрее при беге (прыжки воду не тратят); на нуле — урон, как от голода.
  * Пьют ПКМ пустой рукой по воде или из фляги на поясе. Все числа черновые. TODO: уточнить.
  */
 public final class Water {
@@ -22,8 +22,6 @@ public final class Water {
      * Вода тратится вдвое медленнее, чем в первой версии.
      */
     public static final float THIRST_PER_TICK = 1f / 2400, SPRINT_THIRST_PER_TICK = 1f / 600;
-    /** Жажда за прыжок. */
-    public static final float JUMP_THIRST = 0.025f;
     /** Сколько воды даёт один глоток (из воды и из фляги) и сколько тиков между глотками. */
     public static final int DRINK_AMOUNT = 4, DRINK_COOLDOWN = 10;
     /** Выше этого запаса воды бег тратит вдвое меньше выносливости (Stamina.SPRINT_COST_WATERED). */

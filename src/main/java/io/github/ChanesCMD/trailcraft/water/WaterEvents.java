@@ -17,7 +17,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -58,14 +57,6 @@ public class WaterEvents {
             tracker.damageTimer = 0;
         }
         set(player, water);
-    }
-
-    /** Прыжок игрока сервер тоже обрабатывает (по пакету движения), поэтому событие приходит и здесь. */
-    @SubscribeEvent
-    public static void onJump(LivingEvent.LivingJumpEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player && !player.isCreative() && !player.isSpectator()) {
-            player.getData(ModAttachments.WATER_TRACKER).thirst += Water.JUMP_THIRST;
-        }
     }
 
     /**
