@@ -2,6 +2,7 @@ package io.github.ChanesCMD.trailcraft.water;
 
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.init.ModAttachments;
+import io.github.ChanesCMD.trailcraft.init.ModEffects;
 import io.github.ChanesCMD.trailcraft.inventory.BeltHandler;
 import io.github.ChanesCMD.trailcraft.item.FlaskItem;
 import net.minecraft.core.registries.Registries;
@@ -11,6 +12,7 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
@@ -35,12 +37,16 @@ public class WaterEvents {
             tracker.drinkCooldown--;
         }
         if (player.isInWater()) {
-            fillFlask(player);
+            BeltHandler.of(player).fillFlask(Water.isSalty(player.level(), player.blockPosition()));
         }
         int water = get(player);
         Difficulty difficulty = player.level().getDifficulty();
         if (difficulty != Difficulty.PEACEFUL) {
             tracker.thirst += Water.THIRST_PER_TICK + (player.isSprinting() ? Water.SPRINT_THIRST_PER_TICK : 0);
+            MobEffectInstance salt = player.getEffect(ModEffects.SALT_THIRST);
+            if (salt != null) {
+                tracker.thirst += Water.SALT_THIRST_PER_TICK * (salt.getAmplifier() + 1);
+            }
             while (tracker.thirst >= 1) {
                 tracker.thirst -= 1;
                 water--;
@@ -61,14 +67,12 @@ public class WaterEvents {
 
     /**
      * ПКМ пустой рукой по воде (в пределах досягаемости, ближе твёрдых блоков): глоток, если запас не полный,
-     * и фляга на поясе наполняется доверху — даже при полном запасе воды.
+     * и фляга на поясе наполняется доверху — даже при полном запасе воды (если в ней нет воды другого вида).
+     * Морская вода накладывает «Солёную жажду».
      */
     private static void drink(ServerPlayer player) {
         Water.Tracker tracker = player.getData(ModAttachments.WATER_TRACKER);
-        ItemStack flask = BeltHandler.of(player).flask();
-        boolean flaskNeedsWater = !flask.isEmpty() && FlaskItem.water(flask) < Water.FLASK_SIPS;
-        if (player.isSpectator() || !player.getMainHandItem().isEmpty() || tracker.drinkCooldown > 0
-                || get(player) >= Water.MAX && !flaskNeedsWater) {
+        if (player.isSpectator() || !player.getMainHandItem().isEmpty() || tracker.drinkCooldown > 0) {
             return;
         }
         HitResult hit = player.pick(player.blockInteractionRange(), 1, true);
@@ -76,15 +80,28 @@ public class WaterEvents {
                 || !player.level().getFluidState(blockHit.getBlockPos()).is(FluidTags.WATER)) {
             return;
         }
+        boolean salty = Water.isSalty(player.level(), blockHit.getBlockPos());
+        ItemStack flask = BeltHandler.of(player).flask();
+        boolean flaskNeedsWater = !flask.isEmpty() && FlaskItem.canFill(flask, salty);
+        if (get(player) >= Water.MAX && !flaskNeedsWater) {
+            return;
+        }
         tracker.drinkCooldown = Water.DRINK_COOLDOWN;
         if (get(player) < Water.MAX) {
             set(player, get(player) + Water.DRINK_AMOUNT);
             playDrinkSound(player);
+            if (salty) {
+                saltThirst(player);
+            }
         } else {
             player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_FILL,
                     player.getSoundSource(), 1f, 1f);
         }
-        fillFlask(player);
+        BeltHandler.of(player).fillFlask(salty);
+    }
+
+    private static void saltThirst(ServerPlayer player) {
+        player.addEffect(new MobEffectInstance(ModEffects.SALT_THIRST, Water.SALT_DURATION));
     }
 
     /** Глоток из фляги на поясе: фляга не пустая, запас воды не полный. */
@@ -98,19 +115,25 @@ public class WaterEvents {
         if (sips <= 0) {
             return;
         }
+        boolean salty = FlaskItem.isSalty(belt.flask());
         belt.setFlaskWater(sips - 1);
         tracker.drinkCooldown = Water.DRINK_COOLDOWN;
         set(player, get(player) + Water.DRINK_AMOUNT);
         playDrinkSound(player);
+        if (salty) {
+            saltThirst(player);
+        }
     }
 
-    /** Наполняет флягу на поясе доверху (игрок в воде или пьёт воду ПКМ). */
-    private static void fillFlask(ServerPlayer player) {
+    /** Вылить всю воду из фляги на поясе (в никуда). */
+    private static void pourFlask(ServerPlayer player) {
         BeltHandler belt = BeltHandler.of(player);
-        ItemStack flask = belt.flask();
-        if (!flask.isEmpty() && FlaskItem.water(flask) < Water.FLASK_SIPS) {
-            belt.setFlaskWater(Water.FLASK_SIPS);
+        if (player.isSpectator() || FlaskItem.water(belt.flask()) <= 0) {
+            return;
         }
+        belt.setFlaskWater(0);
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BUCKET_EMPTY,
+                player.getSoundSource(), 0.6f, 1.2f);
     }
 
     private static void playDrinkSound(ServerPlayer player) {
@@ -143,6 +166,12 @@ public class WaterEvents {
                     (payload, context) -> context.enqueueWork(() -> {
                         if (context.player() instanceof ServerPlayer player) {
                             drink(player);
+                        }
+                    }));
+            registrar.playToServer(Water.FlaskPourPayload.TYPE, Water.FlaskPourPayload.STREAM_CODEC,
+                    (payload, context) -> context.enqueueWork(() -> {
+                        if (context.player() instanceof ServerPlayer player) {
+                            pourFlask(player);
                         }
                     }));
             registrar.playToServer(Water.FlaskDrinkPayload.TYPE, Water.FlaskDrinkPayload.STREAM_CODEC,

@@ -786,5 +786,10 @@
   "block.trailcraft.tetrahedrite_nugget": "Тетраэдрит",
   "block.trailcraft.cassiterite_nugget": "Касситерит",
   "block.trailcraft.sphalerite_nugget": "Сфалерит",
-  "tooltip.trailcraft.food": "Еда: +%s, насыщение: +%s"
+  "tooltip.trailcraft.food": "Еда: +%s, насыщение: +%s",
+  "effect.trailcraft.salt_thirst": "Солёная жажда",
+  "tooltip.trailcraft.flask.fresh": "Пресная вода",
+  "tooltip.trailcraft.flask.sea": "Морская вода",
+  "gui.trailcraft.belt.flask_sea": "Фляга (морская): %s/%s",
+  "gui.trailcraft.belt.pour": "Вылить"
 }

@@ -85,6 +85,16 @@ public class BeltHandler extends ContentsHandler {
         return !isBlocked(slot) && getStackInSlot(slot).is(instrumentFor(slot));
     }
 
+    /** Наполняет флягу на поясе доверху водой этого вида, если можно (FlaskItem.canFill). */
+    public void fillFlask(boolean salty) {
+        ItemStack flask = flask();
+        if (!flask.isEmpty() && FlaskItem.canFill(flask, salty)) {
+            ItemStack copy = flask.copy();
+            FlaskItem.fill(copy, salty);
+            setStackInSlot(FLASK, copy);
+        }
+    }
+
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
         if (!isPresent()) {

@@ -50,6 +50,8 @@ public final class HudIcons {
             "..ooo...."};
 
     public static final int[] WATER = {0xFF10204A, 0xFF3F76E4, 0xFF8FB8FF};
+    /** Капли при «Солёной жажде» — серо-зелёные, как морковки при «Голоде». */
+    public static final int[] SALT_WATER = {0xFF1E3A2E, 0xFF6E9A86, 0xFFC4DCD0};
     public static final int[] FOOD_COLORS = {0xFF5A2A06, 0xFFE8761E, 0xFFFFB061, 0xFF3E9A2B};
     public static final int[] HUNGER_COLORS = {0xFF22330A, 0xFF7A9A2B, 0xFFB5D25C, 0xFF4A5A1A};
     public static final int[] AIR = {0xFF2A5A8A, 0xFF9FD3FF, 0xFFFFFFFF};

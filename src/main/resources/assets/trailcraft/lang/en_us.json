@@ -786,5 +786,10 @@
   "block.trailcraft.tetrahedrite_nugget": "Tetrahedrite Nugget",
   "block.trailcraft.cassiterite_nugget": "Cassiterite Nugget",
   "block.trailcraft.sphalerite_nugget": "Sphalerite Nugget",
-  "tooltip.trailcraft.food": "Food: +%s, saturation: +%s"
+  "tooltip.trailcraft.food": "Food: +%s, saturation: +%s",
+  "effect.trailcraft.salt_thirst": "Salt Thirst",
+  "tooltip.trailcraft.flask.fresh": "Fresh water",
+  "tooltip.trailcraft.flask.sea": "Sea water",
+  "gui.trailcraft.belt.flask_sea": "Flask (sea): %s/%s",
+  "gui.trailcraft.belt.pour": "Pour out"
 }

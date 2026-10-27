@@ -63,8 +63,8 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
     private static final int CAL_CLOSE_X = 122, CAL_CLOSE_Y = 5, CAL_NOTE_X = 10, CAL_NOTE_Y = 137;
     /** Стрелки листания сезонов 10×12 слева от кнопки закрытия; шапка (клик — вернуться к сегодня). */
     private static final int CAL_PREV_X = 96, CAL_NEXT_X = 108, CAL_ARROW_W = 10, CAL_HEADER_X = 8, CAL_HEADER_Y = 20;
-    /** Кнопка «Выпить» в окне пояса (относительно окна). */
-    private static final int DRINK_X = 7, DRINK_Y = 42, DRINK_W = 112, DRINK_H = 14;
+    /** Кнопки «Выпить» и «Вылить» в окне пояса (относительно окна). */
+    private static final int DRINK_X = 7, DRINK_Y = 42, DRINK_W = 55, DRINK_H = 14, POUR_X = 64;
     private static final int[] BAR_COLORS = {0xFFE8C33A, 0, 0xFF4A7BE0, 0, 0, 0, 0};
     private static final String[] BACKPACK_ROWS = {"battery", "solar", "mana", "sleeping", "workbench", "atlas", "calendar"};
     private static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").withZone(ZoneId.systemDefault());
@@ -452,7 +452,7 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         renderPopupItems(g);
     }
 
-    /** Окно пояса: слот фляги, запас воды в ней, кнопка «Выпить» и ряд приборов (высотомер, секстант, хронометр или GPS). */
+    /** Окно пояса: слот фляги, запас и вид воды в ней, кнопки «Выпить» и «Вылить» и ряд приборов (высотомер, секстант, хронометр или GPS). */
     private void renderBelt(GuiGraphics g, int mouseX, int mouseY) {
         int px = BELT_WIN_X, py = BELT_WIN_Y;
         UiDraw.panel(g, px, py, BELT_W, BELT_H);
@@ -460,19 +460,15 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         drawSlotFrame(g, px + 7, py + 20, !menu.belt().isPresent());
         ItemStack flask = menu.belt().flask();
         int water = FlaskItem.water(flask);
+        boolean salty = FlaskItem.isSalty(flask);
         Component label = flask.isEmpty() ? Component.translatable("gui.trailcraft.belt.no_flask")
-                : Component.translatable("gui.trailcraft.belt.flask", water, Water.FLASK_SIPS);
+                : Component.translatable(salty ? "gui.trailcraft.belt.flask_sea" : "gui.trailcraft.belt.flask", water, Water.FLASK_SIPS);
         g.drawString(font, label, px + 29, py + 21, UiDraw.LABEL, false);
         UiDraw.frame(g, px + 29, py + 31, 90, 6, 0xFF373737, 0xFFFFFFFF, 0xFF555555);
-        g.fill(px + 30, py + 32, px + 30 + Math.round(88f * water / Water.FLASK_SIPS), py + 36, 0xFF3F76E4);
+        g.fill(px + 30, py + 32, px + 30 + Math.round(88f * water / Water.FLASK_SIPS), py + 36, 0xFF000000 | flask.getBarColor());
 
-        boolean active = canDrinkFromFlask();
-        boolean hover = active && isOver(mouseX, mouseY, px + DRINK_X, py + DRINK_Y, DRINK_W, DRINK_H);
-        UiDraw.frame(g, px + DRINK_X, py + DRINK_Y, DRINK_W, DRINK_H, 0xFF000000, active ? 0xFFFFFFFF : 0xFF9E9E9E,
-                hover ? 0xFFB0B0D8 : active ? 0xFFA8A8A8 : 0xFF6E6E6E);
-        Component drink = Component.translatable("gui.trailcraft.belt.drink");
-        g.drawString(font, drink, px + DRINK_X + (DRINK_W - font.width(drink)) / 2, py + DRINK_Y + 3,
-                active ? 0xFFFFFFFF : 0xFFA0A0A0, active);
+        beltButton(g, px + DRINK_X, py + DRINK_Y, "gui.trailcraft.belt.drink", canDrinkFromFlask(), mouseX, mouseY);
+        beltButton(g, px + POUR_X, py + DRINK_Y, "gui.trailcraft.belt.pour", water > 0, mouseX, mouseY);
 
         g.drawString(font, Component.translatable("gui.trailcraft.belt.instruments"), px + 7, py + INSTRUMENT_Y - 10, UiDraw.LABEL, false);
         BeltHandler belt = menu.belt();
@@ -500,6 +496,15 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         Component hint = menu.belt().isBlocked(index) ? Component.translatable("gui.trailcraft.belt.gps_blocked")
                 : Component.translatable("gui.trailcraft.belt.instrument_hint", BeltHandler.instrumentFor(index).getDescription());
         g.renderTooltip(font, hint, mouseX, mouseY);
+    }
+
+    /** Кнопка окна пояса DRINK_W×DRINK_H; неактивная — серая. */
+    private void beltButton(GuiGraphics g, int x, int y, String key, boolean active, int mouseX, int mouseY) {
+        boolean hover = active && isOver(mouseX, mouseY, x, y, DRINK_W, DRINK_H);
+        UiDraw.frame(g, x, y, DRINK_W, DRINK_H, 0xFF000000, active ? 0xFFFFFFFF : 0xFF9E9E9E,
+                hover ? 0xFFB0B0D8 : active ? 0xFFA8A8A8 : 0xFF6E6E6E);
+        Component text = Component.translatable(key);
+        g.drawString(font, text, x + (DRINK_W - font.width(text)) / 2, y + 3, active ? 0xFFFFFFFF : 0xFFA0A0A0, active);
     }
 
     private boolean canDrinkFromFlask() {
@@ -680,6 +685,11 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         if (menu.popup == Popup.BELT && button == 0 && canDrinkFromFlask()
                 && isOver(mouseX, mouseY, BELT_WIN_X + DRINK_X, BELT_WIN_Y + DRINK_Y, DRINK_W, DRINK_H)) {
             PacketDistributor.sendToServer(Water.FlaskDrinkPayload.INSTANCE);
+            return true;
+        }
+        if (menu.popup == Popup.BELT && button == 0 && FlaskItem.water(menu.belt().flask()) > 0
+                && isOver(mouseX, mouseY, BELT_WIN_X + POUR_X, BELT_WIN_Y + DRINK_Y, DRINK_W, DRINK_H)) {
+            PacketDistributor.sendToServer(Water.FlaskPourPayload.INSTANCE);
             return true;
         }
         if (menu.popup == Popup.CALENDAR && overPopup(mouseX, mouseY)) {

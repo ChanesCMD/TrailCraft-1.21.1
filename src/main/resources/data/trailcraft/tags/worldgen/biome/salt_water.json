@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:burozem_shore",
+    "trailcraft:chernozem_shore",
+    "trailcraft:sea",
+    "trailcraft:zheltozem_shore"
+  ]
+}

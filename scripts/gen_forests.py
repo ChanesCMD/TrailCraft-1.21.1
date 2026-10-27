@@ -376,7 +376,12 @@ SEA_BIOMES = {"sea", "burozem_shore", "chernozem_shore", "zheltozem_shore"}
 
 
 def water_colors():
-    """Меняет только число water_color, не переписывая файл (у морей и берегов своё оформление JSON)."""
+    """
+    Меняет только число water_color, не переписывая файл (у морей и берегов своё оформление JSON).
+    Морские биомы — ещё и в тэге #trailcraft:salt_water: вода в них солёная (Water.isSalty).
+    """
+    write(f"data/{NS}/tags/worldgen/biome/salt_water.json",
+          {"replace": False, "values": [f"{NS}:{b}" for b in sorted(SEA_BIOMES)]})
     folder = os.path.join(ROOT, "data", NS, "worldgen", "biome")
     for name in sorted(os.listdir(folder)):
         color = WATER_SEA if name[:-len(".json")] in SEA_BIOMES else WATER_FRESH

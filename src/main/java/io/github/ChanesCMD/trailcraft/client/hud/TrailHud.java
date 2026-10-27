@@ -11,6 +11,7 @@ import io.github.ChanesCMD.trailcraft.client.gui.TrailInventoryScreen;
 import io.github.ChanesCMD.trailcraft.client.voice.VoiceClient;
 import io.github.ChanesCMD.trailcraft.client.voice.VoiceHeads;
 import io.github.ChanesCMD.trailcraft.health.BodyHealth;
+import io.github.ChanesCMD.trailcraft.init.ModEffects;
 import io.github.ChanesCMD.trailcraft.health.BodyHealth.Part;
 import io.github.ChanesCMD.trailcraft.stamina.Stamina;
 import io.github.ChanesCMD.trailcraft.stamina.StaminaEvents;
@@ -168,7 +169,8 @@ public class TrailHud {
             return;
         }
         FoodOverlay.renderThirst(g, g.guiWidth() / 2 + 91, g.guiHeight() - mc.gui.rightHeight, STEP);
-        drawRightRow(g, mc, HudIcons.DROP, HudIcons.WATER, WaterEvents.get(player));
+        int[] colors = player.hasEffect(ModEffects.SALT_THIRST) ? HudIcons.SALT_WATER : HudIcons.WATER;
+        drawRightRow(g, mc, HudIcons.DROP, colors, WaterEvents.get(player));
     }
 
     /** Кислород над водой, только пока он тратится; пустые пузыри не рисуются, как в ванилле. */
