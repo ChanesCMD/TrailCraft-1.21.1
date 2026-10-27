@@ -179,6 +179,13 @@ public class ModItems {
     public static final DeferredItem<FlaskItem> FLASK = ITEMS.registerItem("flask", props -> new FlaskItem(props.stacksTo(1)));
     /** Кошелёк на 8 видов монет: носится в слоте кошелька. */
     public static final DeferredItem<WalletItem> WALLET = ITEMS.registerItem("wallet", props -> new WalletItem(props.stacksTo(1)));
+    /** Приборы на поясе (см. BeltHandler, client/Coords): высотомер показывает высоту полосой, секстант уточняет X */
+    public static final DeferredItem<Item> BRASS_ALTIMETER = ITEMS.registerItem("brass_altimeter", props -> new Item(props.stacksTo(1)));
+    public static final DeferredItem<Item> SEXTANT = ITEMS.registerItem("sextant", props -> new Item(props.stacksTo(1)));
+    /** Хронометр уточняет Z до чанка. */
+    public static final DeferredItem<Item> CHRONOMETER = ITEMS.registerItem("chronometer", props -> new Item(props.stacksTo(1)));
+    /** GPS: в любом слоте приборов пояса даёт точные координаты, два других слота при нём закрыты. */
+    public static final DeferredItem<Item> GPS = ITEMS.registerItem("gps", props -> new Item(props.stacksTo(1)));
 
     // === МОНЕТЫ (по возрастанию, каждая в 10 раз дороже предыдущей; в кошельке меняются сами) ===
     public static final List<DeferredItem<CoinItem>> COINS = registerCoins("copper_coin", "bronze_coin", "silver_coin", "gold_coin",

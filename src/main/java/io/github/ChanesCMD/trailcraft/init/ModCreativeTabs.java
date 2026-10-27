@@ -97,6 +97,10 @@ public class ModCreativeTabs {
                         output.accept(ModItems.BELT);
                         output.accept(ModItems.FLASK);
                         output.accept(ModItems.WALLET);
+                        output.accept(ModItems.BRASS_ALTIMETER);
+                        output.accept(ModItems.SEXTANT);
+                        output.accept(ModItems.CHRONOMETER);
+                        output.accept(ModItems.GPS);
                         ModItems.COINS.forEach(output::accept);
                         output.accept(ModItems.CALENDAR);
                         output.accept(ModItems.ATLAS);

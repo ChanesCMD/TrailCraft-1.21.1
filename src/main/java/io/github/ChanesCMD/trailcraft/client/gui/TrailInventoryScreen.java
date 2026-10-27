@@ -5,6 +5,7 @@ import io.github.ChanesCMD.trailcraft.calendar.Calendar;
 import io.github.ChanesCMD.trailcraft.calendar.CalendarNotes;
 import io.github.ChanesCMD.trailcraft.client.voice.VoiceClient;
 import io.github.ChanesCMD.trailcraft.client.voice.VoiceHeads;
+import io.github.ChanesCMD.trailcraft.inventory.BeltHandler;
 import io.github.ChanesCMD.trailcraft.inventory.DeathLogPayloads;
 import io.github.ChanesCMD.trailcraft.inventory.DeathRecord;
 import io.github.ChanesCMD.trailcraft.inventory.TrailInventoryMenu;
@@ -305,6 +306,7 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
             g.pose().pushPose();
             g.pose().translate(0, 0, Z_TOOLTIP);
             renderTooltip(g, mouseX, mouseY);
+            renderInstrumentHint(g, mouseX, mouseY);
             g.pose().popPose();
         }
     }
@@ -444,7 +446,7 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         renderPopupItems(g);
     }
 
-    /** Окно пояса: слот фляги, запас воды в ней и кнопка «Выпить». */
+    /** Окно пояса: слот фляги, запас воды в ней, кнопка «Выпить» и ряд приборов (высотомер, секстант, хронометр или GPS). */
     private void renderBelt(GuiGraphics g, int mouseX, int mouseY) {
         int px = BELT_WIN_X, py = BELT_WIN_Y;
         UiDraw.panel(g, px, py, BELT_W, BELT_H);
@@ -465,7 +467,33 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         Component drink = Component.translatable("gui.trailcraft.belt.drink");
         g.drawString(font, drink, px + DRINK_X + (DRINK_W - font.width(drink)) / 2, py + DRINK_Y + 3,
                 active ? 0xFFFFFFFF : 0xFFA0A0A0, active);
+
+        g.drawString(font, Component.translatable("gui.trailcraft.belt.instruments"), px + 7, py + INSTRUMENT_Y - 10, UiDraw.LABEL, false);
+        BeltHandler belt = menu.belt();
+        for (int k = 0; k < BeltHandler.INSTRUMENT_COUNT; k++) {
+            int index = BeltHandler.INSTRUMENTS + k, sx = px + INSTRUMENT_X + 18 * k, sy = py + INSTRUMENT_Y;
+            boolean open = belt.isPresent() && !belt.isBlocked(index);
+            drawSlotFrame(g, sx, sy, !open);
+            if (open && belt.getStackInSlot(index).isEmpty()) {
+                // Бледный силуэт прибора, для которого слот (как значок пустого слота брони)
+                g.renderFakeItem(new ItemStack(BeltHandler.instrumentFor(index)), sx + 1, sy + 1);
+                g.fill(RenderType.guiOverlay(), sx + 1, sy + 1, sx + 17, sy + 17, 0xB08B8B8B);
+            }
+        }
         renderPopupItems(g);
+    }
+
+    /** Подсказка у пустого или закрытого слота прибора на поясе. */
+    private void renderInstrumentHint(GuiGraphics g, int mouseX, int mouseY) {
+        Slot slot = hoveredSlot;
+        if (slot == null || !menu.getCarried().isEmpty() || slot.hasItem()
+                || slot.index < INSTRUMENT_START || slot.index >= INSTRUMENT_START + BeltHandler.INSTRUMENT_COUNT) {
+            return;
+        }
+        int index = slot.getContainerSlot();
+        Component hint = menu.belt().isBlocked(index) ? Component.translatable("gui.trailcraft.belt.gps_blocked")
+                : Component.translatable("gui.trailcraft.belt.instrument_hint", BeltHandler.instrumentFor(index).getDescription());
+        g.renderTooltip(font, hint, mouseX, mouseY);
     }
 
     private boolean canDrinkFromFlask() {

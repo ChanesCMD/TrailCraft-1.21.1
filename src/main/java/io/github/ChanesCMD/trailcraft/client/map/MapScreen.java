@@ -1,5 +1,6 @@
 package io.github.ChanesCMD.trailcraft.client.map;
 
+import io.github.ChanesCMD.trailcraft.client.Coords;
 import io.github.ChanesCMD.trailcraft.client.gui.UiDraw;
 import net.minecraft.Util;
 import io.github.ChanesCMD.trailcraft.client.ClientGear;
@@ -135,7 +136,7 @@ public class MapScreen extends Screen {
             bx = player.getBlockX();
             bz = player.getBlockZ();
         }
-        g.drawString(font, Component.translatable("gui.trailcraft.map.coords", bx, bz), 8, height - 14, 0xFFFFFFFF, true);
+        g.drawString(font, Component.literal(Coords.horizontal(bx, bz)), 8, height - 14, 0xFFFFFFFF, true);
         BlockPos surface = MapSampler.surfaceAt(player.level(), bx, bz);
         if (surface != null) {
             Component biome = player.level().getBiome(surface).unwrapKey()
@@ -245,7 +246,7 @@ public class MapScreen extends Screen {
             Waypoint fresh = new Waypoint(Component.translatable("gui.trailcraft.waypoint.default", Waypoints.count() + 1).getString(),
                     dimension, bx, surface != null ? surface.getY() + 1 : player.getBlockY(), bz,
                     Waypoints.COLORS[Waypoints.count() % Waypoints.COLORS.length]);
-            menu.add(new MenuItem(Component.translatable("gui.trailcraft.map.coords", bx, bz), null));
+            menu.add(new MenuItem(Component.literal(Coords.horizontal(bx, bz)), null));
             menu.add(new MenuItem(Component.translatable("gui.trailcraft.map.menu.add"),
                     () -> minecraft.setScreen(new WaypointScreen(this, fresh, true))));
             if (admin) {

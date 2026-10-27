@@ -39,6 +39,8 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 @EventBusSubscriber(modid = TrailCraft.MODID)
 public class InventoryEvents {
@@ -197,6 +199,7 @@ public class InventoryEvents {
         // Редкие проверки: полсекунды задержки не заметны
         if (player.tickCount % LOCKED_SLOTS_INTERVAL == 0) {
             moveFromLockedSlots(player, backpack);
+            moveFromBlockedInstruments(player, backpack);
         }
         if (player.tickCount % GEAR_INTERVAL == 0) {
             syncGear(player, backpack);
@@ -246,16 +249,87 @@ public class InventoryEvents {
         }
     }
 
-    /** Отправляет клиенту, есть ли в рюкзаке атлас и календарь, когда это меняется. */
+    /**
+     * На поясе лежит GPS: приборы из двух других слотов переносятся в рюкзак, потом в хотбар, а что не поместилось —
+     * выпадает.
+     */
+    private static void moveFromBlockedInstruments(ServerPlayer player, BackpackHandler backpack) {
+        BeltHandler belt = BeltHandler.of(player);
+        if (!belt.isPresent() || !belt.hasGps()) {
+            return;
+        }
+        for (int i = BeltHandler.INSTRUMENTS; i < BeltHandler.INSTRUMENTS + BeltHandler.INSTRUMENT_COUNT; i++) {
+            ItemStack stack = belt.getStackInSlot(i);
+            if (stack.isEmpty() || !belt.isBlocked(i)) {
+                continue;
+            }
+            belt.setStackInSlot(i, ItemStack.EMPTY);
+            ItemStack rest = insertHotbar(player.getInventory(), backpack.insertMain(stack, false));
+            if (!rest.isEmpty()) {
+                player.drop(rest, false);
+            }
+        }
+    }
+
+    /** Отправляет клиенту, есть ли в рюкзаке атлас и календарь и какие приборы на поясе, когда это меняется. */
     private static void syncGear(ServerPlayer player, BackpackHandler backpack) {
-        ItemStack flask = BeltHandler.of(player).flask();
+        BeltHandler belt = BeltHandler.of(player);
+        ItemStack flask = belt.flask();
         int flags = (backpack.has(BackpackItem.ATLAS) ? GearPayload.ATLAS : 0)
                 | (backpack.has(BackpackItem.CALENDAR) ? GearPayload.CALENDAR : 0)
-                | (!flask.isEmpty() && FlaskItem.water(flask) < Water.FLASK_SIPS ? GearPayload.FLASK : 0);
+                | (!flask.isEmpty() && FlaskItem.water(flask) < Water.FLASK_SIPS ? GearPayload.FLASK : 0)
+                | (belt.hasInstrument(BeltHandler.ALTIMETER) ? GearPayload.ALTIMETER : 0)
+                | (belt.hasInstrument(BeltHandler.SEXTANT) ? GearPayload.SEXTANT : 0)
+                | (belt.hasInstrument(BeltHandler.CHRONOMETER) ? GearPayload.CHRONOMETER : 0)
+                | (belt.hasGps() ? GearPayload.GPS : 0);
         if (flags != player.getData(ModAttachments.GEAR_SENT)) {
             player.setData(ModAttachments.GEAR_SENT, flags);
             PacketDistributor.sendToPlayer(player, new GearPayload(flags));
         }
+        if (player.isCreative()) {
+            syncEquipped(player, false);
+        }
+    }
+
+    /** Что последний раз отправлено креативному игроку о кошельке, поясе и рюкзаке (EquippedPayloads). */
+    private static final Map<ServerPlayer, List<ItemStack>> EQUIPPED_SENT = new WeakHashMap<>();
+
+    /** Отправляет креативному клиенту кошелёк, пояс и рюкзак, если они изменились (или всегда, если force). */
+    private static void syncEquipped(ServerPlayer player, boolean force) {
+        PlayerSlots slots = player.getData(ModAttachments.PLAYER_SLOTS);
+        List<ItemStack> stacks = new ArrayList<>();
+        for (int slot : EquippedPayloads.SLOTS) {
+            stacks.add(slots.getStackInSlot(slot).copy());
+        }
+        List<ItemStack> sent = EQUIPPED_SENT.get(player);
+        if (force || sent == null || !sameStacks(sent, stacks)) {
+            EQUIPPED_SENT.put(player, stacks);
+            PacketDistributor.sendToPlayer(player, new EquippedPayloads.Sync(stacks));
+        }
+    }
+
+    private static boolean sameStacks(List<ItemStack> a, List<ItemStack> b) {
+        if (a.size() != b.size()) {
+            return false;
+        }
+        for (int i = 0; i < a.size(); i++) {
+            if (!ItemStack.matches(a.get(i), b.get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** Креатив положил предмет в слот кошелька, пояса или рюкзака (или забрал его оттуда). */
+    private static void setEquipped(ServerPlayer player, EquippedPayloads.Set payload) {
+        int slot = payload.slot();
+        ItemStack stack = payload.stack().isEmpty() ? ItemStack.EMPTY : payload.stack().copyWithCount(1);
+        PlayerSlots slots = player.getData(ModAttachments.PLAYER_SLOTS);
+        boolean known = slot == PlayerSlots.WALLET || slot == PlayerSlots.BELT || slot == PlayerSlots.BACKPACK;
+        if (player.isCreative() && known && (stack.isEmpty() || slots.isItemValid(slot, stack))) {
+            slots.setStackInSlot(slot, stack);
+        }
+        syncEquipped(player, true);
     }
 
     /** Кладёт предмет в хотбар: сначала в такие же стопки, потом в пустые слоты. @return остаток */
@@ -318,6 +392,14 @@ public class InventoryEvents {
                     (payload, context) -> context.enqueueWork(() -> ClientGear.set(payload)));
             registrar.playToClient(CosmeticPayload.TYPE, CosmeticPayload.STREAM_CODEC,
                     (payload, context) -> context.enqueueWork(() -> ClientCosmetics.set(payload)));
+            registrar.playToClient(EquippedPayloads.Sync.TYPE, EquippedPayloads.Sync.STREAM_CODEC,
+                    (payload, context) -> context.enqueueWork(() -> ClientGear.setEquipped(payload.stacks())));
+            registrar.playToServer(EquippedPayloads.Set.TYPE, EquippedPayloads.Set.STREAM_CODEC,
+                    (payload, context) -> context.enqueueWork(() -> {
+                        if (context.player() instanceof ServerPlayer player) {
+                            setEquipped(player, payload);
+                        }
+                    }));
         }
     }
 

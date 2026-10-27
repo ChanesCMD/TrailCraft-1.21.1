@@ -5,6 +5,7 @@ import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.calendar.Calendar;
 import io.github.ChanesCMD.trailcraft.client.ClientConfig;
 import io.github.ChanesCMD.trailcraft.client.ClientGear;
+import io.github.ChanesCMD.trailcraft.client.Coords;
 import io.github.ChanesCMD.trailcraft.client.map.Minimap;
 import io.github.ChanesCMD.trailcraft.client.gui.TrailInventoryScreen;
 import io.github.ChanesCMD.trailcraft.client.voice.VoiceClient;
@@ -98,8 +99,9 @@ public class TrailHud {
                     .map(key -> (Component) Component.translatable(Util.makeDescriptionId("biome", key.location())))
                     .orElse(Component.empty()));
         }
-        if (atlas && ClientConfig.minimapCoords()) {
-            lines.add(Component.translatable("gui.trailcraft.map.coords", player.getBlockX(), player.getBlockZ()));
+        // Координаты видны и без атласа; точность — по приборам на поясе (Coords)
+        if (ClientConfig.minimapCoords()) {
+            lines.add(Component.literal(Coords.of(player.getBlockX(), player.getBlockY(), player.getBlockZ())));
         }
         ClientConfig.DateMode dateMode = ClientConfig.dateMode();
         if (ClientGear.hasCalendar() && dateMode != ClientConfig.DateMode.OFF) {

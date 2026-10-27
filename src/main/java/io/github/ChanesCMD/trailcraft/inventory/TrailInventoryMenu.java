@@ -52,9 +52,14 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
     /** Окно рюкзака 176×201 над слотом рюкзака: левый край = левый край слота, низ на 2 px выше слота. */
     public static final int BACKPACK_W = 176, BACKPACK_H = 201;
     public static final int BACKPACK_WIN_X = BACKPACK_X, BACKPACK_WIN_Y = BOTTOM_Y - 2 - BACKPACK_H;
-    /** Окно кошелька 86×64 (8 монет 4×2) и окно пояса 126×62 (фляга и кнопка «Выпить»), тоже над своими слотами. */
+    /**
+     * Окно кошелька 86×64 (8 монет 4×2) и окно пояса 126×96 (фляга, кнопка «Выпить», ряд из трёх приборов),
+     * тоже над своими слотами.
+     */
     public static final int WALLET_W = 86, WALLET_H = 64, WALLET_WIN_X = WALLET_X, WALLET_WIN_Y = BOTTOM_Y - 2 - WALLET_H;
-    public static final int BELT_W = 126, BELT_H = 62, BELT_WIN_X = BELT_X, BELT_WIN_Y = BOTTOM_Y - 2 - BELT_H;
+    public static final int BELT_W = 126, BELT_H = 96, BELT_WIN_X = BELT_X, BELT_WIN_Y = BOTTOM_Y - 2 - BELT_H;
+    /** Рамка первого слота приборов в окне пояса (относительно окна). */
+    public static final int INSTRUMENT_X = 7, INSTRUMENT_Y = 71;
 
     // === Номера слотов меню ===
     public static final int RESULT = 0;
@@ -70,7 +75,8 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
     public static final int POCKET_START = 104;       // 9: видны только карманы тира надетого рюкзака
     public static final int WALLET_CONTENT_START = 113;   // 8: монеты
     public static final int FLASK_SLOT = 121;
-    public static final int SLOT_COUNT = 122;
+    public static final int INSTRUMENT_START = 122;   // 3: высотомер, секстант, хронометр (или GPS)
+    public static final int SLOT_COUNT = 125;
 
     /** Группы слотов: от группы зависит, когда слот виден. */
     public static final int GROUP_BASE = 0, GROUP_WARMTH = 1, GROUP_BACKPACK = 2, GROUP_WALLET = 3, GROUP_BELT = 4;
@@ -159,6 +165,11 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
         }
         addSlot(new MenuSlot(belt, BeltHandler.FLASK, BELT_WIN_X + 8, BELT_WIN_Y + 21)
                 .group(GROUP_BELT).locked(() -> !belt.isPresent()));
+        for (int k = 0; k < BeltHandler.INSTRUMENT_COUNT; k++) {
+            int index = BeltHandler.INSTRUMENTS + k;
+            addSlot(new MenuSlot(belt, index, BELT_WIN_X + INSTRUMENT_X + 1 + 18 * k, BELT_WIN_Y + INSTRUMENT_Y + 1)
+                    .group(GROUP_BELT).locked(() -> !belt.isPresent() || belt.isBlocked(index)));
+        }
 
         addDataSlot(new DataSlot() {
             @Override
@@ -324,7 +335,7 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
 
     /**
      * Shift-клик по предмету из рюкзака или хотбара: если он подходит в свободный служебный слот рюкзака (атлас,
-     * календарь, аккумулятор…), флягу на поясе, кошелёк или пояс, он уходит туда. Закрытые слоты (нет рюкзака
+     * календарь, аккумулятор…), слот фляги или прибора на поясе, кошелёк или пояс, он уходит туда. Закрытые слоты (нет рюкзака
      * или пояса) не принимают.
      */
     private boolean moveToGear(ItemStack stack) {
@@ -333,6 +344,9 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
             moveToGearSlot(stack, BACKPACK_UTILITY_START + i);
         }
         moveToGearSlot(stack, FLASK_SLOT);
+        for (int i = 0; i < BeltHandler.INSTRUMENT_COUNT; i++) {
+            moveToGearSlot(stack, INSTRUMENT_START + i);
+        }
         moveToGearSlot(stack, WALLET_SLOT);
         moveToGearSlot(stack, BELT_SLOT);
         return stack.getCount() != before;
