@@ -164,6 +164,32 @@ def save(name, signal):
                         os.path.join(OUT, f"{name}.ogg")], check=True)
 
 
+def write_json(path, data):
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+
+
+def merge_sounds(events):
+    """Дописывает события в sounds.json (там и звуки других животных — gen_animal_sounds.py)."""
+    path = os.path.join(ASSETS, "sounds.json")
+    data = {}
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+    data.update(events)
+    write_json(path, data)
+
+
+def merge_lang(entries):
+    for code, values in entries.items():
+        path = os.path.join(ASSETS, "lang", f"{code}.json")
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+        data.update(values)
+        write_json(path, data)
+
+
 def main():
     for name, make in (("song", song), ("ambient", ambient), ("hurt", hurt), ("death", death)):
         save(name, make())
@@ -173,20 +199,11 @@ def main():
         shutil.copy(os.path.join(OUT, f"{name}.ogg"), os.path.join(ASSETS, "sounds", "entity", "capercaillie", f"{name}.ogg"))
         sounds[f"entity.capercaillie.{name}"] = {"subtitle": f"subtitles.trailcraft.entity.capercaillie.{name}",
                                                  "sounds": [f"trailcraft:entity/capercaillie/{name}"]}
-    with open(os.path.join(ASSETS, "sounds.json"), "w", encoding="utf-8", newline="\n") as f:
-        json.dump(sounds, f, ensure_ascii=False, indent=2)
-        f.write("\n")
-    subtitles = {"ru_ru": {"song": "Глухарь токует", "ambient": "Глухарь квохчет"},
-                 "en_us": {"song": "Capercaillie displays", "ambient": "Capercaillie clucks"}}
-    for code, names in subtitles.items():
-        p = os.path.join(ASSETS, "lang", f"{code}.json")
-        with open(p, encoding="utf-8") as f:
-            data = json.load(f)
-        for name, text in names.items():
-            data[f"subtitles.trailcraft.entity.capercaillie.{name}"] = text
-        with open(p, "w", encoding="utf-8", newline="\n") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
-            f.write("\n")
+    merge_sounds(sounds)
+    merge_lang({"ru_ru": {"subtitles.trailcraft.entity.capercaillie.song": "Глухарь токует",
+                          "subtitles.trailcraft.entity.capercaillie.ambient": "Глухарь квохчет"},
+                "en_us": {"subtitles.trailcraft.entity.capercaillie.song": "Capercaillie displays",
+                          "subtitles.trailcraft.entity.capercaillie.ambient": "Capercaillie clucks"}})
     print("ok")
 
 

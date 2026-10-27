@@ -29,7 +29,9 @@
     [],
     [],
     [
-      "trailcraft:grass_patch", "trailcraft:loose_pebbles", "trailcraft:fallen_branches"
+      "trailcraft:grass_patch",
+      "trailcraft:loose_pebbles",
+      "trailcraft:fallen_branches"
     ],
     []
   ],
@@ -62,28 +64,22 @@
     ],
     "creature": [
       {
-        "type": "minecraft:sheep",
-        "weight": 12,
-        "minCount": 4,
+        "type": "trailcraft:duck",
+        "weight": 6,
+        "minCount": 2,
         "maxCount": 4
       },
       {
-        "type": "minecraft:pig",
-        "weight": 10,
-        "minCount": 4,
+        "type": "trailcraft:goose",
+        "weight": 4,
+        "minCount": 2,
         "maxCount": 4
       },
       {
-        "type": "minecraft:chicken",
-        "weight": 10,
-        "minCount": 4,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:cow",
-        "weight": 8,
-        "minCount": 4,
-        "maxCount": 4
+        "type": "trailcraft:beaver",
+        "weight": 4,
+        "minCount": 1,
+        "maxCount": 2
       }
     ],
     "ambient": [],

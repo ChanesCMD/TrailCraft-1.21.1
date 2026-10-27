@@ -20,7 +20,10 @@ import io.github.ChanesCMD.trailcraft.item.TurfCutterItem;
 import io.github.ChanesCMD.trailcraft.farm.Farm;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredItem;
+import io.github.ChanesCMD.trailcraft.animal.Species;
 import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.List;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
@@ -231,5 +234,15 @@ public class ModItems {
             coins.add(ITEMS.registerItem(names[tier], props -> new CoinItem(props.stacksTo(99), t)));
         }
         return List.copyOf(coins);
+    }
+
+    /** Яйца призыва животных (Species), вкладка «Яйца призыва» — ModCreativeTabs.SPAWN_EGGS_TAB. */
+    public static final Map<Species, DeferredItem<DeferredSpawnEggItem>> SPAWN_EGGS = new EnumMap<>(Species.class);
+
+    static {
+        for (Species species : Species.values()) {
+            SPAWN_EGGS.put(species, ITEMS.registerItem(species.id + "_spawn_egg", props ->
+                    new DeferredSpawnEggItem(ModAnimals.TYPES.get(species), species.eggColor, species.eggSpots, props)));
+        }
     }
 }

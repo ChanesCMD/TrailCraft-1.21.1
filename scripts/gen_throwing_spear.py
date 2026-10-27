@@ -80,11 +80,19 @@ def main():
         hand = read(f"assets/{NS}/models/item/{m}_spear_in_hand.json")
         hand["textures"] = {"layer0": f"{NS}:item/{m}_throwing_spear_in_hand"}
         write(f"assets/{NS}/models/item/{m}_throwing_spear_in_hand.json", hand)
+        # Замах (ПКМ зажата): от третьего лица рука поднята над головой, и копьё в ней смотрело остриём вниз-назад —
+        # поворачиваем его на 180° в своей плоскости (вокруг нормали текстуры, третья ось display)
+        throwing = json.loads(json.dumps(hand))
+        for view in ("thirdperson_righthand", "thirdperson_lefthand"):
+            throwing["display"][view]["rotation"][2] += 180
+        write(f"assets/{NS}/models/item/{m}_throwing_spear_throwing.json", throwing)
         icon = {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/{m}_throwing_spear_in_hand"}}
         write(f"assets/{NS}/models/item/{m}_throwing_spear.json", {
             "loader": "neoforge:separate_transforms", "gui_light": "front",
             "base": {"parent": f"{NS}:item/{m}_throwing_spear_in_hand"},
-            "perspectives": {"gui": icon, "fixed": icon, "ground": icon}})
+            "perspectives": {"gui": icon, "fixed": icon, "ground": icon},
+            # trailcraft:throwing — 1, пока копьё держат на замахе (ClientSpearEvents)
+            "overrides": [{"predicate": {f"{NS}:throwing": 1}, "model": f"{NS}:item/{m}_throwing_spear_throwing"}]})
         write(f"data/{NS}/recipe/{m}_throwing_spear.json", {
             "type": "minecraft:crafting_shapeless", "category": "combat",
             "ingredients": [{"item": f"{NS}:{m}_spear"}] + [{"item": "minecraft:feather"}] * 3,

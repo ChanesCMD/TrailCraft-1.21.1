@@ -23,7 +23,7 @@ GROVE_NOISE = 0.1
 # Густые пятна саванны: шум биома выше порога (примерно 30% площади), там же водопои
 SAVANNA_NOISE = 0.3
 
-# Леса: почва, названия ru / en, температура и осадки биома, цвет травы, слои деревьев, лишние мобы к мобам равнины,
+# Леса: почва, названия ru / en, температура и осадки биома, цвет травы, слои деревьев (животные — scripts/gen_animals.py),
 # водопои (необязательно). Слой деревьев: (имя, {порода: вес}, густота). Густота: ("count", n) — n попыток на чанк;
 # ("noise", ниже, выше, порог) — столько попыток там, где шум биома ниже / выше порога (пятна размером в сотню блоков);
 # ("rarity", n) — одно дерево раз в n чанков. Деревья не касаются друг друга, поэтому реальная густота ниже.
@@ -34,91 +34,71 @@ FORESTS = {
     # --- бурозём ---
     "burozem_taiga": dict(
         soil="burozem", ru="Тайга", en="Taiga", temperature=0.3, downfall=0.8, grass=0x6E9C6A,
-        trees=[("trees", {"spruce": 4, "fir": 3, "cedar": 1, "birch": 1}, ("count", 9))],
-        mobs=[("minecraft:wolf", 8, 4, 4), ("minecraft:fox", 8, 2, 4), ("minecraft:rabbit", 4, 2, 3),
-              ("trailcraft:capercaillie", 8, 2, 4)]),
+        trees=[("trees", {"spruce": 4, "fir": 3, "cedar": 1, "birch": 1}, ("count", 9))]),
     "pine_forest": dict(
         soil="burozem", ru="Сосновый бор", en="Pine Forest", temperature=0.35, downfall=0.5, grass=0x7A9E5E,
-        trees=[("trees", {"pine": 1}, ("count", 12))],
-        mobs=[("minecraft:wolf", 5, 4, 4), ("minecraft:fox", 4, 2, 4), ("minecraft:rabbit", 4, 2, 3),
-              ("trailcraft:capercaillie", 8, 2, 4)]),
+        trees=[("trees", {"pine": 1}, ("count", 12))]),
     "birch_forest": dict(
         soil="burozem", ru="Березняк", en="Birch Forest", temperature=0.5, downfall=0.6, grass=0x88BB67,
-        trees=[("trees", {"birch": 1}, ("count", 8))],
-        mobs=[("minecraft:fox", 4, 2, 4), ("minecraft:rabbit", 4, 2, 3), ("trailcraft:capercaillie", 4, 2, 3)]),
+        trees=[("trees", {"birch": 1}, ("count", 8))]),
     "burozem_forest": dict(
         soil="burozem", ru="Широколиственный лес", en="Broadleaf Forest", temperature=0.6, downfall=0.8, grass=0x73A462,
-        trees=[("trees", {"oak": 4, "linden": 3, "chestnut": 2, "walnut": 1, "birch": 1}, ("count", 8))],
-        mobs=[("minecraft:wolf", 5, 4, 4)]),
+        trees=[("trees", {"oak": 4, "linden": 3, "chestnut": 2, "walnut": 1, "birch": 1}, ("count", 8))]),
     # клён 70%, красный клён 30%: красный — в основном пятнами, изредка поодиночке
     "maple_forest": dict(
         soil="burozem", ru="Кленовый лес", en="Maple Forest", temperature=0.55, downfall=0.8, grass=0x76A85C,
         trees=[("maples", {"maple": 1}, ("noise", 8, 2, RED_MAPLE_NOISE)),
                ("red_maples", {"red_maple": 1}, ("noise", 0, 7, RED_MAPLE_NOISE)),
-               ("lone_red_maples", {"red_maple": 1}, ("rarity", 4))],
-        mobs=[("minecraft:wolf", 5, 4, 4)]),
+               ("lone_red_maples", {"red_maple": 1}, ("rarity", 4))]),
     "alder_forest": dict(
         soil="burozem", ru="Ольшаник", en="Alder Forest", temperature=0.55, downfall=0.9, grass=0x5F9A55,
-        trees=[("trees", {"alder": 1}, ("count", 8))],
-        mobs=[]),
+        trees=[("trees", {"alder": 1}, ("count", 8))]),
     "thuja_forest": dict(
         soil="burozem", ru="Туевый лес", en="Thuja Forest", temperature=0.5, downfall=0.9, grass=0x6A9C60,
-        trees=[("trees", {"thuja": 1}, ("count", 8))],
-        mobs=[("minecraft:wolf", 3, 4, 4)]),
+        trees=[("trees", {"thuja": 1}, ("count", 8))]),
     # ивовый лес — только у воды: вдоль рек и на влажных берегах (раскладка — layout)
     "burozem_willow_forest": dict(
         soil="burozem", ru="Ивовый лес", en="Willow Forest", temperature=0.5, downfall=0.9, grass=0x6A9F58,
-        trees=[("trees", {"willow": 1}, ("count", 7))],
-        mobs=[]),
+        trees=[("trees", {"willow": 1}, ("count", 7))]),
     # --- чернозём ---
     "chernozem_forest_steppe": dict(
         soil="chernozem", ru="Лесостепь", en="Forest Steppe", temperature=0.7, downfall=0.6, grass=0x79C05A,
-        trees=[("trees", {"aspen": 3, "birch": 2, "linden": 1, "maple": 1}, ("noise", 0, 7, GROVE_NOISE))],
-        mobs=[("minecraft:rabbit", 4, 2, 3)]),
+        trees=[("trees", {"aspen": 3, "birch": 2, "linden": 1, "maple": 1}, ("noise", 0, 7, GROVE_NOISE))]),
     "walnut_grove": dict(
         soil="chernozem", ru="Ореховая роща", en="Walnut Grove", temperature=0.75, downfall=0.6, grass=0x86BC5A,
-        trees=[("trees", {"walnut": 1}, ("count", 4))],
-        mobs=[("minecraft:rabbit", 4, 2, 3)]),
+        trees=[("trees", {"walnut": 1}, ("count", 4))]),
     "chernozem_willow_forest": dict(
         soil="chernozem", ru="Ивовый лес", en="Willow Forest", temperature=0.7, downfall=0.9, grass=0x72B05A,
-        trees=[("trees", {"willow": 1}, ("count", 7))],
-        mobs=[]),
+        trees=[("trees", {"willow": 1}, ("count", 7))]),
     # --- жёлтозём ---
     # сакура, сирень и железное дерево — маленькие рощи посреди равнины (сакура — только на возвышенностях)
     "sakura_grove": dict(
         soil="zheltozem", ru="Сакуровая роща", en="Sakura Grove", temperature=0.8, downfall=0.8, grass=0x9EBF58,
-        trees=[("trees", {"sakura": 1}, ("count", 5))],
-        mobs=[]),
+        trees=[("trees", {"sakura": 1}, ("count", 5))]),
     "lilac_grove": dict(
         soil="zheltozem", ru="Сиреневая роща", en="Lilac Grove", temperature=0.8, downfall=0.7, grass=0xA5BE57,
-        trees=[("trees", {"lilac": 1}, ("count", 5))],
-        mobs=[]),
+        trees=[("trees", {"lilac": 1}, ("count", 5))]),
     "ironwood_forest": dict(
         soil="zheltozem", ru="Лес железного дерева", en="Ironwood Forest", temperature=0.85, downfall=0.9, grass=0x8FB04E,
-        trees=[("trees", {"ironwood": 1}, ("count", 8))],
-        mobs=[]),
+        trees=[("trees", {"ironwood": 1}, ("count", 8))]),
     # 70% площади — редкие акации (одна на ~3 чанка), 30% — густые пятна с водопоями
     "savanna": dict(
         soil="zheltozem", ru="Саванна", en="Savanna", temperature=1.0, downfall=0.6, grass=0xB8B653,
         trees=[("trees", {"acacia": 1}, ("noise", 0, 8, SAVANNA_NOISE)),
                ("lone_trees", {"acacia": 1}, ("rarity", 3))],
-        water=(SAVANNA_NOISE, 5),
-        mobs=[("minecraft:rabbit", 4, 2, 3)]),
+        water=(SAVANNA_NOISE, 5)),
     # реликтовые эвкалипты (ствол 2×2) — примерно 30% деревьев
     "eucalyptus_forest": dict(
         soil="zheltozem", ru="Эвкалиптовый лес", en="Eucalyptus Forest", temperature=1.0, downfall=0.85, grass=0x99B455,
         trees=[("relicts", {"relict_eucalyptus": 1}, ("count", 2)),
-               ("trees", {"eucalyptus": 1}, ("count", 10))],
-        mobs=[]),
+               ("trees", {"eucalyptus": 1}, ("count", 10))]),
     # пальмы — только вдоль рек (раскладка — layout)
     "palm_shore": dict(
         soil="zheltozem", ru="Пальмовый берег", en="Palm Shore", temperature=1.1, downfall=0.8, grass=0xA9BC52,
-        trees=[("trees", {"palm": 1}, ("count", 5))],
-        mobs=[]),
+        trees=[("trees", {"palm": 1}, ("count", 5))]),
     "ebony_forest": dict(
         soil="zheltozem", ru="Эбеновый лес", en="Ebony Forest", temperature=1.1, downfall=0.95, grass=0x7FAE45,
-        trees=[("trees", {"ebony": 1}, ("count", 1))],
-        mobs=[]),
+        trees=[("trees", {"ebony": 1}, ("count", 1))]),
 }
 # Больше не генерируются: скрипт удаляет их файлы и убирает их из тэга и переводов
 REMOVED_BIOMES = ["zheltozem_forest", "acacia_grove", "palm_grove"]
@@ -382,19 +362,18 @@ E_PEAK, E_SLOPE = (-2.0, -0.78), (-0.78, -0.375)
 W_HIGH, W_MEADOW = (0.4, 0.9333), (W_BANK, 0.4)
 MOUNTAINS = {
     # biome: температура, осадки (downfall), цвет травы, почва (правило поверхности) или snow / None (порода),
-    # растительность (шаг vegetal_decoration), снег и лёд сверху, мобы-животные (козы не появляются)
+    # растительность (шаг vegetal_decoration), снег и лёд сверху (животные — scripts/gen_animals.py)
     "mountain_meadow": dict(temperature=0.4, downfall=0.8, grass=0x83BB6D, soil="burozem",
                             vegetal=["grass_patch", "minecraft:flower_meadow", "loose_pebbles"], freeze=False,
-                            mobs=None, ru="Горный луг", en="Mountain Meadow"),
+                            ru="Горный луг", en="Mountain Meadow"),
     "snowy_slopes": dict(temperature=-0.3, downfall=0.9, grass=0x80B497, soil="snow",
                          vegetal=["loose_pebbles"], freeze=True,
-                         mobs=[("minecraft:rabbit", 4, 2, 3)],
                          ru="Заснеженные склоны", en="Snowy Slopes"),
     "snowy_peaks": dict(temperature=-0.7, downfall=0.9, grass=0x80B497, soil="snow",
-                        vegetal=[], freeze=True, mobs=[],
+                        vegetal=[], freeze=True,
                         ru="Снежные пики", en="Snowy Peaks"),
     "stony_peaks": dict(temperature=1.0, downfall=0.3, grass=0x9ABE4B, soil=None,
-                        vegetal=["loose_pebbles"], freeze=False, mobs=[],
+                        vegetal=["loose_pebbles"], freeze=False,
                         ru="Скалистые пики", en="Stony Peaks"),
 }
 
@@ -411,9 +390,6 @@ def mountains():
         data["features"][VEGETAL] = [v if ":" in v else f"{NS}:{v}" for v in m["vegetal"]]
         if m["freeze"]:
             data["features"][TOP_LAYER] = ["minecraft:freeze_top_layer"]
-        if m["mobs"] is not None:
-            data["spawners"]["creature"] = [{"type": t, "weight": w, "minCount": lo, "maxCount": hi}
-                                            for t, w, lo, hi in m["mobs"]]
         write(f"data/{NS}/worldgen/biome/{biome}.json", data)
     rel = f"data/{NS}/worldgen/noise_settings/trailcraft_world.json"
     data = read(rel)
@@ -470,9 +446,6 @@ def biomes():
         data["features"][VEGETAL] = [f"{NS}:{t}" for t in tree_layers(biome)] + [f"{NS}:{g}" for g in FOREST_GROUND]
         if "water" in f:
             data["features"][LAKES].append(f"{NS}:{biome}_water_holes")
-        creatures = data["spawners"]["creature"]
-        for mob, weight, lo, hi in f["mobs"]:
-            creatures.append({"type": mob, "weight": weight, "minCount": lo, "maxCount": hi})
         write(f"data/{NS}/worldgen/biome/{biome}.json", data)
 
 
@@ -757,4 +730,7 @@ if __name__ == "__main__":
     tag("worldgen/biome", f"{NS}:trailworldgen_biomes", [f"{NS}:{b}" for b in list(FORESTS) + list(MOUNTAINS)],
         [f"{NS}:{b}" for b in REMOVED_BIOMES])
     lang()
+    # животные во всех биомах (новые биомы — копии равнин со старым списком)
+    import gen_animals
+    gen_animals.spawns()
     print("ok")

@@ -23,5 +23,13 @@
         "layer0": "trailcraft:item/amethyst_throwing_spear_in_hand"
       }
     }
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "trailcraft:throwing": 1
+      },
+      "model": "trailcraft:item/amethyst_throwing_spear_throwing"
+    }
+  ]
 }

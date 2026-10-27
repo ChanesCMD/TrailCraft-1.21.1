@@ -64,28 +64,34 @@
     ],
     "creature": [
       {
-        "type": "minecraft:sheep",
-        "weight": 12,
-        "minCount": 4,
+        "type": "trailcraft:sheep",
+        "weight": 6,
+        "minCount": 2,
         "maxCount": 4
       },
       {
-        "type": "minecraft:pig",
-        "weight": 10,
-        "minCount": 4,
+        "type": "trailcraft:goat",
+        "weight": 6,
+        "minCount": 2,
         "maxCount": 4
       },
       {
-        "type": "minecraft:chicken",
-        "weight": 10,
-        "minCount": 4,
-        "maxCount": 4
+        "type": "trailcraft:hare",
+        "weight": 4,
+        "minCount": 1,
+        "maxCount": 2
       },
       {
-        "type": "minecraft:cow",
-        "weight": 8,
-        "minCount": 4,
-        "maxCount": 4
+        "type": "trailcraft:manul",
+        "weight": 2,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
+        "type": "trailcraft:cow",
+        "weight": 3,
+        "minCount": 2,
+        "maxCount": 3
       }
     ],
     "ambient": [],

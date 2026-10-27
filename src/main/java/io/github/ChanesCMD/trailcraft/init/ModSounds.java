@@ -15,6 +15,10 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> CAPERCAILLIE_AMBIENT = register("entity.capercaillie.ambient");
     public static final DeferredHolder<SoundEvent, SoundEvent> CAPERCAILLIE_SONG = register("entity.capercaillie.song");
 
+    /** Ворона и ворон: карканье (scripts/gen_animal_sounds.py). */
+    public static final DeferredHolder<SoundEvent, SoundEvent> CROW_AMBIENT = register("entity.crow.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> RAVEN_AMBIENT = register("entity.raven.ambient");
+
     private static DeferredHolder<SoundEvent, SoundEvent> register(String name) {
         return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, name)));
     }

@@ -1,6 +1,8 @@
 package io.github.ChanesCMD.trailcraft.animal;
 
+import io.github.ChanesCMD.trailcraft.ServerConfig;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
+import io.github.ChanesCMD.trailcraft.calendar.Calendar;
 import io.github.ChanesCMD.trailcraft.init.ModEntities;
 import io.github.ChanesCMD.trailcraft.init.ModSounds;
 import net.minecraft.sounds.SoundEvent;
@@ -88,10 +90,15 @@ public class Capercaillie extends Chicken {
         return ModEntities.CAPERCAILLIE.get().create(level);
     }
 
-    /** Квохтанье; взрослый иногда токует (длинная песня — щелчки, «пробка», точение). */
+    /** Квохтанье; весной (по календарю мира) взрослый иногда токует (длинная песня — щелчки, «пробка», точение). */
     @Override
     protected SoundEvent getAmbientSound() {
-        return !isBaby() && random.nextInt(SONG_CHANCE) == 0 ? ModSounds.CAPERCAILLIE_SONG.get() : ModSounds.CAPERCAILLIE_AMBIENT.get();
+        return !isBaby() && isSpring() && random.nextInt(SONG_CHANCE) == 0
+                ? ModSounds.CAPERCAILLIE_SONG.get() : ModSounds.CAPERCAILLIE_AMBIENT.get();
+    }
+
+    private boolean isSpring() {
+        return Calendar.of(level().getDayTime(), ServerConfig.daysPerSeason()).season() == Calendar.Season.SPRING;
     }
 
     /** Ток длится 6 с: пока он не кончился, глухарь не квохчет поверх. */

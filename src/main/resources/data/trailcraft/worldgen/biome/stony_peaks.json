@@ -60,7 +60,26 @@
         "maxCount": 4
       }
     ],
-    "creature": [],
+    "creature": [
+      {
+        "type": "trailcraft:goat",
+        "weight": 6,
+        "minCount": 2,
+        "maxCount": 4
+      },
+      {
+        "type": "trailcraft:manul",
+        "weight": 4,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
+        "type": "trailcraft:raven",
+        "weight": 3,
+        "minCount": 1,
+        "maxCount": 2
+      }
+    ],
     "ambient": [],
     "axolotls": [],
     "underground_water_creature": [],

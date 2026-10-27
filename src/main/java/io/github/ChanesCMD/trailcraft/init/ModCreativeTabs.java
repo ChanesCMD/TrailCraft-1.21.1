@@ -194,7 +194,6 @@ public class ModCreativeTabs {
                         ModOres.NUGGET_ORES.forEach(ore -> output.accept(ModOres.NUGGETS.get(ore)));
                         ModOres.MIXES.forEach(output::accept);
                         ModOres.INGOTS.forEach(output::accept);
-                        output.accept(ModItems.CAPERCAILLIE_SPAWN_EGG);
                         output.accept(ModItems.RAW_CAPERCAILLIE);
                         output.accept(ModItems.COOKED_CAPERCAILLIE);
                     }).build());
@@ -209,5 +208,14 @@ public class ModCreativeTabs {
                                 output.accept(item);
                             }
                         }
+                    }).build());
+
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> SPAWN_EGGS_TAB =
+            CREATIVE_MODE_TABS.register("trailcraft_spawn_eggs_tab", () -> CreativeModeTab.builder()
+                    .title(Component.translatable("itemGroup.trailcraft_spawn_eggs"))
+                    .icon(() -> ModItems.CAPERCAILLIE_SPAWN_EGG.get().getDefaultInstance())
+                    .displayItems((parameters, output) -> {
+                        output.accept(ModItems.CAPERCAILLIE_SPAWN_EGG);
+                        ModItems.SPAWN_EGGS.values().forEach(output::accept);
                     }).build());
 }

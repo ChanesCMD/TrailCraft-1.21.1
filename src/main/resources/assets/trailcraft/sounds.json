@@ -10,5 +10,19 @@
     "sounds": [
       "trailcraft:entity/capercaillie/ambient"
     ]
+  },
+  "entity.crow.ambient": {
+    "subtitle": "subtitles.trailcraft.entity.crow.ambient",
+    "sounds": [
+      "trailcraft:entity/crow/caw1",
+      "trailcraft:entity/crow/caw2"
+    ]
+  },
+  "entity.raven.ambient": {
+    "subtitle": "subtitles.trailcraft.entity.raven.ambient",
+    "sounds": [
+      "trailcraft:entity/raven/croak1",
+      "trailcraft:entity/raven/croak2"
+    ]
   }
 }

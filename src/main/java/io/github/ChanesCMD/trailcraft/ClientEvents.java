@@ -11,6 +11,10 @@ import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import io.github.ChanesCMD.trailcraft.client.ThrownSpearRenderer;
 import io.github.ChanesCMD.trailcraft.client.animal.CapercaillieModel;
 import io.github.ChanesCMD.trailcraft.client.animal.CapercaillieRenderer;
+import io.github.ChanesCMD.trailcraft.client.animal.TrailAnimalModel;
+import io.github.ChanesCMD.trailcraft.client.animal.TrailAnimalRenderer;
+import io.github.ChanesCMD.trailcraft.animal.Species;
+import io.github.ChanesCMD.trailcraft.init.ModAnimals;
 import io.github.ChanesCMD.trailcraft.init.ModEntities;
 
 @EventBusSubscriber(modid = TrailCraft.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -26,11 +30,17 @@ public class ClientEvents {
     public static void entityRenderers(EntityRenderersEvent.RegisterRenderers e) {
         e.registerEntityRenderer(ModEntities.THROWN_SPEAR.get(), ThrownSpearRenderer::new);
         e.registerEntityRenderer(ModEntities.CAPERCAILLIE.get(), CapercaillieRenderer::new);
+        for (Species species : Species.values()) {
+            e.registerEntityRenderer(ModAnimals.type(species), context -> new TrailAnimalRenderer<>(context, species));
+        }
     }
 
     @SubscribeEvent
     public static void entityLayers(EntityRenderersEvent.RegisterLayerDefinitions e) {
         e.registerLayerDefinition(CapercaillieModel.LAYER, CapercaillieModel::createBodyLayer);
+        for (Species species : Species.values()) {
+            e.registerLayerDefinition(TrailAnimalRenderer.layer(species), () -> TrailAnimalModel.createLayer(TrailAnimalModel.load(species.id)));
+        }
     }
 
     @SubscribeEvent

@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import io.github.ChanesCMD.trailcraft.init.ModAttachments;
 import io.github.ChanesCMD.trailcraft.init.ModBlockEntities;
 import io.github.ChanesCMD.trailcraft.init.ModEffects;
+import io.github.ChanesCMD.trailcraft.init.ModAnimals;
 import io.github.ChanesCMD.trailcraft.init.ModEntities;
 import io.github.ChanesCMD.trailcraft.init.ModSounds;
 import io.github.ChanesCMD.trailcraft.init.ModBlocks;
@@ -37,6 +38,8 @@ public class TrailCraft {
         ModOres.init();
         // Глина, кирпичи, сыродутная печь и кувшин (пакет smelting)
         ModSmelting.init();
+        // Животные (animal/Species) регистрируются в статическом блоке ModAnimals
+        ModAnimals.init();
 
         // Регистрируем блоки и предметы
         ModBlocks.BLOCKS.register(modEventBus);

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.init.ModTools;
 import io.github.ChanesCMD.trailcraft.item.SpearItem;
+import io.github.ChanesCMD.trailcraft.item.ThrowingSpearItem;
 import io.github.ChanesCMD.trailcraft.spear.SpearCombat;
 import io.github.ChanesCMD.trailcraft.spear.SpearJabPayload;
 import net.minecraft.client.Minecraft;
@@ -39,6 +40,8 @@ public class ClientSpearEvents {
      * плавно поворачивают копьё из стойки в горизонталь плоской стороной вверх.
      */
     private static final ResourceLocation CHARGE = ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "charge");
+    /** 1, пока метательное копьё на замахе: модель *_throwing_spear_throwing (от третьего лица повёрнута на 180°). */
+    private static final ResourceLocation THROWING = ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "throwing");
     /**
      * Положение копья от первого лица в стойке и при разгоне (как display в моделях; модели разгона его не задают).
      * Стойка (display [-45, 90, 45]) — это поворот разгона, повёрнутый ребром (на 90° вокруг древка) и поднятый
@@ -89,6 +92,9 @@ public class ClientSpearEvents {
     public static class ModBus {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
+            event.enqueueWork(() -> ModTools.ITEMS.stream().map(item -> item.get()).filter(item -> item instanceof ThrowingSpearItem)
+                    .forEach(item -> ItemProperties.register(item, THROWING, (stack, level, entity, seed) ->
+                            entity != null && charging(entity, stack) ? 1 : 0)));
             event.enqueueWork(() -> ModTools.ITEMS.stream().map(item -> item.get()).filter(ClientSpearEvents::isSpear).forEach(item -> {
                 // Рендер руки от первого лица держит свою копию стака, поэтому сравниваем предмет, а не ссылку
                 ItemProperties.register(item, CHARGE, (stack, level, entity, seed) ->
