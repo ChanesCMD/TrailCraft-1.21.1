@@ -74,7 +74,7 @@ PATCHES = {
     "blackberry_bush": (3, 2, 8),
     "wild_carrot": (4, 2, 6),
     "wild_potato": (4, 2, 8),
-    "wild_jute": (8, 2, 2),
+    "wild_jute": (8, 2, 8),
 }
 
 LANG = {
