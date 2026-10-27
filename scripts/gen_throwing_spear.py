@@ -35,7 +35,7 @@ def read(rel):
         return json.load(f)
 
 
-def fletch(src, tail_gap=5, length=12, width=6, back=0.5):
+def fletch(src, tail_gap=4, length=9, width=4, back=0.5):
     """Оперение, как у стрелы в луке: у торца древка (идёт вверх-вправо, x + y ≈ c) два пера с тёмной обводкой —
     сверху-слева светлое, снизу-справа в тени. Перо у древка во всю длину, к острию сходит на нет, а хвостовой
     край скошен назад. d — сдвиг поперёк древка (x + y − c), s — вдоль древка от места пера (x − y, шаг 2 на пиксель).
@@ -58,8 +58,10 @@ def fletch(src, tail_gap=5, length=12, width=6, back=0.5):
             if opaque(x, y) or not inside(x, y):
                 continue
             a = abs(x + y - c) - 1
-            edge = any(not inside(x + dx, y + dy) and not opaque(x + dx, y + dy)
-                       for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)))
+            # обводка — только по внешнему краю пера (у мелкого пера обводка по всем краям съедает белое)
+            out = abs(x + y - c) + 1
+            edge = not any(inside(x + dx, y + dy) for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))
+                           if abs(x + dx + y + dy - c) == out)
             light, dim = (FEATHER, FEATHER_EDGE) if x + y < c else (SHADE, SHADE_EDGE)
             new[(x, y)] = OUTLINE if edge else light if a < width - 2 else dim
     for p, color in new.items():

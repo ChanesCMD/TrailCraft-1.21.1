@@ -886,5 +886,7 @@
   "item.trailcraft.iron_throwing_spear": "Iron Throwing Spear",
   "item.trailcraft.steel_throwing_spear": "Steel Throwing Spear",
   "entity.trailcraft.capercaillie": "Capercaillie",
-  "item.trailcraft.capercaillie_spawn_egg": "Capercaillie Spawn Egg"
+  "item.trailcraft.capercaillie_spawn_egg": "Capercaillie Spawn Egg",
+  "item.trailcraft.raw_capercaillie": "Raw Capercaillie",
+  "item.trailcraft.cooked_capercaillie": "Cooked Capercaillie"
 }

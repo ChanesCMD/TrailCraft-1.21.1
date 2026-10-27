@@ -12,6 +12,7 @@ import io.github.ChanesCMD.trailcraft.item.CoinItem;
 import io.github.ChanesCMD.trailcraft.item.FlaskItem;
 import io.github.ChanesCMD.trailcraft.item.WalletItem;
 import io.github.ChanesCMD.trailcraft.item.BranchStickItem;
+import io.github.ChanesCMD.trailcraft.animal.Capercaillie;
 import io.github.ChanesCMD.trailcraft.item.ClothBlankItem;
 import io.github.ChanesCMD.trailcraft.item.FirestarterItem;
 import io.github.ChanesCMD.trailcraft.item.HammerItem;
@@ -111,6 +112,10 @@ public class ModItems {
     public static final DeferredItem<Item> CLOTH = ITEMS.registerSimpleItem("cloth");
     public static final DeferredItem<DeferredSpawnEggItem> CAPERCAILLIE_SPAWN_EGG = ITEMS.registerItem("capercaillie_spawn_egg",
             props -> new DeferredSpawnEggItem(ModEntities.CAPERCAILLIE, 0x2F3034, 0x3E6F5F, props));
+    public static final DeferredItem<Item> RAW_CAPERCAILLIE = ITEMS.registerItem("raw_capercaillie",
+            props -> new Item(props.food(Capercaillie.RAW_FOOD)));
+    public static final DeferredItem<Item> COOKED_CAPERCAILLIE = ITEMS.registerItem("cooked_capercaillie",
+            props -> new Item(props.food(Capercaillie.COOKED_FOOD)));
 
     // === ПРЕДМЕТЫ ===
     public static final DeferredItem<Item> CLAY_BALL_WHITE = ITEMS.registerSimpleItem("clay_ball_white");

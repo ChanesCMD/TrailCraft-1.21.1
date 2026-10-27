@@ -195,6 +195,8 @@ public class ModCreativeTabs {
                         ModOres.MIXES.forEach(output::accept);
                         ModOres.INGOTS.forEach(output::accept);
                         output.accept(ModItems.CAPERCAILLIE_SPAWN_EGG);
+                        output.accept(ModItems.RAW_CAPERCAILLIE);
+                        output.accept(ModItems.COOKED_CAPERCAILLIE);
                     }).build());
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TRAILCRAFT_WOOD_TAB =

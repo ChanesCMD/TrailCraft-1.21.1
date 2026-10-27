@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smelting",
+  "category": "food",
+  "cookingtime": 200,
+  "experience": 0.35,
+  "ingredient": {
+    "item": "trailcraft:raw_capercaillie"
+  },
+  "result": {
+    "id": "trailcraft:cooked_capercaillie",
+    "count": 1
+  }
+}

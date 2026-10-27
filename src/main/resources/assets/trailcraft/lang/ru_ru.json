@@ -886,5 +886,7 @@
   "item.trailcraft.iron_throwing_spear": "Железное метательное копьё",
   "item.trailcraft.steel_throwing_spear": "Стальное метательное копьё",
   "entity.trailcraft.capercaillie": "Глухарь",
-  "item.trailcraft.capercaillie_spawn_egg": "Яйцо призыва глухаря"
+  "item.trailcraft.capercaillie_spawn_egg": "Яйцо призыва глухаря",
+  "item.trailcraft.raw_capercaillie": "Сырое мясо глухаря",
+  "item.trailcraft.cooked_capercaillie": "Жареное мясо глухаря"
 }

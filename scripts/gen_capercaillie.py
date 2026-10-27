@@ -1,4 +1,5 @@
-"""Глухарь (animal/Capercaillie, client/animal/CapercaillieModel): текстура, лут, модель яйца призыва, переводы
+"""Глухарь (animal/Capercaillie, client/animal/CapercaillieModel): текстура, лут (перья и мясо), мясо (текстуры,
+модели, рецепты жарки), тэг корма (#trailcraft:capercaillie_food — смородина), модель яйца призыва, переводы
 и превью модели (docs/textures/capercaillie.png).
 
 Развёртка текстуры — коробки CapercaillieModel (texOffs и размеры в BOXES), менять вместе. Нужен Pillow.
@@ -236,6 +237,43 @@ def preview(tex, yaw, pitch=0.45, scale=14):
     return img
 
 
+# Мясо: окорочок (буквы — m основной, h блик, d тень, o контур мяса, w кость, b контур кости)
+MEAT_SHAPE = [
+    "................",
+    "........oooo....",
+    "......oommmmo...",
+    ".....ommhhmmmo..",
+    "....ommhhmmmmdo.",
+    "....omhhmmmmmdo.",
+    "...ommhmmmmmddo.",
+    "...ommmmmmmmddo.",
+    "...ommmmmmmddo..",
+    "....odmmmmddoo..",
+    "....bodddddo....",
+    "...bwboooooo....",
+    "..bwwb..........",
+    ".bwwb...........",
+    "bwwwb...........",
+    ".bbb............",
+]
+MEAT_COLORS = {
+    # мясо глухаря тёмно-красное
+    "raw": {"m": (168, 62, 66), "h": (206, 112, 110), "d": (122, 40, 46), "o": (66, 22, 26)},
+    "cooked": {"m": (150, 92, 46), "h": (196, 140, 76), "d": (104, 60, 28), "o": (54, 30, 14)},
+}
+BONE = {"w": (232, 226, 206), "b": (112, 102, 88)}
+
+
+def meat(kind):
+    img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    colors = dict(MEAT_COLORS[kind], **BONE)
+    for y, row in enumerate(MEAT_SHAPE):
+        for x, ch in enumerate(row):
+            if ch != ".":
+                img.putpixel((x, y), colors[ch] + (255,))
+    return img
+
+
 def write(rel, data):
     p = os.path.join(ROOT, *rel.split("/"))
     os.makedirs(os.path.dirname(p), exist_ok=True)
@@ -245,13 +283,16 @@ def write(rel, data):
 
 
 def lang():
-    names = {"ru_ru": ("Глухарь", "Яйцо призыва глухаря"), "en_us": ("Capercaillie", "Capercaillie Spawn Egg")}
-    for code, (mob, egg) in names.items():
+    names = {"ru_ru": ("Глухарь", "Яйцо призыва глухаря", "Сырое мясо глухаря", "Жареное мясо глухаря"),
+             "en_us": ("Capercaillie", "Capercaillie Spawn Egg", "Raw Capercaillie", "Cooked Capercaillie")}
+    for code, (mob, egg, raw, cooked) in names.items():
         rel = os.path.join(ROOT, "assets", NS, "lang", f"{code}.json")
         with open(rel, encoding="utf-8") as f:
             data = json.load(f)
         data[f"entity.{NS}.capercaillie"] = mob
         data[f"item.{NS}.capercaillie_spawn_egg"] = egg
+        data[f"item.{NS}.raw_capercaillie"] = raw
+        data[f"item.{NS}.cooked_capercaillie"] = cooked
         write(f"assets/{NS}/lang/{code}.json", data)
 
 
@@ -261,14 +302,33 @@ def main():
     os.makedirs(os.path.dirname(out), exist_ok=True)
     tex.save(out)
     write(f"assets/{NS}/models/item/capercaillie_spawn_egg.json", {"parent": "minecraft:item/template_spawn_egg"})
-    # Только перья: 1–3, «Добыча» прибавляет по 0–1 за уровень
+    for kind in ("raw", "cooked"):
+        item = f"{kind}_capercaillie"
+        meat(kind).save(os.path.join(ROOT, "assets", NS, "textures", "item", f"{item}.png"))
+        write(f"assets/{NS}/models/item/{item}.json",
+              {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/{item}"}})
+    # Жарится на костре; печь и коптильня — на всякий случай, по печи же лут горящего глухаря (furnace_smelt)
+    for kind, folder, time in (("campfire_cooking", "campfire/", 600), ("smelting", "", 200), ("smoking", "", 100)):
+        write(f"data/{NS}/recipe/{folder}cooked_capercaillie{'' if kind == 'campfire_cooking' else '_' + kind}.json", {
+            "type": f"minecraft:{kind}", "category": "food", "cookingtime": time, "experience": 0.35,
+            "ingredient": {"item": f"{NS}:raw_capercaillie"}, "result": {"id": f"{NS}:cooked_capercaillie", "count": 1}})
+    write(f"data/{NS}/tags/item/capercaillie_food.json", {"replace": False, "values": [f"{NS}:currant"]})
+    looting = {"function": "minecraft:enchanted_count_increase", "enchantment": "minecraft:looting",
+               "count": {"type": "minecraft:uniform", "min": 0, "max": 1}}
+    # Перья 1–3 и одно мясо (горящий глухарь — уже жареное); «Добыча» прибавляет по 0–1 за уровень
     write(f"data/{NS}/loot_table/entities/capercaillie.json", {
         "type": "minecraft:entity", "random_sequence": f"{NS}:entities/capercaillie",
-        "pools": [{"rolls": 1, "bonus_rolls": 0, "entries": [{"type": "minecraft:item", "name": "minecraft:feather",
-                   "functions": [
-                       {"function": "minecraft:set_count", "count": {"type": "minecraft:uniform", "min": 1, "max": 3}},
-                       {"function": "minecraft:enchanted_count_increase", "enchantment": "minecraft:looting",
-                        "count": {"type": "minecraft:uniform", "min": 0, "max": 1}}]}]}]})
+        "pools": [
+            {"rolls": 1, "bonus_rolls": 0, "entries": [{"type": "minecraft:item", "name": "minecraft:feather",
+             "functions": [
+                 {"function": "minecraft:set_count", "count": {"type": "minecraft:uniform", "min": 1, "max": 3}},
+                 looting]}]},
+            {"rolls": 1, "bonus_rolls": 0, "entries": [{"type": "minecraft:item", "name": f"{NS}:raw_capercaillie",
+             "functions": [
+                 {"function": "minecraft:furnace_smelt", "conditions": [{
+                     "condition": "minecraft:entity_properties", "entity": "this",
+                     "predicate": {"flags": {"is_on_fire": True}}}]},
+                 looting]}]}]})
     lang()
     os.makedirs(DOCS, exist_ok=True)
     views = [preview(tex, yaw) for yaw in (math.radians(35), math.radians(-120), math.radians(90))]
