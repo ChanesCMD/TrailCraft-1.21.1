@@ -762,8 +762,11 @@
   "biome.trailcraft.sakura_grove": "Sakura Grove",
   "biome.trailcraft.lilac_grove": "Lilac Grove",
   "biome.trailcraft.ironwood_forest": "Ironwood Forest",
-  "biome.trailcraft.acacia_grove": "Acacia Grove",
   "biome.trailcraft.eucalyptus_forest": "Eucalyptus Forest",
-  "biome.trailcraft.palm_grove": "Palm Grove",
-  "biome.trailcraft.ebony_forest": "Ebony Forest"
+  "biome.trailcraft.ebony_forest": "Ebony Forest",
+  "biome.trailcraft.birch_forest": "Birch Forest",
+  "biome.trailcraft.burozem_willow_forest": "Willow Forest",
+  "biome.trailcraft.chernozem_willow_forest": "Willow Forest",
+  "biome.trailcraft.savanna": "Savanna",
+  "biome.trailcraft.palm_shore": "Palm Shore"
 }

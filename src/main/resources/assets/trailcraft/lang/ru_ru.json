@@ -762,8 +762,11 @@
   "biome.trailcraft.sakura_grove": "Сакуровая роща",
   "biome.trailcraft.lilac_grove": "Сиреневая роща",
   "biome.trailcraft.ironwood_forest": "Лес железного дерева",
-  "biome.trailcraft.acacia_grove": "Акациевая роща",
   "biome.trailcraft.eucalyptus_forest": "Эвкалиптовый лес",
-  "biome.trailcraft.palm_grove": "Пальмовая роща",
-  "biome.trailcraft.ebony_forest": "Эбеновый лес"
+  "biome.trailcraft.ebony_forest": "Эбеновый лес",
+  "biome.trailcraft.birch_forest": "Березняк",
+  "biome.trailcraft.burozem_willow_forest": "Ивовый лес",
+  "biome.trailcraft.chernozem_willow_forest": "Ивовый лес",
+  "biome.trailcraft.savanna": "Саванна",
+  "biome.trailcraft.palm_shore": "Пальмовый берег"
 }

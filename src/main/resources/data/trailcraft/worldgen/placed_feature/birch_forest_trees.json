@@ -1,9 +1,9 @@
 {
-  "feature": "trailcraft:acacia_grove_trees",
+  "feature": "trailcraft:birch_forest_trees",
   "placement": [
     {
       "type": "minecraft:count",
-      "count": 3
+      "count": 8
     },
     {
       "type": "minecraft:in_square"

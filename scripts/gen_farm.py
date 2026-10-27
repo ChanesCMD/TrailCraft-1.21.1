@@ -47,20 +47,23 @@ WILD_BY_BIOME = {
     "burozem_plains": ["currant_bush", "cloudberry_bush", "gooseberry_bush", "blackberry_bush", "wild_carrot", "wild_potato"],
     "burozem_taiga": ["currant_bush", "cloudberry_bush"],
     "pine_forest": ["currant_bush", "cloudberry_bush"],
+    "birch_forest": ["currant_bush", "gooseberry_bush", "wild_carrot"],
     "burozem_forest": ["currant_bush", "gooseberry_bush", "blackberry_bush"],
     "maple_forest": ["currant_bush", "gooseberry_bush", "blackberry_bush"],
     "alder_forest": ["currant_bush", "blackberry_bush"],
     "thuja_forest": ["currant_bush"],
+    "burozem_willow_forest": ["currant_bush", "blackberry_bush"],
     "chernozem_plains": ["currant_bush", "gooseberry_bush", "wild_carrot", "wild_potato"],
     "chernozem_forest_steppe": ["currant_bush", "gooseberry_bush", "blackberry_bush", "wild_carrot"],
     "walnut_grove": ["gooseberry_bush", "blackberry_bush", "wild_carrot"],
+    "chernozem_willow_forest": ["currant_bush", "blackberry_bush"],
     "zheltozem_plains": ["blackberry_bush", "wild_carrot", "wild_jute"],
     "sakura_grove": ["blackberry_bush", "wild_carrot"],
     "lilac_grove": ["blackberry_bush", "wild_carrot"],
     "ironwood_forest": ["blackberry_bush"],
-    "acacia_grove": ["wild_carrot", "wild_jute"],
+    "savanna": ["wild_carrot", "wild_jute"],
     "eucalyptus_forest": ["wild_jute"],
-    "palm_grove": ["wild_jute"],
+    "palm_shore": ["wild_jute"],
     "ebony_forest": ["wild_jute"],
 }
 # Пятно: растение, попыток (столько растений максимум), разброс, раз в сколько чанков
@@ -312,6 +315,11 @@ def worldgen():
                 {"type": "minecraft:biome"},
             ],
         })
+    # модификаторы биомов, которых больше нет в списке (биом переименован или убран), иначе мир не загрузится
+    mods = path("data", NS, "neoforge", "biome_modifier")
+    for name in os.listdir(mods):
+        if name.startswith("wild_plants_") and name[len("wild_plants_"):-len(".json")] not in WILD_BY_BIOME:
+            os.remove(os.path.join(mods, name))
     for biome, plants in WILD_BY_BIOME.items():
         write(f"data/{NS}/neoforge/biome_modifier/wild_plants_{biome}.json", {
             "type": "neoforge:add_features",

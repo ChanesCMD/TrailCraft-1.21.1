@@ -1,9 +1,10 @@
 {
   "type": "neoforge:add_features",
   "biomes": [
-    "trailcraft:palm_grove"
+    "trailcraft:savanna"
   ],
   "features": [
+    "trailcraft:wild_carrot_patch",
     "trailcraft:wild_jute_patch"
   ],
   "step": "vegetal_decoration"

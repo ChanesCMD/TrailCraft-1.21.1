@@ -1,9 +1,9 @@
 {
-  "feature": "trailcraft:palm_grove_trees",
+  "feature": "trailcraft:burozem_willow_forest_trees",
   "placement": [
     {
       "type": "minecraft:count",
-      "count": 4
+      "count": 7
     },
     {
       "type": "minecraft:in_square"

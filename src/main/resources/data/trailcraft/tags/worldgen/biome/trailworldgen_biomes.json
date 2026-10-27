@@ -25,9 +25,12 @@
     "trailcraft:sakura_grove",
     "trailcraft:lilac_grove",
     "trailcraft:ironwood_forest",
-    "trailcraft:acacia_grove",
     "trailcraft:eucalyptus_forest",
-    "trailcraft:palm_grove",
-    "trailcraft:ebony_forest"
+    "trailcraft:ebony_forest",
+    "trailcraft:birch_forest",
+    "trailcraft:burozem_willow_forest",
+    "trailcraft:chernozem_willow_forest",
+    "trailcraft:savanna",
+    "trailcraft:palm_shore"
   ]
 }

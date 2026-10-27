@@ -117,87 +117,6 @@
               }
             },
             {
-              "biome": "trailcraft:burozem_shore",
-              "parameters": {
-                "temperature": [
-                  -2.0,
-                  -0.24
-                ],
-                "humidity": [
-                  -2.0,
-                  -0.14
-                ],
-                "continentalness": [
-                  -0.19,
-                  -0.15
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  -2.0,
-                  -0.05
-                ],
-                "offset": 0.0
-              }
-            },
-            {
-              "biome": "trailcraft:chernozem_shore",
-              "parameters": {
-                "temperature": [
-                  -0.24,
-                  0.02
-                ],
-                "humidity": [
-                  -2.0,
-                  -0.14
-                ],
-                "continentalness": [
-                  -0.19,
-                  -0.15
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  -2.0,
-                  -0.05
-                ],
-                "offset": 0.0
-              }
-            },
-            {
-              "biome": "trailcraft:zheltozem_shore",
-              "parameters": {
-                "temperature": [
-                  0.02,
-                  2.0
-                ],
-                "humidity": [
-                  -2.0,
-                  -0.14
-                ],
-                "continentalness": [
-                  -0.19,
-                  -0.15
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  -2.0,
-                  -0.05
-                ],
-                "offset": 0.0
-              }
-            },
-            {
               "biome": "trailcraft:burozem_plains",
               "parameters": {
                 "temperature": [
@@ -246,7 +165,7 @@
                 "depth": 0.0,
                 "weirdness": [
                   -2.0,
-                  -0.05
+                  -0.09
                 ],
                 "offset": 0.0
               }
@@ -273,7 +192,7 @@
                 "depth": 0.0,
                 "weirdness": [
                   -2.0,
-                  -0.05
+                  -0.09
                 ],
                 "offset": 0.0
               }
@@ -306,7 +225,7 @@
               }
             },
             {
-              "biome": "trailcraft:burozem_forest",
+              "biome": "trailcraft:birch_forest",
               "parameters": {
                 "temperature": [
                   -0.55,
@@ -314,6 +233,33 @@
                 ],
                 "humidity": [
                   -0.1,
+                  -0.03
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -2.0,
+                  -0.09
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:burozem_forest",
+              "parameters": {
+                "temperature": [
+                  -0.55,
+                  -0.24
+                ],
+                "humidity": [
+                  -0.03,
                   0.2
                 ],
                 "continentalness": [
@@ -327,7 +273,7 @@
                 "depth": 0.0,
                 "weirdness": [
                   -2.0,
-                  -0.05
+                  -0.09
                 ],
                 "offset": 0.0
               }
@@ -354,7 +300,7 @@
                 "depth": 0.0,
                 "weirdness": [
                   -2.0,
-                  -0.05
+                  -0.09
                 ],
                 "offset": 0.0
               }
@@ -381,7 +327,7 @@
                 "depth": 0.0,
                 "weirdness": [
                   -2.0,
-                  -0.05
+                  -0.09
                 ],
                 "offset": 0.0
               }
@@ -435,7 +381,7 @@
                 "depth": 0.0,
                 "weirdness": [
                   -2.0,
-                  -0.05
+                  -0.09
                 ],
                 "offset": 0.0
               }
@@ -462,6 +408,33 @@
                 "depth": 0.0,
                 "weirdness": [
                   -2.0,
+                  -0.09
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:zheltozem_plains",
+              "parameters": {
+                "temperature": [
+                  0.02,
+                  0.25
+                ],
+                "humidity": [
+                  -0.02,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  -0.05
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -0.92,
                   -0.05
                 ],
                 "offset": 0.0
@@ -472,6 +445,114 @@
               "parameters": {
                 "temperature": [
                   0.02,
+                  0.25
+                ],
+                "humidity": [
+                  -0.02,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.05,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  -0.5
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -0.92,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:zheltozem_plains",
+              "parameters": {
+                "temperature": [
+                  0.02,
+                  0.25
+                ],
+                "humidity": [
+                  -0.02,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.05,
+                  2.0
+                ],
+                "erosion": [
+                  -0.25,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -0.92,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:zheltozem_plains",
+              "parameters": {
+                "temperature": [
+                  0.02,
+                  0.25
+                ],
+                "humidity": [
+                  -0.02,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.05,
+                  2.0
+                ],
+                "erosion": [
+                  -0.5,
+                  -0.25
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -0.62,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:zheltozem_plains",
+              "parameters": {
+                "temperature": [
+                  0.02,
+                  0.25
+                ],
+                "humidity": [
+                  -0.02,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.05,
+                  2.0
+                ],
+                "erosion": [
+                  -0.5,
+                  -0.25
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -0.92,
+                  -0.72
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:zheltozem_plains",
+              "parameters": {
+                "temperature": [
+                  0.25,
                   2.0
                 ],
                 "humidity": [
@@ -489,71 +570,17 @@
                 "depth": 0.0,
                 "weirdness": [
                   -2.0,
-                  -0.05
+                  -0.09
                 ],
                 "offset": 0.0
               }
             },
             {
-              "biome": "trailcraft:sakura_grove",
-              "parameters": {
-                "temperature": [
-                  0.02,
-                  0.25
-                ],
-                "humidity": [
-                  0.2,
-                  0.45
-                ],
-                "continentalness": [
-                  -0.15,
-                  2.0
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  -2.0,
-                  -0.05
-                ],
-                "offset": 0.0
-              }
-            },
-            {
-              "biome": "trailcraft:ironwood_forest",
-              "parameters": {
-                "temperature": [
-                  0.02,
-                  0.25
-                ],
-                "humidity": [
-                  0.45,
-                  2.0
-                ],
-                "continentalness": [
-                  -0.15,
-                  2.0
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  -2.0,
-                  -0.05
-                ],
-                "offset": 0.0
-              }
-            },
-            {
-              "biome": "trailcraft:acacia_grove",
+              "biome": "trailcraft:savanna",
               "parameters": {
                 "temperature": [
                   0.25,
-                  0.5
+                  2.0
                 ],
                 "humidity": [
                   0.2,
@@ -570,7 +597,7 @@
                 "depth": 0.0,
                 "weirdness": [
                   -2.0,
-                  -0.05
+                  -0.09
                 ],
                 "offset": 0.0
               }
@@ -597,21 +624,21 @@
                 "depth": 0.0,
                 "weirdness": [
                   -2.0,
-                  -0.05
+                  -0.09
                 ],
                 "offset": 0.0
               }
             },
             {
-              "biome": "trailcraft:palm_grove",
+              "biome": "trailcraft:eucalyptus_forest",
               "parameters": {
                 "temperature": [
                   0.5,
                   2.0
                 ],
                 "humidity": [
-                  0.2,
-                  0.45
+                  0.45,
+                  0.55
                 ],
                 "continentalness": [
                   -0.15,
@@ -624,7 +651,7 @@
                 "depth": 0.0,
                 "weirdness": [
                   -2.0,
-                  -0.05
+                  -0.09
                 ],
                 "offset": 0.0
               }
@@ -637,7 +664,7 @@
                   2.0
                 ],
                 "humidity": [
-                  0.45,
+                  0.55,
                   2.0
                 ],
                 "continentalness": [
@@ -651,7 +678,7 @@
                 "depth": 0.0,
                 "weirdness": [
                   -2.0,
-                  -0.05
+                  -0.09
                 ],
                 "offset": 0.0
               }
@@ -711,15 +738,96 @@
               }
             },
             {
-              "biome": "trailcraft:burozem_plains",
+              "biome": "trailcraft:burozem_shore",
               "parameters": {
                 "temperature": [
                   -2.0,
                   -0.24
                 ],
                 "humidity": [
-                  -0.14,
+                  -2.0,
+                  -0.14
+                ],
+                "continentalness": [
+                  -0.19,
+                  -0.15
+                ],
+                "erosion": [
+                  -2.0,
                   2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -2.0,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:chernozem_shore",
+              "parameters": {
+                "temperature": [
+                  -0.24,
+                  0.02
+                ],
+                "humidity": [
+                  -2.0,
+                  -0.14
+                ],
+                "continentalness": [
+                  -0.19,
+                  -0.15
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -2.0,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:zheltozem_shore",
+              "parameters": {
+                "temperature": [
+                  0.02,
+                  2.0
+                ],
+                "humidity": [
+                  -2.0,
+                  -0.14
+                ],
+                "continentalness": [
+                  -0.19,
+                  -0.15
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -2.0,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:burozem_plains",
+              "parameters": {
+                "temperature": [
+                  -0.55,
+                  -0.24
+                ],
+                "humidity": [
+                  -0.14,
+                  -0.1
                 ],
                 "continentalness": [
                   -0.19,
@@ -746,7 +854,7 @@
                 ],
                 "humidity": [
                   -0.14,
-                  2.0
+                  0.15
                 ],
                 "continentalness": [
                   -0.19,
@@ -841,6 +949,870 @@
                 "weirdness": [
                   -2.0,
                   -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:burozem_willow_forest",
+              "parameters": {
+                "temperature": [
+                  -2.0,
+                  -0.55
+                ],
+                "humidity": [
+                  -0.2,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -0.09,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:burozem_willow_forest",
+              "parameters": {
+                "temperature": [
+                  -0.55,
+                  -0.24
+                ],
+                "humidity": [
+                  -0.1,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -0.09,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:chernozem_willow_forest",
+              "parameters": {
+                "temperature": [
+                  -0.24,
+                  0.02
+                ],
+                "humidity": [
+                  0.15,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -0.09,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:burozem_willow_forest",
+              "parameters": {
+                "temperature": [
+                  -2.0,
+                  -0.55
+                ],
+                "humidity": [
+                  -0.14,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.19,
+                  -0.15
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -2.0,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:burozem_willow_forest",
+              "parameters": {
+                "temperature": [
+                  -0.55,
+                  -0.24
+                ],
+                "humidity": [
+                  -0.1,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.19,
+                  -0.15
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -2.0,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:chernozem_willow_forest",
+              "parameters": {
+                "temperature": [
+                  -0.24,
+                  0.02
+                ],
+                "humidity": [
+                  0.15,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.19,
+                  -0.15
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -2.0,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:palm_shore",
+              "parameters": {
+                "temperature": [
+                  0.25,
+                  2.0
+                ],
+                "humidity": [
+                  -0.02,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -0.09,
+                  -0.05
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:ironwood_forest",
+              "parameters": {
+                "temperature": [
+                  0.02,
+                  0.25
+                ],
+                "humidity": [
+                  -0.02,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -2.0,
+                  -0.92
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:sakura_grove",
+              "parameters": {
+                "temperature": [
+                  0.02,
+                  0.25
+                ],
+                "humidity": [
+                  -0.02,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.05,
+                  2.0
+                ],
+                "erosion": [
+                  -0.5,
+                  -0.25
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  -0.72,
+                  -0.62
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:burozem_plains",
+              "parameters": {
+                "temperature": [
+                  -2.0,
+                  -0.55
+                ],
+                "humidity": [
+                  -2.0,
+                  -0.2
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:pine_forest",
+              "parameters": {
+                "temperature": [
+                  -2.0,
+                  -0.55
+                ],
+                "humidity": [
+                  -0.2,
+                  0.05
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.09,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:burozem_taiga",
+              "parameters": {
+                "temperature": [
+                  -2.0,
+                  -0.55
+                ],
+                "humidity": [
+                  0.05,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.09,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:burozem_plains",
+              "parameters": {
+                "temperature": [
+                  -0.55,
+                  -0.24
+                ],
+                "humidity": [
+                  -2.0,
+                  -0.1
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:birch_forest",
+              "parameters": {
+                "temperature": [
+                  -0.55,
+                  -0.24
+                ],
+                "humidity": [
+                  -0.1,
+                  -0.03
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.09,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:burozem_forest",
+              "parameters": {
+                "temperature": [
+                  -0.55,
+                  -0.24
+                ],
+                "humidity": [
+                  -0.03,
+                  0.2
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.09,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:maple_forest",
+              "parameters": {
+                "temperature": [
+                  -0.55,
+                  -0.24
+                ],
+                "humidity": [
+                  0.2,
+                  0.45
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.09,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:thuja_forest",
+              "parameters": {
+                "temperature": [
+                  -0.55,
+                  -0.24
+                ],
+                "humidity": [
+                  0.45,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.09,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:chernozem_plains",
+              "parameters": {
+                "temperature": [
+                  -0.24,
+                  0.02
+                ],
+                "humidity": [
+                  -2.0,
+                  0.15
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:chernozem_forest_steppe",
+              "parameters": {
+                "temperature": [
+                  -0.24,
+                  0.02
+                ],
+                "humidity": [
+                  0.15,
+                  0.4
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.09,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:walnut_grove",
+              "parameters": {
+                "temperature": [
+                  -0.24,
+                  0.02
+                ],
+                "humidity": [
+                  0.4,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.09,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:zheltozem_plains",
+              "parameters": {
+                "temperature": [
+                  0.02,
+                  0.25
+                ],
+                "humidity": [
+                  -0.02,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  -0.05
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  0.92
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:zheltozem_plains",
+              "parameters": {
+                "temperature": [
+                  0.02,
+                  0.25
+                ],
+                "humidity": [
+                  -0.02,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.05,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  -0.5
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  0.92
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:zheltozem_plains",
+              "parameters": {
+                "temperature": [
+                  0.02,
+                  0.25
+                ],
+                "humidity": [
+                  -0.02,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.05,
+                  2.0
+                ],
+                "erosion": [
+                  -0.25,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  0.92
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:zheltozem_plains",
+              "parameters": {
+                "temperature": [
+                  0.02,
+                  0.25
+                ],
+                "humidity": [
+                  -0.02,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.05,
+                  2.0
+                ],
+                "erosion": [
+                  -0.5,
+                  -0.25
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  0.62
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:zheltozem_plains",
+              "parameters": {
+                "temperature": [
+                  0.02,
+                  0.25
+                ],
+                "humidity": [
+                  -0.02,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.05,
+                  2.0
+                ],
+                "erosion": [
+                  -0.5,
+                  -0.25
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.72,
+                  0.92
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:zheltozem_plains",
+              "parameters": {
+                "temperature": [
+                  0.25,
+                  2.0
+                ],
+                "humidity": [
+                  -0.02,
+                  0.2
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.09,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:savanna",
+              "parameters": {
+                "temperature": [
+                  0.25,
+                  2.0
+                ],
+                "humidity": [
+                  0.2,
+                  0.45
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.09,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:eucalyptus_forest",
+              "parameters": {
+                "temperature": [
+                  0.25,
+                  0.5
+                ],
+                "humidity": [
+                  0.45,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.09,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:eucalyptus_forest",
+              "parameters": {
+                "temperature": [
+                  0.5,
+                  2.0
+                ],
+                "humidity": [
+                  0.45,
+                  0.55
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.09,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:ebony_forest",
+              "parameters": {
+                "temperature": [
+                  0.5,
+                  2.0
+                ],
+                "humidity": [
+                  0.55,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.09,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:desert",
+              "parameters": {
+                "temperature": [
+                  0.02,
+                  0.37
+                ],
+                "humidity": [
+                  -2.0,
+                  -0.02
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:red_desert",
+              "parameters": {
+                "temperature": [
+                  0.37,
+                  2.0
+                ],
+                "humidity": [
+                  -2.0,
+                  -0.02
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
                 ],
                 "offset": 0.0
               }
@@ -930,178 +1902,16 @@
               "biome": "trailcraft:burozem_plains",
               "parameters": {
                 "temperature": [
-                  -2.0,
-                  -0.55
-                ],
-                "humidity": [
-                  -2.0,
-                  -0.2
-                ],
-                "continentalness": [
-                  -0.15,
-                  2.0
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  0.05,
-                  2.0
-                ],
-                "offset": 0.0
-              }
-            },
-            {
-              "biome": "trailcraft:pine_forest",
-              "parameters": {
-                "temperature": [
-                  -2.0,
-                  -0.55
-                ],
-                "humidity": [
-                  -0.2,
-                  0.05
-                ],
-                "continentalness": [
-                  -0.15,
-                  2.0
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  0.05,
-                  2.0
-                ],
-                "offset": 0.0
-              }
-            },
-            {
-              "biome": "trailcraft:burozem_taiga",
-              "parameters": {
-                "temperature": [
-                  -2.0,
-                  -0.55
-                ],
-                "humidity": [
-                  0.05,
-                  2.0
-                ],
-                "continentalness": [
-                  -0.15,
-                  2.0
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  0.05,
-                  2.0
-                ],
-                "offset": 0.0
-              }
-            },
-            {
-              "biome": "trailcraft:burozem_plains",
-              "parameters": {
-                "temperature": [
                   -0.55,
                   -0.24
                 ],
                 "humidity": [
-                  -2.0,
+                  -0.14,
                   -0.1
                 ],
                 "continentalness": [
-                  -0.15,
-                  2.0
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  0.05,
-                  2.0
-                ],
-                "offset": 0.0
-              }
-            },
-            {
-              "biome": "trailcraft:burozem_forest",
-              "parameters": {
-                "temperature": [
-                  -0.55,
-                  -0.24
-                ],
-                "humidity": [
-                  -0.1,
-                  0.2
-                ],
-                "continentalness": [
-                  -0.15,
-                  2.0
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  0.05,
-                  2.0
-                ],
-                "offset": 0.0
-              }
-            },
-            {
-              "biome": "trailcraft:maple_forest",
-              "parameters": {
-                "temperature": [
-                  -0.55,
-                  -0.24
-                ],
-                "humidity": [
-                  0.2,
-                  0.45
-                ],
-                "continentalness": [
-                  -0.15,
-                  2.0
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  0.05,
-                  2.0
-                ],
-                "offset": 0.0
-              }
-            },
-            {
-              "biome": "trailcraft:thuja_forest",
-              "parameters": {
-                "temperature": [
-                  -0.55,
-                  -0.24
-                ],
-                "humidity": [
-                  0.45,
-                  2.0
-                ],
-                "continentalness": [
-                  -0.15,
-                  2.0
+                  -0.19,
+                  -0.15
                 ],
                 "erosion": [
                   -2.0,
@@ -1123,66 +1933,12 @@
                   0.02
                 ],
                 "humidity": [
-                  -2.0,
+                  -0.14,
                   0.15
                 ],
                 "continentalness": [
-                  -0.15,
-                  2.0
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  0.05,
-                  2.0
-                ],
-                "offset": 0.0
-              }
-            },
-            {
-              "biome": "trailcraft:chernozem_forest_steppe",
-              "parameters": {
-                "temperature": [
-                  -0.24,
-                  0.02
-                ],
-                "humidity": [
-                  0.15,
-                  0.4
-                ],
-                "continentalness": [
-                  -0.15,
-                  2.0
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  0.05,
-                  2.0
-                ],
-                "offset": 0.0
-              }
-            },
-            {
-              "biome": "trailcraft:walnut_grove",
-              "parameters": {
-                "temperature": [
-                  -0.24,
-                  0.02
-                ],
-                "humidity": [
-                  0.4,
-                  2.0
-                ],
-                "continentalness": [
-                  -0.15,
-                  2.0
+                  -0.19,
+                  -0.15
                 ],
                 "erosion": [
                   -2.0,
@@ -1205,7 +1961,88 @@
                 ],
                 "humidity": [
                   -0.02,
-                  0.2
+                  2.0
+                ],
+                "continentalness": [
+                  -0.19,
+                  -0.15
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:desert",
+              "parameters": {
+                "temperature": [
+                  0.02,
+                  0.37
+                ],
+                "humidity": [
+                  -0.14,
+                  -0.02
+                ],
+                "continentalness": [
+                  -0.19,
+                  -0.15
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:red_desert",
+              "parameters": {
+                "temperature": [
+                  0.37,
+                  2.0
+                ],
+                "humidity": [
+                  -0.14,
+                  -0.02
+                ],
+                "continentalness": [
+                  -0.19,
+                  -0.15
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:burozem_willow_forest",
+              "parameters": {
+                "temperature": [
+                  -2.0,
+                  -0.55
+                ],
+                "humidity": [
+                  -0.2,
+                  2.0
                 ],
                 "continentalness": [
                   -0.15,
@@ -1218,7 +2055,169 @@
                 "depth": 0.0,
                 "weirdness": [
                   0.05,
+                  0.09
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:burozem_willow_forest",
+              "parameters": {
+                "temperature": [
+                  -0.55,
+                  -0.24
+                ],
+                "humidity": [
+                  -0.1,
                   2.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  0.09
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:chernozem_willow_forest",
+              "parameters": {
+                "temperature": [
+                  -0.24,
+                  0.02
+                ],
+                "humidity": [
+                  0.15,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  0.09
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:burozem_willow_forest",
+              "parameters": {
+                "temperature": [
+                  -2.0,
+                  -0.55
+                ],
+                "humidity": [
+                  -0.14,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.19,
+                  -0.15
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:burozem_willow_forest",
+              "parameters": {
+                "temperature": [
+                  -0.55,
+                  -0.24
+                ],
+                "humidity": [
+                  -0.1,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.19,
+                  -0.15
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:chernozem_willow_forest",
+              "parameters": {
+                "temperature": [
+                  -0.24,
+                  0.02
+                ],
+                "humidity": [
+                  0.15,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.19,
+                  -0.15
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  2.0
+                ],
+                "offset": 0.0
+              }
+            },
+            {
+              "biome": "trailcraft:palm_shore",
+              "parameters": {
+                "temperature": [
+                  0.25,
+                  2.0
+                ],
+                "humidity": [
+                  -0.02,
+                  2.0
+                ],
+                "continentalness": [
+                  -0.15,
+                  2.0
+                ],
+                "erosion": [
+                  -2.0,
+                  2.0
+                ],
+                "depth": 0.0,
+                "weirdness": [
+                  0.05,
+                  0.09
                 ],
                 "offset": 0.0
               }
@@ -1231,8 +2230,8 @@
                   0.25
                 ],
                 "humidity": [
-                  0.2,
-                  0.45
+                  -0.02,
+                  2.0
                 ],
                 "continentalness": [
                   -0.15,
@@ -1244,332 +2243,35 @@
                 ],
                 "depth": 0.0,
                 "weirdness": [
-                  0.05,
+                  0.92,
                   2.0
                 ],
                 "offset": 0.0
               }
             },
             {
-              "biome": "trailcraft:ironwood_forest",
+              "biome": "trailcraft:sakura_grove",
               "parameters": {
                 "temperature": [
                   0.02,
                   0.25
                 ],
                 "humidity": [
-                  0.45,
-                  2.0
-                ],
-                "continentalness": [
-                  -0.15,
-                  2.0
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  0.05,
-                  2.0
-                ],
-                "offset": 0.0
-              }
-            },
-            {
-              "biome": "trailcraft:acacia_grove",
-              "parameters": {
-                "temperature": [
-                  0.25,
-                  0.5
-                ],
-                "humidity": [
-                  0.2,
-                  0.45
-                ],
-                "continentalness": [
-                  -0.15,
-                  2.0
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  0.05,
-                  2.0
-                ],
-                "offset": 0.0
-              }
-            },
-            {
-              "biome": "trailcraft:eucalyptus_forest",
-              "parameters": {
-                "temperature": [
-                  0.25,
-                  0.5
-                ],
-                "humidity": [
-                  0.45,
-                  2.0
-                ],
-                "continentalness": [
-                  -0.15,
-                  2.0
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  0.05,
-                  2.0
-                ],
-                "offset": 0.0
-              }
-            },
-            {
-              "biome": "trailcraft:palm_grove",
-              "parameters": {
-                "temperature": [
-                  0.5,
-                  2.0
-                ],
-                "humidity": [
-                  0.2,
-                  0.45
-                ],
-                "continentalness": [
-                  -0.15,
-                  2.0
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  0.05,
-                  2.0
-                ],
-                "offset": 0.0
-              }
-            },
-            {
-              "biome": "trailcraft:ebony_forest",
-              "parameters": {
-                "temperature": [
-                  0.5,
-                  2.0
-                ],
-                "humidity": [
-                  0.45,
-                  2.0
-                ],
-                "continentalness": [
-                  -0.15,
-                  2.0
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  0.05,
-                  2.0
-                ],
-                "offset": 0.0
-              }
-            },
-            {
-              "biome": "trailcraft:desert",
-              "parameters": {
-                "temperature": [
-                  0.02,
-                  0.37
-                ],
-                "humidity": [
-                  -2.0,
-                  -0.02
-                ],
-                "continentalness": [
-                  -0.15,
-                  2.0
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  0.05,
-                  2.0
-                ],
-                "offset": 0.0
-              }
-            },
-            {
-              "biome": "trailcraft:red_desert",
-              "parameters": {
-                "temperature": [
-                  0.37,
-                  2.0
-                ],
-                "humidity": [
-                  -2.0,
-                  -0.02
-                ],
-                "continentalness": [
-                  -0.15,
-                  2.0
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  0.05,
-                  2.0
-                ],
-                "offset": 0.0
-              }
-            },
-            {
-              "biome": "trailcraft:burozem_plains",
-              "parameters": {
-                "temperature": [
-                  -2.0,
-                  -0.24
-                ],
-                "humidity": [
-                  -0.14,
-                  2.0
-                ],
-                "continentalness": [
-                  -0.19,
-                  -0.15
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  0.05,
-                  2.0
-                ],
-                "offset": 0.0
-              }
-            },
-            {
-              "biome": "trailcraft:chernozem_plains",
-              "parameters": {
-                "temperature": [
-                  -0.24,
-                  0.02
-                ],
-                "humidity": [
-                  -0.14,
-                  2.0
-                ],
-                "continentalness": [
-                  -0.19,
-                  -0.15
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  0.05,
-                  2.0
-                ],
-                "offset": 0.0
-              }
-            },
-            {
-              "biome": "trailcraft:zheltozem_plains",
-              "parameters": {
-                "temperature": [
-                  0.02,
-                  2.0
-                ],
-                "humidity": [
                   -0.02,
                   2.0
                 ],
                 "continentalness": [
-                  -0.19,
-                  -0.15
+                  -0.05,
+                  2.0
                 ],
                 "erosion": [
-                  -2.0,
-                  2.0
+                  -0.5,
+                  -0.25
                 ],
                 "depth": 0.0,
                 "weirdness": [
-                  0.05,
-                  2.0
-                ],
-                "offset": 0.0
-              }
-            },
-            {
-              "biome": "trailcraft:desert",
-              "parameters": {
-                "temperature": [
-                  0.02,
-                  0.37
-                ],
-                "humidity": [
-                  -0.14,
-                  -0.02
-                ],
-                "continentalness": [
-                  -0.19,
-                  -0.15
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  0.05,
-                  2.0
-                ],
-                "offset": 0.0
-              }
-            },
-            {
-              "biome": "trailcraft:red_desert",
-              "parameters": {
-                "temperature": [
-                  0.37,
-                  2.0
-                ],
-                "humidity": [
-                  -0.14,
-                  -0.02
-                ],
-                "continentalness": [
-                  -0.19,
-                  -0.15
-                ],
-                "erosion": [
-                  -2.0,
-                  2.0
-                ],
-                "depth": 0.0,
-                "weirdness": [
-                  0.05,
-                  2.0
+                  0.62,
+                  0.72
                 ],
                 "offset": 0.0
               }

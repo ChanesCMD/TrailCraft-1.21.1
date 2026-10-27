@@ -19,21 +19,30 @@ NS = "trailcraft"
 RED_MAPLE_NOISE = 0.25
 # Рощи лесостепи: шум биома выше порога (примерно 45% площади) — роща
 GROVE_NOISE = 0.1
+# Густые пятна саванны: шум биома выше порога (примерно 30% площади), там же водопои
+SAVANNA_NOISE = 0.3
 
-# Леса: почва, названия ru / en, температура и осадки биома, цвет травы, слои деревьев, лишние мобы к мобам равнины.
-# Слой деревьев: (имя, {порода: вес}, густота). Густота: ("count", n) — n попыток на чанк;
+# Леса: почва, названия ru / en, температура и осадки биома, цвет травы, слои деревьев, лишние мобы к мобам равнины,
+# водопои (необязательно). Слой деревьев: (имя, {порода: вес}, густота). Густота: ("count", n) — n попыток на чанк;
 # ("noise", ниже, выше, порог) — столько попыток там, где шум биома ниже / выше порога (пятна размером в сотню блоков);
 # ("rarity", n) — одно дерево раз в n чанков. Деревья не касаются друг друга, поэтому реальная густота ниже.
+# Порода — дерево <порода>_wild_checked (relict_eucalyptus — эвкалипт со стволом 2×2).
+# Слои ставятся по порядку: крупные деревья — первым слоем, пока им есть место.
+# Водопои: (порог шума, раз в n чанков) — маленькие озёра только там, где шум биома выше порога.
 FORESTS = {
     # --- бурозём ---
     "burozem_taiga": dict(
         soil="burozem", ru="Тайга", en="Taiga", temperature=0.3, downfall=0.8, grass=0x6E9C6A,
-        trees=[("trees", {"spruce": 4, "fir": 3, "cedar": 1, "birch": 1, "aspen": 1}, ("count", 9))],
+        trees=[("trees", {"spruce": 4, "fir": 3, "cedar": 1, "birch": 1}, ("count", 9))],
         mobs=[("minecraft:wolf", 8, 4, 4), ("minecraft:fox", 8, 2, 4), ("minecraft:rabbit", 4, 2, 3)]),
     "pine_forest": dict(
         soil="burozem", ru="Сосновый бор", en="Pine Forest", temperature=0.35, downfall=0.5, grass=0x7A9E5E,
-        trees=[("trees", {"pine": 1}, ("count", 7))],
+        trees=[("trees", {"pine": 1}, ("count", 12))],
         mobs=[("minecraft:wolf", 5, 4, 4), ("minecraft:fox", 4, 2, 4), ("minecraft:rabbit", 4, 2, 3)]),
+    "birch_forest": dict(
+        soil="burozem", ru="Березняк", en="Birch Forest", temperature=0.5, downfall=0.6, grass=0x88BB67,
+        trees=[("trees", {"birch": 1}, ("count", 8))],
+        mobs=[("minecraft:fox", 4, 2, 4), ("minecraft:rabbit", 4, 2, 3)]),
     "burozem_forest": dict(
         soil="burozem", ru="Широколиственный лес", en="Broadleaf Forest", temperature=0.6, downfall=0.8, grass=0x73A462,
         trees=[("trees", {"oak": 4, "linden": 3, "chestnut": 2, "walnut": 1, "birch": 1}, ("count", 8))],
@@ -53,16 +62,26 @@ FORESTS = {
         soil="burozem", ru="Туевый лес", en="Thuja Forest", temperature=0.5, downfall=0.9, grass=0x6A9C60,
         trees=[("trees", {"thuja": 1}, ("count", 8))],
         mobs=[("minecraft:wolf", 3, 4, 4)]),
+    # ивовый лес — только у воды: вдоль рек и на влажных берегах (раскладка — layout)
+    "burozem_willow_forest": dict(
+        soil="burozem", ru="Ивовый лес", en="Willow Forest", temperature=0.5, downfall=0.9, grass=0x6A9F58,
+        trees=[("trees", {"willow": 1}, ("count", 7))],
+        mobs=[]),
     # --- чернозём ---
     "chernozem_forest_steppe": dict(
         soil="chernozem", ru="Лесостепь", en="Forest Steppe", temperature=0.7, downfall=0.6, grass=0x79C05A,
-        trees=[("trees", {"aspen": 3, "oak": 2, "linden": 1, "maple": 1}, ("noise", 0, 7, GROVE_NOISE))],
+        trees=[("trees", {"aspen": 3, "birch": 2, "linden": 1, "maple": 1}, ("noise", 0, 7, GROVE_NOISE))],
         mobs=[("minecraft:rabbit", 4, 2, 3)]),
     "walnut_grove": dict(
         soil="chernozem", ru="Ореховая роща", en="Walnut Grove", temperature=0.75, downfall=0.6, grass=0x86BC5A,
         trees=[("trees", {"walnut": 1}, ("count", 4))],
         mobs=[("minecraft:rabbit", 4, 2, 3)]),
+    "chernozem_willow_forest": dict(
+        soil="chernozem", ru="Ивовый лес", en="Willow Forest", temperature=0.7, downfall=0.9, grass=0x72B05A,
+        trees=[("trees", {"willow": 1}, ("count", 7))],
+        mobs=[]),
     # --- жёлтозём ---
+    # сакура, сирень и железное дерево — маленькие рощи посреди равнины (сакура — только на возвышенностях)
     "sakura_grove": dict(
         soil="zheltozem", ru="Сакуровая роща", en="Sakura Grove", temperature=0.8, downfall=0.8, grass=0x9EBF58,
         trees=[("trees", {"sakura": 1}, ("count", 5))],
@@ -75,25 +94,37 @@ FORESTS = {
         soil="zheltozem", ru="Лес железного дерева", en="Ironwood Forest", temperature=0.85, downfall=0.9, grass=0x8FB04E,
         trees=[("trees", {"ironwood": 1}, ("count", 8))],
         mobs=[]),
-    "acacia_grove": dict(
-        soil="zheltozem", ru="Акациевая роща", en="Acacia Grove", temperature=1.0, downfall=0.6, grass=0xB8B653,
-        trees=[("trees", {"acacia": 1}, ("count", 3))],
+    # 70% площади — редкие акации, 30% — густые пятна с водопоями
+    "savanna": dict(
+        soil="zheltozem", ru="Саванна", en="Savanna", temperature=1.0, downfall=0.6, grass=0xB8B653,
+        trees=[("trees", {"acacia": 1}, ("noise", 1, 8, SAVANNA_NOISE))],
+        water=(SAVANNA_NOISE, 5),
         mobs=[("minecraft:rabbit", 4, 2, 3)]),
+    # реликтовые эвкалипты (ствол 2×2) — примерно 30% деревьев
     "eucalyptus_forest": dict(
         soil="zheltozem", ru="Эвкалиптовый лес", en="Eucalyptus Forest", temperature=1.0, downfall=0.85, grass=0x99B455,
-        trees=[("trees", {"eucalyptus": 1}, ("count", 7))],
+        trees=[("relicts", {"relict_eucalyptus": 1}, ("count", 2)),
+               ("trees", {"eucalyptus": 1}, ("count", 10))],
         mobs=[]),
-    "palm_grove": dict(
-        soil="zheltozem", ru="Пальмовая роща", en="Palm Grove", temperature=1.1, downfall=0.8, grass=0xA9BC52,
-        trees=[("trees", {"palm": 1}, ("count", 4))],
+    # пальмы — только вдоль рек (раскладка — layout)
+    "palm_shore": dict(
+        soil="zheltozem", ru="Пальмовый берег", en="Palm Shore", temperature=1.1, downfall=0.8, grass=0xA9BC52,
+        trees=[("trees", {"palm": 1}, ("count", 5))],
         mobs=[]),
     "ebony_forest": dict(
         soil="zheltozem", ru="Эбеновый лес", en="Ebony Forest", temperature=1.1, downfall=0.95, grass=0x7FAE45,
-        trees=[("trees", {"ebony": 1}, ("count", 9))],
+        trees=[("trees", {"ebony": 1}, ("count", 2))],
         mobs=[]),
 }
-# Больше не генерируются: скрипт убирает их из тэга и переводов
-REMOVED_BIOMES = ["zheltozem_forest"]
+# Больше не генерируются: скрипт удаляет их файлы и убирает их из тэга и переводов
+REMOVED_BIOMES = ["zheltozem_forest", "acacia_grove", "palm_grove"]
+
+# Одинокие деревья посреди равнин (всех трёх почв): имя слоя, {порода: вес}, густота (как у лесов)
+PLAINS_TREES = [
+    ("lone_lilacs", {"lilac": 1}, ("rarity", 16)),
+    ("lone_pussy_willows", {"pussy_willow": 1}, ("rarity", 16)),
+]
+PLAINS = ["burozem_plains", "chernozem_plains", "zheltozem_plains"]
 
 # Пойменные деревья на берегах рек (редко): порода: вес, попыток на чанк
 RIVER_TREES = {"willow": 3, "alder": 2, "white_poplar": 2, "pussy_willow": 2}
@@ -120,13 +151,21 @@ T_SUBTROPIC, T_TROPIC = 0.25, 0.5  # жёлтозём: тёплые рощи | �
 T_RED_DESERT = 0.37      # жёлтозём: сухо — пустыня, ещё теплее — красная пустыня
 # Влажность: от сухого к влажному — равнина, потом леса
 H_PINE, H_TAIGA = -0.2, 0.05                    # бурозём холодный: равнина | бор | тайга
-H_BROADLEAF, H_MAPLE, H_WET = -0.1, 0.2, 0.45   # бурозём умеренный: равнина | широколиственный | кленовый | ольшаник, туя
+H_BROADLEAF, H_BIRCH, H_MAPLE, H_WET = -0.1, -0.03, 0.2, 0.45  # бурозём умеренный: равнина | березняк |
+#                                                 широколиственный | кленовый | ольшаник, туя
 H_FOREST_STEPPE, H_WALNUT = 0.15, 0.4           # чернозём: равнина | лесостепь | ореховая роща
-H_ZHELTOZEM_FOREST = 0.2                        # жёлтозём: пустыни | равнина | рощи и леса (влажнее H_WET — леса)
+H_ZHELTOZEM_FOREST = 0.2                        # жёлтозём: пустыни | равнина | саванна | эвкалипт (влажнее H_WET)
+H_EBONY = 0.55                                  # тропики: эвкалипт | эбеновый лес (самое влажное — редко)
 H_DESERT, H_SHORE = -0.02, -0.14
 # Континентальность: море | прибрежная полоса | суша; странность около 0 — реки, по знаку странности — пары биомов
 C_SEA, C_COAST = -0.19, -0.15
 W_RIVER = 0.05
+W_BANK = 0.09    # |странность| от W_RIVER до W_BANK — полоса вдоль реки, в среднем ~10 блоков от воды (ивы, пальмы)
+# Маленькие рощи — вершины шума странности (|странность| > W_GROVE): пятна обычно в 2–5 чанков, изредка до 6×6 чанков и больше,
+# примерно раз в 1000 блоков тёплой равнины (с верхней границей пятна становились кольцами вокруг полян)
+W_GROVE = 0.92
+# Сакура — на возвышенностях: |странность| около 2/3 (пики рельефа), эрозия низкая, но не горы, вдали от моря
+W_SAKURA, E_SAKURA, C_SAKURA = (0.62, 0.72), (-0.5, -0.25), -0.05
 
 
 def path(*parts):
@@ -203,11 +242,43 @@ def tree_layers(biome):
     return [f"{biome}_{name}" for name, _, _ in FORESTS[biome]["trees"]]
 
 
+def water_holes(biome, level, rarity):
+    """Водопои: маленькие озёра (ванильная фича lake) там, где шум биома выше порога, раз в rarity чанков.
+    Шум считается в углу чанка, как и у слоя деревьев с тем же порогом, поэтому водопои — внутри густых пятен."""
+    write(f"data/{NS}/worldgen/configured_feature/water_hole.json", {
+        "type": "minecraft:lake",
+        "config": {
+            "fluid": {"type": "minecraft:simple_state_provider",
+                      "state": {"Name": "minecraft:water", "Properties": {"level": "0"}}},
+            "barrier": {"type": "minecraft:simple_state_provider", "state": {"Name": "minecraft:air"}},
+        },
+    })
+    write(f"data/{NS}/worldgen/placed_feature/{biome}_water_holes.json", {
+        "feature": f"{NS}:water_hole",
+        "placement": [
+            {"type": "minecraft:noise_threshold_count", "noise_level": level, "below_noise": 0, "above_noise": 1},
+            {"type": "minecraft:rarity_filter", "chance": rarity},
+            {"type": "minecraft:in_square"},
+            {"type": "minecraft:heightmap", "heightmap": "WORLD_SURFACE_WG"},
+            {"type": "minecraft:biome"},
+        ],
+    })
+
+
+def plains_tree_layers():
+    return [f"plains_{name}" for name, _, _ in PLAINS_TREES]
+
+
 def trees():
     for biome, f in FORESTS.items():
         for (name, weights, density), feature in zip(f["trees"], tree_layers(biome)):
             tree_mix(feature, weights)
             tree_placement(feature, density)
+        if "water" in f:
+            water_holes(biome, *f["water"])
+    for (name, weights, density), feature in zip(PLAINS_TREES, plains_tree_layers()):
+        tree_mix(feature, weights)
+        tree_placement(feature, density)
     tree_mix("river_trees", RIVER_TREES)
     tree_placement("river_trees", ("count", RIVER_TREE_COUNT))
     write(f"data/{NS}/neoforge/biome_modifier/river_trees.json", {
@@ -268,10 +339,17 @@ def leaf_variants():
 
 # ============================== БИОМЫ ==============================
 
-VEGETAL = 9  # индекс шага vegetal_decoration в списке features биома
+LAKES, VEGETAL = 1, 9  # индексы шагов lakes и vegetal_decoration в списке features биома
 
 
 def biomes():
+    # одинокие деревья на равнинах — первыми в шаге (до травы, камешков и веток); старые слои plains_* заменяются
+    for plains in PLAINS:
+        rel = f"data/{NS}/worldgen/biome/{plains}.json"
+        data = read(rel)
+        rest = [ft for ft in data["features"][VEGETAL] if not ft.startswith(f"{NS}:plains_")]
+        data["features"][VEGETAL] = [f"{NS}:{t}" for t in plains_tree_layers()] + rest
+        write(rel, data)
     for biome, f in FORESTS.items():
         data = read(f"data/{NS}/worldgen/biome/{f['soil']}_plains.json")
         data["temperature"] = f["temperature"]
@@ -279,69 +357,113 @@ def biomes():
         data["effects"]["grass_color"] = f["grass"]
         # сначала деревья, потом то, что под ними (иначе камешки и ветки не дали бы встать стволу)
         data["features"][VEGETAL] = [f"{NS}:{t}" for t in tree_layers(biome)] + [f"{NS}:{g}" for g in FOREST_GROUND]
+        if "water" in f:
+            data["features"][LAKES].append(f"{NS}:{biome}_water_holes")
         creatures = data["spawners"]["creature"]
         for mob, weight, lo, hi in f["mobs"]:
             creatures.append({"type": mob, "weight": weight, "minCount": lo, "maxCount": hi})
         write(f"data/{NS}/worldgen/biome/{biome}.json", data)
 
 
-def entry(biome, t, h, c, w):
+def entry(biome, t, h, c, e, w):
     return {"biome": f"{NS}:{biome}", "parameters": {
-        "temperature": list(t), "humidity": list(h), "continentalness": list(c), "erosion": [-2.0, 2.0],
+        "temperature": list(t), "humidity": list(h), "continentalness": list(c), "erosion": list(e),
         "depth": 0.0, "weirdness": list(w), "offset": 0.0}}
 
 
-def layout():
+def carve(box, hole):
+    """Коробка параметров без дырки: несколько коробок, которые не пересекаются (multi_noise не любит наложений)."""
+    if any(hl >= hi or hh <= lo for (lo, hi), (hl, hh) in zip(box, hole)):
+        return [box]
+    out, rest = [], list(box)
+    for i, ((lo, hi), (hl, hh)) in enumerate(zip(box, hole)):
+        if hl > lo:
+            out.append(tuple(rest[:i] + [(lo, hl)] + rest[i + 1:]))
+        if hh < hi:
+            out.append(tuple(rest[:i] + [(hh, hi)] + rest[i + 1:]))
+        rest[i] = (max(lo, hl), min(hi, hh))
+    return out
+
+
+def layout_entries():
     """Все биомы мира trailworldgen: море, реки, берега, суша (равнины, леса, пустыни)."""
     ALL = (-2.0, 2.0)
     COLD, MID, WARM = (-2.0, T_CHERNOZEM), (T_CHERNOZEM, T_ZHELTOZEM), (T_ZHELTOZEM, 2.0)
     BOREAL, TEMPERATE = (-2.0, T_TAIGA), (T_TAIGA, T_CHERNOZEM)
     WARM_GROVES, SUBTROPIC, TROPIC = (T_ZHELTOZEM, T_SUBTROPIC), (T_SUBTROPIC, T_TROPIC), (T_TROPIC, 2.0)
+    HOT = (T_SUBTROPIC, 2.0)
     LAND, COAST, INLAND = (C_SEA, 2.0), (C_SEA, C_COAST), (C_COAST, 2.0)
     DESERT, RED = (T_ZHELTOZEM, T_RED_DESERT), (T_RED_DESERT, 2.0)
+    AW = (W_RIVER, 2.0)          # |странность| всей суши, кроме рек
+    BANK = (W_RIVER, W_BANK)     # полоса вдоль реки
     soils = (("burozem", COLD), ("chernozem", MID), ("zheltozem", WARM))
-    # Суша вдали от берега: биом, температура, влажность. Пара биомов — первый при странности < 0, второй при > 0.
-    inland = [
-        ("burozem_plains", BOREAL, (-2.0, H_PINE)),
-        ("pine_forest", BOREAL, (H_PINE, H_TAIGA)),
-        ("burozem_taiga", BOREAL, (H_TAIGA, 2.0)),
-        ("burozem_plains", TEMPERATE, (-2.0, H_BROADLEAF)),
-        ("burozem_forest", TEMPERATE, (H_BROADLEAF, H_MAPLE)),
-        ("maple_forest", TEMPERATE, (H_MAPLE, H_WET)),
-        (("alder_forest", "thuja_forest"), TEMPERATE, (H_WET, 2.0)),
-        ("chernozem_plains", MID, (-2.0, H_FOREST_STEPPE)),
-        ("chernozem_forest_steppe", MID, (H_FOREST_STEPPE, H_WALNUT)),
-        ("walnut_grove", MID, (H_WALNUT, 2.0)),
-        ("zheltozem_plains", WARM, (H_DESERT, H_ZHELTOZEM_FOREST)),
-        (("sakura_grove", "lilac_grove"), WARM_GROVES, (H_ZHELTOZEM_FOREST, H_WET)),
-        ("ironwood_forest", WARM_GROVES, (H_WET, 2.0)),
-        ("acacia_grove", SUBTROPIC, (H_ZHELTOZEM_FOREST, H_WET)),
-        ("eucalyptus_forest", SUBTROPIC, (H_WET, 2.0)),
-        ("palm_grove", TROPIC, (H_ZHELTOZEM_FOREST, H_WET)),
-        ("ebony_forest", TROPIC, (H_WET, 2.0)),
-        ("desert", DESERT, (-2.0, H_DESERT)),
-        ("red_desert", RED, (-2.0, H_DESERT)),
+    # Сетка: биом, температура, влажность, континентальность. Пара биомов — первый при странности < 0, второй при > 0.
+    grid = [
+        ("burozem_plains", BOREAL, (-2.0, H_PINE), INLAND),
+        ("pine_forest", BOREAL, (H_PINE, H_TAIGA), INLAND),
+        ("burozem_taiga", BOREAL, (H_TAIGA, 2.0), INLAND),
+        ("burozem_plains", TEMPERATE, (-2.0, H_BROADLEAF), INLAND),
+        ("birch_forest", TEMPERATE, (H_BROADLEAF, H_BIRCH), INLAND),
+        ("burozem_forest", TEMPERATE, (H_BIRCH, H_MAPLE), INLAND),
+        ("maple_forest", TEMPERATE, (H_MAPLE, H_WET), INLAND),
+        (("alder_forest", "thuja_forest"), TEMPERATE, (H_WET, 2.0), INLAND),
+        ("chernozem_plains", MID, (-2.0, H_FOREST_STEPPE), INLAND),
+        ("chernozem_forest_steppe", MID, (H_FOREST_STEPPE, H_WALNUT), INLAND),
+        ("walnut_grove", MID, (H_WALNUT, 2.0), INLAND),
+        # тёплые рощи (сакура, сирень, железное дерево) — маленькими пятнами на этой равнине, см. ниже
+        ("zheltozem_plains", WARM_GROVES, (H_DESERT, 2.0), INLAND),
+        ("zheltozem_plains", HOT, (H_DESERT, H_ZHELTOZEM_FOREST), INLAND),
+        ("savanna", HOT, (H_ZHELTOZEM_FOREST, H_WET), INLAND),
+        ("eucalyptus_forest", SUBTROPIC, (H_WET, 2.0), INLAND),
+        ("eucalyptus_forest", TROPIC, (H_WET, H_EBONY), INLAND),
+        ("ebony_forest", TROPIC, (H_EBONY, 2.0), INLAND),
+        ("desert", DESERT, (-2.0, H_DESERT), INLAND),
+        ("red_desert", RED, (-2.0, H_DESERT), INLAND),
+        # прибрежная полоса: где сухо — берег (пляж), где влажно — равнины
+        ("burozem_shore", COLD, (-2.0, H_SHORE), COAST),
+        ("chernozem_shore", MID, (-2.0, H_SHORE), COAST),
+        ("zheltozem_shore", WARM, (-2.0, H_SHORE), COAST),
+        ("burozem_plains", COLD, (H_SHORE, 2.0), COAST),
+        ("chernozem_plains", MID, (H_SHORE, 2.0), COAST),
+        ("zheltozem_plains", WARM, (H_DESERT, 2.0), COAST),
+        ("desert", DESERT, (H_SHORE, H_DESERT), COAST),
+        ("red_desert", RED, (H_SHORE, H_DESERT), COAST),
     ]
+    # Пятна поверх сетки, по порядку (каждое вырезает себе место из того, что под ним):
+    # биом, температура, влажность, континентальность, эрозия, |странность|
+    patches = [
+        # ивовый лес — вдоль рек и у воды, там, где растут леса
+        ("burozem_willow_forest", BOREAL, (H_PINE, 2.0), INLAND, ALL, BANK),
+        ("burozem_willow_forest", TEMPERATE, (H_BROADLEAF, 2.0), INLAND, ALL, BANK),
+        ("chernozem_willow_forest", MID, (H_FOREST_STEPPE, 2.0), INLAND, ALL, BANK),
+        ("burozem_willow_forest", BOREAL, (H_SHORE, 2.0), COAST, ALL, AW),
+        ("burozem_willow_forest", TEMPERATE, (H_BROADLEAF, 2.0), COAST, ALL, AW),
+        ("chernozem_willow_forest", MID, (H_FOREST_STEPPE, 2.0), COAST, ALL, AW),
+        # пальмы — только вдоль рек
+        ("palm_shore", HOT, (H_DESERT, 2.0), INLAND, ALL, BANK),
+        # маленькие рощи посреди равнины: сирень при странности > 0, железное дерево при < 0
+        (("ironwood_forest", "lilac_grove"), WARM_GROVES, (H_DESERT, 2.0), INLAND, ALL, (W_GROVE, 2.0)),
+        # сакура — на возвышенностях
+        ("sakura_grove", WARM_GROVES, (H_DESERT, 2.0), (C_SAKURA, 2.0), E_SAKURA, W_SAKURA),
+    ]
+    boxes = [(b, (t, h, c, ALL, AW)) for b, t, h, c in grid]
+    for b, *hole in patches:
+        hole = tuple(hole)
+        boxes = [(bb, piece) for bb, box in boxes for piece in carve(box, hole)] + [(b, hole)]
 
-    out = [entry("sea", ALL, ALL, (-2.0, C_SEA), ALL)]
-    out += [entry(f"{soil}_river", t, ALL, LAND, (-W_RIVER, W_RIVER)) for soil, t in soils]
-    for side, w in enumerate(((-2.0, -W_RIVER), (W_RIVER, 2.0))):
-        # берега: прибрежная полоса там, где сухо
-        out += [entry(f"{soil}_shore", t, (-2.0, H_SHORE), COAST, w) for soil, t in soils]
-        # суша
-        for biome, t, h in inland:
-            out.append(entry(biome[side] if isinstance(biome, tuple) else biome, t, h, INLAND, w))
-        # прибрежная полоса там, где влажно: равнины (лес до самой воды не доходит)
-        out += [
-            entry("burozem_plains", COLD, (H_SHORE, 2.0), COAST, w),
-            entry("chernozem_plains", MID, (H_SHORE, 2.0), COAST, w),
-            entry("zheltozem_plains", WARM, (H_DESERT, 2.0), COAST, w),
-            entry("desert", DESERT, (H_SHORE, H_DESERT), COAST, w),
-            entry("red_desert", RED, (H_SHORE, H_DESERT), COAST, w),
-        ]
+    out = [entry("sea", ALL, ALL, (-2.0, C_SEA), ALL, ALL)]
+    out += [entry(f"{soil}_river", t, ALL, LAND, ALL, (-W_RIVER, W_RIVER)) for soil, t in soils]
+    for side in (0, 1):
+        for biome, (t, h, c, e, (lo, hi)) in boxes:
+            w = (-hi, -lo) if side == 0 else (lo, hi)
+            out.append(entry(biome[side] if isinstance(biome, tuple) else biome, t, h, c, e, w))
+    return out
+
+
+def layout():
     rel = f"data/{NS}/worldgen/world_preset/trailworldgen.json"
     data = read(rel)
-    data["dimensions"]["minecraft:overworld"]["generator"]["biome_source"]["biomes"] = out
+    data["dimensions"]["minecraft:overworld"]["generator"]["biome_source"]["biomes"] = layout_entries()
     write(rel, data)
 
 
@@ -359,6 +481,18 @@ def surface():
     write(rel, data)
 
 
+def remove_old():
+    """Файлы убранных биомов: сам биом и его слои деревьев (<биом>_*.json)."""
+    d = path("data", NS, "worldgen")
+    for biome in REMOVED_BIOMES:
+        old = [os.path.join(d, "biome", f"{biome}.json")]
+        for kind in ("configured_feature", "placed_feature"):
+            old += [os.path.join(d, kind, n) for n in os.listdir(os.path.join(d, kind)) if n.startswith(f"{biome}_")]
+        for p in old:
+            if os.path.exists(p):
+                os.remove(p)
+
+
 def lang():
     for code, k in (("ru_ru", "ru"), ("en_us", "en")):
         rel = f"assets/{NS}/lang/{code}.json"
@@ -371,6 +505,7 @@ def lang():
 
 
 if __name__ == "__main__":
+    remove_old()
     leaf_variants()
     trees()
     biomes()

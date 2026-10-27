@@ -29,7 +29,11 @@
     [],
     [],
     [
-      "trailcraft:grass_patch", "trailcraft:loose_pebbles", "trailcraft:fallen_branches"
+      "trailcraft:plains_lone_lilacs",
+      "trailcraft:plains_lone_pussy_willows",
+      "trailcraft:grass_patch",
+      "trailcraft:loose_pebbles",
+      "trailcraft:fallen_branches"
     ],
     []
   ],

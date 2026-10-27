@@ -3,6 +3,6 @@
   "config": {
     "wood": "walnut",
     "shape": "round",
-    "old_chance": 0.5
+    "old_chance": 0.98
   }
 }

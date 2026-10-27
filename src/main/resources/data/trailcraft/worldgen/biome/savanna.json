@@ -19,7 +19,8 @@
   "features": [
     [],
     [
-      "trailcraft:lake_lava_underground"
+      "trailcraft:lake_lava_underground",
+      "trailcraft:savanna_water_holes"
     ],
     [],
     [],
@@ -29,7 +30,7 @@
     [],
     [],
     [
-      "trailcraft:acacia_grove_trees",
+      "trailcraft:savanna_trees",
       "trailcraft:forest_grass_patch",
       "trailcraft:forest_loose_pebbles",
       "trailcraft:forest_fallen_branches"

@@ -8,7 +8,8 @@ import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfigur
  * Настройки дерева TrailCraft.
  *
  * @param wood      порода (id набора из ModWood, например "oak")
- * @param shape     форма кроны: round, cone, tall, pine, weeping, palm, acacia, sakura
+ * @param shape     форма кроны: round, cone, tall, eucalyptus, relict_eucalyptus (ствол 2×2), pine, weeping, palm,
+ *                  acacia, sakura
  * @param oldChance доля старых деревьев (0 — всегда молодое, как из саженца; 1 — всегда старое)
  */
 public record TrailTreeConfig(String wood, String shape, float oldChance) implements FeatureConfiguration {

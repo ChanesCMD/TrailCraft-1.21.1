@@ -1,0 +1,8 @@
+{
+  "type": "trailcraft:trail_tree",
+  "config": {
+    "wood": "eucalyptus",
+    "shape": "relict_eucalyptus",
+    "old_chance": 1.0
+  }
+}

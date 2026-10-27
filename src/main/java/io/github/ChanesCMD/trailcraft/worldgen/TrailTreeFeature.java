@@ -153,6 +153,8 @@ public class TrailTreeFeature extends Feature<TrailTreeConfig> {
             return switch (shape) {
                 case "cone" -> cone();
                 case "tall" -> tall();
+                case "eucalyptus" -> eucalyptus();
+                case "relict_eucalyptus" -> relictEucalyptus();
                 case "pine" -> pine();
                 case "weeping" -> weeping();
                 case "palm" -> palm();
@@ -212,7 +214,66 @@ public class TrailTreeFeature extends Feature<TrailTreeConfig> {
             return true;
         }
 
-        /** Высокая стройная (берёза, осина, тополь, эвкалипт). */
+        /** Эвкалипт: выше «высокой» формы, крона вытянута вверх по стволу. */
+        boolean eucalyptus() {
+            int h = old ? 14 + r.nextInt(6) : 5 + r.nextInt(3);
+            if (!trunkFree(h)) return false;
+            trunk(h, old);
+            if (old) {
+                roots(30);
+                for (int i = 0; i < 5; i++) {
+                    BlockPos from = base.above(h * 2 / 5 + r.nextInt(h / 2));
+                    BlockPos end = dir(from, r.nextDouble() * Math.PI * 2, 2, 2);
+                    branch(from, end, false);
+                    blob(end, 1.6, 2.6, 1.6);
+                }
+                blob(base.above(h - h / 5), 2.3, h * 0.4, 2.3);
+            } else {
+                blob(base.above(h - 2), 1.5, 3.0, 1.5);
+            }
+            return true;
+        }
+
+        /**
+         * Реликтовый эвкалипт: ствол 2×2 из обычных брёвен, очень высокий, ветви в верхней половине.
+         * Где земля под стволом ниже, ствол уходит вниз до опоры (не больше 3 блоков). Молодой — как обычный эвкалипт.
+         */
+        boolean relictEucalyptus() {
+            if (!old) return eucalyptus();
+            int h = 22 + r.nextInt(8);
+            BlockPos[] cols = {base, base.east(), base.south(), base.south().east()};
+            int[] down = new int[cols.length];
+            for (int i = 0; i < cols.length; i++) {
+                for (int y = 0; y < h; y++) if (!free(cols[i].above(y))) return false;
+                while (down[i] < 3 && free(cols[i].below(down[i] + 1))) down[i]++;
+                if (!level.getBlockState(cols[i].below(down[i] + 1)).isSolid()) return false;
+            }
+            for (int i = 0; i < cols.length; i++)
+                for (int y = -down[i]; y < h; y++) fullLog(cols[i].offset(0, y, 0), Direction.Axis.Y);
+            // корни-подпорки по бокам ствола
+            for (BlockPos c : cols)
+                for (Direction d : Direction.Plane.HORIZONTAL) {
+                    BlockPos p = c.relative(d);
+                    if (logs.containsKey(p) || r.nextInt(100) >= 45 || !level.getBlockState(p.below()).isSolid()) continue;
+                    fullLog(p, d.getAxis());
+                    if (logs.containsKey(p) && r.nextInt(100) < 40) fullLog(p.above(), d.getAxis());
+                }
+            int n = 6 + r.nextInt(3);
+            double a0 = r.nextDouble() * Math.PI * 2;
+            for (int i = 0; i < n; i++) {
+                double a = a0 + i * Math.PI * 2 / n + r.nextDouble() * 0.5;
+                // ветвь растёт из того угла ствола, что смотрит в её сторону
+                BlockPos col = base.offset(Math.cos(a) > 0 ? 1 : 0, 0, Math.sin(a) > 0 ? 1 : 0);
+                BlockPos from = col.above(h / 2 + r.nextInt(h / 2 - 2));
+                BlockPos end = dir(from, a, 4 + r.nextInt(2), 2 + r.nextInt(3));
+                branch(from, end, false);
+                blob(end, 2.2, 2.8, 2.2);
+            }
+            blob(base.offset(r.nextInt(2), h - 1, r.nextInt(2)), 3.0, 4.0, 3.0);
+            return true;
+        }
+
+        /** Высокая стройная (берёза, осина, тополь). */
         boolean tall() {
             int h = old ? 10 + r.nextInt(5) : 4 + r.nextInt(3);
             if (!trunkFree(h)) return false;

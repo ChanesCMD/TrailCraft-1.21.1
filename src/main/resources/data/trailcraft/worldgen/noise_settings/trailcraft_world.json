@@ -1237,7 +1237,8 @@
           "biome_is": [
             "trailcraft:chernozem_plains",
             "trailcraft:chernozem_forest_steppe",
-            "trailcraft:walnut_grove"
+            "trailcraft:walnut_grove",
+            "trailcraft:chernozem_willow_forest"
           ]
         },
         "then_run": {
@@ -1966,10 +1967,12 @@
             "trailcraft:burozem_plains",
             "trailcraft:burozem_taiga",
             "trailcraft:pine_forest",
+            "trailcraft:birch_forest",
             "trailcraft:burozem_forest",
             "trailcraft:maple_forest",
             "trailcraft:alder_forest",
-            "trailcraft:thuja_forest"
+            "trailcraft:thuja_forest",
+            "trailcraft:burozem_willow_forest"
           ]
         },
         "then_run": {
@@ -2699,9 +2702,9 @@
             "trailcraft:sakura_grove",
             "trailcraft:lilac_grove",
             "trailcraft:ironwood_forest",
-            "trailcraft:acacia_grove",
+            "trailcraft:savanna",
             "trailcraft:eucalyptus_forest",
-            "trailcraft:palm_grove",
+            "trailcraft:palm_shore",
             "trailcraft:ebony_forest"
           ]
         },

@@ -4,21 +4,17 @@
     "features": [
       {
         "feature": "trailcraft:spruce_wild_checked",
-        "chance": 0.4
+        "chance": 0.4444
       },
       {
         "feature": "trailcraft:fir_wild_checked",
-        "chance": 0.5
+        "chance": 0.6
       },
       {
         "feature": "trailcraft:cedar_wild_checked",
-        "chance": 0.3333
-      },
-      {
-        "feature": "trailcraft:birch_wild_checked",
         "chance": 0.5
       }
     ],
-    "default": "trailcraft:aspen_wild_checked"
+    "default": "trailcraft:birch_wild_checked"
   }
 }
