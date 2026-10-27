@@ -2,6 +2,8 @@ package io.github.ChanesCMD.trailcraft.animal;
 
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.init.ModEntities;
+import io.github.ChanesCMD.trailcraft.init.ModSounds;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -40,6 +42,8 @@ import net.minecraft.world.level.block.state.BlockState;
  * (loot_table/entities/capercaillie.json).
  */
 public class Capercaillie extends Chicken {
+    /** Ток — один раз из стольких звуков взрослого; длина тока в тиках. */
+    private static final int SONG_CHANCE = 5, SONG_TICKS = 130;
     public static final TagKey<Item> FOOD = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "capercaillie_food"));
     /** Мясо — как курица: сырое иногда даёт голод. */
     public static final FoodProperties RAW_FOOD = new FoodProperties.Builder().nutrition(2).saturationModifier(0.3f)
@@ -84,6 +88,24 @@ public class Capercaillie extends Chicken {
         return ModEntities.CAPERCAILLIE.get().create(level);
     }
 
+    /** Квохтанье; взрослый иногда токует (длинная песня — щелчки, «пробка», точение). */
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return !isBaby() && random.nextInt(SONG_CHANCE) == 0 ? ModSounds.CAPERCAILLIE_SONG.get() : ModSounds.CAPERCAILLIE_AMBIENT.get();
+    }
+
+    /** Ток длится 6 с: пока он не кончился, глухарь не квохчет поверх. */
+    @Override
+    public void playAmbientSound() {
+        SoundEvent sound = getAmbientSound();
+        if (sound == ModSounds.CAPERCAILLIE_SONG.get()) {
+            ambientSoundTime = -SONG_TICKS;
+        }
+        // свои звуки уже низкие — без понижения getVoicePitch
+        playSound(sound, getSoundVolume(), super.getVoicePitch());
+    }
+
+    /** Вскрик и смерть пока куриные — ниже голосом. */
     @Override
     public float getVoicePitch() {
         return super.getVoicePitch() * 0.7f;

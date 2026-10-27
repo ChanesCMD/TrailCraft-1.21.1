@@ -10,6 +10,7 @@ import io.github.ChanesCMD.trailcraft.init.ModAttachments;
 import io.github.ChanesCMD.trailcraft.init.ModBlockEntities;
 import io.github.ChanesCMD.trailcraft.init.ModEffects;
 import io.github.ChanesCMD.trailcraft.init.ModEntities;
+import io.github.ChanesCMD.trailcraft.init.ModSounds;
 import io.github.ChanesCMD.trailcraft.init.ModBlocks;
 import io.github.ChanesCMD.trailcraft.init.ModComponents;
 import io.github.ChanesCMD.trailcraft.init.ModCreativeTabs;
@@ -43,6 +44,7 @@ public class TrailCraft {
         ModComponents.COMPONENTS.register(modEventBus);
         ModEffects.EFFECTS.register(modEventBus);
         ModEntities.ENTITY_TYPES.register(modEventBus);
+        ModSounds.SOUND_EVENTS.register(modEventBus);
         ModParticles.PARTICLE_TYPES.register(modEventBus);
         ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         ModFeatures.FEATURES.register(modEventBus);

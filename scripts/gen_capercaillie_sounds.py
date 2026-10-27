@@ -1,4 +1,5 @@
-"""Звуки глухаря — пробные, в игру пока не подключены: docs/sounds/capercaillie/*.ogg.
+"""Звуки глухаря: все — в docs/sounds/capercaillie/*.ogg; в игре (assets/trailcraft/sounds/entity/capercaillie/,
+sounds.json, init/ModSounds) — ток и квохтанье (IN_GAME), вскрик и смерть пока куриные.
 
 Синтез из шума и тонов (нужны numpy и ffmpeg с libvorbis):
 - song — ток: двойные щелчки «тэк-тэк», всё чаще, хлопок «пробки» и «точение» (шипящее скрежетание);
@@ -6,7 +7,9 @@
 - hurt — короткий хриплый вскрик; death — вскрик, уходящий вниз, и хлопанье крыльев.
 Запуск: python scripts/gen_capercaillie_sounds.py
 """
+import json
 import os
+import shutil
 import subprocess
 import tempfile
 import wave
@@ -15,6 +18,8 @@ import numpy as np
 
 RATE = 44100
 OUT = os.path.join(os.path.dirname(__file__), "..", "docs", "sounds", "capercaillie")
+ASSETS = os.path.join(os.path.dirname(__file__), "..", "src", "main", "resources", "assets", "trailcraft")
+IN_GAME = ["song", "ambient"]
 rng = np.random.default_rng(11)
 
 
@@ -162,6 +167,26 @@ def save(name, signal):
 def main():
     for name, make in (("song", song), ("ambient", ambient), ("hurt", hurt), ("death", death)):
         save(name, make())
+    os.makedirs(os.path.join(ASSETS, "sounds", "entity", "capercaillie"), exist_ok=True)
+    sounds = {}
+    for name in IN_GAME:
+        shutil.copy(os.path.join(OUT, f"{name}.ogg"), os.path.join(ASSETS, "sounds", "entity", "capercaillie", f"{name}.ogg"))
+        sounds[f"entity.capercaillie.{name}"] = {"subtitle": f"subtitles.trailcraft.entity.capercaillie.{name}",
+                                                 "sounds": [f"trailcraft:entity/capercaillie/{name}"]}
+    with open(os.path.join(ASSETS, "sounds.json"), "w", encoding="utf-8", newline="\n") as f:
+        json.dump(sounds, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+    subtitles = {"ru_ru": {"song": "Глухарь токует", "ambient": "Глухарь квохчет"},
+                 "en_us": {"song": "Capercaillie displays", "ambient": "Capercaillie clucks"}}
+    for code, names in subtitles.items():
+        p = os.path.join(ASSETS, "lang", f"{code}.json")
+        with open(p, encoding="utf-8") as f:
+            data = json.load(f)
+        for name, text in names.items():
+            data[f"subtitles.trailcraft.entity.capercaillie.{name}"] = text
+        with open(p, "w", encoding="utf-8", newline="\n") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+            f.write("\n")
     print("ok")
 
 

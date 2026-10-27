@@ -1,0 +1,14 @@
+{
+  "entity.capercaillie.song": {
+    "subtitle": "subtitles.trailcraft.entity.capercaillie.song",
+    "sounds": [
+      "trailcraft:entity/capercaillie/song"
+    ]
+  },
+  "entity.capercaillie.ambient": {
+    "subtitle": "subtitles.trailcraft.entity.capercaillie.ambient",
+    "sounds": [
+      "trailcraft:entity/capercaillie/ambient"
+    ]
+  }
+}

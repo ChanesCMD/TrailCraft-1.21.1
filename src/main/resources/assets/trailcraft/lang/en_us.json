@@ -888,5 +888,7 @@
   "entity.trailcraft.capercaillie": "Capercaillie",
   "item.trailcraft.capercaillie_spawn_egg": "Capercaillie Spawn Egg",
   "item.trailcraft.raw_capercaillie": "Raw Capercaillie",
-  "item.trailcraft.cooked_capercaillie": "Cooked Capercaillie"
+  "item.trailcraft.cooked_capercaillie": "Cooked Capercaillie",
+  "subtitles.trailcraft.entity.capercaillie.song": "Capercaillie displays",
+  "subtitles.trailcraft.entity.capercaillie.ambient": "Capercaillie clucks"
 }

@@ -888,5 +888,7 @@
   "entity.trailcraft.capercaillie": "Глухарь",
   "item.trailcraft.capercaillie_spawn_egg": "Яйцо призыва глухаря",
   "item.trailcraft.raw_capercaillie": "Сырое мясо глухаря",
-  "item.trailcraft.cooked_capercaillie": "Жареное мясо глухаря"
+  "item.trailcraft.cooked_capercaillie": "Жареное мясо глухаря",
+  "subtitles.trailcraft.entity.capercaillie.song": "Глухарь токует",
+  "subtitles.trailcraft.entity.capercaillie.ambient": "Глухарь квохчет"
 }

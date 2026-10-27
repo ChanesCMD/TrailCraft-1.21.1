@@ -192,7 +192,8 @@
   сосновом бору и березняке — `mobs` в `FORESTS` скрипта `gen_forests.py`, на любой почве `#minecraft:dirt` —
   `animal/AnimalEvents.java`). Модель — `client/animal/CapercaillieModel.java`, текстура, лут, яйцо призыва и переводы —
   `scripts/gen_capercaillie.py` (там же развёртка коробок, менять вместе с моделью; превью — `docs/textures/capercaillie.png`.
-  Свои звуки (ток, квохтанье, вскрик) — пробные, в игру не подключены: `docs/sounds/capercaillie/`, `scripts/gen_capercaillie_sounds.py`).
+  Звуки — `scripts/gen_capercaillie_sounds.py` (все варианты — `docs/sounds/capercaillie/`): в игре квохтанье и ток
+  (взрослый токует раз из 5 звуков; `init/ModSounds.java`, `sounds.json`), вскрик и смерть пока куриные, ниже голосом).
 - Модели копья в руке — `models/item/spear/`: `jab` (укол) и `charge_0..8` (шаги разгона; `charge_1..7` считает
   `scripts/gen_spear_charge.py`: древко опускается из стойки в горизонталь строго в плоскости взгляда, плоская сторона
   поворачивается вверх, хват остаётся в кисти; slerp между концами уводил копьё вбок). От первого лица разгон
