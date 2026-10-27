@@ -24,7 +24,8 @@ CLAYS = {
 }
 ADOBE = (150, 118, 82)       # укреплённый кирпич: глина с соломой
 STRAW = (222, 190, 96)
-RAW_CLAY = (160, 150, 140)   # сырой слепок и сырой кувшин
+RAW_CLAY = (160, 150, 140)   # сырой кувшин
+MOLD_CLAY = (138, 128, 118)  # слепок (самые светлые места шаблона красителя — в 1,3 раза светлее)
 FIRED_JUG = (184, 102, 64)
 
 # Металлы на костре больше не плавятся: эти рецепты удаляются (костёр по-прежнему жжёт древесный уголь)
@@ -126,55 +127,100 @@ def brick_wall(color, rnd, mortar=(196, 190, 178), specks=None):
     return im
 
 
-def brick_item(color, specks=None, seed=0):
-    """Кирпич в руке: брусок в лёгкой перспективе (верх светлее, торец темнее)."""
+# Кирпич в руке — по форме ванильного кирпича (minecraft:item/brick): буквы — оттенки, цвет берётся от глины
+BRICK_SHAPE = [
+    "................",
+    "................",
+    "..........aa....",
+    "......aaaadms...",
+    "...aaadmmmmmms..",
+    "aaadmmmmmmmmmms.",
+    "hmmmmmmmmmmmhhds",
+    "dhmmmmmmmhhhdsso",
+    "ddhmmhhhhdssssso",
+    "dddhhdsssssssseo",
+    "sddmsssssssseoo.",
+    "asdmssssseooo...",
+    ".asmseoooo......",
+    "..aaoo..........",
+    "................",
+    "................",
+]
+# яркость оттенков ванильного кирпича относительно основного (m = #B5593F)
+BRICK_SHADES = {"h": 1.09, "m": 1.0, "d": 0.77, "s": 0.69, "e": 0.53, "a": 0.40, "o": 0.24}
+
+# Слепок из глины — по форме ванильного зелёного красителя (minecraft:item/green_dye)
+MOLD_SHAPE = [
+    "................",
+    "..........o.....",
+    ".........omoo...",
+    "......okoldomk..",
+    "....omolmolmk...",
+    "...ollmoolmdk...",
+    "..ollmomllmomk..",
+    ".odlmomllmomk...",
+    ".omoollldomlk...",
+    ".oodmlmomlldk...",
+    "odmmmmomllmk....",
+    ".kkkkkmmdkk.....",
+    ".....kkkk.......",
+    "................",
+    "................",
+    "................",
+]
+# яркость оттенков красителя относительно основного (m = #496A18)
+MOLD_SHADES = {"l": 1.32, "m": 1.0, "d": 0.75, "o": 0.62, "k": 0.48}
+
+# Цвета соломы — как у метлы (textures/item/broom.png)
+STRAW_LIGHT, STRAW_MID, STRAW_DARK, STRAW_EDGE = (0xE8, 0xDC, 0x96), (0xD2, 0xC6, 0x76), (0x96, 0x8A, 0x3E), (0x60, 0x54, 0x20)
+STRAW_TIE, STRAW_TIE_DARK = (0x5C, 0x46, 0x28), (0x3C, 0x2C, 0x18)
+
+
+def from_shape(shape, shades, color, specks=None, seed=0):
+    """Рисует по шаблону из букв: каждая буква — оттенок основного цвета; specks — вкрапления (солома в самане)."""
     rnd = random.Random(seed)
     im = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
-    for y in range(5, 12):
-        for x in range(2, 14):
-            skew = (11 - y) // 3
-            xx = x + skew
-            if xx > 14:
+    for y, row in enumerate(shape):
+        for x, ch in enumerate(row):
+            if ch == ".":
                 continue
-            k = 1.15 if y < 7 else (0.82 if xx >= 12 else 1.0)
-            k *= rnd.uniform(0.93, 1.06)
-            c = shade(color, k)
-            if specks and rnd.random() < 0.2 and y >= 7:
-                c = shade(specks, rnd.uniform(0.85, 1.1))
-            im.putpixel((xx, y), c + (255,))
-    for x in range(2, 14):
-        im.putpixel((x, 11), shade(color, 0.6) + (255,))
+            c = shade(color, shades[ch])
+            if specks and ch in "hmds" and rnd.random() < 0.22:
+                c = shade(specks, shades[ch] * rnd.uniform(0.9, 1.05))
+            im.putpixel((x, y), c + (255,))
     return im
 
 
+def brick_item(color, specks=None, seed=0):
+    return from_shape(BRICK_SHAPE, BRICK_SHADES, color, specks, seed)
+
+
 def straw_item():
-    rnd = random.Random(5)
+    """Сноп соломы цветов метлы: по диагонали, перетянут посередине, распушён к концам."""
     im = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
-    for i in range(9):
-        x0 = 3 + i
-        for t in range(12):
-            x = x0 + (t * (i - 4)) // 14
-            y = 14 - t
-            if 0 <= x < 16:
-                im.putpixel((x, y), shade(STRAW, rnd.uniform(0.75, 1.12)) + (255,))
-    for x in range(5, 12):  # перевязь
-        im.putpixel((x, 9), (120, 86, 40, 255))
+    for y in range(16):
+        for x in range(16):
+            u, v = x - y, x + y - 15  # u — вдоль снопа, v — поперёк
+            a = abs(u)
+            if a > 13:
+                continue
+            width = 2.5 if a <= 2 else (3.5 if a <= 7 else 4.5)
+            if abs(v) > width:
+                continue
+            if a <= 1:
+                c = STRAW_TIE if a == 0 else STRAW_TIE_DARK
+            else:
+                c = [STRAW_LIGHT, STRAW_MID, STRAW_DARK, STRAW_MID][v % 4]
+                if abs(v) >= width - 0.6:
+                    c = STRAW_EDGE if a < 10 else STRAW_DARK
+                if a >= 12:
+                    c = STRAW_MID if v % 2 == 0 else STRAW_DARK
+            im.putpixel((x, y), c + (255,))
     return im
 
 
 def lump(color, seed):
-    """Слепок: приплюснутый ком глины."""
-    rnd = random.Random(seed)
-    im = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
-    for y in range(16):
-        for x in range(16):
-            dx, dy = (x - 7.5) / 6.5, (y - 9) / 4.5
-            if dx * dx + dy * dy <= 1:
-                k = 1.15 - 0.3 * (dy + 1) / 2 + rnd.uniform(-0.05, 0.05)
-                im.putpixel((x, y), shade(color, k) + (255,))
-    for x, y in ((5, 8), (9, 9), (7, 11)):  # следы пальцев
-        im.putpixel((x, y), shade(color, 0.8) + (255,))
-    return im
+    return from_shape(MOLD_SHAPE, MOLD_SHADES, color, seed=seed)
 
 
 def jug(color, seed):
@@ -220,7 +266,7 @@ def textures():
         png(f"item/brick_{clay}", brick_item(color, seed=len(clay)))
     png("item/reinforced_brick", brick_item(ADOBE, specks=STRAW, seed=3))
     png("item/straw", straw_item())
-    png("item/clay_mold", lump(RAW_CLAY, 1))
+    png("item/clay_mold", lump(MOLD_CLAY, 1))
     png("item/unfired_jug", jug(RAW_CLAY, 2))
     png("item/jug", jug(FIRED_JUG, 2))
     side, top, front, front_on = bloomery_faces()
