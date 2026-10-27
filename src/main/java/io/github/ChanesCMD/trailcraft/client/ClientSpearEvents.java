@@ -39,9 +39,14 @@ public class ClientSpearEvents {
      * плавно поворачивают копьё из стойки в горизонталь плоской стороной вверх.
      */
     private static final ResourceLocation CHARGE = ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "charge");
-    /** Положение копья от первого лица в стойке и при разгоне (как display в моделях; модели разгона его не задают). */
-    private static final float[] FP_IDLE_ROTATION = {-45, 90, 45}, FP_IDLE_TRANSLATION = {0, 2, -6};
+    /**
+     * Положение копья от первого лица в стойке и при разгоне (как display в моделях; модели разгона его не задают).
+     * Стойка (display [-45, 90, 45]) — это поворот разгона, повёрнутый ребром (на 90° вокруг древка) и поднятый
+     * на FP_IDLE_PITCH: так переход ниже идёт без ухода копья вбок.
+     */
+    private static final float[] FP_IDLE_TRANSLATION = {0, 2, -6};
     private static final float[] FP_CHARGE_ROTATION = {-90, 0, 45}, FP_CHARGE_TRANSLATION = {0, -1, -9};
+    private static final float FP_IDLE_PITCH = Mth.PI / 4;
 
     /** ЛКМ с копьём в руке: обычную атаку и копание отменяем; при полной зарядке — укол. */
     @SubscribeEvent
@@ -136,7 +141,11 @@ public class ClientSpearEvents {
                 poseStack.translate(side * Mth.lerp(progress, FP_IDLE_TRANSLATION[0], FP_CHARGE_TRANSLATION[0]) / 16,
                         Mth.lerp(progress, FP_IDLE_TRANSLATION[1], FP_CHARGE_TRANSLATION[1]) / 16,
                         Mth.lerp(progress, FP_IDLE_TRANSLATION[2], FP_CHARGE_TRANSLATION[2]) / 16);
-                poseStack.mulPose(rotation(FP_IDLE_ROTATION, side).slerp(rotation(FP_CHARGE_ROTATION, side), progress));
+                // Древко опускается в плоскости взгляда и одновременно поворачивается плоской стороной вверх (slerp между
+                // стойкой и разгоном уводил копьё вбок)
+                float rest = 1 - progress;
+                poseStack.mulPose(new Quaternionf().rotationX(rest * FP_IDLE_PITCH).rotateZ(-side * rest * Mth.HALF_PI)
+                        .mul(rotation(FP_CHARGE_ROTATION, side)));
             } else {
                 float jab = SpearJabAnim.progress(player, partialTick);
                 if (jab >= 0) {

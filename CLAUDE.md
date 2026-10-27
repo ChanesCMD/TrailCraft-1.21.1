@@ -103,8 +103,10 @@
   `client/ClientSpearEvents.java`, `client/SpearArmPose.java` (поза руки, enum-расширение в
   `META-INF/enumextensions.json`), `client/SpearJabAnim.java`. Числа — `ModTiers.SpearStats`.
   Зачарование «Выпад» — `data/trailcraft/enchantment/lunge.json` + `init/ModEnchantments.java`.
-- Модели копья в руке — `models/item/spear/`: `jab` (укол) и `charge_0..8` (шаги разгона; углы между стойкой
-  и горизонталью посчитаны slerp'ом). От первого лица разгон поворачивается в коде, модели его не задают.
+- Модели копья в руке — `models/item/spear/`: `jab` (укол) и `charge_0..8` (шаги разгона; `charge_1..7` считает
+  `scripts/gen_spear_charge.py`: древко опускается из стойки в горизонталь строго в плоскости взгляда, плоская сторона
+  поворачивается вверх, хват остаётся в кисти; slerp между концами уводил копьё вбок). От первого лица разгон
+  поворачивается в коде (`ClientSpearEvents.SpearHand`) по тому же принципу, модели его не задают.
 - HUD (ТЗ, раздел 4): слева — еда (морковки) и над ней выносливость, справа — вода и над ней кислород.
   `client/hud/TrailHud.java` подменяет ванильные слои здоровья, брони, еды и воздуха
   (`replaceLayer` теряет условия ванильных групп — `visible()` проверяет их сам); значки-заглушки — `HudIcons`.
