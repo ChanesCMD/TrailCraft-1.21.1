@@ -1,6 +1,7 @@
 package io.github.ChanesCMD.trailcraft.item;
 
 import io.github.ChanesCMD.trailcraft.init.ModItems;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -20,6 +21,8 @@ import java.util.List;
 /**
  * Тканевая заготовка (3 джута и обработанная палка): в одной руке заготовка, в другой обработанная палка, зажать ПКМ —
  * через WEAVE_TICKS получается тканевое полотно. Палка возвращается с шансом STICK_RETURN, иначе ломается.
+ * Анимация — как шлифовка наждачкой в Create: заготовку подносят к лицу, как еду (UseAnim.EAT: от неё летят волокна
+ * и каждые 4 тика звук getEatingSound), палкой трут по ней (от первого лица — ClientClothEvents).
  */
 public class ClothBlankItem extends Item {
     public static final int WEAVE_TICKS = 60;
@@ -60,14 +63,13 @@ public class ClothBlankItem extends Item {
 
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
-        return UseAnim.BOW;
+        return UseAnim.EAT;
     }
 
+    /** Звук трения палкой: ванилла играет его с частицами заготовки, как звук еды. */
     @Override
-    public void onUseTick(Level level, LivingEntity entity, ItemStack stack, int remaining) {
-        if (!level.isClientSide && remaining % 10 == 0) {
-            level.playSound(null, entity.blockPosition(), SoundEvents.WOOL_HIT, SoundSource.PLAYERS, 0.6f, 1.2f);
-        }
+    public SoundEvent getEatingSound() {
+        return SoundEvents.BRUSH_GENERIC;
     }
 
     @Override
