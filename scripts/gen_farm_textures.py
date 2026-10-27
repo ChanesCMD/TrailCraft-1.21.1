@@ -1,13 +1,13 @@
 """
 Рисует текстуры для земледелия: тяпки, грядки, ягодные кусты и ягоды, дикие морковь и картошку, джут и верёвку.
 
-Запуск из корня проекта:  python scripts/gen_farm_textures.py [--hoe A|B|C]
+Запуск из корня проекта:  python scripts/gen_farm_textures.py [--hoe A|B|C|D]
 Нужен Pillow (pip install pillow). Скрипт перезаписывает только свои текстуры (список — в конце файла).
 
-Тяпки рисуются в трёх вариантах формы: A — классическая (головка влево, лезвие загнуто вниз), B — широкая
-(плоское полотно), C — треугольная. В игру идёт выбранный вариант (по умолчанию A), все варианты лежат
-в docs/textures/hoes/<вариант>/, а общий лист для сравнения — docs/textures/hoes.png.
-Черенок у всех тяпок — обработанная палка (textures/item/stick_processed.png).
+Тяпки рисуются в четырёх вариантах формы: A — классическая (головка влево, лезвие загнуто вниз), B — широкая
+(плоское полотно), C — треугольная, D — рисунок автора (головка вправо, свой черенок). В игру идёт выбранный
+вариант (по умолчанию D), все варианты лежат в docs/textures/hoes/<вариант>/, а общий лист для сравнения —
+docs/textures/hoes.png. Черенок у A–C — обработанная палка (textures/item/stick_processed.png).
 """
 import os
 import random
@@ -126,6 +126,39 @@ HOE_VARIANTS = {
 }
 
 
+# D — рисунок автора целиком, с черенком (1 — светлый, 2 — средний, 3 — тёмный, 4 — торец).
+# Головка: h — блик, l — светлый, m — средний, d — тёмный, o — контур.
+HOE_FULL = {
+    "D": [
+        "................",
+        "................",
+        "........hl......",
+        ".......hlmm.....",
+        ".......mdmmm....",
+        ".........ddmd...",
+        ".........12do...",
+        "........123.....",
+        ".......123......",
+        "......123.......",
+        ".....123........",
+        "....123.........",
+        "...123..........",
+        "..123...........",
+        ".134............",
+        "................",
+    ],
+}
+HOE_FULL_HANDLE = {"1": hx("#b8945a"), "2": hx("#8f6a3a"), "3": hx("#6b4c28"), "4": hx("#45301a")}
+# Цвета головки металлов из рисунка автора: h, l, m, d, o
+HOE_FULL_HEADS = {
+    "copper": ["#f0aa82", "#d68258", "#b4623c", "#8a4226", "#602c1a"],
+    "bronze": ["#f0c86e", "#d7a242", "#b27a26", "#825418", "#583610"],
+    "iron": ["#f2f9ff", "#cdd3e0", "#b7bdc8", "#515459", "#323337"],
+    "steel": ["#dce6f0", "#b0bcca", "#8c98a8", "#545c6a", "#2e323a"],
+}
+HOE_VARIANTS.update(HOE_FULL)
+
+
 def hoe_tones(material):
     r = [hx(c) if c else None for c in HOE_RAMPS[material]]
     if r[3] is None:
@@ -139,7 +172,16 @@ def hoe_tones(material):
 
 
 def hoe(material, variant):
-    img = paint(load("item/stick_processed.png"), HOE_VARIANTS[variant], hoe_tones(material))
+    if variant in HOE_FULL:
+        tones = dict(HOE_FULL_HANDLE)
+        if material in HOE_FULL_HEADS:
+            tones.update(zip("hlmdo", map(hx, HOE_FULL_HEADS[material])))
+        else:
+            ramp = hoe_tones(material)
+            tones.update({k: ramp[k] for k in "hlmdo"})
+        img = paint(blank(), HOE_VARIANTS[variant], tones)
+    else:
+        img = paint(load("item/stick_processed.png"), HOE_VARIANTS[variant], hoe_tones(material))
     if material == "flint":
         # сколы на кремне: светлые точки по краю полотна
         rnd = random.Random(variant)
@@ -880,7 +922,7 @@ def preview():
 
 
 if __name__ == "__main__":
-    chosen = "A"
+    chosen = "D"
     if "--hoe" in sys.argv:
         chosen = sys.argv[sys.argv.index("--hoe") + 1].upper()
         if chosen not in HOE_VARIANTS:
