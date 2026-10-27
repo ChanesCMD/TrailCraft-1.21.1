@@ -1,6 +1,5 @@
 package io.github.ChanesCMD.trailcraft.worldgen;
 
-import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
@@ -27,12 +26,8 @@ import java.util.Set;
 public class PondFeature extends Feature<NoneFeatureConfiguration> {
     public static final int MIN_SIZE = 1, MAX_SIZE = 5;
 
-    public PondFeature(Codec<NoneFeatureConfiguration> codec) {
-        super(codec);
-    }
-
     public PondFeature() {
-        this(NoneFeatureConfiguration.CODEC);
+        super(NoneFeatureConfiguration.CODEC);
     }
 
     @Override
