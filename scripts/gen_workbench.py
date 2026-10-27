@@ -1,7 +1,7 @@
 """Малые доски и верстаки из досок каждой породы (ModWood: <порода>_small_board, <порода>_crafting_table).
 
-Пишет: текстуры (из текстуры досок своей породы: верх с рамкой и сеткой, бока с инструментами; малая доска —
-по шаблону), модели, блокстейты, лут, тэги, рецепты (доски + пила → 4 малые доски, тонкое бревно + пила → 1; 4 малые доски → верстак),
+Пишет: текстуры (верстак — ванильный, перекрашенный в цвет досок породы, полотно сверху — в цвет соломы;
+малая доска — по шаблону), модели, блокстейты, лут, тэги, рецепты (доски + пила → 4 малые доски, тонкое бревно + пила → 1; 4 малые доски → верстак),
 переводы. Убирает ванильный верстак из 4 любых досок (bootstrap_crafting_table). Нужен Pillow.
 Запуск: python scripts/gen_workbench.py
 """
@@ -38,7 +38,6 @@ BOARD_SHAPE = [
     "................",
 ]
 BOARD_SHADES = {"l": 1.2, "m": 1.0, "d": 0.75, "o": 0.45}
-METAL, METAL_DARK, HANDLE = (176, 178, 182), (110, 112, 118), (92, 64, 38)
 
 
 def path(*parts):
@@ -95,45 +94,40 @@ def darken(im, x, y, k):
     im.putpixel((x, y), shade((r, g, b), k) + (a,))
 
 
-def top(base):
-    """Верх: доски, тёмная рамка по краю и сетка 3×3 для крафта."""
-    im = base.copy()
-    for i in range(16):
-        for x, y in ((i, 0), (i, 15), (0, i), (15, i)):
-            darken(im, x, y, 0.55)
-        for x, y in ((i, 1), (1, i)):
-            darken(im, x, y, 1.15)
-        for v in (5, 10):
-            if 1 < i < 15:
-                darken(im, v, i, 0.72)
-                darken(im, i, v, 0.72)
-    return im
+# Верстак — ванильные текстуры (scripts/templates/crafting_table_*.png), перекрашенные: дерево — в цвет досок породы
+# (по яркости относительно основного цвета ванильных досок), полотно на столешнице — в цвет соломы, металл не трогаем
+TEMPLATES = os.path.join(os.path.dirname(__file__), "templates")
+VANILLA_WOOD = (175, 143, 85)
+VANILLA_MAT = (174, 105, 60)
+STRAW = (0xD2, 0xC6, 0x76)
+TOP_FRAME = {(188, 152, 98), (25, 20, 12), (26, 21, 13)}  # дерево по краю столешницы, остальное на верху — полотно
 
 
-def side(base, tool):
-    """Бок: столешница сверху (тёмная полоса), на стенке висит инструмент."""
-    im = base.copy()
-    for x in range(16):
-        for y in range(3):
-            darken(im, x, y, 0.62 if y < 2 else 0.85)
-        darken(im, x, 15, 0.7)
-    for y in range(16):
-        darken(im, 0, y, 0.8)
-        darken(im, 15, y, 0.8)
-    if tool == "saw":
-        for x in range(4, 12):                       # полотно пилы с зубьями
-            for y in range(6, 9):
-                im.putpixel((x, y), (METAL if y < 8 else METAL_DARK) + (255,))
-            if x % 2 == 0:
-                im.putpixel((x, 9), METAL_DARK + (255,))
-        for x, y in ((12, 6), (13, 6), (12, 7), (13, 7), (12, 8), (13, 8)):
-            im.putpixel((x, y), HANDLE + (255,))
-    else:                                            # молоток
-        for y in range(5, 14):
-            im.putpixel((8, y), HANDLE + (255,))
-        for x in range(5, 12):
-            for y in range(5, 7):
-                im.putpixel((x, y), (METAL if y == 5 else METAL_DARK) + (255,))
+def lum(c):
+    return 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]
+
+
+def recolor(px, ref, color):
+    return shade(color, lum(px) / lum(ref))
+
+
+def is_metal(px):
+    r, g, b = px[:3]
+    return max(r, g, b) - min(r, g, b) < 12 and max(r, g, b) > 120  # серый и белый — инструменты
+
+
+def from_template(name, wood_color, mat=False):
+    src = Image.open(os.path.join(TEMPLATES, f"crafting_table_{name}.png")).convert("RGBA")
+    im = Image.new("RGBA", src.size, (0, 0, 0, 0))
+    for y in range(src.height):
+        for x in range(src.width):
+            px = src.getpixel((x, y))
+            if px[3] == 0 or is_metal(px):
+                im.putpixel((x, y), px)
+            elif mat and px[:3] not in TOP_FRAME:
+                im.putpixel((x, y), recolor(px, VANILLA_MAT, STRAW) + (px[3],))
+            else:
+                im.putpixel((x, y), recolor(px, VANILLA_WOOD, wood_color) + (px[3],))
     return im
 
 
@@ -150,9 +144,10 @@ def board(color):
 def textures():
     for wood in WOODS:
         base = planks(wood)
-        png(f"block/{wood}_crafting_table_top", top(base))
-        png(f"block/{wood}_crafting_table_side", side(base, "saw"))
-        png(f"block/{wood}_crafting_table_front", side(base, "hammer"))
+        color = average(base)
+        png(f"block/{wood}_crafting_table_top", from_template("top", color, mat=True))
+        png(f"block/{wood}_crafting_table_side", from_template("side", color))
+        png(f"block/{wood}_crafting_table_front", from_template("front", color))
         png(f"item/{wood}_small_board", board(average(base)))
 
 
