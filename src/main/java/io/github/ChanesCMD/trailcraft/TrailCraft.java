@@ -16,6 +16,7 @@ import io.github.ChanesCMD.trailcraft.init.ModFeatures;
 import io.github.ChanesCMD.trailcraft.init.ModItems;
 import io.github.ChanesCMD.trailcraft.init.ModMenus;
 import io.github.ChanesCMD.trailcraft.init.ModOres;
+import io.github.ChanesCMD.trailcraft.init.ModParticles;
 import io.github.ChanesCMD.trailcraft.init.ModTools;
 import io.github.ChanesCMD.trailcraft.init.ModWood;
 
@@ -37,6 +38,7 @@ public class TrailCraft {
         ModItems.ITEMS.register(modEventBus);
         ModComponents.COMPONENTS.register(modEventBus);
         ModEffects.EFFECTS.register(modEventBus);
+        ModParticles.PARTICLE_TYPES.register(modEventBus);
         ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         ModFeatures.FEATURES.register(modEventBus);
         ModAttachments.ATTACHMENT_TYPES.register(modEventBus);

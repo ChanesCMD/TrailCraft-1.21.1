@@ -84,6 +84,15 @@ public final class ClientConfig {
             .comment("Minimap opacity in percent.")
             .defineInRange("minimapOpacity", 100, 20, 100);
 
+    /** Погода частицами (client/weather/) вместо ванильной текстуры дождя и снега. */
+    public static final ModConfigSpec.BooleanValue WEATHER_PARTICLES = BUILDER
+            .comment("Particle weather: rain drops, snow flakes, splashes, ripples and dust storms instead of the vanilla rain texture.")
+            .define("weatherParticles", true);
+    /** Плотность погодных частиц в процентах. */
+    public static final ModConfigSpec.IntValue WEATHER_DENSITY = BUILDER
+            .comment("Weather particle density in percent.")
+            .defineInRange("weatherDensity", 100, 10, 300);
+
     public static final ModConfigSpec SPEC = BUILDER.build();
 
     public static int minimapSize() {
@@ -125,6 +134,14 @@ public final class ClientConfig {
     /** Непрозрачность миникарты от 0,2 до 1. */
     public static float minimapOpacity() {
         return SPEC.isLoaded() ? MINIMAP_OPACITY.get() / 100f : 1f;
+    }
+
+    public static boolean weatherParticles() {
+        return !SPEC.isLoaded() || WEATHER_PARTICLES.get();
+    }
+
+    public static float weatherDensity() {
+        return SPEC.isLoaded() ? WEATHER_DENSITY.get() / 100f : 1f;
     }
 
     /** Все настройки миникарты и даты — по умолчанию. */

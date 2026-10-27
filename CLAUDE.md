@@ -101,6 +101,14 @@
   Горы (правила поверхности): крутые склоны (`minecraft:steep`) выше 80 — голая порода; снег выше линии
   140 + 2 × глубина поверхности (плавная волна до ~152) лежит слоем на всю глубину поверхности, чтобы бока ступенек
   были белыми, а не полосатыми.
+- Погода частицами (аналог мода Particle Rain) — `client/weather/`: `WeatherParticles` спавнит вокруг камеры капли
+  (`RainDropParticle`: полоса вдоль скорости, косая по ветру; о землю — брызги `RainSplashParticle`, о воду — круги
+  `RainRippleParticle`, крона задерживает 70 % капель), снежинки (`SnowFlakeParticle`) и в жарких биомах без осадков
+  (пустыни) вместо дождя — пыльную бурю (`DustMoteParticle`, цвет — цвет земли); в дождь/снег/бурю туман ближе, в бурю —
+  цвета пыли. Ветер — `WeatherWind` (только от времени мира, у всех игроков одинаковый, сильнее в дождь и грозу).
+  Ванильную текстуру дождя и снега убирает `mixin/LevelRendererMixin` (звук дождя остаётся). Типы частиц —
+  `init/ModParticles.java`; текстуры и `particles/*.json` пишет `scripts/gen_weather_textures.py` (превью —
+  `docs/textures/weather_particles.png`). Вкл/выкл и плотность — `ClientConfig.WEATHER_PARTICLES`, `WEATHER_DENSITY`.
 - Красный клён — вариант листвы на древесине клёна: `ModWood.addLeafVariant` (своя листва и саженец, брёвна и доски —
   клёна); его JSON — копии файлов клёна, пишет `scripts/gen_forests.py` (`LEAF_VARIANTS`).
 - Руды: список — `ore/Ore.java` (породы — `ore/Rock.java`), блок `block/OreBlock.java` один на руду, порода — свойство

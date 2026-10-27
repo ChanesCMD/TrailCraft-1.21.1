@@ -7,6 +7,9 @@
     "FoodDataAccessor",
     "LeavesBlockMixin"
   ],
+  "client": [
+    "LevelRendererMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }
