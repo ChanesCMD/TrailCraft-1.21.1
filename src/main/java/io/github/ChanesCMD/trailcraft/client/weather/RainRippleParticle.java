@@ -46,7 +46,7 @@ public class RainRippleParticle extends TextureSheetParticle {
         float pz = (float) (Mth.lerp(partialTicks, zo, z) - cam.z());
         float size = quadSize;
         float fade = 1 - (age + partialTicks) / lifetime;
-        WeatherQuad.render(buffer, camera, px, py, pz, new Vector3f(size, 0, 0), new Vector3f(0, 0, size),
+        WeatherQuad.render(buffer, px, py, pz, new Vector3f(size, 0, 0), new Vector3f(0, 0, size),
                 getU0(), getU1(), getV0(), getV1(), rCol, gCol, bCol, alpha * Mth.clamp(fade * 1.5f, 0, 1),
                 getLightColor(partialTicks));
     }

@@ -1,12 +1,11 @@
 package io.github.ChanesCMD.trailcraft.client.weather;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.Camera;
 import org.joml.Vector3f;
 
 /**
- * Четырёхугольник частицы с произвольными осями (полоса капли вдоль скорости, круг на воде — лёжа). Вершины идут
- * в том же обходе, что у обычной частицы, повёрнутой к камере, поэтому лицевая сторона всегда смотрит на камеру.
+ * Четырёхугольник частицы с произвольными осями (полоса капли вдоль скорости, круг на воде — лёжа). Обход вершин
+ * выбирается так, чтобы к камере была лицевая сторона: изнанку частиц видеокарта отсекает.
  */
 final class WeatherQuad {
     /**
@@ -14,13 +13,10 @@ final class WeatherQuad {
      * @param a  полуось «вправо» (u)
      * @param b  полуось «вверх» (v, верх текстуры — +b)
      */
-    static void render(VertexConsumer buffer, Camera camera, float cx, float cy, float cz, Vector3f a, Vector3f b,
+    static void render(VertexConsumer buffer, float cx, float cy, float cz, Vector3f a, Vector3f b,
                        float u0, float u1, float v0, float v1, float r, float g, float bl, float alpha, int light) {
-        Vector3f right = new Vector3f(1, 0, 0).rotate(camera.rotation());
-        Vector3f up = new Vector3f(0, 1, 0).rotate(camera.rotation());
-        Vector3f face = right.cross(up, new Vector3f());
-        // обход как у частицы, повёрнутой к камере; иначе грань отсечётся
-        if (a.cross(b, new Vector3f()).dot(face) < 0) {
+        // лицевая грань — обход против часовой стрелки на экране: нормаль (b × a) смотрит на камеру (камера в начале координат)
+        if (a.cross(b, new Vector3f()).dot(cx, cy, cz) < 0) {
             a = new Vector3f(a).negate();
             float t = u0;
             u0 = u1;

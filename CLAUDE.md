@@ -109,6 +109,8 @@
   Ванильную текстуру дождя и снега убирает `mixin/LevelRendererMixin` (звук дождя остаётся). Типы частиц —
   `init/ModParticles.java`; текстуры и `particles/*.json` пишет `scripts/gen_weather_textures.py` (превью —
   `docs/textures/weather_particles.png`). Вкл/выкл и плотность — `ClientConfig.WEATHER_PARTICLES`, `WEATHER_DENSITY`.
+  Временный биом `trailcraft:winter_test` (копия буроземной равнины с температурой −0,5, в генерацию не входит) — чтобы
+  посмотреть снег: `/fillbiome ~-28 ~-4 ~-28 ~28 ~4 ~28 trailcraft:winter_test`; осадки берутся по биому у земли.
 - Красный клён — вариант листвы на древесине клёна: `ModWood.addLeafVariant` (своя листва и саженец, брёвна и доски —
   клёна); его JSON — копии файлов клёна, пишет `scripts/gen_forests.py` (`LEAF_VARIANTS`).
 - Руды: список — `ore/Ore.java` (породы — `ore/Rock.java`), блок `block/OreBlock.java` один на руду, порода — свойство

@@ -30,6 +30,8 @@ public class RainDropParticle extends TextureSheetParticle {
     static final float LENGTH = 0.55f, WIDTH = 0.022f;
     /** Какая доля капель застревает в кроне. */
     static final float LEAVES_CATCH = 0.7f;
+    /** Дымок от капли в лаве — у одной капли из стольких. */
+    static final int LAVA_SMOKE_CHANCE = 6;
 
     private boolean throughLeaves;
 
@@ -76,7 +78,9 @@ public class RainDropParticle extends TextureSheetParticle {
             double surface = pos.getY() + fluid.getHeight(level, pos);
             if (y <= surface) {
                 if (fluid.is(FluidTags.LAVA)) {
-                    level.addParticle(ParticleTypes.SMOKE, x, surface, z, 0, 0.02, 0);
+                    if (random.nextInt(LAVA_SMOKE_CHANCE) == 0) {
+                        level.addParticle(ParticleTypes.SMOKE, x, surface, z, 0, 0.02, 0);
+                    }
                 } else {
                     splash(ModParticles.RAIN_RIPPLE.get(), surface + 0.01);
                 }
@@ -127,7 +131,7 @@ public class RainDropParticle extends TextureSheetParticle {
         }
         side.normalize(WIDTH);
         // голова капли — в точке частицы, центр полосы — на полдлины позади
-        WeatherQuad.render(buffer, camera, px + along.x, py + along.y, pz + along.z, side, along,
+        WeatherQuad.render(buffer, px + along.x, py + along.y, pz + along.z, side, along,
                 getU0(), getU1(), getV0(), getV1(), rCol, gCol, bCol, alpha, getLightColor(partialTicks));
     }
 

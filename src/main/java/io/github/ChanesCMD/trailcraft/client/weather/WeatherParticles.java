@@ -46,7 +46,7 @@ public final class WeatherParticles {
     /** Биом без осадков с температурой выше этой — пустыня: вместо дождя пыльная буря. */
     static final float DUST_TEMPERATURE = 1.0f;
     /** Насколько сгущается туман: в дождь/снег, в грозу дополнительно, в пыльную бурю. */
-    static final float FOG_WET = 0.3f, FOG_THUNDER = 0.2f, FOG_DUST = 0.85f;
+    static final float FOG_WET = 0.3f, FOG_THUNDER = 0.2f, FOG_DUST = 0.55f;
 
     /** Сглаженные (раз в тик) сила тумана и цвет пыли — чтобы на границе биомов туман не прыгал. */
     private static float wetFog, dustFog;
@@ -90,7 +90,8 @@ public final class WeatherParticles {
                 continue;
             }
             double y = lo + random.nextDouble() * (hi - lo);
-            Biome biome = level.getBiome(pos.set(x, y, z)).value();
+            // биом — у земли, как у ванильного дождя (иначе /fillbiome тонким слоем не даёт снега над головой)
+            Biome biome = level.getBiome(pos.set(x, top, z)).value();
             switch (biome.getPrecipitationAt(pos)) {
                 case RAIN -> {
                     double vx = wind.x * RAIN_DRIFT, vz = wind.z * RAIN_DRIFT, vy = -RAIN_FALL - random.nextFloat() * 0.25;
@@ -155,7 +156,7 @@ public final class WeatherParticles {
         }
         float k = (1 - FOG_WET * Math.min(wetFog, 1) - FOG_THUNDER * Math.max(0, wetFog - 1)) * (1 - FOG_DUST * dustFog);
         event.setFarPlaneDistance(event.getFarPlaneDistance() * k);
-        event.setNearPlaneDistance(event.getNearPlaneDistance() * k * (1 - dustFog));
+        event.setNearPlaneDistance(event.getNearPlaneDistance() * k * (1 - 0.5f * dustFog));
         event.setCanceled(true);
     }
 
@@ -164,7 +165,7 @@ public final class WeatherParticles {
         if (!enabled() || dustFog < 0.01f || isUnderFluid(event.getCamera())) {
             return;
         }
-        float t = dustFog * 0.8f;
+        float t = dustFog * 0.6f;
         event.setRed(Mth.lerp(t, event.getRed(), dustR * 0.9f));
         event.setGreen(Mth.lerp(t, event.getGreen(), dustG * 0.9f));
         event.setBlue(Mth.lerp(t, event.getBlue(), dustB * 0.9f));
