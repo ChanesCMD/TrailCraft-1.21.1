@@ -52,7 +52,7 @@ def line(im, x0, y0, x1, y1, a):
 
 def snow_flake(variant):
     """Снежинки: 0–3 — 8×8 (комочек, крестик, шестилучевая звёздочка, пушинка); 4–9 — 9×9 с центром в пикселе 4
-    (звезда с веточками, шестигранная пластинка, восьмилучевая звезда, иголка, крупа, ромбик)."""
+    (звезда с веточками, шестигранная пластинка со спицами — 17×17, восьмилучевая звезда, иголка, крупа, ромбик)."""
     if variant >= 4:
         return snow_flake_big(variant)
     im = img(8, 8)
@@ -95,18 +95,22 @@ def snow_flake_big(variant):
                 line(im, mx, my, mx + math.cos(b) * 1.3, my + math.sin(b) * 1.3, 0.6)
         put(im, c, c, 1)
     elif variant == 5:
-        # шестигранная пластинка: плотный край, полупрозрачная середина
-        corners = [(c + math.cos(k * math.pi / 3) * 3.6, c + math.sin(k * math.pi / 3) * 3.6) for k in range(6)]
-        for y in range(9):
-            for x in range(9):
+        # шестигранная пластинка 17×17 (на 9×9 спицы сливались): плотный край, полупрозрачная середина,
+        # спицы от центра к углам
+        im = img(17, 17)
+        c, R = 8, 7.6
+        corners = [(c + math.cos(k * math.pi / 3 + math.pi / 2) * R, c + math.sin(k * math.pi / 3 + math.pi / 2) * R)
+                   for k in range(6)]
+        for y in range(17):
+            for x in range(17):
                 d = math.hypot(x - c, y - c)
-                ang = math.atan2(y - c, x - c) % (math.pi / 3) - math.pi / 6
-                r = 3.6 * math.cos(math.pi / 6) / math.cos(ang)
-                if d <= r - 0.6:
-                    put(im, x, y, 0.35)
+                ang = (math.atan2(y - c, x - c) - math.pi / 2) % (math.pi / 3) - math.pi / 6
+                if d <= R * math.cos(math.pi / 6) / math.cos(ang) - 0.8:
+                    put(im, x, y, 0.25)
         for k in range(6):
             line(im, *corners[k], *corners[(k + 1) % 6], 0.95)
-        put(im, c, c, 0.8)
+            line(im, c, c, *corners[k], 0.9)
+        put(im, c, c, 1)
     elif variant == 6:
         # восьмилучевая звезда: длинный крест и короткие диагонали
         line(im, c, 0, c, 8, 0.85)
