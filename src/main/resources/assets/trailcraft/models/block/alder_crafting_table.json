@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "trailcraft:block/alder_crafting_table_front",
+    "north": "trailcraft:block/alder_crafting_table_front",
+    "south": "trailcraft:block/alder_crafting_table_side",
+    "east": "trailcraft:block/alder_crafting_table_side",
+    "west": "trailcraft:block/alder_crafting_table_front",
+    "up": "trailcraft:block/alder_crafting_table_top",
+    "down": "trailcraft:block/alder_planks"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "trailcraft:pussy_willow_planks"
+    },
+    {
+      "tag": "trailcraft:saws"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:pussy_willow_small_board",
+    "count": 2
+  }
+}

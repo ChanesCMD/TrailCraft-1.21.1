@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "trailcraft:block/chestnut_crafting_table_front",
+    "north": "trailcraft:block/chestnut_crafting_table_front",
+    "south": "trailcraft:block/chestnut_crafting_table_side",
+    "east": "trailcraft:block/chestnut_crafting_table_side",
+    "west": "trailcraft:block/chestnut_crafting_table_front",
+    "up": "trailcraft:block/chestnut_crafting_table_top",
+    "down": "trailcraft:block/chestnut_planks"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "trailcraft:white_poplar_planks"
+    },
+    {
+      "tag": "trailcraft:saws"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:white_poplar_small_board",
+    "count": 2
+  }
+}

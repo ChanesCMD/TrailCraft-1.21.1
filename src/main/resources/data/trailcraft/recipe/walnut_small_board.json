@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "trailcraft:walnut_planks"
+    },
+    {
+      "tag": "trailcraft:saws"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:walnut_small_board",
+    "count": 2
+  }
+}

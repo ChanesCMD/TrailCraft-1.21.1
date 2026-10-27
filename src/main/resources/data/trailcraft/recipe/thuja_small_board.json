@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "trailcraft:thuja_planks"
+    },
+    {
+      "tag": "trailcraft:saws"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:thuja_small_board",
+    "count": 2
+  }
+}

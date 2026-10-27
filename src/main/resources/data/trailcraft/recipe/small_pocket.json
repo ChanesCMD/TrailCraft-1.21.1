@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "trailcraft:cloth"
+    },
+    {
+      "item": "trailcraft:cloth"
+    },
+    {
+      "item": "trailcraft:cloth"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:small_pocket",
+    "count": 1
+  }
+}

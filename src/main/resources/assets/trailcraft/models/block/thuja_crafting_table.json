@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "trailcraft:block/thuja_crafting_table_front",
+    "north": "trailcraft:block/thuja_crafting_table_front",
+    "south": "trailcraft:block/thuja_crafting_table_side",
+    "east": "trailcraft:block/thuja_crafting_table_side",
+    "west": "trailcraft:block/thuja_crafting_table_front",
+    "up": "trailcraft:block/thuja_crafting_table_top",
+    "down": "trailcraft:block/thuja_planks"
+  }
+}

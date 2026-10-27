@@ -3,6 +3,7 @@ package io.github.ChanesCMD.trailcraft.init;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.block.StrippableLogBlock;
 import io.github.ChanesCMD.trailcraft.block.ThinLogBlock;
+import io.github.ChanesCMD.trailcraft.block.WoodCraftingTableBlock;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -45,6 +46,9 @@ public final class ModWood {
     public static final class WoodSet {
         public final String id;
         public DeferredBlock<Block> log, thinLog, strippedLog, wood, strippedWood, leaves, sapling, planks, stairs, slab, fence, gate, door, trapdoor, button, plate;
+        /** Малая доска (доски + пила) и верстак из 4 малых досок; у вариантов листвы — null. */
+        public DeferredItem<Item> smallBoard;
+        public DeferredBlock<Block> craftingTable;
         public final List<DeferredItem<? extends Item>> items = new ArrayList<>();
         WoodSet(String id) { this.id = id; }
     }
@@ -130,6 +134,11 @@ public final class ModWood {
         item(s, id + "_stairs", s.stairs); item(s, id + "_slab", s.slab); item(s, id + "_fence", s.fence); item(s, id + "_fence_gate", s.gate);
         s.items.add(ModItems.ITEMS.registerItem(id + "_door", p -> new DoubleHighBlockItem(s.door.get(), p)));
         item(s, id + "_trapdoor", s.trapdoor); item(s, id + "_button", s.button); item(s, id + "_pressure_plate", s.plate);
+        // малая доска — для верстака и мебели; верстак — из 4 малых досок своей породы
+        s.smallBoard = ModItems.ITEMS.registerSimpleItem(id + "_small_board");
+        s.items.add(s.smallBoard);
+        s.craftingTable = reg(id + "_crafting_table", WoodCraftingTableBlock::new, wood(planksColor, 2.5f, 2.5f));
+        item(s, id + "_crafting_table", s.craftingTable);
         SETS.add(s);
     }
 

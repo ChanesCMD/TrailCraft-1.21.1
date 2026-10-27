@@ -4,6 +4,7 @@ import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.init.ModBlocks;
 import io.github.ChanesCMD.trailcraft.init.ModItems;
 import io.github.ChanesCMD.trailcraft.init.ModSmelting;
+import io.github.ChanesCMD.trailcraft.init.ModWood;
 import io.github.ChanesCMD.trailcraft.item.BranchStickItem;
 import io.github.ChanesCMD.trailcraft.item.ClothBlankItem;
 import io.github.ChanesCMD.trailcraft.smelting.Smelting;
@@ -11,6 +12,7 @@ import io.github.ChanesCMD.trailcraft.smelting.Smelting.Metal;
 import io.github.ChanesCMD.trailcraft.smelting.StrawEvents;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
@@ -57,6 +59,12 @@ public class TrailJeiPlugin implements IModPlugin {
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(new ItemStack(ModSmelting.SMALL_BLOOMERY_ITEM.get()), BLOOMERY);
         registration.addRecipeCatalyst(new ItemStack(ModSmelting.JUG.get()), BLOOMERY);
+        // верстаки пород — то же окно крафта, что у ванильного
+        for (ModWood.WoodSet set : ModWood.SETS) {
+            if (set.craftingTable != null) {
+                registration.addRecipeCatalyst(new ItemStack(set.craftingTable.get()), RecipeTypes.CRAFTING);
+            }
+        }
     }
 
     @Override

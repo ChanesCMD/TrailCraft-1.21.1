@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "trailcraft:block/lilac_crafting_table_front",
+    "north": "trailcraft:block/lilac_crafting_table_front",
+    "south": "trailcraft:block/lilac_crafting_table_side",
+    "east": "trailcraft:block/lilac_crafting_table_side",
+    "west": "trailcraft:block/lilac_crafting_table_front",
+    "up": "trailcraft:block/lilac_crafting_table_top",
+    "down": "trailcraft:block/lilac_planks"
+  }
+}

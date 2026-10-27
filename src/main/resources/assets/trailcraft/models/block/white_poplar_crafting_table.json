@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "trailcraft:block/white_poplar_crafting_table_front",
+    "north": "trailcraft:block/white_poplar_crafting_table_front",
+    "south": "trailcraft:block/white_poplar_crafting_table_side",
+    "east": "trailcraft:block/white_poplar_crafting_table_side",
+    "west": "trailcraft:block/white_poplar_crafting_table_front",
+    "up": "trailcraft:block/white_poplar_crafting_table_top",
+    "down": "trailcraft:block/white_poplar_planks"
+  }
+}

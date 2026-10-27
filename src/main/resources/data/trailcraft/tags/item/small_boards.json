@@ -1,0 +1,28 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:oak_small_board",
+    "trailcraft:birch_small_board",
+    "trailcraft:acacia_small_board",
+    "trailcraft:sakura_small_board",
+    "trailcraft:eucalyptus_small_board",
+    "trailcraft:chestnut_small_board",
+    "trailcraft:thuja_small_board",
+    "trailcraft:pine_small_board",
+    "trailcraft:fir_small_board",
+    "trailcraft:spruce_small_board",
+    "trailcraft:white_poplar_small_board",
+    "trailcraft:ebony_small_board",
+    "trailcraft:maple_small_board",
+    "trailcraft:cedar_small_board",
+    "trailcraft:willow_small_board",
+    "trailcraft:lilac_small_board",
+    "trailcraft:palm_small_board",
+    "trailcraft:ironwood_small_board",
+    "trailcraft:aspen_small_board",
+    "trailcraft:linden_small_board",
+    "trailcraft:pussy_willow_small_board",
+    "trailcraft:walnut_small_board",
+    "trailcraft:alder_small_board"
+  ]
+}

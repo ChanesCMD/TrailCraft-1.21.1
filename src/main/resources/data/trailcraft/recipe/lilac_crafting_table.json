@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "#": {
-      "tag": "minecraft:planks"
+      "item": "trailcraft:lilac_small_board"
     }
   },
   "pattern": [
@@ -11,7 +11,7 @@
     "##"
   ],
   "result": {
-    "id": "minecraft:crafting_table",
+    "id": "trailcraft:lilac_crafting_table",
     "count": 1
   }
 }

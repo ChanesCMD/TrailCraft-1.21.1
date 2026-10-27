@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "trailcraft:block/sakura_crafting_table_front",
+    "north": "trailcraft:block/sakura_crafting_table_front",
+    "south": "trailcraft:block/sakura_crafting_table_side",
+    "east": "trailcraft:block/sakura_crafting_table_side",
+    "west": "trailcraft:block/sakura_crafting_table_front",
+    "up": "trailcraft:block/sakura_crafting_table_top",
+    "down": "trailcraft:block/sakura_planks"
+  }
+}

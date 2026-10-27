@@ -1,6 +1,29 @@
 {
   "replace": false,
   "values": [
-    "minecraft:crafting_table"
+    "minecraft:crafting_table",
+    "trailcraft:oak_crafting_table",
+    "trailcraft:birch_crafting_table",
+    "trailcraft:acacia_crafting_table",
+    "trailcraft:sakura_crafting_table",
+    "trailcraft:eucalyptus_crafting_table",
+    "trailcraft:chestnut_crafting_table",
+    "trailcraft:thuja_crafting_table",
+    "trailcraft:pine_crafting_table",
+    "trailcraft:fir_crafting_table",
+    "trailcraft:spruce_crafting_table",
+    "trailcraft:white_poplar_crafting_table",
+    "trailcraft:ebony_crafting_table",
+    "trailcraft:maple_crafting_table",
+    "trailcraft:cedar_crafting_table",
+    "trailcraft:willow_crafting_table",
+    "trailcraft:lilac_crafting_table",
+    "trailcraft:palm_crafting_table",
+    "trailcraft:ironwood_crafting_table",
+    "trailcraft:aspen_crafting_table",
+    "trailcraft:linden_crafting_table",
+    "trailcraft:pussy_willow_crafting_table",
+    "trailcraft:walnut_crafting_table",
+    "trailcraft:alder_crafting_table"
   ]
 }

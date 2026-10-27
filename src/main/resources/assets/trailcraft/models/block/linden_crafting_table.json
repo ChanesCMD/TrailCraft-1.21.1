@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "trailcraft:block/linden_crafting_table_front",
+    "north": "trailcraft:block/linden_crafting_table_front",
+    "south": "trailcraft:block/linden_crafting_table_side",
+    "east": "trailcraft:block/linden_crafting_table_side",
+    "west": "trailcraft:block/linden_crafting_table_front",
+    "up": "trailcraft:block/linden_crafting_table_top",
+    "down": "trailcraft:block/linden_planks"
+  }
+}

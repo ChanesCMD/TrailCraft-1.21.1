@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "trailcraft:block/pine_crafting_table_front",
+    "north": "trailcraft:block/pine_crafting_table_front",
+    "south": "trailcraft:block/pine_crafting_table_side",
+    "east": "trailcraft:block/pine_crafting_table_side",
+    "west": "trailcraft:block/pine_crafting_table_front",
+    "up": "trailcraft:block/pine_crafting_table_top",
+    "down": "trailcraft:block/pine_planks"
+  }
+}
