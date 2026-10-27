@@ -140,6 +140,7 @@
 - Mixin (`trailcraft.mixins.json`, пакет `mixin/`): `LeavesBlockMixin` — любая листва без столкновений, внутри
   замедляет и гасит падение (`makeStuckInBlock`); листва у тонких брёвен (`#trailcraft:thin_logs`, их нет
   в `#minecraft:logs`) не опадает. `FoodDataAccessor` — истощение для HUD.
+- Лава с водой даёт серый гранит вместо булыжника (`block/FluidMixEvents.java`, `BlockEvent.FluidPlaceBlockEvent`).
 - Плавка — на ванильном костре (`campfire_cooking`, `data/trailcraft/recipe/campfire/`), печи нет. Костёр складывается
   огнивом `item/FirestarterItem.java` из брошенных на землю тонкого бревна (`#trailcraft:thin_logs`) и 4 веток; с костра
   без шёлкового касания падает свой древесный уголь (`data/minecraft/loot_table/blocks/campfire.json`).
