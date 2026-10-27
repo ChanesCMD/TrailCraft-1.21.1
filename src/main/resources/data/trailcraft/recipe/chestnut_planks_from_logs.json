@@ -4,6 +4,9 @@
   "ingredients": [
     {
       "tag": "trailcraft:chestnut_logs"
+    },
+    {
+      "tag": "trailcraft:saws"
     }
   ],
   "result": {

@@ -1,6 +1,7 @@
 package io.github.ChanesCMD.trailcraft.init;
 
 import io.github.ChanesCMD.trailcraft.init.ModTiers.Material;
+import io.github.ChanesCMD.trailcraft.item.SawItem;
 import io.github.ChanesCMD.trailcraft.item.SpearItem;
 import io.github.ChanesCMD.trailcraft.item.TieredToolItem;
 import net.minecraft.world.item.AxeItem;
@@ -19,7 +20,7 @@ import java.util.function.Function;
 /**
  * Инструменты и предметы из ТЗ, часть 2 (52 предмета). Имя в реестре = имя текстуры.
  * Кирка, топор, лопата — кремень и металлы; тяпка — кремень, кость и металлы; нож и копьё — все материалы;
- * серп, коса, пила, кусачки — металлы.
+ * серп, коса, пила, кусачки — металлы. Пила распиливает брёвна на доски (item/SawItem).
  * Кремнёвая «лопата» (flint_shovel) в игре называется «Кремнёвая мотыга». Тяпки (*_hoe) — ванильные мотыги:
  * вспахивают землю, а жёлтозём, бурозём и чернозём — в свои грядки (farm/FarmEvents).
  * TODO: уточнить, заменять ли ванильные железные инструменты (сейчас свои рядом с ванильными).
@@ -67,7 +68,8 @@ public final class ModTools {
             if (m.isMetal()) {
                 tool(m, "_sickle", ModTiers.SICKLE_DAMAGE, ModTiers.SICKLE_SPEED);
                 tool(m, "_scythe", ModTiers.SCYTHE_DAMAGE, ModTiers.SCYTHE_SPEED);
-                tool(m, "_saw", ModTiers.SAW_DAMAGE, ModTiers.SAW_SPEED);
+                reg(m.id + "_saw", p -> new SawItem(m.tier,
+                        p.attributes(DiggerItem.createAttributes(m.tier, ModTiers.SAW_DAMAGE, ModTiers.SAW_SPEED))));
                 tool(m, "_cutters", ModTiers.CUTTERS_DAMAGE, ModTiers.CUTTERS_SPEED);
             }
         }

@@ -4,6 +4,9 @@
   "ingredients": [
     {
       "tag": "trailcraft:willow_logs"
+    },
+    {
+      "tag": "trailcraft:saws"
     }
   ],
   "result": {

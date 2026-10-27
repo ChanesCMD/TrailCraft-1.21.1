@@ -4,6 +4,9 @@
   "ingredients": [
     {
       "tag": "trailcraft:ebony_logs"
+    },
+    {
+      "tag": "trailcraft:saws"
     }
   ],
   "result": {

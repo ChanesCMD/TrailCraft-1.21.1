@@ -468,6 +468,7 @@
   "item.trailcraft.stick_processed": "Processed Stick",
   "item.trailcraft.long_stick": "Long Stick",
   "tooltip.trailcraft.rubs": "Processing: %s/%s",
+  "tooltip.trailcraft.saw": "Log with a saw in the crafting grid: 4 planks (the saw loses durability)",
   "tooltip.trailcraft.branch.process": "Right-click a rock (granite, limestone, etc.) %s times to get a processed stick",
   "item.trailcraft.metal_scrap": "Metal Scrap",
   "item.trailcraft.paper_scraps": "Paper Scraps",

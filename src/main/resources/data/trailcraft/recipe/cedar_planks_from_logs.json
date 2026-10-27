@@ -4,6 +4,9 @@
   "ingredients": [
     {
       "tag": "trailcraft:cedar_logs"
+    },
+    {
+      "tag": "trailcraft:saws"
     }
   ],
   "result": {

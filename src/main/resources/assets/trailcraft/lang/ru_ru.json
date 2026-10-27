@@ -468,6 +468,7 @@
   "item.trailcraft.stick_processed": "Обработанная палка",
   "item.trailcraft.long_stick": "Длинная палка",
   "tooltip.trailcraft.rubs": "Обработка: %s/%s",
+  "tooltip.trailcraft.saw": "Бревно с пилой в сетке крафта — 4 доски (пила теряет прочность)",
   "tooltip.trailcraft.branch.process": "ПКМ по породе (гранит, известняк и т. п.) %s раза — обработанная палка",
   "item.trailcraft.metal_scrap": "Металлический скрап",
   "item.trailcraft.paper_scraps": "Клочья бумаги",

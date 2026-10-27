@@ -4,6 +4,9 @@
   "ingredients": [
     {
       "tag": "trailcraft:fir_logs"
+    },
+    {
+      "tag": "trailcraft:saws"
     }
   ],
   "result": {

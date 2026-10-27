@@ -4,6 +4,9 @@
   "ingredients": [
     {
       "tag": "trailcraft:walnut_logs"
+    },
+    {
+      "tag": "trailcraft:saws"
     }
   ],
   "result": {
