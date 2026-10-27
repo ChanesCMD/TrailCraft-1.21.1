@@ -18,19 +18,31 @@ import javax.annotation.Nullable;
 import java.util.Locale;
 
 /**
- * Свой AppleSkin для ряда морковок: насыщение — золотой контур поверх морковок, истощение — светлая полоска позади
- * ряда (до следующей потери насыщения или еды), а если в руке еда — мигают морковки и контур, которые она добавит.
- * В подсказке еды — сколько она даёт. Насыщение клиент получает от ванилы, истощение — от сервера (FoodSync).
+ * Свой AppleSkin для ряда морковок: насыщение — золотой контур поверх морковок, истощение — тёмная полоска позади
+ * ряда, которая убывает до следующей потери насыщения или еды; а если в руке еда — мигают морковки и контур, которые
+ * она добавит. Такая же полоска позади ряда воды — сколько осталось до потери следующей единицы воды.
+ * В подсказке еды — сколько она даёт. Насыщение клиент получает от ванилы, истощение и жажду — от сервера (FoodSync).
  */
 @EventBusSubscriber(modid = TrailCraft.MODID, value = Dist.CLIENT)
 public final class FoodOverlay {
-    private static final int SATURATION = 0xFFFFD84A;
+    private static final int SATURATION = 0xFFFFD84A, BAR = 0x80000000;
     /** Ванильный порог истощения: на 4 снимается единица насыщения или еды. */
     private static final float EXHAUSTION_MAX = 4;
-    private static float exhaustion;
+    private static float exhaustion, thirst;
 
-    public static void setExhaustion(float value) {
-        exhaustion = value;
+    /** @param thirst накопленная жажда 0..1 (на 1 тратится единица воды, Water.Tracker) */
+    public static void set(float exhaustion, float thirst) {
+        FoodOverlay.exhaustion = exhaustion;
+        FoodOverlay.thirst = thirst;
+    }
+
+    /** Полоска позади ряда воды (ряд заполняется справа налево, поэтому полоска прижата к правому краю right). */
+    static void renderThirst(GuiGraphics g, int right, int y, int step) {
+        int width = 9 * step + 9;
+        int left = Math.round((1 - Mth.clamp(thirst, 0, 1)) * width);
+        if (left > 0) {
+            g.fill(right - left, y, right, y + 9, BAR);
+        }
     }
 
     /** Ряд из 10 морковок слева направо с левого края x, верх — y. */
@@ -39,9 +51,9 @@ public final class FoodOverlay {
         int level = food.getFoodLevel();
         float saturation = food.getSaturationLevel();
         int width = 9 * step + 9;
-        int filled = Math.round(Mth.clamp(exhaustion / EXHAUSTION_MAX, 0, 1) * width);
-        if (filled > 0) {
-            g.fill(x, y, x + filled, y + 9, 0x40FFFFFF);
+        int left = Math.round((1 - Mth.clamp(exhaustion / EXHAUSTION_MAX, 0, 1)) * width);
+        if (left > 0) {
+            g.fill(x, y, x + left, y + 9, BAR);
         }
         for (int i = 0; i < 10; i++) {
             HudIcons.draw(g, x + i * step, y, HudIcons.FOOD, colors, Mth.clamp(level - 2 * i, 0, 2));

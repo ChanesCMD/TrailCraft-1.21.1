@@ -15,6 +15,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -29,13 +30,16 @@ import java.util.List;
 /**
  * Самородок на поверхности, а под ним, в верхних слоях, большая жила его руды (VEIN_MIN..VEIN_MAX блоков).
  * Жила заменяет любой твёрдый природный блок; порода руды — та, что заменена, если она подходит руде, иначе первая
- * порода руды. Частота (одна фича на 4 сектора 9×9 чанков) — в placed_feature/nugget_deposit_*.json.
+ * порода руды. Фича вызывается в каждом чанке, но ставится ровно в одном чанке каждой клетки CELL×CELL чанков
+ * (4 сектора 9×9): чанк выбирается по сиду мира, клетке и руде, не ближе MARGIN к краю клетки — так места
+ * распределены равномерно, а не кучками, как при случайном шансе.
  */
 public class NuggetDepositFeature extends Feature<NuggetDepositFeature.Config> {
     private static final int VEIN_MIN = 15, VEIN_MAX = 25;
     /** Центр жилы — на столько блоков ниже поверхности. */
     private static final int DEPTH_MIN = 3, DEPTH_MAX = 8;
     private static final int RADIUS = 3;
+    private static final int CELL = 18, MARGIN = 3;
 
     /** @param ore id руды из {@link Ore} (например, malachite) */
     public record Config(String ore) implements FeatureConfiguration {
@@ -56,6 +60,9 @@ public class NuggetDepositFeature extends Feature<NuggetDepositFeature.Config> {
         WorldGenLevel level = ctx.level();
         RandomSource random = ctx.random();
         BlockPos pos = ctx.origin();
+        if (!isChosenChunk(level.getSeed(), new ChunkPos(pos), ore)) {
+            return false;
+        }
         BlockState here = level.getBlockState(pos);
         boolean water = here.is(Blocks.WATER) && here.getFluidState().isSource();
         BlockPos below = pos.below();
@@ -68,6 +75,22 @@ public class NuggetDepositFeature extends Feature<NuggetDepositFeature.Config> {
         level.setBlock(pos, nugget, Block.UPDATE_CLIENTS);
         placeVein(level, random, ore, below.below(DEPTH_MIN + random.nextInt(DEPTH_MAX - DEPTH_MIN + 1)));
         return true;
+    }
+
+    /** Этот ли чанк выбран для руды в своей клетке CELL×CELL чанков. */
+    private static boolean isChosenChunk(long seed, ChunkPos chunk, Ore ore) {
+        int cellX = Math.floorDiv(chunk.x, CELL), cellZ = Math.floorDiv(chunk.z, CELL);
+        long h = mix(seed ^ cellX * 0x9E3779B97F4A7C15L ^ cellZ * 0xC2B2AE3D27D4EB4FL ^ (ore.ordinal() + 1) * 0x165667B19E3779F9L);
+        int span = CELL - 2 * MARGIN;
+        int x = MARGIN + (int) Math.floorMod(h, (long) span), z = MARGIN + (int) Math.floorMod(h >>> 32, (long) span);
+        return chunk.x == cellX * CELL + x && chunk.z == cellZ * CELL + z;
+    }
+
+    /** Перемешивание битов (splitmix64). */
+    private static long mix(long h) {
+        h = (h ^ h >>> 30) * 0xBF58476D1CE4E5B9L;
+        h = (h ^ h >>> 27) * 0x94D049BB133111EBL;
+        return h ^ h >>> 31;
     }
 
     /** Жила — ближайшие к центру клетки сплюснутого шара (со случайным разбросом), пока не наберётся размер. */

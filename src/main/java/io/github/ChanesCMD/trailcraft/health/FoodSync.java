@@ -2,6 +2,7 @@ package io.github.ChanesCMD.trailcraft.health;
 
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.client.hud.FoodOverlay;
+import io.github.ChanesCMD.trailcraft.init.ModAttachments;
 import io.github.ChanesCMD.trailcraft.mixin.FoodDataAccessor;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -19,34 +20,36 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 /**
- * Истощение (сколько осталось до потери насыщения или еды) ванилла клиенту не шлёт, а полоске в HUD
- * (client/hud/FoodOverlay) оно нужно: сервер отправляет его, когда оно заметно изменилось.
+ * Истощение (сколько осталось до потери насыщения или еды) ванилла клиенту не шлёт, а полоскам в HUD
+ * (client/hud/FoodOverlay) оно нужно вместе с накопленной жаждой: сервер отправляет их, когда они заметно изменились.
  */
 @EventBusSubscriber(modid = TrailCraft.MODID)
 public final class FoodSync {
     private static final int INTERVAL = 5;
     private static final float STEP = 0.05f;
-    private static final Map<ServerPlayer, Float> SENT = new WeakHashMap<>();
+    private static final Map<ServerPlayer, ExhaustionPayload> SENT = new WeakHashMap<>();
 
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Post event) {
         if (!(event.getEntity() instanceof ServerPlayer player) || player.tickCount % INTERVAL != 0) {
             return;
         }
-        float exhaustion = ((FoodDataAccessor) player.getFoodData()).trailcraft$getExhaustion();
-        Float sent = SENT.get(player);
-        if (sent == null || Math.abs(sent - exhaustion) >= STEP) {
-            SENT.put(player, exhaustion);
-            PacketDistributor.sendToPlayer(player, new ExhaustionPayload(exhaustion));
+        ExhaustionPayload now = new ExhaustionPayload(((FoodDataAccessor) player.getFoodData()).trailcraft$getExhaustion(),
+                player.getData(ModAttachments.WATER_TRACKER).thirst);
+        ExhaustionPayload sent = SENT.get(player);
+        if (sent == null || Math.abs(sent.food() - now.food()) >= STEP || Math.abs(sent.thirst() - now.thirst()) >= STEP / 4) {
+            SENT.put(player, now);
+            PacketDistributor.sendToPlayer(player, now);
         }
     }
 
-    /** Сервер → клиент: текущее истощение игрока. */
-    public record ExhaustionPayload(float value) implements CustomPacketPayload {
+    /** Сервер → клиент: истощение игрока (0..4) и накопленная жажда (0..1). */
+    public record ExhaustionPayload(float food, float thirst) implements CustomPacketPayload {
         public static final Type<ExhaustionPayload> TYPE =
                 new Type<>(ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "exhaustion"));
         public static final StreamCodec<ByteBuf, ExhaustionPayload> STREAM_CODEC =
-                StreamCodec.composite(ByteBufCodecs.FLOAT, ExhaustionPayload::value, ExhaustionPayload::new);
+                StreamCodec.composite(ByteBufCodecs.FLOAT, ExhaustionPayload::food, ByteBufCodecs.FLOAT, ExhaustionPayload::thirst,
+                        ExhaustionPayload::new);
 
         @Override
         public Type<? extends CustomPacketPayload> type() {
@@ -59,7 +62,7 @@ public final class FoodSync {
         @SubscribeEvent
         public static void onRegisterPayloads(RegisterPayloadHandlersEvent event) {
             event.registrar("1").playToClient(ExhaustionPayload.TYPE, ExhaustionPayload.STREAM_CODEC,
-                    (payload, context) -> context.enqueueWork(() -> FoodOverlay.setExhaustion(payload.value())));
+                    (payload, context) -> context.enqueueWork(() -> FoodOverlay.set(payload.food(), payload.thirst())));
         }
     }
 

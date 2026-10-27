@@ -66,7 +66,8 @@ SMELT = {
 }
 
 # Самородки на поверхности над большой жилой (worldgen/NuggetDepositFeature): руда, во что дробятся молотком,
-# названия ru / en. Блок и предмет — <руда>_nugget; одна фича каждой руды на 4 сектора 9×9 чанков.
+# названия ru / en. Блок и предмет — <руда>_nugget; одна фича каждой руды на 4 сектора 9×9 чанков — чанк в каждой клетке
+# 18×18 чанков выбирает сама фича (NuggetDepositFeature), поэтому места распределены равномерно.
 NUGGETS = [
     ("native_copper", "copper_mix", "Самородная медь", "Native Copper Nugget"),
     ("malachite", "copper_mix", "Малахит", "Malachite Nugget"),
@@ -74,7 +75,6 @@ NUGGETS = [
     ("cassiterite", "tin_mix", "Касситерит", "Cassiterite Nugget"),
     ("sphalerite", "zinc_mix", "Сфалерит", "Sphalerite Nugget"),
 ]
-NUGGET_RARITY = 4 * 9 * 9  # чанков на одну фичу: 4 сектора по 9×9 чанков
 
 # Свои слитки: id, тэг c:ingots/..., ru, en
 INGOTS = [
@@ -356,7 +356,6 @@ def worldgen():
         write(f"data/{NS}/worldgen/placed_feature/nugget_deposit_{ore}.json", {
             "feature": f"{NS}:nugget_deposit_{ore}",
             "placement": [
-                {"type": "minecraft:rarity_filter", "chance": NUGGET_RARITY},
                 {"type": "minecraft:in_square"},
                 {"type": "minecraft:heightmap", "heightmap": "OCEAN_FLOOR_WG"},
                 {"type": "minecraft:biome"},

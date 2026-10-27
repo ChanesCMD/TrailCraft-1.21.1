@@ -167,6 +167,7 @@ public class TrailHud {
         if (player == null || !visible(mc) || player.getVehicle() instanceof LivingEntity vehicle && vehicle.showVehicleHealth()) {
             return;
         }
+        FoodOverlay.renderThirst(g, g.guiWidth() / 2 + 91, g.guiHeight() - mc.gui.rightHeight, STEP);
         drawRightRow(g, mc, HudIcons.DROP, HudIcons.WATER, WaterEvents.get(player));
     }
 

@@ -2,10 +2,6 @@
   "feature": "trailcraft:nugget_deposit_native_copper",
   "placement": [
     {
-      "type": "minecraft:rarity_filter",
-      "chance": 324
-    },
-    {
       "type": "minecraft:in_square"
     },
     {
