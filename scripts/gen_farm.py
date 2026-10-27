@@ -42,9 +42,9 @@ BERRIES = [
 # Где растут дикие растения: биом -> что в нём растёт (леса — scripts/gen_forests.py). TODO: уточнить биомы.
 # Смородина и крыжовник — умеренные равнины и леса (смородина — и в сырых), морошка — самая прохладная полоса,
 # ежевика — тёплые и умеренные леса и опушки, картофель — умеренные равнины, морковь — равнины и светлые рощи,
-# джут — жаркие и влажные места (жёлтозём).
+# джут — жаркие и влажные места (жёлтозём), реже — равнины, лесостепь и ивняки бурозёма и чернозёма.
 WILD_BY_BIOME = {
-    "burozem_plains": ["currant_bush", "cloudberry_bush", "gooseberry_bush", "blackberry_bush", "wild_carrot", "wild_potato"],
+    "burozem_plains": ["currant_bush", "cloudberry_bush", "gooseberry_bush", "blackberry_bush", "wild_carrot", "wild_potato", "wild_jute"],
     "burozem_taiga": ["currant_bush", "cloudberry_bush"],
     "pine_forest": ["currant_bush", "cloudberry_bush"],
     "birch_forest": ["currant_bush", "gooseberry_bush", "wild_carrot"],
@@ -52,11 +52,11 @@ WILD_BY_BIOME = {
     "maple_forest": ["currant_bush", "gooseberry_bush", "blackberry_bush"],
     "alder_forest": ["currant_bush", "blackberry_bush"],
     "thuja_forest": ["currant_bush"],
-    "burozem_willow_forest": ["currant_bush", "blackberry_bush"],
-    "chernozem_plains": ["currant_bush", "gooseberry_bush", "wild_carrot", "wild_potato"],
-    "chernozem_forest_steppe": ["currant_bush", "gooseberry_bush", "blackberry_bush", "wild_carrot"],
+    "burozem_willow_forest": ["currant_bush", "blackberry_bush", "wild_jute"],
+    "chernozem_plains": ["currant_bush", "gooseberry_bush", "wild_carrot", "wild_potato", "wild_jute"],
+    "chernozem_forest_steppe": ["currant_bush", "gooseberry_bush", "blackberry_bush", "wild_carrot", "wild_jute"],
     "walnut_grove": ["gooseberry_bush", "blackberry_bush", "wild_carrot"],
-    "chernozem_willow_forest": ["currant_bush", "blackberry_bush"],
+    "chernozem_willow_forest": ["currant_bush", "blackberry_bush", "wild_jute"],
     "zheltozem_plains": ["blackberry_bush", "wild_carrot", "wild_jute"],
     "sakura_grove": ["blackberry_bush", "wild_carrot"],
     "lilac_grove": ["blackberry_bush", "wild_carrot"],
@@ -74,7 +74,7 @@ PATCHES = {
     "blackberry_bush": (3, 2, 8),
     "wild_carrot": (4, 2, 6),
     "wild_potato": (4, 2, 8),
-    "wild_jute": (5, 2, 5),
+    "wild_jute": (8, 2, 2),
 }
 
 LANG = {

@@ -4,6 +4,7 @@ import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.worldgen.FallenBranchFeature;
 import io.github.ChanesCMD.trailcraft.worldgen.LoosePebbleFeature;
 import io.github.ChanesCMD.trailcraft.worldgen.NuggetDepositFeature;
+import io.github.ChanesCMD.trailcraft.worldgen.PondFeature;
 import io.github.ChanesCMD.trailcraft.worldgen.TrailTreeConfig;
 import io.github.ChanesCMD.trailcraft.worldgen.TrailTreeFeature;
 import net.minecraft.core.registries.Registries;
@@ -24,6 +25,10 @@ public final class ModFeatures {
     /** Самородок на поверхности и большая жила его руды под ним. */
     public static final DeferredHolder<Feature<?>, Feature<NuggetDepositFeature.Config>> NUGGET_DEPOSIT =
             FEATURES.register("nugget_deposit", NuggetDepositFeature::new);
+
+    /** Озерцо на равнине: 1–5 блоков воды вровень с землёй. */
+    public static final DeferredHolder<Feature<?>, Feature<NoneFeatureConfiguration>> POND =
+            FEATURES.register("pond", PondFeature::new);
 
     public static final DeferredHolder<Feature<?>, Feature<TrailTreeConfig>> TRAIL_TREE =
             FEATURES.register("trail_tree", TrailTreeFeature::new);
