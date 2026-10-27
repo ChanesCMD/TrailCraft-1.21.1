@@ -17,6 +17,7 @@ import io.github.ChanesCMD.trailcraft.item.FirestarterItem;
 import io.github.ChanesCMD.trailcraft.item.HammerItem;
 import io.github.ChanesCMD.trailcraft.item.TurfCutterItem;
 import io.github.ChanesCMD.trailcraft.farm.Farm;
+import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredItem;
 import java.util.ArrayList;
 import java.util.List;
@@ -108,6 +109,8 @@ public class ModItems {
     public static final DeferredItem<ClothBlankItem> CLOTH_BLANK = ITEMS.registerItem("cloth_blank", ClothBlankItem::new);
     /** Тканевое полотно: 3 полотна и верёвка — армейский вещмешок. */
     public static final DeferredItem<Item> CLOTH = ITEMS.registerSimpleItem("cloth");
+    public static final DeferredItem<DeferredSpawnEggItem> CAPERCAILLIE_SPAWN_EGG = ITEMS.registerItem("capercaillie_spawn_egg",
+            props -> new DeferredSpawnEggItem(ModEntities.CAPERCAILLIE, 0x2F3034, 0x3E6F5F, props));
 
     // === ПРЕДМЕТЫ ===
     public static final DeferredItem<Item> CLAY_BALL_WHITE = ITEMS.registerSimpleItem("clay_ball_white");

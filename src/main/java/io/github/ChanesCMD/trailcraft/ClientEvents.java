@@ -9,6 +9,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import io.github.ChanesCMD.trailcraft.client.ThrownSpearRenderer;
+import io.github.ChanesCMD.trailcraft.client.animal.CapercaillieModel;
+import io.github.ChanesCMD.trailcraft.client.animal.CapercaillieRenderer;
 import io.github.ChanesCMD.trailcraft.init.ModEntities;
 
 @EventBusSubscriber(modid = TrailCraft.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -23,6 +25,12 @@ public class ClientEvents {
     @SubscribeEvent
     public static void entityRenderers(EntityRenderersEvent.RegisterRenderers e) {
         e.registerEntityRenderer(ModEntities.THROWN_SPEAR.get(), ThrownSpearRenderer::new);
+        e.registerEntityRenderer(ModEntities.CAPERCAILLIE.get(), CapercaillieRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void entityLayers(EntityRenderersEvent.RegisterLayerDefinitions e) {
+        e.registerLayerDefinition(CapercaillieModel.LAYER, CapercaillieModel::createBodyLayer);
     }
 
     @SubscribeEvent

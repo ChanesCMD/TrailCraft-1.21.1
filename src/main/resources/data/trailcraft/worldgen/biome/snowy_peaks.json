@@ -60,14 +60,7 @@
         "maxCount": 4
       }
     ],
-    "creature": [
-      {
-        "type": "minecraft:goat",
-        "weight": 5,
-        "minCount": 1,
-        "maxCount": 3
-      }
-    ],
+    "creature": [],
     "ambient": [],
     "axolotls": [],
     "underground_water_creature": [],

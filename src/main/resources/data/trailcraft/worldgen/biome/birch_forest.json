@@ -99,6 +99,12 @@
         "weight": 4,
         "minCount": 2,
         "maxCount": 3
+      },
+      {
+        "type": "trailcraft:capercaillie",
+        "weight": 4,
+        "minCount": 2,
+        "maxCount": 3
       }
     ],
     "ambient": [],

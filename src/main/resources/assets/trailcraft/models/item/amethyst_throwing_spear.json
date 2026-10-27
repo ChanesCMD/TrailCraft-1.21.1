@@ -8,19 +8,19 @@
     "gui": {
       "parent": "minecraft:item/generated",
       "textures": {
-        "layer0": "trailcraft:item/amethyst_throwing_spear"
+        "layer0": "trailcraft:item/amethyst_throwing_spear_in_hand"
       }
     },
     "fixed": {
       "parent": "minecraft:item/generated",
       "textures": {
-        "layer0": "trailcraft:item/amethyst_throwing_spear"
+        "layer0": "trailcraft:item/amethyst_throwing_spear_in_hand"
       }
     },
     "ground": {
       "parent": "minecraft:item/generated",
       "textures": {
-        "layer0": "trailcraft:item/amethyst_throwing_spear"
+        "layer0": "trailcraft:item/amethyst_throwing_spear_in_hand"
       }
     }
   }

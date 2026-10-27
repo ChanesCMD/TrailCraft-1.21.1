@@ -1,7 +1,7 @@
 """Метательные копья (item/ThrowingSpearItem, init/ModTools): <материал>_throwing_spear.
 
-Пишет: текстуры (иконка и в руке — текстуры обычного копья с оперением из перьев у древка), модели (в руке — как
-у обычного копья, в инвентаре и на земле — иконка), рецепты (копьё + 3 пера), переводы. Нужен Pillow.
+Пишет: текстуру (одна, длинная — копьё в руке с оперением, как у стрелы, у торца древка), модели (в руке — как
+у обычного копья, в инвентаре, в рамке и на земле — та же длинная текстура плоской иконкой), рецепты (копьё + 3 пера), переводы. Нужен Pillow.
 Запуск: python scripts/gen_throwing_spear.py
 """
 import json
@@ -13,7 +13,9 @@ from PIL import Image
 ROOT = os.path.join(os.path.dirname(__file__), "..", "src", "main", "resources")
 NS = "trailcraft"
 MATERIALS = ["flint", "bone", "amethyst", "copper", "bronze", "iron", "steel"]
-FEATHER, FEATHER_SHADE = (236, 236, 232, 255), (186, 186, 190, 255)
+FEATHER, FEATHER_EDGE = (246, 246, 242, 255), (214, 214, 212, 255)
+SHADE, SHADE_EDGE = (186, 186, 192, 255), (150, 150, 158, 255)
+OUTLINE = (62, 56, 54, 255)
 
 
 def path(*parts):
@@ -33,33 +35,50 @@ def read(rel):
         return json.load(f)
 
 
-def fletch(src):
-    """Оперение: у торца древка (самый нижний-левый пиксель; древко идёт вверх-вправо) по перу с каждой стороны."""
+def fletch(src, tail_gap=5, length=12, width=6, back=0.5):
+    """Оперение, как у стрелы в луке: у торца древка (идёт вверх-вправо, x + y ≈ c) два пера с тёмной обводкой —
+    сверху-слева светлое, снизу-справа в тени. Перо у древка во всю длину, к острию сходит на нет, а хвостовой
+    край скошен назад. d — сдвиг поперёк древка (x + y − c), s — вдоль древка от места пера (x − y, шаг 2 на пиксель).
+    """
     im = src.copy()
     w, h = im.size
-    k = w // 16  # текстура в руке может быть крупнее 16×16
-    opaque = [(x, y) for y in range(h) for x in range(w) if im.getpixel((x, y))[3]]
-    bx, by = max(opaque, key=lambda p: p[1] - p[0])
-    for step in range(1 * k, 5 * k):
-        sx, sy = bx + step, by - step                         # точка на древке
-        for side, color in ((1, FEATHER), (-1, FEATHER_SHADE)):
-            for d in range(1, 2 * k + 1):
-                x, y = sx + side * d, sy + side * d           # поперёк древка
-                if 0 <= x < w and 0 <= y < h and not im.getpixel((x, y))[3]:
-                    im.putpixel((x, y), color)
+    opaque = lambda x, y: 0 <= x < w and 0 <= y < h and im.getpixel((x, y))[3] > 0
+    pts = [(x, y) for y in range(h) for x in range(w) if opaque(x, y)]
+    c = round(sum(x + y for x, y in pts) / len(pts))
+    tail = min(x - y for x, y in pts)
+
+    def inside(x, y):
+        a = abs(x + y - c) - 1  # от края древка
+        s = (x - y) - tail - 2 * tail_gap
+        return 1 <= a <= width and -2 * back * a <= s <= 2 * length - a * 2 * length / width
+
+    new = {}
+    for y in range(h):
+        for x in range(w):
+            if opaque(x, y) or not inside(x, y):
+                continue
+            a = abs(x + y - c) - 1
+            edge = any(not inside(x + dx, y + dy) and not opaque(x + dx, y + dy)
+                       for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)))
+            light, dim = (FEATHER, FEATHER_EDGE) if x + y < c else (SHADE, SHADE_EDGE)
+            new[(x, y)] = OUTLINE if edge else light if a < width - 2 else dim
+    for p, color in new.items():
+        im.putpixel(p, color)
     return im
 
 
 def main():
     tex = path("assets", NS, "textures", "item")
     for m in MATERIALS:
-        for suffix in ("", "_in_hand"):
-            src = Image.open(os.path.join(tex, f"{m}_spear{suffix}.png")).convert("RGBA")
-            fletch(src).save(os.path.join(tex, f"{m}_throwing_spear{suffix}.png"))
+        src = Image.open(os.path.join(tex, f"{m}_spear_in_hand.png")).convert("RGBA")
+        fletch(src).save(os.path.join(tex, f"{m}_throwing_spear_in_hand.png"))
+        short = os.path.join(tex, f"{m}_throwing_spear.png")
+        if os.path.exists(short):
+            os.remove(short)
         hand = read(f"assets/{NS}/models/item/{m}_spear_in_hand.json")
         hand["textures"] = {"layer0": f"{NS}:item/{m}_throwing_spear_in_hand"}
         write(f"assets/{NS}/models/item/{m}_throwing_spear_in_hand.json", hand)
-        icon = {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/{m}_throwing_spear"}}
+        icon = {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/{m}_throwing_spear_in_hand"}}
         write(f"assets/{NS}/models/item/{m}_throwing_spear.json", {
             "loader": "neoforge:separate_transforms", "gui_light": "front",
             "base": {"parent": f"{NS}:item/{m}_throwing_spear_in_hand"},

@@ -35,15 +35,17 @@ FORESTS = {
     "burozem_taiga": dict(
         soil="burozem", ru="Тайга", en="Taiga", temperature=0.3, downfall=0.8, grass=0x6E9C6A,
         trees=[("trees", {"spruce": 4, "fir": 3, "cedar": 1, "birch": 1}, ("count", 9))],
-        mobs=[("minecraft:wolf", 8, 4, 4), ("minecraft:fox", 8, 2, 4), ("minecraft:rabbit", 4, 2, 3)]),
+        mobs=[("minecraft:wolf", 8, 4, 4), ("minecraft:fox", 8, 2, 4), ("minecraft:rabbit", 4, 2, 3),
+              ("trailcraft:capercaillie", 8, 2, 4)]),
     "pine_forest": dict(
         soil="burozem", ru="Сосновый бор", en="Pine Forest", temperature=0.35, downfall=0.5, grass=0x7A9E5E,
         trees=[("trees", {"pine": 1}, ("count", 12))],
-        mobs=[("minecraft:wolf", 5, 4, 4), ("minecraft:fox", 4, 2, 4), ("minecraft:rabbit", 4, 2, 3)]),
+        mobs=[("minecraft:wolf", 5, 4, 4), ("minecraft:fox", 4, 2, 4), ("minecraft:rabbit", 4, 2, 3),
+              ("trailcraft:capercaillie", 8, 2, 4)]),
     "birch_forest": dict(
         soil="burozem", ru="Березняк", en="Birch Forest", temperature=0.5, downfall=0.6, grass=0x88BB67,
         trees=[("trees", {"birch": 1}, ("count", 8))],
-        mobs=[("minecraft:fox", 4, 2, 4), ("minecraft:rabbit", 4, 2, 3)]),
+        mobs=[("minecraft:fox", 4, 2, 4), ("minecraft:rabbit", 4, 2, 3), ("trailcraft:capercaillie", 4, 2, 3)]),
     "burozem_forest": dict(
         soil="burozem", ru="Широколиственный лес", en="Broadleaf Forest", temperature=0.6, downfall=0.8, grass=0x73A462,
         trees=[("trees", {"oak": 4, "linden": 3, "chestnut": 2, "walnut": 1, "birch": 1}, ("count", 8))],
@@ -380,19 +382,19 @@ E_PEAK, E_SLOPE = (-2.0, -0.78), (-0.78, -0.375)
 W_HIGH, W_MEADOW = (0.4, 0.9333), (W_BANK, 0.4)
 MOUNTAINS = {
     # biome: температура, осадки (downfall), цвет травы, почва (правило поверхности) или snow / None (порода),
-    # растительность (шаг vegetal_decoration), снег и лёд сверху, мобы-животные
+    # растительность (шаг vegetal_decoration), снег и лёд сверху, мобы-животные (козы не появляются)
     "mountain_meadow": dict(temperature=0.4, downfall=0.8, grass=0x83BB6D, soil="burozem",
                             vegetal=["grass_patch", "minecraft:flower_meadow", "loose_pebbles"], freeze=False,
                             mobs=None, ru="Горный луг", en="Mountain Meadow"),
     "snowy_slopes": dict(temperature=-0.3, downfall=0.9, grass=0x80B497, soil="snow",
                          vegetal=["loose_pebbles"], freeze=True,
-                         mobs=[("minecraft:goat", 5, 1, 3), ("minecraft:rabbit", 4, 2, 3)],
+                         mobs=[("minecraft:rabbit", 4, 2, 3)],
                          ru="Заснеженные склоны", en="Snowy Slopes"),
     "snowy_peaks": dict(temperature=-0.7, downfall=0.9, grass=0x80B497, soil="snow",
-                        vegetal=[], freeze=True, mobs=[("minecraft:goat", 5, 1, 3)],
+                        vegetal=[], freeze=True, mobs=[],
                         ru="Снежные пики", en="Snowy Peaks"),
     "stony_peaks": dict(temperature=1.0, downfall=0.3, grass=0x9ABE4B, soil=None,
-                        vegetal=["loose_pebbles"], freeze=False, mobs=[("minecraft:goat", 3, 1, 2)],
+                        vegetal=["loose_pebbles"], freeze=False, mobs=[],
                         ru="Скалистые пики", en="Stony Peaks"),
 }
 

@@ -194,6 +194,7 @@ public class ModCreativeTabs {
                         ModOres.NUGGET_ORES.forEach(ore -> output.accept(ModOres.NUGGETS.get(ore)));
                         ModOres.MIXES.forEach(output::accept);
                         ModOres.INGOTS.forEach(output::accept);
+                        output.accept(ModItems.CAPERCAILLIE_SPAWN_EGG);
                     }).build());
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TRAILCRAFT_WOOD_TAB =
