@@ -3,7 +3,9 @@ package io.github.ChanesCMD.trailcraft.client;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.client.gui.UiDraw;
 import io.github.ChanesCMD.trailcraft.inventory.EquippedPayloads;
+import io.github.ChanesCMD.trailcraft.inventory.OpenInventoryPayload;
 import io.github.ChanesCMD.trailcraft.inventory.PlayerSlots;
+import io.github.ChanesCMD.trailcraft.inventory.TrailInventoryMenu.Popup;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -26,7 +28,8 @@ import java.util.List;
 /**
  * Креативная вкладка «Инвентарь»: ванильные слоты 9..35 моду не нужны (основной инвентарь лежит в рюкзаке),
  * поэтому прячем их за экран, как ванилла прячет слоты крафта, и закрашиваем их сетку на фоне.
- * На освободившемся месте — слоты кошелька, пояса и рюкзака (их содержимое присылает сервер, см. EquippedPayloads).
+ * На освободившемся месте — слоты кошелька, пояса и рюкзака (их содержимое присылает сервер, см. EquippedPayloads);
+ * плюс у слота открывает инвентарь TrailCraft сразу с окном этого предмета.
  */
 @EventBusSubscriber(modid = TrailCraft.MODID, value = Dist.CLIENT)
 public class ClientCreativeEvents {
@@ -35,6 +38,10 @@ public class ClientCreativeEvents {
     private static final int HIDDEN = -2000;
     /** Рамка первого слота снаряжения (кошелёк, пояс, рюкзак) относительно вкладки; подпись над ними. */
     private static final int GEAR_X = GRID_X, GEAR_Y = GRID_Y + 18, LABEL_Y = GRID_Y + 6;
+    /** Плюс открытия окна — в правом верхнем углу слота, как в инвентаре TrailCraft. */
+    private static final int PLUS_DX = 10, PLUS_DY = 1;
+    /** Окна слотов EquippedPayloads.SLOTS: кошелёк, пояс, рюкзак. */
+    private static final Popup[] POPUPS = {Popup.WALLET, Popup.BELT, Popup.BACKPACK};
 
     @SubscribeEvent
     public static void onBackground(ContainerScreenEvent.Render.Background event) {
@@ -70,9 +77,14 @@ public class ClientCreativeEvents {
             ItemStack stack = ClientGear.equipped(k);
             g.renderItem(stack, sx + 1, sy + 1);
             g.renderItemDecorations(font, stack, sx + 1, sy + 1);
-            if (gearSlotAt(screen, mouseX, mouseY) == k) {
+            if (gearSlotAt(screen, mouseX, mouseY) == k && plusAt(screen, mouseX, mouseY) < 0) {
                 g.fill(RenderType.guiOverlay(), sx + 1, sy + 1, sx + 17, sy + 17, 0x80FFFFFF);
             }
+            // Плюс открывает окно предмета, как в инвентаре TrailCraft; поверх предмета в слоте
+            g.pose().pushPose();
+            g.pose().translate(0, 0, 200);
+            UiDraw.plusButton(g, sx + PLUS_DX, sy + PLUS_DY);
+            g.pose().popPose();
         }
     }
 
@@ -84,7 +96,7 @@ public class ClientCreativeEvents {
             return;
         }
         int k = gearSlotAt(screen, event.getMouseX(), event.getMouseY());
-        if (k < 0) {
+        if (k < 0 || plusAt(screen, event.getMouseX(), event.getMouseY()) >= 0) {
             return;
         }
         var font = Minecraft.getInstance().font;
@@ -107,6 +119,14 @@ public class ClientCreativeEvents {
     @SubscribeEvent
     public static void onMouseClick(ScreenEvent.MouseButtonPressed.Pre event) {
         if (!(event.getScreen() instanceof CreativeModeInventoryScreen screen) || !screen.isInventoryOpen()) {
+            return;
+        }
+        int plus = plusAt(screen, event.getMouseX(), event.getMouseY());
+        if (plus >= 0 && screen.getMenu().getCarried().isEmpty()) {
+            // Окна кошелька, пояса и рюкзака есть только в инвентаре TrailCraft: открываем его с нужным окном
+            event.setCanceled(true);
+            ClientInventoryEvents.pendingPopup = POPUPS[plus];
+            PacketDistributor.sendToServer(OpenInventoryPayload.FROM_CREATIVE);
             return;
         }
         int k = gearSlotAt(screen, event.getMouseX(), event.getMouseY());
@@ -142,6 +162,18 @@ public class ClientCreativeEvents {
             case PlayerSlots.BELT -> stack.is(PlayerSlots.BELTS);
             default -> stack.is(PlayerSlots.BACKPACKS);
         };
+    }
+
+    /** Номер слота, чей плюс под курсором, или -1. */
+    private static int plusAt(CreativeModeInventoryScreen screen, double mouseX, double mouseY) {
+        for (int k = 0; k < EquippedPayloads.SLOTS.length; k++) {
+            double x = mouseX - (screen.getGuiLeft() + GEAR_X + 18 * k + PLUS_DX);
+            double y = mouseY - (screen.getGuiTop() + GEAR_Y + PLUS_DY);
+            if (x >= 0 && x < 7 && y >= 0 && y < 7) {
+                return k;
+            }
+        }
+        return -1;
     }
 
     /** Номер слота снаряжения под курсором (0 — кошелёк, 1 — пояс, 2 — рюкзак) или -1. */

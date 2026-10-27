@@ -149,6 +149,8 @@ public class ModItems {
     public static final DeferredItem<BranchStickItem> STICK_BRANCH = ITEMS.registerItem("stick_branch",
             props -> new BranchStickItem(ModBlocks.FALLEN_BRANCH.get(), props));
     public static final DeferredItem<Item> STICK_PROCESSED = ITEMS.registerSimpleItem("stick_processed");
+    /** Длинная палка: две обработанные палки по диагонали; древко копий. */
+    public static final DeferredItem<Item> LONG_STICK = ITEMS.registerSimpleItem("long_stick");
     /** Огниво: разжигает костёр из выброшенных тонкого бревна и 4 веток (FirestarterItem). */
     public static final DeferredItem<FirestarterItem> FIRESTARTER = ITEMS.registerItem("firestarter",
             props -> new FirestarterItem(props.durability(FirestarterItem.DURABILITY)));

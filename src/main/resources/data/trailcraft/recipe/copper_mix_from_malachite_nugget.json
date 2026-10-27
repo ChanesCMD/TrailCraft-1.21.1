@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "trailcraft:malachite_nugget"
+    },
+    {
+      "item": "trailcraft:malachite_nugget"
+    },
+    {
+      "item": "trailcraft:malachite_nugget"
+    },
+    {
+      "item": "trailcraft:stone_hammer"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:copper_mix",
+    "count": 3
+  }
+}

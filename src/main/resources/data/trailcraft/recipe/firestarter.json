@@ -4,11 +4,14 @@
   "key": {
     "S": {
       "item": "trailcraft:stick_processed"
+    },
+    "B": {
+      "item": "trailcraft:stick_branch"
     }
   },
   "pattern": [
     "S ",
-    " S"
+    " B"
   ],
   "result": {
     "id": "trailcraft:firestarter",

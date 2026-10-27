@@ -1,0 +1,6 @@
+{
+  "type": "trailcraft:nugget_deposit",
+  "config": {
+    "ore": "malachite"
+  }
+}

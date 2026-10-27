@@ -465,6 +465,7 @@
   "block.trailcraft.shale_pebble": "Shale Pebble",
   "item.trailcraft.stick_branch": "Branch",
   "item.trailcraft.stick_processed": "Processed Stick",
+  "item.trailcraft.long_stick": "Long Stick",
   "tooltip.trailcraft.rubs": "Processing: %s/%s",
   "tooltip.trailcraft.branch.process": "Right-click a rock (granite, limestone, etc.) %s times to get a processed stick",
   "item.trailcraft.metal_scrap": "Metal Scrap",
@@ -775,5 +776,14 @@
   "biome.trailcraft.burozem_willow_forest": "Willow Forest",
   "biome.trailcraft.chernozem_willow_forest": "Willow Forest",
   "biome.trailcraft.savanna": "Savanna",
-  "biome.trailcraft.palm_shore": "Palm Shore"
+  "biome.trailcraft.palm_shore": "Palm Shore",
+  "item.trailcraft.brass_mix": "Brass Mix",
+  "item.trailcraft.copper_mix": "Pure Copper Mix",
+  "item.trailcraft.tin_mix": "Pure Tin Mix",
+  "item.trailcraft.zinc_mix": "Pure Zinc Mix",
+  "block.trailcraft.native_copper_nugget": "Native Copper Nugget",
+  "block.trailcraft.malachite_nugget": "Malachite Nugget",
+  "block.trailcraft.tetrahedrite_nugget": "Tetrahedrite Nugget",
+  "block.trailcraft.cassiterite_nugget": "Cassiterite Nugget",
+  "block.trailcraft.sphalerite_nugget": "Sphalerite Nugget"
 }

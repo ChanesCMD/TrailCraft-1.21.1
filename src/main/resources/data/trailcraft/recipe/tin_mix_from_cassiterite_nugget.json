@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "trailcraft:cassiterite_nugget"
+    },
+    {
+      "item": "trailcraft:cassiterite_nugget"
+    },
+    {
+      "item": "trailcraft:cassiterite_nugget"
+    },
+    {
+      "item": "trailcraft:stone_hammer"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:tin_mix",
+    "count": 3
+  }
+}

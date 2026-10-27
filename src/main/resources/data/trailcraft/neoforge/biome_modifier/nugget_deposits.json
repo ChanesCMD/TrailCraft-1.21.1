@@ -1,0 +1,12 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#trailcraft:trailworldgen_biomes",
+  "features": [
+    "trailcraft:nugget_deposit_native_copper",
+    "trailcraft:nugget_deposit_malachite",
+    "trailcraft:nugget_deposit_tetrahedrite",
+    "trailcraft:nugget_deposit_cassiterite",
+    "trailcraft:nugget_deposit_sphalerite"
+  ],
+  "step": "underground_ores"
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "trailcraft:copper_mix"
+    },
+    {
+      "item": "trailcraft:copper_mix"
+    },
+    {
+      "item": "trailcraft:copper_mix"
+    },
+    {
+      "item": "trailcraft:tin_mix"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:tin_bronze_mix",
+    "count": 4
+  }
+}

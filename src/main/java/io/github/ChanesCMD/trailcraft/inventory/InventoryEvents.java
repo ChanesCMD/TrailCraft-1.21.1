@@ -376,7 +376,7 @@ public class InventoryEvents {
             registrar.playToServer(OpenInventoryPayload.TYPE, OpenInventoryPayload.STREAM_CODEC,
                     (payload, context) -> context.enqueueWork(() -> {
                         if (context.player() instanceof ServerPlayer player) {
-                            open(player);
+                            open(player, payload.creative());
                         }
                     }));
             registrar.playToServer(DeathLogPayloads.Request.TYPE, DeathLogPayloads.Request.STREAM_CODEC,
@@ -403,9 +403,12 @@ public class InventoryEvents {
         }
     }
 
-    /** Открывает инвентарь, только если у игрока не открыт другой контейнер. Креатив пользуется ванильным. */
-    private static void open(ServerPlayer player) {
-        if (player.containerMenu == player.inventoryMenu && !player.isCreative() && !player.isSpectator()) {
+    /**
+     * Открывает инвентарь, только если у игрока не открыт другой контейнер. Креатив пользуется ванильным, а этот
+     * открывает только плюсом у слота кошелька, пояса или рюкзака (fromCreative).
+     */
+    private static void open(ServerPlayer player, boolean fromCreative) {
+        if (player.containerMenu == player.inventoryMenu && (!player.isCreative() || fromCreative) && !player.isSpectator()) {
             player.openMenu(new SimpleMenuProvider((id, inventory, p) -> new TrailInventoryMenu(id, inventory),
                     Component.translatable("container.trailcraft.inventory")));
         }

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "trailcraft:tetrahedrite_nugget"
+    },
+    {
+      "item": "trailcraft:tetrahedrite_nugget"
+    },
+    {
+      "item": "trailcraft:tetrahedrite_nugget"
+    },
+    {
+      "item": "trailcraft:stone_hammer"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:copper_mix",
+    "count": 3
+  }
+}

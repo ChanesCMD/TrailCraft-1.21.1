@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "trailcraft:copper_mix"
+    },
+    {
+      "item": "trailcraft:copper_mix"
+    },
+    {
+      "item": "trailcraft:copper_mix"
+    },
+    {
+      "item": "trailcraft:zinc_mix"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:brass_mix",
+    "count": 4
+  }
+}

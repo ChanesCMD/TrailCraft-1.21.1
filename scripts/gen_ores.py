@@ -19,35 +19,35 @@ ORES = [
     ("bituminous_coal", "coal", "any", True, "bituminous_coal", 2, 4, ["sandstone", "limestone"], 10, 14, 0, 200,
      "Залежь каменного угля", "Bituminous Coal Deposit", "Каменный уголь", "Bituminous Coal"),
     ("malachite", "copper", "stone", True, "raw_malachite", 2, 4, ["limestone", "dolomite"], 8, 9, -10, 160,
-     "Малахит", "Malachite", "Кусок малахита", "Raw Malachite"),
+     "Малахит", "Malachite", "Рудный малахит", "Raw Malachite"),
     ("native_copper", "copper", "stone", True, "raw_native_copper", 1, 1, ["basalt", "gabbro"], 6, 8, -64, 64,
-     "Самородная медь", "Native Copper", "Кусок самородной меди", "Raw Native Copper"),
+     "Самородная медь", "Native Copper", "Рудная самородная медь", "Raw Native Copper"),
     ("tetrahedrite", "copper", "stone", True, "raw_tetrahedrite", 2, 4, ["andesite", "granite"], 6, 8, -64, 120,
-     "Тетраэдрит", "Tetrahedrite", "Кусок тетраэдрита", "Raw Tetrahedrite"),
+     "Тетраэдрит", "Tetrahedrite", "Рудный тетраэдрит", "Raw Tetrahedrite"),
     ("hematite", "iron", "stone", False, "raw_hematite", 1, 1, ["sandstone", "shale"], 8, 9, 20, 200,
-     "Гематит", "Hematite", "Кусок гематита", "Raw Hematite"),
+     "Гематит", "Hematite", "Рудный гематит", "Raw Hematite"),
     ("magnetite", "iron", "stone", False, "raw_magnetite", 1, 1, ["diorite", "marble"], 6, 9, -64, 120,
-     "Магнетит", "Magnetite", "Кусок магнетита", "Raw Magnetite"),
+     "Магнетит", "Magnetite", "Рудный магнетит", "Raw Magnetite"),
     ("limonite", "iron", "any", False, "raw_limonite", 2, 4, ["limestone", "chalk"], 8, 9, 40, 200,
-     "Лимонит", "Limonite", "Кусок лимонита", "Raw Limonite"),
+     "Лимонит", "Limonite", "Рудный лимонит", "Raw Limonite"),
     ("sphalerite", "zinc", "stone", False, "raw_sphalerite", 2, 4, ["dolomite", "limestone"], 6, 8, -10, 120,
-     "Сфалерит", "Sphalerite", "Кусок сфалерита", "Raw Sphalerite"),
+     "Сфалерит", "Sphalerite", "Рудный сфалерит", "Raw Sphalerite"),
     ("cassiterite", "tin", "stone", False, "raw_cassiterite", 2, 4, ["gray_granite", "granite"], 4, 7, -64, 80,
-     "Касситерит", "Cassiterite", "Кусок касситерита", "Raw Cassiterite"),
+     "Касситерит", "Cassiterite", "Рудный касситерит", "Raw Cassiterite"),
     ("native_bismuth", "bismuth", "stone", False, "raw_native_bismuth", 1, 1, ["granite", "marble"], 4, 6, -64, 100,
-     "Самородный висмут", "Native Bismuth", "Кусок самородного висмута", "Raw Native Bismuth"),
+     "Самородный висмут", "Native Bismuth", "Рудный самородный висмут", "Raw Native Bismuth"),
     ("galena", "lead", "stone", False, "raw_galena", 2, 4, ["limestone", "marble"], 5, 8, -10, 140,
-     "Галенит", "Galena", "Кусок галенита", "Raw Galena"),
+     "Галенит", "Galena", "Рудный галенит", "Raw Galena"),
     ("native_gold", "gold", "iron", False, "raw_native_gold", 1, 1, ["gray_granite", "andesite"], 3, 5, -64, 40,
-     "Самородное золото", "Native Gold", "Кусок самородного золота", "Raw Native Gold"),
+     "Самородное золото", "Native Gold", "Рудное самородное золото", "Raw Native Gold"),
     ("pentlandite", "nickel", "iron", False, "raw_pentlandite", 1, 1, ["gabbro", "basalt"], 4, 6, -64, 20,
-     "Пентландит", "Pentlandite", "Кусок пентландита", "Raw Pentlandite"),
+     "Пентландит", "Pentlandite", "Рудный пентландит", "Raw Pentlandite"),
     ("lepidolite", "lithium", "stone", False, "raw_lepidolite", 1, 1, ["granite", "gray_granite"], 3, 6, -64, 60,
-     "Лепидолит", "Lepidolite", "Кусок лепидолита", "Raw Lepidolite"),
+     "Лепидолит", "Lepidolite", "Рудный лепидолит", "Raw Lepidolite"),
     ("bauxite", "aluminum", "any", False, "raw_bauxite", 2, 4, ["limestone", "basalt"], 5, 9, 30, 200,
-     "Боксит", "Bauxite", "Кусок боксита", "Raw Bauxite"),
+     "Боксит", "Bauxite", "Рудный боксит", "Raw Bauxite"),
     ("nepheline", "aluminum", "stone", False, "raw_nepheline", 2, 4, ["diorite", "gray_granite"], 4, 7, -64, 80,
-     "Нефелин", "Nepheline", "Кусок нефелина", "Raw Nepheline"),
+     "Нефелин", "Nepheline", "Рудный нефелин", "Raw Nepheline"),
     ("apatite", "apatite", "stone", True, "apatite", 2, 4, ["gabbro", "marble"], 5, 7, -40, 120,
      "Апатитовая руда", "Apatite Ore", "Апатит", "Apatite"),
 ]
@@ -61,7 +61,20 @@ SMELT = {
     "raw_galena": f"{NS}:lead_ingot", "raw_native_gold": "minecraft:gold_ingot", "raw_pentlandite": f"{NS}:nickel_ingot",
     "raw_lepidolite": f"{NS}:lithium_ingot", "raw_bauxite": f"{NS}:aluminum_ingot", "raw_nepheline": f"{NS}:aluminum_ingot",
     "tin_bronze_mix": f"{NS}:tin_bronze_ingot", "bismuth_bronze_mix": f"{NS}:bismuth_bronze_ingot",
+    "brass_mix": "create:brass_ingot",
+    "copper_mix": "minecraft:copper_ingot", "tin_mix": f"{NS}:tin_ingot", "zinc_mix": "create:zinc_ingot",
 }
+
+# Самородки на поверхности над большой жилой (worldgen/NuggetDepositFeature): руда, во что дробятся молотком,
+# названия ru / en. Блок и предмет — <руда>_nugget; одна фича каждой руды на 4 сектора 9×9 чанков.
+NUGGETS = [
+    ("native_copper", "copper_mix", "Самородная медь", "Native Copper Nugget"),
+    ("malachite", "copper_mix", "Малахит", "Malachite Nugget"),
+    ("tetrahedrite", "copper_mix", "Тетраэдрит", "Tetrahedrite Nugget"),
+    ("cassiterite", "tin_mix", "Касситерит", "Cassiterite Nugget"),
+    ("sphalerite", "zinc_mix", "Сфалерит", "Sphalerite Nugget"),
+]
+NUGGET_RARITY = 4 * 9 * 9  # чанков на одну фичу: 4 сектора по 9×9 чанков
 
 # Свои слитки: id, тэг c:ingots/..., ru, en
 INGOTS = [
@@ -77,6 +90,10 @@ INGOTS = [
 OTHER_ITEMS = [
     ("tin_bronze_mix", "Шихта оловянной бронзы", "Tin Bronze Mix"),
     ("bismuth_bronze_mix", "Шихта висмутовой бронзы", "Bismuth Bronze Mix"),
+    ("brass_mix", "Шихта латуни", "Brass Mix"),
+    ("copper_mix", "Шихта чистой меди", "Pure Copper Mix"),
+    ("tin_mix", "Шихта чистого олова", "Pure Tin Mix"),
+    ("zinc_mix", "Шихта чистого цинка", "Pure Zinc Mix"),
     ("charcoal", "Древесный уголь", "Charcoal"),
     ("firestarter", "Огниво", "Firestarter"),
     ("stone_hammer", "Каменный молоток", "Stone Hammer"),
@@ -263,14 +280,33 @@ def recipes():
                        + [{"tag": "c:raw_materials/bismuth"}, {"tag": "c:raw_materials/zinc"}, hammer],
         "result": {"id": f"{NS}:bismuth_bronze_mix", "count": 4},
     })
+    write(f"data/{NS}/recipe/brass_mix.json", {
+        "type": "minecraft:crafting_shapeless", "category": "misc",
+        "ingredients": [{"tag": "c:raw_materials/copper"}] * 3 + [{"tag": "c:raw_materials/zinc"}, hammer],
+        "result": {"id": f"{NS}:brass_mix", "count": 4},
+    })
+    # Самородки: 3 штуки и молоток — 3 чистой шихты; чистая шихта смешивается в сплавы без молотка
+    for ore, mix, _, _ in NUGGETS:
+        write(f"data/{NS}/recipe/{mix}_from_{ore}_nugget.json", {
+            "type": "minecraft:crafting_shapeless", "category": "misc",
+            "ingredients": [{"item": f"{NS}:{ore}_nugget"}] * 3 + [hammer],
+            "result": {"id": f"{NS}:{mix}", "count": 3},
+        })
+    for alloy, second in (("tin_bronze_mix", "tin_mix"), ("brass_mix", "zinc_mix")):
+        write(f"data/{NS}/recipe/{alloy}_from_pure_mix.json", {
+            "type": "minecraft:crafting_shapeless", "category": "misc",
+            "ingredients": [{"item": f"{NS}:copper_mix"}] * 3 + [{"item": f"{NS}:{second}"}],
+            "result": {"id": f"{NS}:{alloy}", "count": 4},
+        })
     write(f"data/{NS}/recipe/stone_hammer.json", {
         "type": "minecraft:crafting_shaped", "category": "equipment",
         "key": {"P": {"tag": f"{NS}:hard_pebbles"}, "S": {"item": f"{NS}:stick_processed"}}, "pattern": ["P", "S"],
         "result": {"id": f"{NS}:stone_hammer", "count": 1},
     })
+    # Две обработанные палки по диагонали — длинная палка (recipe/long_stick.json), поэтому в огниве вторая — ветка
     write(f"data/{NS}/recipe/firestarter.json", {
         "type": "minecraft:crafting_shaped", "category": "equipment",
-        "key": {"S": {"item": f"{NS}:stick_processed"}}, "pattern": ["S ", " S"],
+        "key": {"S": {"item": f"{NS}:stick_processed"}, "B": {"item": f"{NS}:stick_branch"}}, "pattern": ["S ", " B"],
         "result": {"id": f"{NS}:firestarter", "count": 1},
     })
     write(f"data/{NS}/recipe/bronze_pickaxe.json", {
@@ -313,6 +349,45 @@ def worldgen():
         "type": "neoforge:add_features", "biomes": f"#{NS}:trailworldgen_biomes",
         "features": features, "step": "underground_ores",
     })
+    deposits = []
+    for ore, _, _, _ in NUGGETS:
+        write(f"data/{NS}/worldgen/configured_feature/nugget_deposit_{ore}.json", {
+            "type": f"{NS}:nugget_deposit", "config": {"ore": ore}})
+        write(f"data/{NS}/worldgen/placed_feature/nugget_deposit_{ore}.json", {
+            "feature": f"{NS}:nugget_deposit_{ore}",
+            "placement": [
+                {"type": "minecraft:rarity_filter", "chance": NUGGET_RARITY},
+                {"type": "minecraft:in_square"},
+                {"type": "minecraft:heightmap", "heightmap": "OCEAN_FLOOR_WG"},
+                {"type": "minecraft:biome"},
+            ],
+        })
+        deposits.append(f"{NS}:nugget_deposit_{ore}")
+    write(f"data/{NS}/neoforge/biome_modifier/nugget_deposits.json", {
+        "type": "neoforge:add_features", "biomes": f"#{NS}:trailworldgen_biomes",
+        "features": deposits, "step": "underground_ores",
+    })
+
+
+def nuggets():
+    """Самородок на земле устроен как кремень: те же 4 модели (flint_pebble_a..d) со своей текстурой."""
+    for ore, _, _, _ in NUGGETS:
+        block = f"{ore}_nugget"
+        variants = []
+        for v in "abcd":
+            model = read(f"assets/{NS}/models/block/flint_pebble_{v}.json")
+            model["textures"] = {"particle": f"{NS}:block/{block}", "all": f"{NS}:block/{block}"}
+            write(f"assets/{NS}/models/block/{block}_{v}.json", model)
+            for y in (0, 90, 180, 270):
+                variants.append({"model": f"{NS}:block/{block}_{v}", **({"y": y} if y else {})})
+        write(f"assets/{NS}/blockstates/{block}.json", {"variants": {"": variants}})
+        item_model(block)
+        write(f"data/{NS}/loot_table/blocks/{block}.json", {
+            "type": "minecraft:block",
+            "pools": [{"rolls": 1, "bonus_rolls": 0, "entries": [{"type": "minecraft:item", "name": f"{NS}:{block}"}],
+                       "conditions": [{"condition": "minecraft:survives_explosion"}]}],
+            "random_sequence": f"{NS}:blocks/{block}",
+        })
 
 
 def lang():
@@ -324,6 +399,8 @@ def lang():
         entries[f"item.{NS}.{i[0]}"] = (i[2], i[3])
     for i in OTHER_ITEMS:
         entries[f"item.{NS}.{i[0]}"] = (i[1], i[2])
+    for ore, _, ru, en in NUGGETS:
+        entries[f"block.{NS}.{ore}_nugget"] = (ru, en)
     for code, k in (("ru_ru", 0), ("en_us", 1)):
         rel = f"assets/{NS}/lang/{code}.json"
         data = read(rel)
@@ -342,6 +419,7 @@ def items():
 if __name__ == "__main__":
     ore_models()
     items()
+    nuggets()
     loot()
     tags()
     recipes()

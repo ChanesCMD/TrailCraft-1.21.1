@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "category": "misc",
+  "cookingtime": 600,
+  "experience": 0.7,
+  "ingredient": {
+    "item": "trailcraft:zinc_mix"
+  },
+  "result": {
+    "id": "create:zinc_ingot",
+    "count": 1
+  }
+}

@@ -3,6 +3,7 @@ package io.github.ChanesCMD.trailcraft.init;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.worldgen.FallenBranchFeature;
 import io.github.ChanesCMD.trailcraft.worldgen.LoosePebbleFeature;
+import io.github.ChanesCMD.trailcraft.worldgen.NuggetDepositFeature;
 import io.github.ChanesCMD.trailcraft.worldgen.TrailTreeConfig;
 import io.github.ChanesCMD.trailcraft.worldgen.TrailTreeFeature;
 import net.minecraft.core.registries.Registries;
@@ -19,6 +20,10 @@ public final class ModFeatures {
             FEATURES.register("loose_pebble", LoosePebbleFeature::new);
     public static final DeferredHolder<Feature<?>, Feature<NoneFeatureConfiguration>> FALLEN_BRANCH =
             FEATURES.register("fallen_branch", FallenBranchFeature::new);
+
+    /** Самородок на поверхности и большая жила его руды под ним. */
+    public static final DeferredHolder<Feature<?>, Feature<NuggetDepositFeature.Config>> NUGGET_DEPOSIT =
+            FEATURES.register("nugget_deposit", NuggetDepositFeature::new);
 
     public static final DeferredHolder<Feature<?>, Feature<TrailTreeConfig>> TRAIL_TREE =
             FEATURES.register("trail_tree", TrailTreeFeature::new);

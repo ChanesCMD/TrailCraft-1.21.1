@@ -3,6 +3,7 @@ package io.github.ChanesCMD.trailcraft.client.gui;
 import io.github.ChanesCMD.trailcraft.ServerConfig;
 import io.github.ChanesCMD.trailcraft.calendar.Calendar;
 import io.github.ChanesCMD.trailcraft.calendar.CalendarNotes;
+import io.github.ChanesCMD.trailcraft.client.ClientInventoryEvents;
 import io.github.ChanesCMD.trailcraft.client.voice.VoiceClient;
 import io.github.ChanesCMD.trailcraft.client.voice.VoiceHeads;
 import io.github.ChanesCMD.trailcraft.inventory.BeltHandler;
@@ -133,6 +134,11 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         addWidget(noteBox);
         if (menu.popup == Popup.CALENDAR) {
             setPopupRect(calX, calY, CAL_W, CAL_H);
+        }
+        // Открыт плюсом у слота во вкладке креатива — сразу показываем его окно
+        if (ClientInventoryEvents.pendingPopup != Popup.NONE) {
+            openPopup(ClientInventoryEvents.pendingPopup);
+            ClientInventoryEvents.pendingPopup = Popup.NONE;
         }
     }
 

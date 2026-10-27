@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "trailcraft:sphalerite_nugget"
+    },
+    {
+      "item": "trailcraft:sphalerite_nugget"
+    },
+    {
+      "item": "trailcraft:sphalerite_nugget"
+    },
+    {
+      "item": "trailcraft:stone_hammer"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:zinc_mix",
+    "count": 3
+  }
+}

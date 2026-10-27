@@ -145,6 +145,7 @@ public class ModCreativeTabs {
                         // Палки
                         output.accept(ModItems.STICK_BRANCH);
                         output.accept(ModItems.STICK_PROCESSED);
+                        output.accept(ModItems.LONG_STICK);
                         output.accept(ModItems.FIRESTARTER);
                         output.accept(ModItems.STONE_HAMMER);
 
@@ -174,8 +175,8 @@ public class ModCreativeTabs {
                             output.accept(ModOres.DROPS.get(ore));
                         }
                         output.accept(ModOres.CHARCOAL);
-                        output.accept(ModOres.TIN_BRONZE_MIX);
-                        output.accept(ModOres.BISMUTH_BRONZE_MIX);
+                        ModOres.NUGGET_ORES.forEach(ore -> output.accept(ModOres.NUGGETS.get(ore)));
+                        ModOres.MIXES.forEach(output::accept);
                         ModOres.INGOTS.forEach(output::accept);
                     }).build());
 

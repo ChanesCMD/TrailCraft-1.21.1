@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "combat",
+  "key": {
+    "R": {
+      "item": "minecraft:bone"
+    },
+    "L": {
+      "item": "trailcraft:long_stick"
+    }
+  },
+  "pattern": [
+    " R",
+    "L "
+  ],
+  "result": {
+    "id": "trailcraft:bone_spear",
+    "count": 1
+  }
+}
