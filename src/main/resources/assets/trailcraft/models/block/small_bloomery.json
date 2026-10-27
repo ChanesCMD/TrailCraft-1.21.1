@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "trailcraft:block/small_bloomery_top",
+    "front": "trailcraft:block/small_bloomery_front",
+    "side": "trailcraft:block/small_bloomery_side"
+  }
+}

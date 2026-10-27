@@ -149,6 +149,20 @@ public class ModCreativeTabs {
                         output.accept(ModItems.FIRESTARTER);
                         output.accept(ModItems.STONE_HAMMER);
 
+                        // Глина, кирпичи и плавка (ModSmelting)
+                        for (var brick : ModSmelting.BRICKS.values()) {
+                            output.accept(brick);
+                        }
+                        for (var bricks : ModSmelting.BRICK_BLOCK_ITEMS.values()) {
+                            output.accept(bricks);
+                        }
+                        output.accept(ModSmelting.STRAW);
+                        output.accept(ModSmelting.REINFORCED_BRICK);
+                        output.accept(ModSmelting.SMALL_BLOOMERY_ITEM);
+                        output.accept(ModSmelting.CLAY_MOLD);
+                        output.accept(ModSmelting.UNFIRED_JUG);
+                        output.accept(ModSmelting.JUG);
+
                         // Инструменты и предметы (ModTools)
                         for (var item : ModTools.ITEMS) {
                             output.accept(item);

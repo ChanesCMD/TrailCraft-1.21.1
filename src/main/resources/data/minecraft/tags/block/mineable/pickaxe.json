@@ -54,6 +54,11 @@
     "trailcraft:limestone_gravel",
     "trailcraft:marble_gravel",
     "trailcraft:sandstone_gravel",
-    "trailcraft:shale_gravel"
+    "trailcraft:shale_gravel",
+    "trailcraft:bricks_white",
+    "trailcraft:bricks_blue",
+    "trailcraft:bricks_gray",
+    "trailcraft:bricks_red",
+    "trailcraft:small_bloomery"
   ]
 }

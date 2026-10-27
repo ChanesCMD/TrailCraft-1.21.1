@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "trailcraft:clay_balls"
+    },
+    {
+      "item": "trailcraft:straw"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:reinforced_brick",
+    "count": 1
+  }
+}

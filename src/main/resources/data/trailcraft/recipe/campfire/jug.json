@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "category": "misc",
+  "cookingtime": 600,
+  "experience": 0.3,
+  "ingredient": {
+    "item": "trailcraft:unfired_jug"
+  },
+  "result": {
+    "id": "trailcraft:jug",
+    "count": 1
+  }
+}

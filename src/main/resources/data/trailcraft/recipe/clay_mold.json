@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "trailcraft:clay_balls"
+    },
+    {
+      "tag": "trailcraft:clay_balls"
+    },
+    {
+      "tag": "trailcraft:clay_balls"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:clay_mold",
+    "count": 1
+  }
+}

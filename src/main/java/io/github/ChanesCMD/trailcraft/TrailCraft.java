@@ -17,6 +17,7 @@ import io.github.ChanesCMD.trailcraft.init.ModItems;
 import io.github.ChanesCMD.trailcraft.init.ModMenus;
 import io.github.ChanesCMD.trailcraft.init.ModOres;
 import io.github.ChanesCMD.trailcraft.init.ModParticles;
+import io.github.ChanesCMD.trailcraft.init.ModSmelting;
 import io.github.ChanesCMD.trailcraft.init.ModTools;
 import io.github.ChanesCMD.trailcraft.init.ModWood;
 
@@ -32,6 +33,8 @@ public class TrailCraft {
         ModTools.init();
         // Руды, слитки и шихта регистрируются в статическом блоке ModOres
         ModOres.init();
+        // Глина, кирпичи, сыродутная печь и кувшин (пакет smelting)
+        ModSmelting.init();
 
         // Регистрируем блоки и предметы
         ModBlocks.BLOCKS.register(modEventBus);

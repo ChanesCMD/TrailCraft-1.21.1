@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:grass_small",
+    "trailcraft:grass_medium",
+    "trailcraft:grass_tall",
+    "minecraft:short_grass",
+    "minecraft:tall_grass"
+  ]
+}

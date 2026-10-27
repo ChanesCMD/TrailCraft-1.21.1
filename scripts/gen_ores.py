@@ -52,7 +52,7 @@ ORES = [
      "Апатитовая руда", "Apatite Ore", "Апатит", "Apatite"),
 ]
 
-# Во что плавится на костре то, что падает с руды
+# Во что плавится то, что падает с руды (справочник; плавка — в кувшине, smelting/Smelting.java)
 SMELT = {
     "raw_malachite": "minecraft:copper_ingot", "raw_native_copper": "minecraft:copper_ingot",
     "raw_tetrahedrite": "minecraft:copper_ingot",
@@ -258,11 +258,8 @@ def tags():
 
 
 def recipes():
-    for src, result in SMELT.items():
-        write(f"data/{NS}/recipe/campfire/{result.split(':')[1]}_from_{src}.json", {
-            "type": "minecraft:campfire_cooking", "category": "misc", "cookingtime": 600, "experience": 0.7,
-            "ingredient": {"item": f"{NS}:{src}"}, "result": {"id": result, "count": 1},
-        })
+    # Металлы на костре не плавятся (только в кувшине в малой сыродутной печи — smelting/Smelting.java,
+    # scripts/gen_smelting.py убирает старые рецепты костра); SMELT — справочник, во что что плавится
     write(f"data/{NS}/recipe/campfire/charcoal_from_thin_logs.json", {
         "type": "minecraft:campfire_cooking", "category": "misc", "cookingtime": 600, "experience": 0.15,
         "ingredient": {"tag": f"{NS}:thin_logs"}, "result": {"id": f"{NS}:charcoal", "count": 1},
@@ -315,7 +312,7 @@ def recipes():
         "pattern": ["BBB", " S ", " S "],
         "result": {"id": f"{NS}:bronze_pickaxe", "count": 1},
     })
-    # Печи пока нет: плавят на костре
+    # Печи нет: металлы плавят в кувшине в малой сыродутной печи
     furnace = path("data", NS, "recipe", "bootstrap_furnace.json")
     if os.path.exists(furnace):
         os.remove(furnace)

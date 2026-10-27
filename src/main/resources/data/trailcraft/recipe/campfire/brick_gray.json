@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "category": "misc",
+  "cookingtime": 400,
+  "experience": 0.1,
+  "ingredient": {
+    "item": "trailcraft:clay_ball_gray"
+  },
+  "result": {
+    "id": "trailcraft:brick_gray",
+    "count": 1
+  }
+}

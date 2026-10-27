@@ -2,7 +2,10 @@ package io.github.ChanesCMD.trailcraft.client;
 
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.client.gui.TrailInventoryScreen;
+import io.github.ChanesCMD.trailcraft.client.gui.BloomeryScreen;
+import io.github.ChanesCMD.trailcraft.client.gui.JugScreen;
 import io.github.ChanesCMD.trailcraft.init.ModMenus;
+import io.github.ChanesCMD.trailcraft.init.ModSmelting;
 import io.github.ChanesCMD.trailcraft.inventory.DeathLogPayloads;
 import io.github.ChanesCMD.trailcraft.inventory.OpenInventoryPayload;
 import io.github.ChanesCMD.trailcraft.inventory.TrailInventoryMenu;
@@ -52,6 +55,8 @@ public class ClientInventoryEvents {
         @SubscribeEvent
         public static void onRegisterScreens(RegisterMenuScreensEvent event) {
             event.register(ModMenus.INVENTORY.get(), TrailInventoryScreen::new);
+            event.register(ModSmelting.JUG_MENU.get(), JugScreen::new);
+            event.register(ModSmelting.BLOOMERY_MENU.get(), BloomeryScreen::new);
         }
     }
 }

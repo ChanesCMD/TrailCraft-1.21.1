@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "F": {
+      "item": "trailcraft:flint"
+    },
+    "P": {
+      "item": "trailcraft:stick_processed"
+    }
+  },
+  "pattern": [
+    "F",
+    "P"
+  ],
+  "result": {
+    "id": "trailcraft:flint_knife",
+    "count": 1
+  }
+}
