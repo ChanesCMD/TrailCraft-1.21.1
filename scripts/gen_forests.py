@@ -368,6 +368,64 @@ def leaf_variants():
 # ============================== БИОМЫ ==============================
 
 LAKES, VEGETAL = 1, 9  # индексы шагов lakes и vegetal_decoration в списке features биома
+TOP_LAYER = 10        # индекс шага top_layer_modification (снег и лёд — minecraft:freeze_top_layer)
+
+# Горные биомы, как в ванили с 1.18. Рельеф ванильный и от биома не зависит: горы стоят там, где ванильные шумы дают
+# горы, — далеко от моря (континентальность > C_MOUNTAIN), при низкой эрозии и на гребнях странности (|странность|
+# W_HIGH — высокие срезы и пики). Самые размытые места (E_PEAK) — пики, повыше (E_SLOPE) — склоны; между гребнями
+# (|странность| W_MEADOW) при той же эрозии — горный луг. В холодной и средней полосе (бурозём, чернозём) горы
+# снежные, в тёплой (жёлтозём) — голые скалы. Крутые склоны выше 80 — порода, выше 140 — снег (общие правила поверхности).
+C_MOUNTAIN = 0.03
+E_PEAK, E_SLOPE = (-2.0, -0.78), (-0.78, -0.375)
+W_HIGH, W_MEADOW = (0.4, 0.9333), (W_BANK, 0.4)
+MOUNTAINS = {
+    # biome: температура, осадки (downfall), цвет травы, почва (правило поверхности) или snow / None (порода),
+    # растительность (шаг vegetal_decoration), снег и лёд сверху, мобы-животные
+    "mountain_meadow": dict(temperature=0.4, downfall=0.8, grass=0x83BB6D, soil="burozem",
+                            vegetal=["grass_patch", "minecraft:flower_meadow", "loose_pebbles"], freeze=False,
+                            mobs=None, ru="Горный луг", en="Mountain Meadow"),
+    "snowy_slopes": dict(temperature=-0.3, downfall=0.9, grass=0x80B497, soil="snow",
+                         vegetal=["loose_pebbles"], freeze=True,
+                         mobs=[("minecraft:goat", 5, 1, 3), ("minecraft:rabbit", 4, 2, 3)],
+                         ru="Заснеженные склоны", en="Snowy Slopes"),
+    "snowy_peaks": dict(temperature=-0.7, downfall=0.9, grass=0x80B497, soil="snow",
+                        vegetal=[], freeze=True, mobs=[("minecraft:goat", 5, 1, 3)],
+                        ru="Снежные пики", en="Snowy Peaks"),
+    "stony_peaks": dict(temperature=1.0, downfall=0.3, grass=0x9ABE4B, soil=None,
+                        vegetal=["loose_pebbles"], freeze=False, mobs=[("minecraft:goat", 3, 1, 2)],
+                        ru="Скалистые пики", en="Stony Peaks"),
+}
+
+
+def mountains():
+    """Горные биомы (MOUNTAINS): строятся из буроземной равнины (тот же порядок фич, что во всех биомах), снежные
+    получают правило поверхности «снег слоем на всю глубину поверхности»."""
+    for biome, m in MOUNTAINS.items():
+        data = read(f"data/{NS}/worldgen/biome/burozem_plains.json")
+        data["temperature"] = m["temperature"]
+        data["downfall"] = m["downfall"]
+        data["has_precipitation"] = True
+        data["effects"]["grass_color"] = m["grass"]
+        data["features"][VEGETAL] = [v if ":" in v else f"{NS}:{v}" for v in m["vegetal"]]
+        if m["freeze"]:
+            data["features"][TOP_LAYER] = ["minecraft:freeze_top_layer"]
+        if m["mobs"] is not None:
+            data["spawners"]["creature"] = [{"type": t, "weight": w, "minCount": lo, "maxCount": hi}
+                                            for t, w, lo, hi in m["mobs"]]
+        write(f"data/{NS}/worldgen/biome/{biome}.json", data)
+    rel = f"data/{NS}/worldgen/noise_settings/trailcraft_world.json"
+    data = read(rel)
+    rules = surface_rules(data)
+    snowy = [f"{NS}:{b}" for b, m in MOUNTAINS.items() if m["soil"] == "snow"]
+    rules[:] = [r for r in rules if r.get("if_true", {}).get("biome_is") != snowy]
+    first_soil = next(i for i, r in enumerate(rules) if r.get("if_true", {}).get("type") == "minecraft:biome")
+    rules.insert(first_soil, {
+        "type": "minecraft:condition", "if_true": {"type": "minecraft:biome", "biome_is": snowy},
+        "then_run": {"type": "minecraft:condition", "if_true": {
+            "type": "minecraft:stone_depth", "offset": 0, "surface_type": "floor", "add_surface_depth": True,
+            "secondary_depth_range": 0}, "then_run": {"type": "minecraft:block",
+                                                      "result_state": {"Name": "minecraft:snow_block"}}}})
+    write(rel, data)
 
 
 # Цвет воды: пресная (реки, озёра, суша) чуть светлее ванильной 3F76E4, морская (море и его берега *_shore) — ещё светлее
@@ -447,6 +505,7 @@ def layout_entries():
     DESERT, RED = (T_ZHELTOZEM, T_RED_DESERT), (T_RED_DESERT, 2.0)
     AW = (W_RIVER, 2.0)          # |странность| всей суши, кроме рек
     BANK = (W_RIVER, W_BANK)     # полоса вдоль реки
+    MOUNT, NOT_WARM = (C_MOUNTAIN, 2.0), (-2.0, T_ZHELTOZEM)
     soils = (("burozem", COLD), ("chernozem", MID), ("zheltozem", WARM))
     # Сетка: биом, температура, влажность, континентальность. Пара биомов — первый при странности < 0, второй при > 0.
     grid = [
@@ -491,6 +550,11 @@ def layout_entries():
         ("chernozem_willow_forest", MID, (H_FOREST_STEPPE, 2.0), COAST, ALL, AW),
         # пальмы — только вдоль рек
         ("palm_shore", HOT, (H_DESERT, 2.0), INLAND, ALL, BANK),
+        # горы (см. MOUNTAINS): пики, склоны, луг между гребнями
+        ("snowy_peaks", NOT_WARM, ALL, MOUNT, E_PEAK, W_HIGH),
+        ("snowy_slopes", NOT_WARM, ALL, MOUNT, E_SLOPE, W_HIGH),
+        ("stony_peaks", WARM, ALL, MOUNT, (E_PEAK[0], E_SLOPE[1]), W_HIGH),
+        ("mountain_meadow", COLD, ALL, MOUNT, E_SLOPE, W_MEADOW),
         # маленькие рощи посреди равнины: сирень при странности > 0, железное дерево при < 0
         (("ironwood_forest", "lilac_grove"), WARM_GROVES, (H_DESERT, 2.0), INLAND, ALL, (W_GROVE, 2.0)),
         # сакура — на возвышенностях
@@ -648,7 +712,8 @@ def surface():
             continue
         for soil in ("burozem", "chernozem", "zheltozem"):
             if f"{NS}:{soil}_plains" in cond["biome_is"]:
-                cond["biome_is"] = [f"{NS}:{soil}_plains"] + [f"{NS}:{b}" for b, f in FORESTS.items() if f["soil"] == soil]
+                cond["biome_is"] = ([f"{NS}:{soil}_plains"] + [f"{NS}:{b}" for b, f in FORESTS.items() if f["soil"] == soil]
+                                    + [f"{NS}:{b}" for b, m in MOUNTAINS.items() if m["soil"] == soil])
     write(rel, data)
 
 
@@ -670,7 +735,7 @@ def lang():
         data = read(rel)
         for biome in REMOVED_BIOMES:
             data.pop(f"biome.{NS}.{biome}", None)
-        for biome, f in FORESTS.items():
+        for biome, f in list(FORESTS.items()) + list(MOUNTAINS.items()):
             data[f"biome.{NS}.{biome}"] = f[k]
         write(rel, data)
 
@@ -681,12 +746,13 @@ if __name__ == "__main__":
     tree_variants()
     trees()
     biomes()
+    mountains()
     water_colors()
     layout()
     sakura_hill()
     caves()
     surface()
-    tag("worldgen/biome", f"{NS}:trailworldgen_biomes", [f"{NS}:{b}" for b in FORESTS],
+    tag("worldgen/biome", f"{NS}:trailworldgen_biomes", [f"{NS}:{b}" for b in list(FORESTS) + list(MOUNTAINS)],
         [f"{NS}:{b}" for b in REMOVED_BIOMES])
     lang()
     print("ok")

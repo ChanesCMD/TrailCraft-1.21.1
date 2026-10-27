@@ -792,5 +792,9 @@
   "tooltip.trailcraft.flask.fresh": "Пресная вода",
   "tooltip.trailcraft.flask.sea": "Морская вода",
   "gui.trailcraft.belt.flask_sea": "Фляга (морская): %s/%s",
-  "gui.trailcraft.belt.pour": "Вылить"
+  "gui.trailcraft.belt.pour": "Вылить",
+  "biome.trailcraft.mountain_meadow": "Горный луг",
+  "biome.trailcraft.snowy_slopes": "Заснеженные склоны",
+  "biome.trailcraft.snowy_peaks": "Снежные пики",
+  "biome.trailcraft.stony_peaks": "Скалистые пики"
 }

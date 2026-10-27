@@ -792,5 +792,9 @@
   "tooltip.trailcraft.flask.fresh": "Fresh water",
   "tooltip.trailcraft.flask.sea": "Sea water",
   "gui.trailcraft.belt.flask_sea": "Flask (sea): %s/%s",
-  "gui.trailcraft.belt.pour": "Pour out"
+  "gui.trailcraft.belt.pour": "Pour out",
+  "biome.trailcraft.mountain_meadow": "Mountain Meadow",
+  "biome.trailcraft.snowy_slopes": "Snowy Slopes",
+  "biome.trailcraft.snowy_peaks": "Snowy Peaks",
+  "biome.trailcraft.stony_peaks": "Stony Peaks"
 }
