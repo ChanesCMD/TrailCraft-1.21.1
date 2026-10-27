@@ -175,7 +175,9 @@ def rain_ripple(frame):
 
 
 def dust_mote(variant):
-    """Пыль 8×8: мягкое пятно, пара песчинок, клочок."""
+    """Пыль и песок 8×8 (оттенок серого — светлее/темнее цвета земли): 0 — мягкое пятно, 1 — пара песчинок,
+    2 — клочок, 3 — крупная песчинка с тенью, 4 — россыпь точек, 5 — шлейф по ветру, 6 — комок с крапинами,
+    7 — светлая и тёмная песчинки, 8 — бледное облачко, 9 — завиток вихря."""
     im = img(8, 8)
     rnd = random.Random(variant * 31 + 7)
     if variant == 0:
@@ -187,10 +189,46 @@ def dust_mote(variant):
         for x, y in [(2, 3), (5, 4), (4, 1), (3, 6)]:
             put(im, x, y, 1, 255)
             put(im, x + 1, y, 0.4, 230)
-    else:
+    elif variant == 2:
         for _ in range(14):
             x, y = int(rnd.gauss(3.5, 1.4)), int(rnd.gauss(3.5, 0.9))
             put(im, x, y, rnd.uniform(0.4, 0.9), 240)
+    elif variant == 3:
+        for x, y, v in [(3, 3, 255), (4, 3, 245), (3, 4, 225), (4, 4, 200)]:
+            put(im, x, y, 1, v)
+        put(im, 5, 4, 0.5, 170)
+        put(im, 4, 5, 0.5, 170)
+    elif variant == 4:
+        for _ in range(7):
+            put(im, rnd.randrange(8), rnd.randrange(8), rnd.uniform(0.6, 1), rnd.choice((200, 230, 255)))
+    elif variant == 5:
+        for x in range(8):
+            put(im, x, 4, (x + 1) / 8, 240)
+            put(im, x, 3, (x + 1) / 8 * 0.45, 220)
+            if x % 3 == 0:
+                put(im, x, 5, (x + 1) / 8 * 0.35, 210)
+    elif variant == 6:
+        for y in range(8):
+            for x in range(8):
+                d = math.hypot((x - 3.5) * 1.2, y - 3.8) + rnd.uniform(-0.5, 0.5)
+                if d < 2.8:
+                    put(im, x, y, 0.85, 175 if rnd.random() < 0.3 else 235)
+    elif variant == 7:
+        put(im, 2, 2, 1, 255)
+        put(im, 3, 2, 0.6, 240)
+        put(im, 5, 5, 1, 165)
+        put(im, 5, 6, 0.6, 150)
+    elif variant == 8:
+        for y in range(8):
+            for x in range(8):
+                d = math.hypot((x - 3.5) / 1.1, (y - 3.5) / 0.8)
+                put(im, x, y, max(0.0, 1 - d / 4) * 0.45, 245)
+    else:
+        for i in range(14):
+            t = i / 13
+            ang = t * math.pi * 1.6
+            r = 0.8 + t * 2.6
+            put(im, int(round(3.5 + math.cos(ang) * r)), int(round(3.5 + math.sin(ang) * r)), 0.4 + 0.5 * (1 - t), 235)
     return im
 
 
@@ -200,7 +238,7 @@ SPRITES = {
     "snow_flake": (snow_flake, 10),
     "rain_splash": (rain_splash, 4),
     "rain_ripple": (rain_ripple, 4),
-    "dust_mote": (dust_mote, 3),
+    "dust_mote": (dust_mote, 10),
 }
 
 # как подкрашивать в превью (в игре цвет задаёт код)
