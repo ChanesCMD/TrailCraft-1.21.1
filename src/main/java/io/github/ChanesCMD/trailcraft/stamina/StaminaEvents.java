@@ -2,6 +2,8 @@ package io.github.ChanesCMD.trailcraft.stamina;
 
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.init.ModAttachments;
+import io.github.ChanesCMD.trailcraft.water.Water;
+import io.github.ChanesCMD.trailcraft.water.WaterEvents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -24,7 +26,7 @@ public class StaminaEvents {
         Stamina.Tracker tracker = player.getData(ModAttachments.STAMINA_TRACKER);
         float stamina = player.getData(ModAttachments.STAMINA);
         if (player.isSprinting()) {
-            stamina -= Stamina.SPRINT_COST;
+            stamina -= WaterEvents.get(player) > Water.WELL_WATERED ? Stamina.SPRINT_COST_WATERED : Stamina.SPRINT_COST;
             tracker.cooldown = Stamina.REGEN_DELAY;
         } else if (tracker.cooldown > 0) {
             tracker.cooldown--;

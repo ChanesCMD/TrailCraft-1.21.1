@@ -78,7 +78,7 @@ public class LoosePebbleFeature extends Feature<NoneFeatureConfiguration> {
         if (!here.isAir() && !water) return false;
         BlockPos below = pos.below();
         BlockState ground = level.getBlockState(below);
-        if (!ground.isFaceSturdy(level, below, Direction.UP) || ground.is(BlockTags.LEAVES) || ground.is(BlockTags.LOGS)) return false;
+        if (!ground.isFaceSturdy(level, below, Direction.UP) || ground.is(BlockTags.LEAVES) || ground.is(BlockTags.LOGS) || ground.is(ModTags.THIN_LOG_BLOCKS)) return false;
 
         Block pebble = Blocks.AIR;
         if (ctx.random().nextFloat() < FLINT_CHANCE) {

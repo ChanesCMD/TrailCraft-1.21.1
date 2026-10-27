@@ -137,7 +137,9 @@ public class TrailHud {
             return;
         }
         int[] colors = player.hasEffect(MobEffects.HUNGER) ? HudIcons.HUNGER_COLORS : HudIcons.FOOD_COLORS;
-        drawLeftRow(g, mc, HudIcons.FOOD, colors, player.getFoodData().getFoodLevel());
+        // Ряд еды с насыщением, истощением и тем, что даст еда в руке (FoodOverlay, как AppleSkin)
+        FoodOverlay.render(g, player, g.guiWidth() / 2 - 91, g.guiHeight() - mc.gui.leftHeight, STEP, colors);
+        mc.gui.leftHeight += ROW;
         if (!BodyHealth.isFull(player)) {
             // От верха ряда еды до низа хотбара — 39 px, фигурка 35
             renderBody(g, g.guiWidth() / 2 - 91 - 6 - 18, g.guiHeight() - 37, player);

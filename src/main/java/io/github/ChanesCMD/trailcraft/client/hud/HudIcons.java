@@ -79,5 +79,26 @@ public final class HudIcons {
         }
     }
 
+    /** Только контур значка одним цветом (насыщение поверх морковок); full — сколько половинок, как в draw. */
+    public static void drawOutline(GuiGraphics g, int x, int y, String[] pattern, int color, int full) {
+        for (int row = 0; row < 9; row++) {
+            String line = pattern[row];
+            for (int col = 0; col < 9; col++) {
+                if (line.charAt(col) == 'o' && (full == 2 || full == 1 && col < 5)) {
+                    g.fill(x + col, y + row, x + col + 1, y + row + 1, color);
+                }
+            }
+        }
+    }
+
+    /** Палитра с другой прозрачностью (alpha 0..255). */
+    public static int[] withAlpha(int[] colors, int alpha) {
+        int[] out = new int[colors.length];
+        for (int i = 0; i < colors.length; i++) {
+            out[i] = alpha << 24 | colors[i] & 0xFFFFFF;
+        }
+        return out;
+    }
+
     private HudIcons() {}
 }

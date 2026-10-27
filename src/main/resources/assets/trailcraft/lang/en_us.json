@@ -785,5 +785,6 @@
   "block.trailcraft.malachite_nugget": "Malachite Nugget",
   "block.trailcraft.tetrahedrite_nugget": "Tetrahedrite Nugget",
   "block.trailcraft.cassiterite_nugget": "Cassiterite Nugget",
-  "block.trailcraft.sphalerite_nugget": "Sphalerite Nugget"
+  "block.trailcraft.sphalerite_nugget": "Sphalerite Nugget",
+  "tooltip.trailcraft.food": "Food: +%s, saturation: +%s"
 }

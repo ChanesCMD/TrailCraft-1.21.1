@@ -17,12 +17,17 @@ import net.minecraft.world.damagesource.DamageType;
 public final class Water {
     /** Полный запас: 10 капель по 2 единицы, как у еды. */
     public static final int MAX = 20;
-    /** Жажда за тик просто так и дополнительно за тик бега; каждая накопленная единица жажды отнимает единицу воды. */
-    public static final float THIRST_PER_TICK = 1f / 1200, SPRINT_THIRST_PER_TICK = 1f / 300;
+    /**
+     * Жажда за тик просто так и дополнительно за тик бега; каждая накопленная единица жажды отнимает единицу воды.
+     * Вода тратится вдвое медленнее, чем в первой версии.
+     */
+    public static final float THIRST_PER_TICK = 1f / 2400, SPRINT_THIRST_PER_TICK = 1f / 600;
     /** Жажда за прыжок. */
-    public static final float JUMP_THIRST = 0.05f;
-    /** Сколько воды даёт один глоток и сколько тиков между глотками. */
-    public static final int DRINK_AMOUNT = 2, DRINK_COOLDOWN = 10;
+    public static final float JUMP_THIRST = 0.025f;
+    /** Сколько воды даёт один глоток (из воды и из фляги) и сколько тиков между глотками. */
+    public static final int DRINK_AMOUNT = 4, DRINK_COOLDOWN = 10;
+    /** Выше этого запаса воды бег тратит вдвое меньше выносливости (Stamina.SPRINT_COST_WATERED). */
+    public static final int WELL_WATERED = MAX * 7 / 10;
     /** Фляга на поясе: сколько в ней глотков (каждый — DRINK_AMOUNT воды). */
     public static final int FLASK_SIPS = 10;
     /** На нуле: урон 1 раз в столько тиков (как от голода). */

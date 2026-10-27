@@ -285,12 +285,12 @@ def recipes():
         "ingredients": [{"tag": "c:raw_materials/copper"}] * 3 + [{"tag": "c:raw_materials/zinc"}, hammer],
         "result": {"id": f"{NS}:brass_mix", "count": 4},
     })
-    # Самородки: 3 штуки и молоток — 3 чистой шихты; чистая шихта смешивается в сплавы без молотка
+    # Самородки: 3 штуки и молоток — 1 чистая шихта; чистая шихта смешивается в сплавы без молотка
     for ore, mix, _, _ in NUGGETS:
         write(f"data/{NS}/recipe/{mix}_from_{ore}_nugget.json", {
             "type": "minecraft:crafting_shapeless", "category": "misc",
             "ingredients": [{"item": f"{NS}:{ore}_nugget"}] * 3 + [hammer],
-            "result": {"id": f"{NS}:{mix}", "count": 3},
+            "result": {"id": f"{NS}:{mix}", "count": 1},
         })
     for alloy, second in (("tin_bronze_mix", "tin_mix"), ("brass_mix", "zinc_mix")):
         write(f"data/{NS}/recipe/{alloy}_from_pure_mix.json", {
@@ -370,16 +370,17 @@ def worldgen():
 
 
 def nuggets():
-    """Самородок на земле устроен как кремень: те же 4 модели (flint_pebble_a..d) со своей текстурой."""
+    """Самородок на земле: общая форма block/nugget_shape (пишет scripts/gen_nugget_models.py), своя текстура."""
     for ore, _, _, _ in NUGGETS:
         block = f"{ore}_nugget"
-        variants = []
-        for v in "abcd":
-            model = read(f"assets/{NS}/models/block/flint_pebble_{v}.json")
-            model["textures"] = {"particle": f"{NS}:block/{block}", "all": f"{NS}:block/{block}"}
-            write(f"assets/{NS}/models/block/{block}_{v}.json", model)
-            for y in (0, 90, 180, 270):
-                variants.append({"model": f"{NS}:block/{block}_{v}", **({"y": y} if y else {})})
+        for v in "abcd":  # старые модели по образцу кремня
+            old = path("assets", NS, "models", "block", f"{block}_{v}.json")
+            if os.path.exists(old):
+                os.remove(old)
+        write(f"assets/{NS}/models/block/{block}.json", {
+            "parent": f"{NS}:block/nugget_shape",
+            "textures": {"particle": f"{NS}:block/{block}", "all": f"{NS}:block/{block}"}})
+        variants = [{"model": f"{NS}:block/{block}", **({"y": y} if y else {})} for y in (0, 90, 180, 270)]
         write(f"assets/{NS}/blockstates/{block}.json", {"variants": {"": variants}})
         item_model(block)
         write(f"data/{NS}/loot_table/blocks/{block}.json", {

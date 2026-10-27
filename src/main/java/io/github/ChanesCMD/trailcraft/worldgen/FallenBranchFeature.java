@@ -1,6 +1,7 @@
 package io.github.ChanesCMD.trailcraft.worldgen;
 
 import io.github.ChanesCMD.trailcraft.init.ModBlocks;
+import io.github.ChanesCMD.trailcraft.init.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
@@ -24,7 +25,7 @@ public class FallenBranchFeature extends Feature<NoneFeatureConfiguration> {
         BlockPos below = pos.below();
         BlockState ground = level.getBlockState(below);
         if (!level.getBlockState(pos).isAir() || !ground.isFaceSturdy(level, below, Direction.UP)
-                || ground.is(BlockTags.LEAVES) || ground.is(BlockTags.LOGS)) {
+                || ground.is(BlockTags.LEAVES) || ground.is(BlockTags.LOGS) || ground.is(ModTags.THIN_LOG_BLOCKS)) {
             return false;
         }
         level.setBlock(pos, ModBlocks.FALLEN_BRANCH.get().defaultBlockState(), Block.UPDATE_CLIENTS);

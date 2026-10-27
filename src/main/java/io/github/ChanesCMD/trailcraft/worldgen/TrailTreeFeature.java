@@ -9,6 +9,7 @@ import java.util.Set;
 
 import io.github.ChanesCMD.trailcraft.block.ThinLogBlock;
 import io.github.ChanesCMD.trailcraft.init.ModWood;
+import io.github.ChanesCMD.trailcraft.init.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -436,7 +437,7 @@ public class TrailTreeFeature extends Feature<TrailTreeConfig> {
         }
 
         static boolean isTree(BlockState s) {
-            return s.is(BlockTags.LOGS) || s.is(BlockTags.LEAVES);
+            return s.is(BlockTags.LOGS) || s.is(ModTags.THIN_LOG_BLOCKS) || s.is(BlockTags.LEAVES);
         }
 
         // ---------- установка

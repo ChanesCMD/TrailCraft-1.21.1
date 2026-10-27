@@ -15,6 +15,8 @@ public final class Stamina {
     public static final float MAX = 100;
     /** Расход за тик бега: полный запас — примерно 20 секунд бега. */
     public static final float SPRINT_COST = 0.25f;
+    /** Расход за тик бега, если воды больше 7/10 (Water.WELL_WATERED). */
+    public static final float SPRINT_COST_WATERED = SPRINT_COST / 2;
     /** Расход за прыжок: 25 прыжков подряд с полного запаса. */
     public static final float JUMP_COST = 2;
     /** Восстановление за тик (полный запас — примерно 10 секунд). */

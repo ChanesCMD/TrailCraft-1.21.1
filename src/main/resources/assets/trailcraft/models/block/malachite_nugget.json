@@ -1,0 +1,7 @@
+{
+  "parent": "trailcraft:block/nugget_shape",
+  "textures": {
+    "particle": "trailcraft:block/malachite_nugget",
+    "all": "trailcraft:block/malachite_nugget"
+  }
+}

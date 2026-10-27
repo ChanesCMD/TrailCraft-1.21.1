@@ -1,0 +1,28 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:thin_oak_log",
+    "trailcraft:thin_birch_log",
+    "trailcraft:thin_acacia_log",
+    "trailcraft:thin_sakura_log",
+    "trailcraft:thin_eucalyptus_log",
+    "trailcraft:thin_chestnut_log",
+    "trailcraft:thin_thuja_log",
+    "trailcraft:thin_pine_log",
+    "trailcraft:thin_fir_log",
+    "trailcraft:thin_spruce_log",
+    "trailcraft:thin_white_poplar_log",
+    "trailcraft:thin_ebony_log",
+    "trailcraft:thin_maple_log",
+    "trailcraft:thin_cedar_log",
+    "trailcraft:thin_willow_log",
+    "trailcraft:thin_lilac_log",
+    "trailcraft:thin_palm_log",
+    "trailcraft:thin_ironwood_log",
+    "trailcraft:thin_aspen_log",
+    "trailcraft:thin_linden_log",
+    "trailcraft:thin_pussy_willow_log",
+    "trailcraft:thin_walnut_log",
+    "trailcraft:thin_alder_log"
+  ]
+}

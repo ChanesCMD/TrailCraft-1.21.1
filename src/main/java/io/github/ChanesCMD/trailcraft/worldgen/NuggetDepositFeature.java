@@ -6,6 +6,7 @@ import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.block.OreBlock;
 import io.github.ChanesCMD.trailcraft.block.PebbleBlock;
 import io.github.ChanesCMD.trailcraft.init.ModOres;
+import io.github.ChanesCMD.trailcraft.init.ModTags;
 import io.github.ChanesCMD.trailcraft.ore.Ore;
 import io.github.ChanesCMD.trailcraft.ore.Rock;
 import net.minecraft.core.BlockPos;
@@ -60,7 +61,7 @@ public class NuggetDepositFeature extends Feature<NuggetDepositFeature.Config> {
         BlockPos below = pos.below();
         BlockState ground = level.getBlockState(below);
         if (!here.isAir() && !water || !ground.isFaceSturdy(level, below, Direction.UP)
-                || ground.is(BlockTags.LEAVES) || ground.is(BlockTags.LOGS)) {
+                || ground.is(BlockTags.LEAVES) || ground.is(BlockTags.LOGS) || ground.is(ModTags.THIN_LOG_BLOCKS)) {
             return false;
         }
         BlockState nugget = ModOres.NUGGET_BLOCKS.get(ore).get().defaultBlockState().setValue(PebbleBlock.WATERLOGGED, water);

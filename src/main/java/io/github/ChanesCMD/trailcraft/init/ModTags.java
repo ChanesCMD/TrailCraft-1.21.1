@@ -19,6 +19,9 @@ public class ModTags {
     /** Тонкие брёвна: одно такое бревно и 4 ветки, разожжённые огнивом, дают костёр. */
     public static final TagKey<Item> THIN_LOGS = TagKey.create(Registries.ITEM,
             ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "thin_logs"));
+    /** Тонкие брёвна — не в #minecraft:logs, а в своём тэге; листва рядом с ними не опадает (mixin/LeavesBlockMixin). */
+    public static final TagKey<Block> THIN_LOG_BLOCKS = TagKey.create(Registries.BLOCK,
+            ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "thin_logs"));
 
     /** Слитки бронзы (оловянной и висмутовой): из них бронзовые инструменты. */
     public static final TagKey<Item> BRONZE_INGOTS = TagKey.create(Registries.ITEM,
