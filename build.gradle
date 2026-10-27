@@ -223,24 +223,6 @@ tasks.register('checkDevRuntime') {
     doLast {}
 }
 
-// Папка модов для PojavLauncher и его форков: TrailCraft и обязательные зависимости (Create, Ponder, Flywheel,
-// Registrate) — те же jar, что в среде разработки. Без e4steam, JEI и прочего только для разработки.
-configurations {
-    pojavMods { transitive = false }
-}
-dependencies {
-    pojavMods "com.simibubi.create:create-${minecraft_version}:${create_version}:slim"
-    pojavMods "net.createmod.ponder:ponder-neoforge:${ponder_version}+mc${minecraft_version}"
-    pojavMods "dev.engine-room.flywheel:flywheel-neoforge-${minecraft_version}:${flywheel_version}"
-    pojavMods "com.tterrag.registrate:Registrate:${registrate_version}"
-}
-tasks.register('pojavMods', Sync) {
-    description = 'Collects TrailCraft and its required mods into pojav/mods'
-    from tasks.named('jar')
-    from configurations.pojavMods
-    into 'pojav/mods'
-}
-
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
