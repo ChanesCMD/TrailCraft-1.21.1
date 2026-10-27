@@ -181,6 +181,10 @@
   `client/ClientSpearEvents.java`, `client/SpearArmPose.java` (поза руки, enum-расширение в
   `META-INF/enumextensions.json`), `client/SpearJabAnim.java`. Числа — `ModTiers.SpearStats`.
   Зачарование «Выпад» — `data/trailcraft/enchantment/lunge.json` + `init/ModEnchantments.java`.
+- Метательные копья (`<материал>_throwing_spear`, `item/ThrowingSpearItem.java`): копьё + 3 пера; зажать ПКМ и отпустить
+  (≥ 0,5 с) — бросок, как трезубцем; летящее копьё — сущность `spear/ThrownSpear.java` (`init/ModEntities.java`, урон
+  6 + прибавка уровня, лежит, пока не подберут), рисуется иконкой предмета — `client/ThrownSpearRenderer.java`.
+  Текстуры (копьё с оперением), модели, рецепты, переводы — `scripts/gen_throwing_spear.py`.
 - Модели копья в руке — `models/item/spear/`: `jab` (укол) и `charge_0..8` (шаги разгона; `charge_1..7` считает
   `scripts/gen_spear_charge.py`: древко опускается из стойки в горизонталь строго в плоскости взгляда, плоская сторона
   поворачивается вверх, хват остаётся в кисти; slerp между концами уводил копьё вбок). От первого лица разгон

@@ -6,7 +6,10 @@ import net.minecraft.client.renderer.BiomeColors;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import io.github.ChanesCMD.trailcraft.client.ThrownSpearRenderer;
+import io.github.ChanesCMD.trailcraft.init.ModEntities;
 
 @EventBusSubscriber(modid = TrailCraft.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientEvents {
@@ -16,6 +19,11 @@ public class ClientEvents {
 
     /** Запасной цвет (для предметов в руке и при USE_BIOME_TINT = false): ванильная трава равнин #91BD59. */
     private static final int GRASS_COLOR = 0x91BD59;
+
+    @SubscribeEvent
+    public static void entityRenderers(EntityRenderersEvent.RegisterRenderers e) {
+        e.registerEntityRenderer(ModEntities.THROWN_SPEAR.get(), ThrownSpearRenderer::new);
+    }
 
     @SubscribeEvent
     public static void blockColors(RegisterColorHandlersEvent.Block e) {

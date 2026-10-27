@@ -3,6 +3,7 @@ package io.github.ChanesCMD.trailcraft.init;
 import io.github.ChanesCMD.trailcraft.init.ModTiers.Material;
 import io.github.ChanesCMD.trailcraft.item.SawItem;
 import io.github.ChanesCMD.trailcraft.item.SpearItem;
+import io.github.ChanesCMD.trailcraft.item.ThrowingSpearItem;
 import io.github.ChanesCMD.trailcraft.item.TieredToolItem;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.DiggerItem;
@@ -63,6 +64,11 @@ public final class ModTools {
         }
         for (Material m : Material.values()) {
             reg(m.id + "_spear", p -> new SpearItem(m.tier, m.spear, p.attributes(SpearItem.createAttributes(m.spear))));
+        }
+        // метательные копья: обычное копьё и 3 пера (item/ThrowingSpearItem, бросок — spear/ThrownSpear)
+        for (Material m : Material.values()) {
+            reg(m.id + "_throwing_spear", p -> new ThrowingSpearItem(m, p.durability(m.tier.getUses())
+                    .attributes(SwordItem.createAttributes(m.tier, ModTiers.KNIFE_DAMAGE, ModTiers.KNIFE_SPEED))));
         }
         for (Material m : Material.values()) {
             if (m.isMetal()) {

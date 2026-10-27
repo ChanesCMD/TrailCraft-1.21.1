@@ -1,0 +1,27 @@
+{
+  "loader": "neoforge:separate_transforms",
+  "gui_light": "front",
+  "base": {
+    "parent": "trailcraft:item/flint_throwing_spear_in_hand"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "minecraft:item/generated",
+      "textures": {
+        "layer0": "trailcraft:item/flint_throwing_spear"
+      }
+    },
+    "fixed": {
+      "parent": "minecraft:item/generated",
+      "textures": {
+        "layer0": "trailcraft:item/flint_throwing_spear"
+      }
+    },
+    "ground": {
+      "parent": "minecraft:item/generated",
+      "textures": {
+        "layer0": "trailcraft:item/flint_throwing_spear"
+      }
+    }
+  }
+}

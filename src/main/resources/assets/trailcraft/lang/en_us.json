@@ -877,5 +877,12 @@
   "block.trailcraft.walnut_crafting_table": "Walnut Crafting Table",
   "item.trailcraft.alder_small_board": "Small Alder Board",
   "block.trailcraft.alder_crafting_table": "Alder Crafting Table",
-  "message.trailcraft.flint_pickaxe.too_weak": "The flint pickaxe is too weak for this stone"
+  "message.trailcraft.flint_pickaxe.too_weak": "The flint pickaxe is too weak for this stone",
+  "item.trailcraft.flint_throwing_spear": "Flint Throwing Spear",
+  "item.trailcraft.bone_throwing_spear": "Bone Throwing Spear",
+  "item.trailcraft.amethyst_throwing_spear": "Amethyst Throwing Spear",
+  "item.trailcraft.copper_throwing_spear": "Copper Throwing Spear",
+  "item.trailcraft.bronze_throwing_spear": "Bronze Throwing Spear",
+  "item.trailcraft.iron_throwing_spear": "Iron Throwing Spear",
+  "item.trailcraft.steel_throwing_spear": "Steel Throwing Spear"
 }

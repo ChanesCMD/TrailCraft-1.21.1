@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import io.github.ChanesCMD.trailcraft.init.ModAttachments;
 import io.github.ChanesCMD.trailcraft.init.ModBlockEntities;
 import io.github.ChanesCMD.trailcraft.init.ModEffects;
+import io.github.ChanesCMD.trailcraft.init.ModEntities;
 import io.github.ChanesCMD.trailcraft.init.ModBlocks;
 import io.github.ChanesCMD.trailcraft.init.ModComponents;
 import io.github.ChanesCMD.trailcraft.init.ModCreativeTabs;
@@ -41,6 +42,7 @@ public class TrailCraft {
         ModItems.ITEMS.register(modEventBus);
         ModComponents.COMPONENTS.register(modEventBus);
         ModEffects.EFFECTS.register(modEventBus);
+        ModEntities.ENTITY_TYPES.register(modEventBus);
         ModParticles.PARTICLE_TYPES.register(modEventBus);
         ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         ModFeatures.FEATURES.register(modEventBus);
