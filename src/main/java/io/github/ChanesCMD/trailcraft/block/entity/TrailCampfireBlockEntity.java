@@ -42,8 +42,8 @@ import java.util.Optional;
  */
 public class TrailCampfireBlockEntity extends BlockEntity {
     public static final int SLOTS = 4;
-    /** Сколько тиков горит одно тонкое бревно (2 минуты). */
-    public static final int LOG_BURN_TICKS = 2400;
+    /** Сколько тиков горит одно тонкое бревно (1 минута). */
+    public static final int LOG_BURN_TICKS = 1200;
     /** Больше этого зола не копится. */
     public static final int MAX_ASH = 4;
 

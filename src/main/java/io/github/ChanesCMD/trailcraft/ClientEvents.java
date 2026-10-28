@@ -8,7 +8,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import io.github.ChanesCMD.trailcraft.client.BackpackLayer;
 import io.github.ChanesCMD.trailcraft.client.ThrownSpearRenderer;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.resources.PlayerSkin;
 import io.github.ChanesCMD.trailcraft.client.TrailCampfireRenderer;
 import io.github.ChanesCMD.trailcraft.init.ModBlockEntities;
 import io.github.ChanesCMD.trailcraft.client.animal.CapercaillieModel;
@@ -35,6 +38,16 @@ public class ClientEvents {
         e.registerBlockEntityRenderer(ModBlockEntities.CAMPFIRE.get(), TrailCampfireRenderer::new);
         for (Species species : Species.values()) {
             e.registerEntityRenderer(ModAnimals.type(species), context -> new TrailAnimalRenderer<>(context, species));
+        }
+    }
+
+    /** Рюкзак на спине — у обоих видов скина игрока. */
+    @SubscribeEvent
+    public static void playerLayers(EntityRenderersEvent.AddLayers e) {
+        for (PlayerSkin.Model skin : e.getSkins()) {
+            if (e.getSkin(skin) instanceof PlayerRenderer renderer) {
+                renderer.addLayer(new BackpackLayer(renderer));
+            }
         }
     }
 

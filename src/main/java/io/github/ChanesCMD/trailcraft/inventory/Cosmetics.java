@@ -14,19 +14,29 @@ import java.util.List;
 
 /**
  * Косметика: если переключатель слота включён и в косметическом слоте что-то лежит, другие игроки (и сам игрок)
- * видят этот предмет вместо надетой брони. Слоты игрока на клиенты не синхронизируются — шлём CosmeticPayload.
+ * видят этот предмет вместо надетой брони. Заодно — какой рюкзак надет (его рисует на спине client/BackpackLayer).
+ * Слоты игрока на клиенты не синхронизируются — шлём CosmeticPayload.
  */
 @EventBusSubscriber(modid = TrailCraft.MODID)
 public final class Cosmetics {
-    /** Что показывать вместо брони в слотах 0–3 (шлем … ботинки); пустой предмет — саму броню. */
+    /**
+     * Что показывать вместо брони в слотах 0–3 (шлем … ботинки; пустой предмет — саму броню) и в 4 — надетый рюкзак
+     * (только сам предмет, без содержимого: другим игрокам оно ни к чему).
+     */
     public static List<ItemStack> shown(ServerPlayer player) {
         PlayerSlots slots = player.getData(ModAttachments.PLAYER_SLOTS);
         int toggles = player.getData(ModAttachments.COSMETIC_TOGGLES);
-        List<ItemStack> shown = new ArrayList<>(4);
+        List<ItemStack> shown = new ArrayList<>(CosmeticPayload.SIZE);
         for (int i = 0; i < 4; i++) {
             shown.add((toggles & (1 << i)) != 0 ? slots.getStackInSlot(PlayerSlots.COSMETIC + i).copy() : ItemStack.EMPTY);
         }
+        shown.add(backpack(slots));
         return shown;
+    }
+
+    private static ItemStack backpack(PlayerSlots slots) {
+        ItemStack worn = slots.getStackInSlot(PlayerSlots.BACKPACK);
+        return worn.isEmpty() ? ItemStack.EMPTY : new ItemStack(worn.getItem());
     }
 
     /**
@@ -44,7 +54,7 @@ public final class Cosmetics {
 
     private static boolean changed(ServerPlayer player) {
         List<ItemStack> sent = player.getData(ModAttachments.COSMETIC_SENT);
-        if (sent.size() != 4) {
+        if (sent.size() != CosmeticPayload.SIZE) {
             return true;
         }
         PlayerSlots slots = player.getData(ModAttachments.PLAYER_SLOTS);
@@ -55,7 +65,7 @@ public final class Cosmetics {
                 return true;
             }
         }
-        return false;
+        return !ItemStack.matches(backpack(slots), sent.get(CosmeticPayload.BACKPACK));
     }
 
     /** Игрок появился в зоне видимости другого — тому нужна его косметика. */

@@ -23,12 +23,14 @@ import net.minecraft.world.phys.Vec3;
 /**
  * Еда на костре TrailCraft: лежит плашмя, как на ванильном костре, но на высоте своего бревна (или на золе —
  * TrailCampfireBlock.slotPosition), а под ней — плоская глиняная тарелочка (textures/block/campfire_plate.png:
- * тарелка 8×8 в середине текстуры 16×16).
+ * тарелка 6×6 в середине текстуры 16×16).
  */
 public class TrailCampfireRenderer implements BlockEntityRenderer<TrailCampfireBlockEntity> {
     private static final ResourceLocation PLATE = ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "block/campfire_plate");
-    /** Тарелка — 8 пикселей, предмет — как у ванильного костра (6 пикселей), чуть выше тарелки. */
-    private static final float PLATE_HALF = 4 / 16f, ITEM_SCALE = 0.375f, PLATE_LIFT = 0.002f, ITEM_LIFT = 0.016f;
+    /** Тарелка — 6 пикселей, предмет — как у ванильного костра (тоже 6 пикселей), чуть выше тарелки. */
+    private static final float PLATE_HALF = 3 / 16f, ITEM_SCALE = 0.375f, PLATE_LIFT = 0.002f, ITEM_LIFT = 0.016f;
+    /** Где тарелка в текстуре: пиксели 5..11 из 16. */
+    private static final float PLATE_UV0 = 0.5f - PLATE_HALF, PLATE_UV1 = 0.5f + PLATE_HALF;
 
     private final ItemRenderer itemRenderer;
 
@@ -61,11 +63,11 @@ public class TrailCampfireRenderer implements BlockEntityRenderer<TrailCampfireB
         }
     }
 
-    /** Плоский квадрат тарелки лицом вверх; берётся середина текстуры (4..12 из 16). */
+    /** Плоский квадрат тарелки лицом вверх; берётся середина текстуры (PLATE_UV0..PLATE_UV1). */
     private static void plate(PoseStack pose, VertexConsumer out, TextureAtlasSprite sprite, float x, float y, float z,
                               int light, int overlay) {
-        float u0 = lerp(sprite.getU0(), sprite.getU1(), 0.25f), u1 = lerp(sprite.getU0(), sprite.getU1(), 0.75f);
-        float v0 = lerp(sprite.getV0(), sprite.getV1(), 0.25f), v1 = lerp(sprite.getV0(), sprite.getV1(), 0.75f);
+        float u0 = lerp(sprite.getU0(), sprite.getU1(), PLATE_UV0), u1 = lerp(sprite.getU0(), sprite.getU1(), PLATE_UV1);
+        float v0 = lerp(sprite.getV0(), sprite.getV1(), PLATE_UV0), v1 = lerp(sprite.getV0(), sprite.getV1(), PLATE_UV1);
         PoseStack.Pose last = pose.last();
         vertex(out, last, x - PLATE_HALF, y, z - PLATE_HALF, u0, v0, light, overlay);
         vertex(out, last, x - PLATE_HALF, y, z + PLATE_HALF, u0, v1, light, overlay);

@@ -1,6 +1,3 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "trailcraft:item/leather_backpack"
-  }
+  "parent": "trailcraft:block/leather_backpack"
 }
