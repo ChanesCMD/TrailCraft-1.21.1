@@ -82,8 +82,8 @@
   `neoforge/biome_modifier/wild_plants_*.json`, переводы) пишет `scripts/gen_farm.py`, текстуры —
   `scripts/gen_farm_textures.py` (нужен Pillow); тяпки в четырёх вариантах формы (в игре — D, рисунок автора) — `docs/textures/hoes.png`,
   выбрать другой: `python scripts/gen_farm_textures.py --hoe B`; пучок джута — 70 вариантов (K–O — по B, P–T — по C, M1–M10 — смесь B, D, K, N, V1–V10 — по M10, W1–W10 — V с прядями пучками, X1–X10 — тонкие, как солома и пшеница, Y1–Y10 — по X2 и X10; в игре — Y8),
-  верёвка — прежняя (old, в игре) или 10 вариантов в цветах пучка (`docs/textures/ropes.png`, `rope()`), другой: `--rope R4`;
-  `docs/textures/jute_bundles.png`, другой: `--jute B`.
+  `docs/textures/jute_bundles.png`, другой: `--jute B`; верёвка — прежняя (old, в игре) или 10 вариантов в цветах
+  пучка (`docs/textures/ropes.png`, `rope()`), другой: `--rope R4`.
 - Генерация мира (пресет `trailworldgen`): биомы раскладываются по `worldgen/world_preset/trailworldgen.json` — его
   целиком пишет таблица `layout()` в `scripts/gen_forests.py` (температура — полосы почв бурозём / чернозём / жёлтозём
   и подполосы внутри них, влажность — равнина / леса / пустыня, знак странности — пара биомов в одной клетке, например
