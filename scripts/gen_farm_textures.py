@@ -686,7 +686,7 @@ ITEM_BERRY_COLORS = {
 }
 
 # Пучки джута: 40 вариантов (K–O — по B, P–T — по C, M1–M10 — смесь B, D, K и N в цветах волокна, V1–V10 — по M10, W1–W10 — они же с прядями пучками,
-# X1–X10 — тонкие, как солома и пшеница: straw_bundle). l/m/d — волокно (светлое, среднее, тёмное), o — контур волокна, R/r — перевязь,
+# X1–X10 — тонкие, как солома и пшеница: straw_bundle; Y1–Y10 — по X2 и X10). l/m/d — волокно (светлое, среднее, тёмное), o — контур волокна, R/r — перевязь,
 # b — контур перевязи, g/G/k — зелёные стебли и листья (сырой джут)
 JUTE_BUNDLES = {
     # A — косой сноп, перевязан посередине, концы веером
@@ -1716,6 +1716,20 @@ STRAW_LIKE = {
     "X10": dict(width=3, ties=(0,), tail="r", fan=(5, 5), spread=2, fray=1, seed=10),
 }
 JUTE_BUNDLES.update({name: straw_bundle(**params) for name, params in STRAW_LIKE.items()})
+# Y1–Y10 — по X2 (веер сверху) и X10 (веер с обеих сторон и концы бечёвки)
+FANNED = {
+    "Y1": dict(width=2, ties=(-3,), fan=(0, 8), spread=2, fray=2, seed=2, length=(-13, 12)),
+    "Y2": dict(width=3, ties=(-3,), tail="r", fan=(0, 8), spread=2, fray=2, seed=2),
+    "Y3": dict(width=3, ties=(-4,), fan=(0, 10), spread=2, fray=2, seed=13),
+    "Y4": dict(width=3, ties=(-3,), fan=(3, 8), spread=2, fray=2, seed=14),
+    "Y5": dict(width=2, ties=(0,), tail="r", fan=(5, 5), spread=2, fray=1, seed=10, length=(-13, 13)),
+    "Y6": dict(width=3, ties=(0,), fan=(6, 6), spread=2, fray=1, seed=16),
+    "Y7": dict(width=3, ties=(-3,), tail="r", fan=(3, 7), spread=2, fray=1, seed=17),
+    "Y8": dict(width=3, ties=(-6, -1), fan=(0, 7), spread=2, fray=2, seed=18),
+    "Y9": dict(width=3, ties=(0,), tail="r", fan=(5, 5), spread=2, fray=3, seed=19),
+    "Y10": dict(width=2, ties=(-2,), tail="r", fan=(4, 8), spread=2, fray=2, seed=20, length=(-13, 13)),
+}
+JUTE_BUNDLES.update({name: straw_bundle(**params) for name, params in FANNED.items()})
 
 JUTE_SEEDS = [
     "................",
@@ -1840,7 +1854,7 @@ if __name__ == "__main__":
         chosen = sys.argv[sys.argv.index("--hoe") + 1].upper()
         if chosen not in HOE_VARIANTS:
             sys.exit(f"Нет варианта тяпки {chosen}, есть: {', '.join(HOE_VARIANTS)}")
-    # пучок джута — 60 вариантов (docs/textures/jute_bundles.png), другой: --jute B
+    # пучок джута — 70 вариантов (docs/textures/jute_bundles.png), другой: --jute B
     JUTE_CHOSEN = "A"
     if "--jute" in sys.argv:
         JUTE_CHOSEN = sys.argv[sys.argv.index("--jute") + 1].upper()
