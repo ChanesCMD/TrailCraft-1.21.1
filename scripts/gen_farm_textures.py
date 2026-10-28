@@ -685,7 +685,7 @@ ITEM_BERRY_COLORS = {
                    "s": "#4f7a30", "g": "#649231"},
 }
 
-# Пучки джута: 20 вариантов (K–O — по B, P–T — по C). l/m/d — волокно (светлое, среднее, тёмное), o — контур волокна, R/r — перевязь,
+# Пучки джута: 30 вариантов (K–O — по B, P–T — по C, M1–M10 — смесь B, D, K и N в цветах волокна). l/m/d — волокно (светлое, среднее, тёмное), o — контур волокна, R/r — перевязь,
 # b — контур перевязи, g/G/k — зелёные стебли и листья (сырой джут)
 JUTE_BUNDLES = {
     # A — косой сноп, перевязан посередине, концы веером
@@ -1069,6 +1069,197 @@ JUTE_BUNDLES = {
         ".olmo...olmo....",
         ".ooo.....ooo....",
     ],
+
+    # M1 — сноп B, две перевязи (K), на нижней узел с концами (N)
+    "M1": [
+        "................",
+        "...o..o..o..o...",
+        "..olo.lo.ol.ol..",
+        "...olmlmlmlmo...",
+        "....olmlmlmo....",
+        "....bRrRrRrb....",
+        "....olmlmlmo....",
+        "....olmlmlmo....",
+        "....olmlmlmo....",
+        "....bRrRrRrbb...",
+        "....olmlmlmobRb.",
+        "...olmlmlmldobr.",
+        "..olmlmlmlmldob.",
+        "..ololmlmlolo...",
+        "...o.o.o.o.o....",
+        "................",
+    ],
+    # M2 — стройный сноп K, сверху пряди расходятся, как стебли D
+    "M2": [
+        "..l.....l...l...",
+        ".ld..l.ml..ld...",
+        "..md.lm.d..md...",
+        "...d..mdd.dl....",
+        "....d..dd.d.....",
+        ".....olmlmo.....",
+        ".....bRrRrb.....",
+        ".....olmlmo.....",
+        ".....olmlmo.....",
+        ".....olmlmo.....",
+        ".....bRrRrb.....",
+        ".....olmlmo.....",
+        "....olmlmldo....",
+        "...olmlmlmldo...",
+        "...o.o.o.o.o....",
+        "................",
+    ],
+    # M3 — сноп B с узлом N, верхние концы растрёпаны прядями, как у D
+    "M3": [
+        "..l...l...l..l..",
+        ".lm..lm..ml.lm..",
+        "..md..md.d.md...",
+        "...olmlmlmlmo...",
+        "....olmlmlmo....",
+        "....olmlmlmo....",
+        "....olmlmlmo....",
+        "....bRrRrRrbb...",
+        "....brRrRrRbRb..",
+        "....olmlmlmobRb.",
+        "....olmlmldo.br.",
+        "...olmlmlmldo.b.",
+        "..olmlmlmlmldo..",
+        "..ololmlmlolo...",
+        "...o.o.o.o.o....",
+        "................",
+    ],
+    # M4 — стройный K, одна перевязь с узлом и концами (N), низ веером (B)
+    "M4": [
+        "................",
+        "....o..o..o.....",
+        "...olo.lo.olo...",
+        "....olmlmlmo....",
+        ".....olmlmo.....",
+        ".....olmlmo.....",
+        ".....olmlmo.....",
+        ".....bRrRrbb....",
+        ".....brRrRbRb...",
+        ".....olmlmobRb..",
+        ".....olmlmo.br..",
+        "....olmlmldo.b..",
+        "...olmlmlmldo...",
+        "..olmlmlmlmldo..",
+        "..o.o.o.o.o.o...",
+        "................",
+    ],
+    # M5 — пучок прядей по форме D, в цвет волокна, перехвачен дважды (K)
+    "M5": [
+        "..l.....l...l...",
+        ".lm..l.ml..lm...",
+        "..md.lm.d..md...",
+        "...d..mdd.dl....",
+        "....d.olmo......",
+        "....bRrRrb......",
+        "....olmlmo......",
+        "....olmlmo......",
+        "....bRrRrb......",
+        "....olmlmo......",
+        "...olmlmldo.....",
+        "...lm.lm.md.....",
+        "..lm..lm..md....",
+        "..d...d....d....",
+        "................",
+        "................",
+    ],
+    # M6 — сноп B, узел слева, концы бечёвки свисают (N зеркально)
+    "M6": [
+        "................",
+        "...o..o..o..o...",
+        "..ol.ol.ol.olo..",
+        "...olmlmlmlmo...",
+        "....olmlmlmo....",
+        "....olmlmlmo....",
+        "....olmlmlmo....",
+        "...bbRrRrRrb....",
+        "..bRbrRrRrRb....",
+        ".bRbolmlmlmo....",
+        ".rb.olmlmldo....",
+        ".b.olmlmlmldo...",
+        "..olmlmlmlmldo..",
+        "...ololmlmlolo..",
+        "....o.o.o.o.o...",
+        "................",
+    ],
+    # M7 — стройный K: сверху пряди D, снизу веер B, две перевязи, на верхней узел N
+    "M7": [
+        "..l.....l...l...",
+        ".lm..l.ml..lm...",
+        "..md.lm.d..md...",
+        "...d..mdd.d.....",
+        ".....olmlmo.....",
+        ".....bRrRrbb....",
+        ".....olmlmobRb..",
+        ".....olmlmo.br..",
+        ".....olmlmo..b..",
+        ".....bRrRrb.....",
+        ".....olmlmo.....",
+        "....olmlmldo....",
+        "...olmlmlmldo...",
+        "..olmlmlmlmldo..",
+        "..o.o.o.o.o.o...",
+        "................",
+    ],
+    # M8 — широкий сноп B, обе стороны растрёпаны прядями D, одна перевязь
+    "M8": [
+        ".l...l...l...l..",
+        ".lm.lm..ml..ml..",
+        "..md.md.d..md...",
+        "...olmlmlmlmo...",
+        "....olmlmlmo....",
+        "....olmlmlmo....",
+        "....olmlmlmo....",
+        "....bRrRrRrb....",
+        "....brRrRrRb....",
+        "....olmlmlmo....",
+        "....olmlmldo....",
+        "...olmlmlmldo...",
+        "..dm.md.md..md..",
+        ".dm..m..m.d..md.",
+        ".d...d..d..d..d.",
+        "................",
+    ],
+    # M9 — стройный K, две перевязи, узел с концами на нижней (N)
+    "M9": [
+        "................",
+        "....o..o..o.....",
+        "...olo.lo.olo...",
+        "....olmlmlmo....",
+        ".....olmlmo.....",
+        ".....bRrRrb.....",
+        ".....olmlmo.....",
+        ".....olmlmo.....",
+        ".....olmlmo.....",
+        ".....bRrRrbb....",
+        ".....olmlmobRb..",
+        "....olmlmldobr..",
+        "...olmlmlmldob..",
+        "...o.o.o.o.o....",
+        "................",
+        "................",
+    ],
+    # M10 — пряди D в цвет волокна, перехват с узлом и свисающими концами (N)
+    "M10": [
+        "..l.....l...l...",
+        ".lm..l.ml..lm...",
+        "..md.lm.d..md...",
+        "...d..mdd.dl....",
+        "...d..mdd.d.....",
+        "....d.olmo......",
+        "....bRrRrbb.....",
+        "....brRrRbRb....",
+        "....olmlmobRb...",
+        "...olmlmldobr...",
+        "...lm.lm.md.b...",
+        "..lm..lm..md....",
+        "..d...d....d....",
+        ".d....d.....d...",
+        "................",
+        "................",
+    ],
 }
 JUTE_BUNDLE_COLORS = {"l": "#e6cf92", "m": "#c9ab66", "d": "#97793f", "o": "#5e4524", "R": "#a07a3e", "r": "#6a4e26",
                       "b": "#3e2c16", "g": "#66a03a", "G": "#7fb64a", "k": "#436f26"}
@@ -1132,7 +1323,7 @@ def jute_bundles(chosen):
         x, y = i % per_row * 90, i // per_row * 110
         big = jute_bundle(variant).resize((80, 80), Image.NEAREST)
         out.paste(big, (x + 5, y + 5), big)
-        draw.text((x + 38, y + 92), variant + (" *" if variant == chosen else ""), fill=(255, 255, 255, 255))
+        draw.text((x + 34, y + 92), variant + (" *" if variant == chosen else ""), fill=(255, 255, 255, 255))
     out.save(os.path.join(DOCS, "jute_bundles.png"))
 
 
@@ -1196,7 +1387,7 @@ if __name__ == "__main__":
         chosen = sys.argv[sys.argv.index("--hoe") + 1].upper()
         if chosen not in HOE_VARIANTS:
             sys.exit(f"Нет варианта тяпки {chosen}, есть: {', '.join(HOE_VARIANTS)}")
-    # пучок джута — 20 вариантов (docs/textures/jute_bundles.png), другой: --jute B
+    # пучок джута — 30 вариантов (docs/textures/jute_bundles.png), другой: --jute B
     JUTE_CHOSEN = "A"
     if "--jute" in sys.argv:
         JUTE_CHOSEN = sys.argv[sys.argv.index("--jute") + 1].upper()
