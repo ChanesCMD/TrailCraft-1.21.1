@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "B": {
+      "item": "create:brass_ingot"
+    },
+    "C": {
+      "item": "create:cogwheel"
+    }
+  },
+  "pattern": [
+    " B ",
+    "BCB"
+  ],
+  "result": {
+    "id": "trailcraft:sextant",
+    "count": 1
+  }
+}

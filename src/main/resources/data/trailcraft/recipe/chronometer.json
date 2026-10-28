@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "M": {
+      "item": "trailcraft:mini_precision_mechanism"
+    },
+    "B": {
+      "tag": "trailcraft:small_boards"
+    }
+  },
+  "pattern": [
+    "M",
+    "B"
+  ],
+  "result": {
+    "id": "trailcraft:chronometer",
+    "count": 1
+  }
+}

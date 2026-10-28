@@ -38,7 +38,7 @@ import java.util.List;
  * распределены равномерно, а не кучками, как при случайном шансе.
  */
 public class NuggetDepositFeature extends Feature<NuggetDepositFeature.Config> {
-    private static final int VEIN_MIN = 15, VEIN_MAX = 25;
+    private static final int VEIN_MIN = 8, VEIN_MAX = 12;
     /** Центр жилы — на столько блоков ниже поверхности. */
     private static final int DEPTH_MIN = 3, DEPTH_MAX = 8;
     private static final int RADIUS = 3;

@@ -8,6 +8,7 @@ import java.util.Map;
 import net.minecraft.world.level.block.Block;
 import io.github.ChanesCMD.trailcraft.block.PebbleBlock;
 import io.github.ChanesCMD.trailcraft.block.SupportBlock;
+import io.github.ChanesCMD.trailcraft.block.StrawBedBlock;
 import io.github.ChanesCMD.trailcraft.block.BackpackBlock;
 import io.github.ChanesCMD.trailcraft.block.TurfBlock;
 import io.github.ChanesCMD.trailcraft.block.GraveBlock;
@@ -263,6 +264,11 @@ public class ModBlocks {
             BlockBehaviour.Properties.of().mapColor(MapColor.PODZOL).strength(0.5f).sound(SoundType.WOOD).noOcclusion()
                     .noLootTable().pushReaction(PushReaction.DESTROY)
                     .lightLevel(state -> state.getValue(TrailCampfireBlock.LIT) ? 11 + state.getValue(TrailCampfireBlock.LOGS) : 0));
+
+    /** Кровать из соломы: только точка возрождения, спать нельзя (StrawBedBlock). */
+    public static final DeferredBlock<Block> STRAW_BED = BLOCKS.registerBlock("straw_bed", StrawBedBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW).strength(0.4f).sound(SoundType.GRASS).noOcclusion()
+                    .ignitedByLava().pushReaction(PushReaction.DESTROY));
 
     // === ОПОРЫ (collapse/Collapse): стойка и перекладина, ставятся одним предметом (SupportItem) ===
     /** Деревянная опора держит породу и почву 9×5×9 вокруг себя в раме, 3×5×3 — одна. */

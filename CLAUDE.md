@@ -144,10 +144,10 @@
   `raw_*`, слитков, шихты и древесного угля — `init/ModOres.java`. Все JSON (модели из двух слоёв
   `models/block/ore_layered.json`, блокстейты, лут, тэги, рецепты, генерация, переводы) пишет `scripts/gen_ores.py` по
   такой же таблице — меняя руду, менять в обоих местах и перезапускать скрипт. Оверлеи руд —
-  `textures/block/ore/<руда>/<порода>_<n>.png`, по 3 на пару. Генерация: `worldgen/configured_feature/ore_*.json`
+  `textures/block/ore/<руда>/<порода>_<n>.png`, по 3 на пару. Размеры жил (кроме угля) — вдвое меньше первых. Генерация: `worldgen/configured_feature/ore_*.json`
   (жила заменяет только свои породы), `placed_feature/ore_*.json`, `neoforge/biome_modifier/ores.json`.
   Самородки (`ModOres.NUGGETS`, блок-камешек `<руда>_nugget` как кремень) лежат над большой жилой своей руды
-  (`worldgen/NuggetDepositFeature.java`, 15–25 блоков в 3–8 блоках под поверхностью, заменяет любой твёрдый природный
+  (`worldgen/NuggetDepositFeature.java`, 8–12 блоков в 3–8 блоках под поверхностью, заменяет любой твёрдый природный
   блок; самородков на поверхности 3–7, чаще 3–5); их JSON — таблица `NUGGETS` в `scripts/gen_ores.py`, формы — три
   в `scripts/gen_nugget_models.py` (`nugget_shape_13`, `_15`, `_17`, блокстейт выбирает случайно; поменяв формы,
   перезапустить `gen_ores.py`). Текстуры кусков руды, самородков и шихты —
@@ -222,6 +222,11 @@
   Модели, текстуры, блокстейт — `scripts/gen_campfire.py` (превью текстур — `docs/textures/campfire.png`). Ванильный
   костёр огнивом только зажигается; с него без шёлкового касания падает свой древесный уголь
   (`data/minecraft/loot_table/blocks/campfire.json`).
+- Кровать из соломы (`block/StrawBedBlock.java`, 4 соломы 2×2): только точка возрождения, спать нельзя; ПКМ ставит
+  точку (не принудительную), встать — рядом или сверху (`RespawnAnchorBlock.findStandUpPosition`). Рецепты приборов
+  пояса — из деталей Create: секстант — шестерня и 3 латунных слитка, высотомер — 4 латунных листа и пузырёк с водой,
+  хронометр — мини-механизм точности (`mini_precision_mechanism`: золотой лист, шестерня, вал, кусочек железа) над малой
+  доской любой породы. Всё это (текстуры, модели, рецепты, переводы) пишет `scripts/gen_straw_bed_instruments.py`.
 - Линейка (`item/RulerItem.java`): ПКМ по двум блокам — расстояние по прямой между центрами (до 32) и сдвиги по осям
   над хотбаром, пунктир частиц; первая отметка — компонент `trailcraft:ruler_start`, Shift+ПКМ сбрасывает.
 - Инвентарь: `inventory/TrailInventoryMenu.java` + `client/gui/TrailInventoryScreen.java`. Дополнительные слоты

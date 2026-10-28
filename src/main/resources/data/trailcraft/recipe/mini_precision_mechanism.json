@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "create:golden_sheet"
+    },
+    {
+      "item": "create:cogwheel"
+    },
+    {
+      "item": "create:shaft"
+    },
+    {
+      "item": "minecraft:iron_nugget"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:mini_precision_mechanism",
+    "count": 1
+  }
+}

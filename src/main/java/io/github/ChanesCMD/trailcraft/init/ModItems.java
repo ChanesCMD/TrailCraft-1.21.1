@@ -179,6 +179,9 @@ public class ModItems {
     // === ПЕНЬ ДЛЯ РУБКИ ===
     public static final DeferredItem<BlockItem> CHOPPING_STUMP = ITEMS.registerSimpleBlockItem("chopping_stump", ModBlocks.CHOPPING_STUMP);
 
+    // === КРОВАТЬ ИЗ СОЛОМЫ ===
+    public static final DeferredItem<BlockItem> STRAW_BED = ITEMS.registerSimpleBlockItem("straw_bed", ModBlocks.STRAW_BED);
+
     // === ОПОРЫ ===
     /** Опора: стойка столбом до 3 блоков, а по боку другой опоры — перекладина (SupportItem). */
     public static final DeferredItem<SupportItem> WOODEN_SUPPORT = ITEMS.registerItem("wooden_support",
@@ -220,6 +223,8 @@ public class ModItems {
     public static final DeferredItem<Item> SEXTANT = ITEMS.registerItem("sextant", props -> new Item(props.stacksTo(1)));
     /** Хронометр уточняет Z до чанка. */
     public static final DeferredItem<Item> CHRONOMETER = ITEMS.registerItem("chronometer", props -> new Item(props.stacksTo(1)));
+    /** Мини-механизм точности (золотой лист, шестерня, вал и кусочек железа из Create): из него хронометр. */
+    public static final DeferredItem<Item> MINI_PRECISION_MECHANISM = ITEMS.registerSimpleItem("mini_precision_mechanism");
     /** GPS: в любом слоте приборов пояса даёт точные координаты, два других слота при нём закрыты. */
     public static final DeferredItem<Item> GPS = ITEMS.registerItem("gps", props -> new Item(props.stacksTo(1)));
 

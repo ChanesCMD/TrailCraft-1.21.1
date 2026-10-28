@@ -1034,5 +1034,8 @@
   "item.trailcraft.steiger_hammer.desc": "В руке: под нависающей породой зелёные точки — держит опора, красные — может обвалиться",
   "item.trailcraft.steiger_hammer.desc2": "Посмотрите на опору — видно, что она держит",
   "item.trailcraft.steiger_hammer.framed": "Опора в раме: держит %s×%s×%s",
-  "item.trailcraft.steiger_hammer.lone": "Опора без рамы: держит только %s×%s×%s — поставьте вторую стойку и перекладину"
+  "item.trailcraft.steiger_hammer.lone": "Опора без рамы: держит только %s×%s×%s — поставьте вторую стойку и перекладину",
+  "block.trailcraft.straw_bed": "Кровать из соломы",
+  "block.trailcraft.straw_bed.no_spawn": "Здесь нельзя возродиться",
+  "item.trailcraft.mini_precision_mechanism": "Мини-механизм точности"
 }

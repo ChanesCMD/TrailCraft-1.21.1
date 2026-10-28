@@ -89,6 +89,7 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.SHALE_PEBBLE);
                         output.accept(ModItems.FLINT);
                         output.accept(ModItems.CHOPPING_STUMP);
+                        output.accept(ModItems.STRAW_BED);
                         output.accept(ModItems.WOODEN_SUPPORT);
                         output.accept(ModItems.IRON_SUPPORT);
                         output.accept(ModItems.STEIGER_HAMMER);
@@ -104,6 +105,7 @@ public class ModCreativeTabs {
                         output.accept(ModItems.BRASS_ALTIMETER);
                         output.accept(ModItems.SEXTANT);
                         output.accept(ModItems.CHRONOMETER);
+                        output.accept(ModItems.MINI_PRECISION_MECHANISM);
                         output.accept(ModItems.GPS);
                         ModItems.COINS.forEach(output::accept);
                         output.accept(ModItems.CALENDAR);
