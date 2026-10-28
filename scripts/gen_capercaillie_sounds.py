@@ -1,15 +1,13 @@
-"""Звуки глухаря: все — в docs/sounds/capercaillie/*.ogg; в игре (assets/trailcraft/sounds/entity/capercaillie/,
-sounds.json, init/ModSounds) — ток и квохтанье (IN_GAME), вскрик и смерть пока куриные.
+"""Звуки глухаря: assets/trailcraft/sounds/entity/capercaillie/*.ogg, события — sounds.json (init/ModSounds), субтитры.
+Вскрик и смерть пока куриные.
 
 Синтез из шума и тонов (нужны numpy и ffmpeg с libvorbis):
 - song — ток: двойные щелчки «тэк-тэк», всё чаще, хлопок «пробки» и «точение» (шипящее скрежетание);
-- ambient — низкое квохтанье «кок... кок»;
-- hurt — короткий хриплый вскрик; death — вскрик, уходящий вниз, и хлопанье крыльев.
+- ambient — низкое квохтанье «кок... кок».
 Запуск: python scripts/gen_capercaillie_sounds.py
 """
 import json
 import os
-import shutil
 import subprocess
 import tempfile
 import wave
@@ -17,9 +15,8 @@ import wave
 import numpy as np
 
 RATE = 44100
-OUT = os.path.join(os.path.dirname(__file__), "..", "docs", "sounds", "capercaillie")
 ASSETS = os.path.join(os.path.dirname(__file__), "..", "src", "main", "resources", "assets", "trailcraft")
-IN_GAME = ["song", "ambient"]
+OUT = os.path.join(ASSETS, "sounds", "entity", "capercaillie")
 rng = np.random.default_rng(11)
 
 
@@ -118,37 +115,6 @@ def ambient():
     return track
 
 
-def squawk(seconds, f0, f1, vibrato=12):
-    x = t(seconds)
-    freq = np.linspace(f0, f1, len(x)) * (1 + 0.04 * np.sin(2 * np.pi * vibrato * x))
-    phase = 2 * np.pi * np.cumsum(freq) / RATE
-    saw = 2 * ((phase / (2 * np.pi)) % 1) - 1
-    raw = saw + band(rng.standard_normal(len(x)), 1500, 5000) * 0.5
-    voice = band(raw, 500, 3500) + band(raw, 1100, 1700) * 1.2
-    return voice * env(len(x), 0.008, seconds / 2)
-
-
-def flutter(seconds=0.7):
-    s = np.zeros(int(seconds * RATE))
-    at = 0.0
-    while at < seconds - 0.06:
-        n = int(0.05 * RATE)
-        place(s, band(rng.standard_normal(n), 150, 1800) * env(n, 0.002, 0.012), at)
-        at += 0.07 + rng.uniform(-0.01, 0.01)
-    return s * np.linspace(1, 0.3, len(s))
-
-
-def hurt():
-    return squawk(0.28, 820, 980)
-
-
-def death():
-    track = np.zeros(int(1.4 * RATE))
-    place(track, squawk(0.55, 950, 450, 9), 0)
-    place(track, flutter() * 0.6, 0.5)
-    return track
-
-
 def save(name, signal):
     signal = signal / (np.max(np.abs(signal)) + 1e-9) * 0.85
     pcm = (signal * 32767).astype(np.int16)
@@ -191,12 +157,9 @@ def merge_lang(entries):
 
 
 def main():
-    for name, make in (("song", song), ("ambient", ambient), ("hurt", hurt), ("death", death)):
-        save(name, make())
-    os.makedirs(os.path.join(ASSETS, "sounds", "entity", "capercaillie"), exist_ok=True)
     sounds = {}
-    for name in IN_GAME:
-        shutil.copy(os.path.join(OUT, f"{name}.ogg"), os.path.join(ASSETS, "sounds", "entity", "capercaillie", f"{name}.ogg"))
+    for name, make in (("song", song), ("ambient", ambient)):
+        save(name, make())
         sounds[f"entity.capercaillie.{name}"] = {"subtitle": f"subtitles.trailcraft.entity.capercaillie.{name}",
                                                  "sounds": [f"trailcraft:entity/capercaillie/{name}"]}
     merge_sounds(sounds)

@@ -1,18 +1,16 @@
 """Звуки животных TrailCraft (кроме глухаря — scripts/gen_capercaillie_sounds.py): карканье вороны и ворона.
 
-Пишет assets/trailcraft/sounds/entity/<вид>/*.ogg (копии — docs/sounds/<вид>/), события в sounds.json (init/ModSounds)
+Пишет assets/trailcraft/sounds/entity/<вид>/*.ogg, события в sounds.json (init/ModSounds)
 и субтитры. Нужны numpy и ffmpeg с libvorbis.
 Запуск: python scripts/gen_animal_sounds.py
 """
 import os
-import shutil
 
 import numpy as np
 
 import gen_capercaillie_sounds as synth
 from gen_capercaillie_sounds import RATE, band, env, place, t
 
-DOCS = os.path.join(os.path.dirname(__file__), "..", "docs", "sounds")
 rng = np.random.default_rng(23)
 
 
@@ -60,11 +58,8 @@ def main():
         for kind, files in kinds.items():
             names = []
             for name, make in files:
-                synth.OUT = os.path.join(DOCS, mob)
+                synth.OUT = os.path.join(synth.ASSETS, "sounds", "entity", mob)
                 synth.save(name, make())
-                target = os.path.join(synth.ASSETS, "sounds", "entity", mob)
-                os.makedirs(target, exist_ok=True)
-                shutil.copy(os.path.join(DOCS, mob, f"{name}.ogg"), os.path.join(target, f"{name}.ogg"))
                 names.append(f"trailcraft:entity/{mob}/{name}")
             events[f"entity.{mob}.{kind}"] = {"subtitle": f"subtitles.trailcraft.entity.{mob}.{kind}", "sounds": names}
     synth.merge_sounds(events)
