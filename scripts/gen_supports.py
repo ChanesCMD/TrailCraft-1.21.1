@@ -1,15 +1,17 @@
 """
-Опоры (block/SupportBlock.java, item/SupportItem.java, обвалы — collapse/Collapse.java) и молоток штейгера
-(item/SteigerHammerItem.java): модели, блокстейты, модели предметов, лут, рецепты, тэги (#trailcraft:can_collapse — что
-обваливается, #trailcraft:collapsible_soils — какие почвы осыпаются, кирка/топор), текстура молотка и переводы.
+Опоры (block/SupportBlock.java, item/SupportItem.java, обвалы — collapse/Collapse.java), молоток штейгера
+(item/SteigerHammerItem.java) и геологический молоток (item/GeologicalHammerItem.java): модели, блокстейты, модели
+предметов, лут, рецепты, тэги (#trailcraft:can_collapse — что обваливается, #trailcraft:collapsible_soils — какие почвы
+осыпаются, кирка/топор), текстуры молотков и переводы.
 
 Запуск из корня проекта:  python scripts/gen_supports.py   (нужен Pillow)
 
 Стойка — брус 6×6 во всю высоту блока, перекладина — брус 6×6 у верха блока (y 10–16); плечи north/east/south/west
 тянутся от середины к краю блока, к соседней опоре (одна модель плеча на север, блокстейт поворачивает). Меняя формы
 здесь, менять и SupportBlock (POST, CORE, ARM_SHAPES). Текстуры опор пока ванильные: окорённый дуб и железный блок.
-Молоток штейгера (каменный молоток + кремень) — черенок каменного молотка, металлическая головка с бойком и клювом
-поперёк черенка.
+Молоток штейгера (каменный молоток + кремень) — черенок каменного молотка, железная головка с маленьким бойком и
+клювом поперёк черенка. Геологический молоток (медный слиток над обработанной палкой) — тот же черенок, медная головка
+с широким бойком и коротким долотом. Деревянная опора — 2 тонких бревна и пила (пила остаётся, SawItem).
 """
 import json
 import os
@@ -19,10 +21,11 @@ from PIL import Image
 NS = "trailcraft"
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "main", "resources")
 
-# материал → (текстура бока, текстура торца, рецепт: ингредиент, сколько выходит)
+# материал → (текстура бока, текстура торца, рецепт: ингредиент столбиком, сколько выходит, инструмент справа или None)
 MATERIALS = {
-    "wooden": (f"{NS}:block/stripped_oak_log", f"{NS}:block/stripped_oak_log_top", {"tag": f"{NS}:thin_logs"}, 4),
-    "iron": ("minecraft:block/iron_block", "minecraft:block/iron_block", {"item": "minecraft:iron_ingot"}, 2),
+    "wooden": (f"{NS}:block/stripped_oak_log", f"{NS}:block/stripped_oak_log_top", {"tag": f"{NS}:thin_logs"}, 4,
+               {"tag": f"{NS}:saws"}),
+    "iron": ("minecraft:block/iron_block", "minecraft:block/iron_block", {"item": "minecraft:iron_ingot"}, 2, None),
 }
 SOILS = ["zheltozem", "burozem", "chernozem", "loam", "clay_white", "clay_blue", "clay_red", "clay_gray", "peat"]
 ARM_Y = {"north": 0, "east": 90, "south": 180, "west": 270}
@@ -42,6 +45,17 @@ LANG = {
     "item.trailcraft.support.beam": ("ПКМ по боку опоры — перекладина",
                                      "Right-click the side of a support to place a beam"),
     "item.trailcraft.steiger_hammer": ("Молоток штейгера", "Steiger's Hammer"),
+    "item.trailcraft.geological_hammer": ("Геологический молоток", "Geological Hammer"),
+    "item.trailcraft.geological_hammer.desc": ("ПКМ по блоку — какой руды больше всего в %s блоках вокруг",
+                                               "Right-click a block: which ore is most common within %s blocks"),
+    "item.trailcraft.geological_hammer.found": ("%s: %s", "%s: %s"),
+    "item.trailcraft.geological_hammer.this": ("%s (%s)", "%s (%s)"),
+    "item.trailcraft.geological_hammer.nothing": ("Руды поблизости нет", "No ore nearby"),
+    "item.trailcraft.geological_hammer.traces": ("Следы", "Traces"),
+    "item.trailcraft.geological_hammer.small": ("Немного", "Small amount"),
+    "item.trailcraft.geological_hammer.medium": ("Средне", "Medium amount"),
+    "item.trailcraft.geological_hammer.large": ("Много", "Large amount"),
+    "item.trailcraft.geological_hammer.very_large": ("Очень много", "Very large amount"),
     "item.trailcraft.steiger_hammer.desc": ("В руке: под нависающей породой зелёные точки — держит опора, красные — "
                                             "может обвалиться", "In hand: green dots under overhanging rock are "
                                             "supported, red ones may collapse"),
@@ -131,7 +145,7 @@ def loot(block, item):
 
 
 def materials():
-    for mat, (side, end, ingredient, count) in MATERIALS.items():
+    for mat, (side, end, ingredient, count, tool) in MATERIALS.items():
         name = f"{mat}_support"
         textures = {"side": side, "end": end, "particle": side}
         for part in ("post", "core", "arm"):
@@ -141,16 +155,19 @@ def materials():
         write(f"assets/{NS}/models/item/{name}.json", {"parent": f"{NS}:block/{name}_post"})
         loot(name, name)
         loot(f"{name}_beam", name)
+        key, pattern = {"M": ingredient}, ["M", "M"]
+        if tool:  # пила остаётся в сетке и теряет прочность (SawItem)
+            key["T"], pattern = tool, ["MT", "M "]
         write(f"data/{NS}/recipe/{name}.json", {
             "type": "minecraft:crafting_shaped", "category": "building",
-            "key": {"M": ingredient}, "pattern": ["M", "M"],
+            "key": key, "pattern": pattern,
             "result": {"id": f"{NS}:{name}", "count": count}})
     tag("block", "minecraft:mineable/axe", [f"{NS}:wooden_support", f"{NS}:wooden_support_beam"])
     tag("block", "minecraft:mineable/pickaxe", [f"{NS}:iron_support", f"{NS}:iron_support_beam"])
 
 
-def steiger_hammer():
-    """Черенок каменного молотка и поперёк него металлическая головка: боёк вверху слева, клюв внизу справа."""
+def hammer_texture(name, head, outline):
+    """Черенок каменного молотка и поперёк него головка head ({(x, y): цвет}), обведённая outline."""
     tex = os.path.join(ROOT, "assets", NS, "textures", "item")
     src = Image.open(os.path.join(tex, "stone_hammer.png")).convert("RGBA")
     img = Image.new("RGBA", (16, 16))
@@ -159,19 +176,6 @@ def steiger_hammer():
             c = src.getpixel((x, y))
             if c[3] and c[0] - c[2] > 25:  # только черенок
                 img.putpixel((x, y), c)
-    outline, dark, mid, light = (40, 40, 46, 255), (92, 94, 102, 255), (140, 143, 150, 255), (196, 199, 205, 255)
-    head = {}
-    for i in range(9):
-        x, y = 6 + i, 1 + i
-        head[(x, y)], head[(x, y + 1)] = mid, dark
-        if i < 6:
-            head[(x - 1, y + 1)] = light if i < 3 else mid
-    for p in [(4, 1), (5, 0), (6, 0), (4, 2), (4, 3), (5, 3)]:
-        head[p] = mid
-    for p in [(5, 1), (5, 2), (6, 1)]:
-        head[p] = light
-    for p in [(14, 10), (13, 10), (14, 11)]:  # клюв сужается
-        head.pop(p, None)
     for p, c in head.items():
         img.putpixel(p, c)
     filled = {(x, y) for x in range(16) for y in range(16) if img.getpixel((x, y))[3]}
@@ -180,13 +184,52 @@ def steiger_hammer():
             if 0 <= q[0] < 16 and 0 <= q[1] < 16 and q not in filled:
                 img.putpixel(q, outline)
                 filled.add(q)
-    img.save(os.path.join(tex, "steiger_hammer.png"))
-    write(f"assets/{NS}/models/item/steiger_hammer.json",
-          {"parent": "minecraft:item/handheld", "textures": {"layer0": f"{NS}:item/steiger_hammer"}})
+    img.save(os.path.join(tex, f"{name}.png"))
+    write(f"assets/{NS}/models/item/{name}.json",
+          {"parent": "minecraft:item/handheld", "textures": {"layer0": f"{NS}:item/{name}"}})
+
+
+def steiger_hammer():
+    """Железная головка поперёк черенка: маленький боёк вверху слева, клюв внизу справа."""
+    outline, dark, mid, light = (40, 40, 46, 255), (92, 94, 102, 255), (140, 143, 150, 255), (196, 199, 205, 255)
+    head = {}
+    for i in range(7):
+        x, y = 7 + i, 2 + i
+        head[(x, y)], head[(x, y + 1)] = mid, dark
+    for p in [(6, 2), (6, 3), (7, 1)]:
+        head[p] = light
+    head[(6, 1)] = mid
+    head.pop((13, 9), None)  # клюв сужается
+    head.pop((12, 9), None)
+    head[(13, 8)] = dark
+    hammer_texture("steiger_hammer", head, outline)
     write(f"data/{NS}/recipe/steiger_hammer.json", {
         "type": "minecraft:crafting_shapeless", "category": "equipment",
         "ingredients": [{"item": f"{NS}:stone_hammer"}, {"item": f"{NS}:flint"}],
         "result": {"id": f"{NS}:steiger_hammer", "count": 1}})
+
+
+def geological_hammer():
+    """Медная головка: широкий плоский боёк 3×3 вверху слева, короткое долото внизу справа."""
+    outline, dark, mid, light = (58, 30, 18, 255), (140, 74, 40, 255), (196, 110, 62, 255), (236, 160, 110, 255)
+    head = {}
+    for i in range(6):
+        x, y = 8 + i, 3 + i
+        head[(x, y)], head[(x, y + 1)] = mid, dark
+    for x in (5, 6, 7):
+        for y in (1, 2, 3):
+            head[(x, y)] = mid
+    for p in [(5, 1), (6, 1), (5, 2)]:
+        head[p] = light
+    head[(7, 3)] = dark
+    head.pop((13, 9), None)
+    head[(13, 8)] = dark
+    hammer_texture("geological_hammer", head, outline)
+    write(f"data/{NS}/recipe/geological_hammer.json", {
+        "type": "minecraft:crafting_shaped", "category": "equipment",
+        "key": {"I": {"item": "minecraft:copper_ingot"}, "S": {"item": f"{NS}:stick_processed"}},
+        "pattern": ["I", "S"],
+        "result": {"id": f"{NS}:geological_hammer", "count": 1}})
 
 
 def tags():
@@ -208,6 +251,7 @@ if __name__ == "__main__":
     templates()
     materials()
     steiger_hammer()
+    geological_hammer()
     tags()
     lang()
     print("ok")

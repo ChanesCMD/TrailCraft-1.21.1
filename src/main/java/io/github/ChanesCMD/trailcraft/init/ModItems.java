@@ -8,6 +8,7 @@ import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.item.Tiers;
 import io.github.ChanesCMD.trailcraft.item.SupportItem;
 import io.github.ChanesCMD.trailcraft.item.SteigerHammerItem;
+import io.github.ChanesCMD.trailcraft.item.GeologicalHammerItem;
 import io.github.ChanesCMD.trailcraft.item.BackpackItem;
 import io.github.ChanesCMD.trailcraft.item.PocketItem;
 import io.github.ChanesCMD.trailcraft.item.CoinItem;
@@ -192,6 +193,9 @@ public class ModItems {
     /** Молоток штейгера: в руке показывает, что обвалится и что держат опоры (SteigerHammerItem). */
     public static final DeferredItem<SteigerHammerItem> STEIGER_HAMMER = ITEMS.registerItem("steiger_hammer",
             props -> new SteigerHammerItem(props.stacksTo(1)));
+    /** Геологический молоток: ПКМ по блоку — какой руды вокруг больше всего и сколько (GeologicalHammerItem). */
+    public static final DeferredItem<GeologicalHammerItem> GEOLOGICAL_HAMMER = ITEMS.registerItem("geological_hammer",
+            props -> new GeologicalHammerItem(props.durability(GeologicalHammerItem.DURABILITY)));
 
     // === КОСТЁР ===
     /** Костёр для креатива и JEI; в выживании его складывают огнивом. */

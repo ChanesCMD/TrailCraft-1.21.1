@@ -1038,5 +1038,15 @@
   "block.trailcraft.straw_bed": "Кровать из соломы",
   "block.trailcraft.straw_bed.no_spawn": "Здесь нельзя возродиться",
   "item.trailcraft.mini_precision_mechanism": "Мини-механизм точности",
-  "block.trailcraft.straw_block": "Блок соломы"
+  "block.trailcraft.straw_block": "Блок соломы",
+  "item.trailcraft.geological_hammer": "Геологический молоток",
+  "item.trailcraft.geological_hammer.desc": "ПКМ по блоку — какой руды больше всего в %s блоках вокруг",
+  "item.trailcraft.geological_hammer.found": "%s: %s",
+  "item.trailcraft.geological_hammer.this": "%s (%s)",
+  "item.trailcraft.geological_hammer.nothing": "Руды поблизости нет",
+  "item.trailcraft.geological_hammer.traces": "Следы",
+  "item.trailcraft.geological_hammer.small": "Немного",
+  "item.trailcraft.geological_hammer.medium": "Средне",
+  "item.trailcraft.geological_hammer.large": "Много",
+  "item.trailcraft.geological_hammer.very_large": "Очень много"
 }

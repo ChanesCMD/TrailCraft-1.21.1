@@ -5,8 +5,8 @@
 Запуск из корня проекта:  python scripts/gen_straw_bed_instruments.py   (нужен Pillow)
 
 Блок соломы — 4 соломы (2×2), обратно — 4 соломы; ванильный тюк сена (HayBlock: ставится по осям, гасит урон от
-падения): бок — соломины вдоль оси и две перевязки, торец — срезы соломин. Кровать — циновка из соломы 16×3×16:
-соломины вдоль X цветами предмета соломы (textures/item/straw.png), между пучками тёмные щели. Рецепт — 2 блока
+падения): бок — соломины вдоль оси и две перевязки, торец — срезы соломин. Кровать — соломенный тюфяк 4 пикселя
+высотой в два блока (изножье и изголовье с валиком) цветами предмета соломы (textures/item/straw.png). Рецепт — 2 блока
 соломы рядом.
 Приборы — из деталей Create: секстант — шестерня и 3 латунных слитка дугой; высотомер — 4 латунных листа вокруг
 пузырька с водой (ингредиент neoforge:components — зелье «вода»); хронометр — мини-механизм точности над досками
@@ -74,56 +74,97 @@ def straw_palette():
     return colors[:2], colors[2:4], colors[4:]
 
 
+def strands(img, box, vertical, rnd, light, mid):
+    """Соломины в прямоугольнике box (x0, y0, x1, y1): вдоль y (vertical) или вдоль x, отрезками разной длины."""
+    x0, y0, x1, y1 = box
+    start, stop = (y0, y1) if vertical else (x0, x1)
+    for line in (range(x0, x1) if vertical else range(y0, y1)):
+        pos = start - rnd.randint(0, 4)
+        while pos < stop:
+            run = rnd.randint(3, 7)
+            c = rnd.choice(light) if rnd.random() < 0.75 else mid[1]
+            for i in range(max(pos, start), min(pos + run, stop)):
+                img.putpixel((line, i) if vertical else (i, line), c)
+            pos += run
+
+
 def straw_bed_textures():
+    """
+    Тюфяк смотрит изголовьем на север (v = 0 — северный край). Изножье и изголовье: соломины вдоль кровати, тёмная
+    перевязка поперёк, края темнее; у изголовья — валик соломы поперёк. Бок — соломины вдоль, торец — срезы соломин
+    (видны нижние 4 строки, uv 12–16).
+    """
     rnd = random.Random(7)
     dark, mid, light = straw_palette()
-    top = Image.new("RGBA", (16, 16))
-    for y in range(16):
-        gap = y % 4 == 3  # щель между пучками
-        x = rnd.randint(-3, 0)
-        while x < 16:
-            run = rnd.randint(3, 7)  # соломина
-            if gap:
-                c = rnd.choice(dark) if rnd.random() < 0.5 else mid[0]
-            else:
-                c = rnd.choice(light) if rnd.random() < 0.7 else mid[1]
-            for i in range(max(0, x), min(16, x + run)):
-                top.putpixel((i, y), c)
-            x += run
-    top.save(os.path.join(TEX, "block", "straw_bed_top.png"))
-    # бок (видны нижние 3 строки, uv 13–16): торцы соломин — светлые точки на средних, нижняя строка — тень
-    side = Image.new("RGBA", (16, 16))
+    textures = {}
+    for part in ("head", "foot"):
+        img = Image.new("RGBA", (16, 16))
+        strands(img, (0, 0, 16, 16), True, rnd, light, mid)
+        if part == "head":
+            strands(img, (0, 1, 16, 6), False, rnd, light, mid)  # валик-подушка
+            for x in range(16):
+                img.putpixel((x, 0), mid[0])
+                img.putpixel((x, 6), dark[x % 2])
+        else:
+            for x in range(16):
+                img.putpixel((x, 8), dark[x % 2])
+                img.putpixel((x, 15), mid[0])
+        for y in range(16):  # края тюфяка темнее
+            for x in (0, 15):
+                if img.getpixel((x, y)) in light:
+                    img.putpixel((x, y), mid[1])
+        img.save(os.path.join(TEX, "block", f"straw_bed_{part}.png"))
+        textures[part] = img
+    side = Image.new("RGBA", (16, 16), mid[1])
+    strands(side, (0, 12, 16, 15), False, rnd, light, mid)
     for x in range(16):
-        for y in range(16):
-            row = y % 3
-            if row == 2:
-                c = rnd.choice(dark)
-            elif (x + row) % 2:
-                c = rnd.choice(light)
-            else:
-                c = mid[1]
-            side.putpixel((x, y), c)
+        side.putpixel((x, 15), dark[x % 2])
     side.save(os.path.join(TEX, "block", "straw_bed_side.png"))
-    return top
+    end = Image.new("RGBA", (16, 16), mid[1])
+    for x in range(16):
+        for y in range(12, 15):
+            end.putpixel((x, y), rnd.choice(light) if rnd.random() < 0.6 else rnd.choice(dark + mid))
+        end.putpixel((x, 15), dark[x % 2])
+    end.save(os.path.join(TEX, "block", "straw_bed_end.png"))
+    old = os.path.join(TEX, "block", "straw_bed_top.png")
+    if os.path.exists(old):
+        os.remove(old)
+    return textures, side, end
 
 
 def straw_bed():
-    face_side = {"uv": [0, 13, 16, 16], "texture": "#side"}
-    write(f"assets/{NS}/models/block/straw_bed.json", {
-        "parent": "minecraft:block/block",
-        "textures": {"particle": f"{NS}:block/straw_bed_top", "top": f"{NS}:block/straw_bed_top",
-                     "side": f"{NS}:block/straw_bed_side"},
-        "elements": [{"from": [0, 0, 0], "to": [16, 3, 16], "faces": {
-            "up": {"uv": [0, 0, 16, 16], "texture": "#top"},
-            "down": {"uv": [0, 0, 16, 16], "texture": "#top", "cullface": "down"},
-            "north": {**face_side, "cullface": "north"}, "south": {**face_side, "cullface": "south"},
-            "east": {**face_side, "cullface": "east"}, "west": {**face_side, "cullface": "west"}}}]})
-    write(f"assets/{NS}/blockstates/straw_bed.json", {"variants": {"": {"model": f"{NS}:block/straw_bed"}}})
-    write(f"assets/{NS}/models/item/straw_bed.json", {"parent": f"{NS}:block/straw_bed"})
+    """Изножье и изголовье (facing — от изножья к изголовью, модели смотрят на север), 16×4×16 каждое."""
+    side = {"uv": [0, 12, 16, 16], "texture": "#side"}
+    end = {"uv": [0, 12, 16, 16], "texture": "#end"}
+    for part in ("head", "foot"):
+        faces = {"up": {"uv": [0, 0, 16, 16], "texture": "#top"},
+                 "down": {"uv": [0, 0, 16, 16], "texture": "#top", "cullface": "down"},
+                 "east": side, "west": side}
+        # торец только снаружи: со стороны второй половины грани нет
+        faces["north" if part == "head" else "south"] = end
+        write(f"assets/{NS}/models/block/straw_bed_{part}.json", {
+            "parent": "minecraft:block/block",
+            "textures": {"particle": f"{NS}:block/straw_bed_{part}", "top": f"{NS}:block/straw_bed_{part}",
+                         "side": f"{NS}:block/straw_bed_side", "end": f"{NS}:block/straw_bed_end"},
+            "elements": [{"from": [0, 0, 0], "to": [16, 4, 16], "faces": faces}]})
+    old = path(f"assets/{NS}/models/block/straw_bed.json")
+    if os.path.exists(old):
+        os.remove(old)
+    variants = {}
+    for facing, y in (("north", 0), ("east", 90), ("south", 180), ("west", 270)):
+        for part in ("head", "foot"):
+            v = {"model": f"{NS}:block/straw_bed_{part}"}
+            if y:
+                v["y"] = y
+            variants[f"facing={facing},part={part}"] = v
+    write(f"assets/{NS}/blockstates/straw_bed.json", {"variants": variants})
+    write(f"assets/{NS}/models/item/straw_bed.json", {"parent": f"{NS}:block/straw_bed_head"})
     write(f"data/{NS}/loot_table/blocks/straw_bed.json", {
         "type": "minecraft:block",
         "pools": [{"rolls": 1.0, "bonus_rolls": 0.0, "entries": [{"type": "minecraft:item", "name": f"{NS}:straw_bed"}],
-                   "conditions": [{"condition": "minecraft:survives_explosion"}]}],
+                   "conditions": [{"condition": "minecraft:survives_explosion"},
+                                  {"condition": "minecraft:block_state_property", "block": f"{NS}:straw_bed",
+                                   "properties": {"part": "head"}}]}],
         "random_sequence": f"{NS}:blocks/straw_bed"})
     write(f"data/{NS}/recipe/straw_bed.json", {
         "type": "minecraft:crafting_shaped", "category": "misc",
@@ -240,11 +281,11 @@ def preview(images):
 
 
 if __name__ == "__main__":
-    top = straw_bed_textures()
+    bed, bed_side, bed_end = straw_bed_textures()
     block_side, block_top = straw_block()
     straw_bed()
     mini = mini_mechanism()
     recipes()
     lang()
-    preview([block_side, block_top, top, Image.open(os.path.join(TEX, "block", "straw_bed_side.png")), mini])
+    preview([block_side, block_top, bed["head"], bed["foot"], bed_side, bed_end, mini])
     print("ok")

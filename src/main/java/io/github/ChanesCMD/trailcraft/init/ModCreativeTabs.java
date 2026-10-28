@@ -94,6 +94,7 @@ public class ModCreativeTabs {
                         output.accept(ModItems.WOODEN_SUPPORT);
                         output.accept(ModItems.IRON_SUPPORT);
                         output.accept(ModItems.STEIGER_HAMMER);
+                        output.accept(ModItems.GEOLOGICAL_HAMMER);
                         output.accept(ModItems.DUFFEL_BACKPACK);
                         output.accept(ModItems.LEATHER_BACKPACK);
                         output.accept(ModItems.TACTICAL_BACKPACK);

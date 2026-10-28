@@ -4,11 +4,14 @@
   "key": {
     "M": {
       "tag": "trailcraft:thin_logs"
+    },
+    "T": {
+      "tag": "trailcraft:saws"
     }
   },
   "pattern": [
-    "M",
-    "M"
+    "MT",
+    "M "
   ],
   "result": {
     "id": "trailcraft:wooden_support",

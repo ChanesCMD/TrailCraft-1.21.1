@@ -1,9 +1,10 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "particle": "trailcraft:block/straw_bed_top",
-    "top": "trailcraft:block/straw_bed_top",
-    "side": "trailcraft:block/straw_bed_side"
+    "particle": "trailcraft:block/straw_bed_head",
+    "top": "trailcraft:block/straw_bed_head",
+    "side": "trailcraft:block/straw_bed_side",
+    "end": "trailcraft:block/straw_bed_end"
   },
   "elements": [
     {
@@ -14,7 +15,7 @@
       ],
       "to": [
         16,
-        3,
+        4,
         16
       ],
       "faces": {
@@ -37,45 +38,32 @@
           "texture": "#top",
           "cullface": "down"
         },
-        "north": {
-          "uv": [
-            0,
-            13,
-            16,
-            16
-          ],
-          "texture": "#side",
-          "cullface": "north"
-        },
-        "south": {
-          "uv": [
-            0,
-            13,
-            16,
-            16
-          ],
-          "texture": "#side",
-          "cullface": "south"
-        },
         "east": {
           "uv": [
             0,
-            13,
+            12,
             16,
             16
           ],
-          "texture": "#side",
-          "cullface": "east"
+          "texture": "#side"
         },
         "west": {
           "uv": [
             0,
-            13,
+            12,
             16,
             16
           ],
-          "texture": "#side",
-          "cullface": "west"
+          "texture": "#side"
+        },
+        "north": {
+          "uv": [
+            0,
+            12,
+            16,
+            16
+          ],
+          "texture": "#end"
         }
       }
     }

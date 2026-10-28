@@ -1038,5 +1038,15 @@
   "block.trailcraft.straw_bed": "Straw Bed",
   "block.trailcraft.straw_bed.no_spawn": "You can't respawn here",
   "item.trailcraft.mini_precision_mechanism": "Mini Precision Mechanism",
-  "block.trailcraft.straw_block": "Straw Block"
+  "block.trailcraft.straw_block": "Straw Block",
+  "item.trailcraft.geological_hammer": "Geological Hammer",
+  "item.trailcraft.geological_hammer.desc": "Right-click a block: which ore is most common within %s blocks",
+  "item.trailcraft.geological_hammer.found": "%s: %s",
+  "item.trailcraft.geological_hammer.this": "%s (%s)",
+  "item.trailcraft.geological_hammer.nothing": "No ore nearby",
+  "item.trailcraft.geological_hammer.traces": "Traces",
+  "item.trailcraft.geological_hammer.small": "Small amount",
+  "item.trailcraft.geological_hammer.medium": "Medium amount",
+  "item.trailcraft.geological_hammer.large": "Large amount",
+  "item.trailcraft.geological_hammer.very_large": "Very large amount"
 }
