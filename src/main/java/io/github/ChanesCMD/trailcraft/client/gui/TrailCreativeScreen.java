@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.searchtree.SearchTree;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.SimpleContainer;
@@ -78,11 +79,15 @@ public class TrailCreativeScreen extends AbstractContainerScreen<TrailCreativeSc
         return lastTab;
     }
 
-    /** Открыть креатив на вкладке (из инвентаря TrailCraft: сначала закрыть его меню на сервере). */
+    /**
+     * Открыть креатив на вкладке (из инвентаря TrailCraft: сначала закрыть его меню на сервере). Не closeContainer:
+     * тот ставит пустой экран, мышь захватывается, и новое окно открывается с курсором в центре экрана.
+     */
     public static void open(CreativeModeTab tab) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player.containerMenu != mc.player.inventoryMenu) {
-            mc.player.closeContainer();
+            mc.player.connection.send(new ServerboundContainerClosePacket(mc.player.containerMenu.containerId));
+            mc.player.containerMenu = mc.player.inventoryMenu;
         }
         mc.setScreen(new TrailCreativeScreen(mc.player, tab));
     }
