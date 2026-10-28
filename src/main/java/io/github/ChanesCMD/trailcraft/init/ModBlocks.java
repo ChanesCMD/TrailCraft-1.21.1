@@ -1,6 +1,10 @@
 package io.github.ChanesCMD.trailcraft.init;
 
 import net.minecraft.util.ColorRGBA;
+import net.minecraft.resources.ResourceLocation;
+import io.github.ChanesCMD.trailcraft.ore.Rock;
+import java.util.EnumMap;
+import java.util.Map;
 import net.minecraft.world.level.block.Block;
 import io.github.ChanesCMD.trailcraft.block.PebbleBlock;
 import io.github.ChanesCMD.trailcraft.block.SupportBlock;
@@ -198,6 +202,16 @@ public class ModBlocks {
     public static final DeferredBlock<Block> SHALE_GRAVEL = BLOCKS.registerBlock("shale_gravel",
             props -> new ColoredFallingBlock(new ColorRGBA(0x575B62), props),
             BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.6f).sound(SoundType.GRAVEL).requiresCorrectToolForDrops());
+
+    // === БУЛЫЖНИК ИЗ ПОРОД (12 блоков, свойства — как у своей породы): нижние две трети обвала (collapse/Collapse) ===
+    public static final Map<Rock, DeferredBlock<Block>> COBBLESTONES = new EnumMap<>(Rock.class);
+    static {
+        for (Rock rock : Rock.values()) {
+            DeferredBlock<Block> stone = DeferredBlock.createBlock(ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, rock.getSerializedName()));
+            COBBLESTONES.put(rock, BLOCKS.register(rock.getSerializedName() + "_cobblestone",
+                    () -> new Block(BlockBehaviour.Properties.ofFullCopy(stone.get()))));
+        }
+    }
 
     // === КАМЕШКИ (12 блоков, 3x5x2 пикселя) ===
     public static final DeferredBlock<Block> ANDESITE_PEBBLE = BLOCKS.registerBlock("andesite_pebble", PebbleBlock::new,

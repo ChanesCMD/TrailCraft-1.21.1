@@ -1015,5 +1015,17 @@
   "block.trailcraft.iron_support": "Железная крепь",
   "block.trailcraft.iron_support_beam": "Железная перекладина",
   "item.trailcraft.support.range": "Держит породу и почву %s×%s×%s вокруг себя",
-  "item.trailcraft.support.beam": "ПКМ по боку крепи — перекладина (до %s блоков от стойки)"
+  "item.trailcraft.support.beam": "ПКМ по боку крепи — перекладина (до %s блоков от стойки)",
+  "block.trailcraft.andesite_cobblestone": "Андезитовый булыжник",
+  "block.trailcraft.basalt_cobblestone": "Базальтовый булыжник",
+  "block.trailcraft.chalk_cobblestone": "Меловой булыжник",
+  "block.trailcraft.diorite_cobblestone": "Диоритовый булыжник",
+  "block.trailcraft.dolomite_cobblestone": "Доломитовый булыжник",
+  "block.trailcraft.gabbro_cobblestone": "Габбровый булыжник",
+  "block.trailcraft.granite_cobblestone": "Гранитный булыжник",
+  "block.trailcraft.gray_granite_cobblestone": "Серый гранитный булыжник",
+  "block.trailcraft.limestone_cobblestone": "Известняковый булыжник",
+  "block.trailcraft.marble_cobblestone": "Мраморный булыжник",
+  "block.trailcraft.sandstone_cobblestone": "Песчаниковый булыжник",
+  "block.trailcraft.shale_cobblestone": "Сланцевый булыжник"
 }

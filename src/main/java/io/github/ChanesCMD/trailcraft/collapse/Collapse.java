@@ -14,6 +14,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -30,6 +31,7 @@ import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -40,14 +42,15 @@ import java.util.Set;
  * Обвалы, как в TFC, но с предупреждением. Обваливается только природное и только когда игрок что-то выкопал рядом:
  * сломал породу, руду или крепь — с шансом {@link #TRIGGER_CHANCE} ищется нависающая порода (#trailcraft:can_collapse,
  * под ней пусто) в радиусе {@link #MIN_RADIUS}…{@link #MIN_RADIUS} + {@link #RADIUS_VARIANCE} − 1, не поставленная
- * игроком (PlacedBlocks) и не под крепью (SupportBlock). Найденное 2–5 с сыплет пылью с потолка и трещит, потом падает:
- * порода — своим гравием, руда — сама собой; блоки над ней — с шансом {@link #PROPAGATE_CHANCE} каждый, столбом.
+ * игроком (PlacedBlocks) и не под крепью (SupportBlock). Найденное 2–5 с сыплет пылью с потолка и трещит, потом падает
+ * столбами (блоки над нижним — с шансом {@link #PROPAGATE_CHANCE} каждый): нижние две трети столба — булыжником своей
+ * породы, верхняя треть — её гравием, руда — сама собой.
  * Камни бьют по {@link #DAMAGE_PER_BLOCK} за блок падения, не больше {@link #MAX_DAMAGE} (шлем снимает четверть).
  * Почва (#trailcraft:collapsible_soils) осыпается сразу, как песок, если игрок выкопал блок под ней, и никого не бьёт.
  */
 @EventBusSubscriber(modid = TrailCraft.MODID)
 public final class Collapse {
-    public static final float TRIGGER_CHANCE = 0.1f;
+    public static final float TRIGGER_CHANCE = 0.2f;
     public static final int MIN_RADIUS = 3;
     public static final int RADIUS_VARIANCE = 6;
     public static final float PROPAGATE_CHANCE = 0.55f;
@@ -59,7 +62,7 @@ public final class Collapse {
     private static final int SUPPORT_REACH_H = 6, SUPPORT_REACH_V = 3;
 
     private static final Map<Level, LevelCollapses> LEVELS = new IdentityHashMap<>();
-    private static final Map<Block, BlockState> RUBBLE = new HashMap<>();
+    private static final Map<Block, BlockState> COBBLESTONE = new HashMap<>(), GRAVEL = new HashMap<>();
 
     private static final class LevelCollapses {
         /** Сломанное игроком в этот тик: проверяется в конце тика, когда блока уже нет. */
@@ -205,11 +208,21 @@ public final class Collapse {
         List<BlockPos> supports = supports(level, min, max);
         List<BlockPos> sorted = new ArrayList<>(pending.blocks);
         sorted.sort(Comparator.comparingInt(BlockPos::getY));
+        // в каждом столбце нижние две трети (не меньше одного блока) — булыжник, остальное сверху — гравий
+        Map<Long, List<BlockPos>> columns = new HashMap<>();
+        for (BlockPos p : sorted) {
+            columns.computeIfAbsent(ChunkPos.asLong(p.getX(), p.getZ()), k -> new ArrayList<>()).add(p);
+        }
+        Set<BlockPos> gravel = new HashSet<>();
+        for (List<BlockPos> column : columns.values()) {
+            int cobble = Math.max(1, Math.round(column.size() * 2 / 3f));
+            gravel.addAll(column.subList(cobble, column.size()));
+        }
         BlockPos first = null;
         for (BlockPos p : sorted) {
             BlockState state = level.getBlockState(p);
             if (canCollapse(level, p, supports) && FallingBlock.isFree(level.getBlockState(p.below()))) {
-                FallingBlockEntity.fall(level, p, rubble(state)).setHurtsEntities(DAMAGE_PER_BLOCK, MAX_DAMAGE);
+                FallingBlockEntity.fall(level, p, rubble(state, gravel.contains(p))).setHurtsEntities(DAMAGE_PER_BLOCK, MAX_DAMAGE);
                 if (first == null) {
                     first = p;
                 }
@@ -225,15 +238,18 @@ public final class Collapse {
         return level.getBlockState(pos).is(ModTags.CAN_COLLAPSE) && !PlacedBlocks.isPlaced(level, pos) && !supported(level, pos, supports);
     }
 
-    /** Во что превращается упавшая порода: в свой гравий (trailcraft:<порода>_gravel); руда падает сама собой. */
-    private static BlockState rubble(BlockState state) {
+    /**
+     * Во что превращается упавшая порода: в свой булыжник (trailcraft:<порода>_cobblestone) или гравий
+     * (trailcraft:<порода>_gravel); руда падает сама собой.
+     */
+    private static BlockState rubble(BlockState state, boolean gravel) {
         if (state.getBlock() instanceof OreBlock) {
             return state;
         }
-        return RUBBLE.computeIfAbsent(state.getBlock(), block -> {
+        return (gravel ? GRAVEL : COBBLESTONE).computeIfAbsent(state.getBlock(), block -> {
             ResourceLocation id = BuiltInRegistries.BLOCK.getKey(block);
-            Block gravel = BuiltInRegistries.BLOCK.get(id.withSuffix("_gravel"));
-            return gravel == Blocks.AIR ? block.defaultBlockState() : gravel.defaultBlockState();
+            Block rubble = BuiltInRegistries.BLOCK.get(id.withSuffix(gravel ? "_gravel" : "_cobblestone"));
+            return rubble == Blocks.AIR ? block.defaultBlockState() : rubble.defaultBlockState();
         });
     }
 

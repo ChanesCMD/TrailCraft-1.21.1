@@ -72,6 +72,7 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.MARBLE_GRAVEL);
                         output.accept(ModBlocks.SANDSTONE_GRAVEL);
                         output.accept(ModBlocks.SHALE_GRAVEL);
+                        ModBlocks.COBBLESTONES.values().forEach(output::accept);
 
                         // Камешки (12)
                         output.accept(ModBlocks.ANDESITE_PEBBLE);

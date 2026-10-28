@@ -61,6 +61,18 @@
     "trailcraft:bricks_red",
     "trailcraft:small_bloomery",
     "trailcraft:iron_support",
-    "trailcraft:iron_support_beam"
+    "trailcraft:iron_support_beam",
+    "trailcraft:andesite_cobblestone",
+    "trailcraft:basalt_cobblestone",
+    "trailcraft:chalk_cobblestone",
+    "trailcraft:diorite_cobblestone",
+    "trailcraft:dolomite_cobblestone",
+    "trailcraft:gabbro_cobblestone",
+    "trailcraft:granite_cobblestone",
+    "trailcraft:gray_granite_cobblestone",
+    "trailcraft:limestone_cobblestone",
+    "trailcraft:marble_cobblestone",
+    "trailcraft:sandstone_cobblestone",
+    "trailcraft:shale_cobblestone"
   ]
 }

@@ -136,6 +136,11 @@ public class ModItems {
     public static final DeferredItem<BlockItem> SANDSTONE_GRAVEL = ITEMS.registerSimpleBlockItem("sandstone_gravel", ModBlocks.SANDSTONE_GRAVEL);
     public static final DeferredItem<BlockItem> SHALE_GRAVEL = ITEMS.registerSimpleBlockItem("shale_gravel", ModBlocks.SHALE_GRAVEL);
 
+    // === БУЛЫЖНИК ИЗ ПОРОД ===
+    static {
+        ModBlocks.COBBLESTONES.values().forEach(ITEMS::registerSimpleBlockItem);
+    }
+
     // Дёрнорез: добывает блоки вместе с дёрном
     public static final DeferredItem<TurfCutterItem> TURF_CUTTER = ITEMS.registerItem("turf_cutter",
             props -> new TurfCutterItem(Tiers.IRON, props.attributes(DiggerItem.createAttributes(Tiers.IRON, 1.0F, -2.8F))));
