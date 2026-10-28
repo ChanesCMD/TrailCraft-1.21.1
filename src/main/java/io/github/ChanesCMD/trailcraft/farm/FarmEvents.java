@@ -16,7 +16,7 @@ import net.neoforged.neoforge.event.level.block.CropGrowEvent;
 
 import java.util.Map;
 
-/** Вспахивание почв в грядки и медленный рост на жёлтозёме. Сами грядки — block/GardenBedBlock. */
+/** Вспахивание почв в грядки, рост только на влажной грядке и медленный рост на жёлтозёме. Сами грядки — block/GardenBedBlock. */
 @EventBusSubscriber(modid = TrailCraft.MODID)
 public final class FarmEvents {
     private static Map<Block, Block> bedBySoil;
@@ -52,13 +52,16 @@ public final class FarmEvents {
         }
     }
 
-    /** На медленной почве (жёлтозём) часть попыток роста растения отменяется. Быструю почву ускоряет сама грядка. */
+    /**
+     * На сухой грядке растения не растут. На медленной почве (жёлтозём) часть попыток роста растения отменяется.
+     * Быструю почву ускоряет сама грядка.
+     */
     @SubscribeEvent
     public static void onCropGrow(CropGrowEvent.Pre event) {
         LevelAccessor level = event.getLevel();
         BlockState soil = level.getBlockState(event.getPos().below());
-        if (soil.getBlock() instanceof GardenBedBlock bed && bed.growthSpeed() < 1
-                && level.getRandom().nextFloat() >= bed.growthSpeed()) {
+        if (soil.getBlock() instanceof GardenBedBlock bed && (GardenBedBlock.isDry(soil) || bed.growthSpeed() < 1
+                && level.getRandom().nextFloat() >= bed.growthSpeed())) {
             event.setResult(CropGrowEvent.Pre.Result.DO_NOT_GROW);
         }
     }

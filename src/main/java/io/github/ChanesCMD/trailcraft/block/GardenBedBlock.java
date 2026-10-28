@@ -1,8 +1,8 @@
 package io.github.ChanesCMD.trailcraft.block;
 
+import io.github.ChanesCMD.trailcraft.farm.Watering;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -20,8 +20,9 @@ import java.util.function.Supplier;
 
 /**
  * Грядка из почвы (жёлтозём, бурозём, чернозём). Вспахивается тяпкой из голой почвы или почвы с дёрном (FarmEvents).
- * Как ванильная грядка: влажная, если в 4 блоках вода или идёт дождь; без воды сохнет и, когда на ней ничего не растёт,
- * становится обратно своей почвой (так же — если на неё прыгнуть или поставить сверху блок).
+ * Влажная, если в 4 блоках вода, идёт дождь или её полили лейкой (на Farm.WATERED_DAYS игровых суток, farm/Watering);
+ * без воды сохнет, но остаётся грядкой — только растения на сухой грядке не растут (FarmEvents). Своей почвой
+ * становится, если на неё прыгнуть или поставить сверху блок.
  * Растения на ней растут с множителем growthSpeed (числа — в farm/Farm): больше 1 — грядка даёт растению
  * лишние случайные тики, меньше 1 — часть попыток роста отменяет FarmEvents.
  */
@@ -55,13 +56,12 @@ public class GardenBedBlock extends FarmBlock {
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         int moisture = state.getValue(MOISTURE);
-        if (!isNearWater(level, pos) && !level.isRainingAt(pos.above())) {
-            if (moisture > 0) {
-                level.setBlock(pos, state.setValue(MOISTURE, moisture - 1), Block.UPDATE_CLIENTS);
-            } else if (!level.getBlockState(pos.above()).is(BlockTags.MAINTAINS_FARMLAND)) {
-                dry(null, state, level, pos);
+        if (!isNearWater(level, pos) && !level.isRainingAt(pos.above()) && !Watering.isWatered(level, pos)) {
+            // Сохнет постепенно; сухая остаётся грядкой, только растения на ней не растут (FarmEvents)
+            if (moisture == 0) {
                 return;
             }
+            level.setBlock(pos, state.setValue(MOISTURE, moisture - 1), Block.UPDATE_CLIENTS);
         } else if (moisture < MAX_MOISTURE) {
             level.setBlock(pos, state.setValue(MOISTURE, MAX_MOISTURE), Block.UPDATE_CLIENTS);
         }
@@ -83,7 +83,20 @@ public class GardenBedBlock extends FarmBlock {
         entity.causeFallDamage(fallDistance, 1.0F, entity.damageSources().fall());
     }
 
-    /** Грядка пересохла (или её затоптали, или сверху поставили блок) — снова своя почва. */
+    /** Сухая грядка (влажность 0) — растения на ней не растут. */
+    public static boolean isDry(BlockState state) {
+        return state.getValue(MOISTURE) == 0;
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!state.is(newState.getBlock())) {
+            Watering.forget(level, pos);
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+
+    /** Грядку затоптали или сверху поставили блок — снова своя почва. */
     private void dry(@Nullable Entity entity, BlockState state, Level level, BlockPos pos) {
         BlockState soilState = pushEntitiesUp(state, soil.get().defaultBlockState(), level, pos);
         level.setBlockAndUpdate(pos, soilState);

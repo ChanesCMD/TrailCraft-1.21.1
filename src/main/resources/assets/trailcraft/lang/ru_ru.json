@@ -931,5 +931,7 @@
   "item.trailcraft.wolf_spawn_egg": "Яйцо призыва волка",
   "itemGroup.trailcraft_spawn_eggs": "TrailCraft: Яйца призыва",
   "subtitles.trailcraft.entity.crow.ambient": "Ворона каркает",
-  "subtitles.trailcraft.entity.raven.ambient": "Ворон каркает"
+  "subtitles.trailcraft.entity.raven.ambient": "Ворон каркает",
+  "tooltip.trailcraft.watering_can.water": "Вода: %s/%s",
+  "tooltip.trailcraft.watering_can.use": "ПКМ по воде — наполнить, по грядке — полить 3×3 на %s сут."
 }

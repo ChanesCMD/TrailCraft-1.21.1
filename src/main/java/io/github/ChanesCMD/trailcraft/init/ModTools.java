@@ -4,6 +4,8 @@ import io.github.ChanesCMD.trailcraft.init.ModTiers.Material;
 import io.github.ChanesCMD.trailcraft.item.SawItem;
 import io.github.ChanesCMD.trailcraft.item.SpearItem;
 import io.github.ChanesCMD.trailcraft.item.ThrowingSpearItem;
+import io.github.ChanesCMD.trailcraft.item.WateringCanItem;
+import io.github.ChanesCMD.trailcraft.farm.Farm;
 import io.github.ChanesCMD.trailcraft.item.TieredToolItem;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.DiggerItem;
@@ -80,10 +82,11 @@ public final class ModTools {
             }
         }
 
-        // TODO: уточнить, что делают лейки, линейка и метла
-        single("wooden_watering_can");
-        single("bronze_watering_can");
-        single("zinc_watering_can");
+        // лейки: наполняются из воды, поливают грядки (item/WateringCanItem, farm/Watering)
+        reg("wooden_watering_can", p -> new WateringCanItem(Farm.WOODEN_CAN_WATER, p.stacksTo(1)));
+        reg("bronze_watering_can", p -> new WateringCanItem(Farm.BRONZE_CAN_WATER, p.stacksTo(1)));
+        reg("zinc_watering_can", p -> new WateringCanItem(Farm.ZINC_CAN_WATER, p.stacksTo(1)));
+        // TODO: уточнить, что делают линейка и метла
         single("wooden_ruler");
         single("broom");
     }

@@ -15,6 +15,14 @@ public final class Farm {
     /** Чернозём — лучше всех: в полтора раза быстрее. */
     public static final float CHERNOZEM_GROWTH = 1.5f;
 
+    // === ЛЕЙКИ (item/WateringCanItem, farm/Watering) ===
+    /** Политая грядка влажная столько игровых суток (сутки — 24000 тиков времени мира, при любой длине суток в конфиге). */
+    public static final int WATERED_DAYS = 2;
+    /** Поливает квадрат грядок со стороной 2 × WATERING_RADIUS + 1 вокруг грядки, по которой кликнули. */
+    public static final int WATERING_RADIUS = 1;
+    /** Сколько поливов вмещает лейка: деревянная, бронзовая, цинковая. */
+    public static final int WOODEN_CAN_WATER = 8, BRONZE_CAN_WATER = 16, ZINC_CAN_WATER = 32;
+
     // === ЯГОДНЫЕ КУСТЫ (как сладкие ягоды) ===
     /** Куст подрастает (0 → 3) за случайный тик с шансом 1 из стольких. */
     public static final int BUSH_GROWTH_CHANCE = 5;

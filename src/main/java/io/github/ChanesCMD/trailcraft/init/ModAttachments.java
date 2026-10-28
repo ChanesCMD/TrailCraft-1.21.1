@@ -15,6 +15,7 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -47,6 +48,12 @@ public final class ModAttachments {
     public static final Supplier<AttachmentType<Map<String, String>>> CALENDAR_NOTES = ATTACHMENT_TYPES.register("calendar_notes",
             () -> AttachmentType.<Map<String, String>>builder(() -> Map.of())
                     .serialize(Codec.unboundedMap(Codec.STRING, Codec.STRING)).copyOnDeath().build());
+
+    /** Политые лейкой грядки чанка: позиция блока (BlockPos.asLong) → время мира (dayTime), до которого грядка влажная. */
+    public static final Supplier<AttachmentType<Map<Long, Long>>> WATERED_BEDS = ATTACHMENT_TYPES.register("watered_beds",
+            () -> AttachmentType.<Map<Long, Long>>builder(() -> new HashMap<>())
+                    .serialize(Codec.unboundedMap(Codec.STRING.xmap(Long::parseLong, String::valueOf), Codec.LONG)
+                            .xmap(map -> (Map<Long, Long>) new HashMap<>(map), map -> map)).build());
 
     /** Последнее, что отправлено клиенту в GearPayload (не сохраняется: после входа отправится заново). */
     public static final Supplier<AttachmentType<Integer>> GEAR_SENT = ATTACHMENT_TYPES.register("gear_sent",
