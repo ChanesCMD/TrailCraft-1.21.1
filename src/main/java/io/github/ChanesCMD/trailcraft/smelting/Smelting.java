@@ -134,10 +134,18 @@ public final class Smelting {
         return 200 + 40 * units;
     }
 
-    /** Что выплавится из содержимого кувшина (пустой список — нечего плавить). */
+    /** Есть ли в содержимом кувшина то, что не плавится (мелочь): такой кувшин печь не плавит. */
+    public static boolean hasForeign(List<ItemStack> contents) {
+        return contents.stream().anyMatch(stack -> !stack.isEmpty() && !melts(stack));
+    }
+
+    /** Что выплавится из содержимого кувшина (пустой список — нечего плавить или в кувшине мелочь). */
     public static List<ItemStack> result(List<ItemStack> contents) {
         Map<Metal, Double> amounts = new EnumMap<>(Metal.class);
         int total = 0;
+        if (hasForeign(contents)) {
+            return new ArrayList<>();
+        }
         for (ItemStack stack : contents) {
             if (!melts(stack)) {
                 continue;

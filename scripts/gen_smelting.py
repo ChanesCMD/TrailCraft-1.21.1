@@ -53,6 +53,7 @@ LANG = {
     "block.trailcraft.small_bloomery": ("Малая сыродутная печь", "Small Bloomery"),
     "tooltip.trailcraft.clay_mold": ("ПКМ — выбрать, что вылепить", "Right-click to choose what to shape"),
     "tooltip.trailcraft.jug.result": ("Выплавится: %s × %s", "Will smelt: %s × %s"),
+    "tooltip.trailcraft.jug.foreign": ("С мелочью кувшин не плавится", "A jug with odds and ends won't smelt"),
     "gui.trailcraft.clay_mold": ("Слепок из глины", "Clay Mold"),
     "gui.trailcraft.clay_mold.hint": ("Выберите форму", "Choose a shape"),
     "item.trailcraft.cloth_blank": ("Тканевая заготовка", "Cloth Blank"),
@@ -272,23 +273,7 @@ def bloomery_faces():
     return side, top, front, front_on
 
 
-JUTE = (191, 163, 102)       # тканевая заготовка и полотно — цвет джута
-STICK = (120, 86, 48)
-
-
-def cloth_blank():
-    """Тканевая заготовка: обработанная палка по диагонали, посередине намотан толстый слой джута."""
-    rnd = random.Random(21)
-    im = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
-    for t in range(2, 15):  # палка
-        im.putpixel((t, 15 - t), shade(STICK, 1.1 if t % 3 else 0.85) + (255,))
-    for y in range(16):
-        for x in range(16):
-            u, v = x - (15 - y), x + (15 - y) - 15  # v — вдоль палки, u — поперёк
-            if abs(v) <= 4 and abs(u) <= 3 - (abs(v) == 4):
-                k = (1.15 if u < 0 else 0.8 if u > 1 else 1.0) * (0.88 if (v + u) % 3 == 0 else 1.0)
-                im.putpixel((x, y), shade(JUTE, k * rnd.uniform(0.95, 1.04)) + (255,))
-    return im
+JUTE = (191, 163, 102)       # тканевое полотно — цвет джута
 
 
 def cloth():
@@ -321,7 +306,7 @@ def textures():
     png("item/clay_mold", lump(MOLD_CLAY, 1))
     png("item/unfired_jug", jug(RAW_CLAY, 2))
     png("item/jug", jug(FIRED_JUG, 2))
-    png("item/cloth_blank", cloth_blank())
+    # тканевая заготовка — рисунок автора (textures/item/cloth_blank.png), скрипт её не перерисовывает
     png("item/cloth", cloth())
     side, top, front, front_on = bloomery_faces()
     png("block/small_bloomery_side", side)
@@ -383,9 +368,28 @@ def backpack_result(backpack):
         {"slot": POCKETS_SLOT, "item": {"id": f"{NS}:{BACKPACK_POCKETS[backpack]}", "count": 1}}]}}
 
 
+# Мелочь, которую можно хранить в кувшине по 64 (JugHandler); то, что плавится, — по 16, как раньше. Кувшин
+# с мелочью в печи не плавится.
+ROCKS = ["andesite", "basalt", "chalk", "diorite", "dolomite", "gabbro", "granite", "gray_granite", "limestone",
+         "marble", "sandstone", "shale"]
+NUGGET_ORES = ["native_copper", "malachite", "tetrahedrite", "cassiterite", "sphalerite"]
+JUG_ITEMS = (
+    [f"{NS}:stick_branch", f"{NS}:stick_processed", "minecraft:stick", f"{NS}:straw"]
+    + [f"{NS}:brick_{c}" for c in CLAYS] + [f"{NS}:reinforced_brick", "minecraft:brick"]
+    + [f"#{NS}:clay_balls", "minecraft:clay_ball"]
+    + [f"{NS}:{r}_pebble" for r in ROCKS] + [f"{NS}:flint_pebble", "minecraft:flint"]
+    + [f"{NS}:{o}_nugget" for o in NUGGET_ORES]
+    + [f"{NS}:bituminous_coal", f"{NS}:charcoal", "minecraft:coal", "minecraft:charcoal", f"{NS}:ash", f"{NS}:apatite"]
+    + [f"{NS}:jute", f"{NS}:jute_seeds", f"{NS}:rope", "minecraft:string", "minecraft:feather"]
+    + [f"{NS}:{b}" for b in ("currant", "cloudberry", "gooseberry", "blackberry")]
+    + ["minecraft:wheat_seeds", "minecraft:bone", "minecraft:bone_meal", "minecraft:gunpowder",
+       "minecraft:iron_nugget", "minecraft:gold_nugget"])
+
+
 def data():
     clay_balls = [f"{NS}:clay_ball_{c}" for c in CLAYS]
     tag("item", f"{NS}:clay_balls", clay_balls)
+    tag("item", f"{NS}:jug_items", JUG_ITEMS)
     tag("item", f"{NS}:straw_tools", STRAW_TOOLS)
     # топливо малой сыродутной печи (BloomeryBlockEntity): уголь и торф (торф горит вдвое меньше)
     tag("item", f"{NS}:bloomery_fuels", ["#minecraft:coals", f"{NS}:peat"])

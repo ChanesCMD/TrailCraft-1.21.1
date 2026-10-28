@@ -5,7 +5,7 @@ import io.github.ChanesCMD.trailcraft.inventory.ContentsHandler;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-/** Слоты кувшина в правой руке игрока. */
+/** Слоты кувшина в правой руке игрока: то, что плавится, — по 16, мелочь (#trailcraft:jug_items) — по 64. */
 public class JugHandler extends ContentsHandler {
     public JugHandler(Player player) {
         super(player, JugItem.SLOTS);
@@ -19,11 +19,16 @@ public class JugHandler extends ContentsHandler {
 
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
-        return isPresent() && Smelting.melts(stack);
+        return isPresent() && JugItem.fits(stack);
     }
 
     @Override
     public int getSlotLimit(int slot) {
-        return JugItem.SLOT_LIMIT;
+        return JugItem.SMALL_LIMIT;
+    }
+
+    @Override
+    protected int getStackLimit(int slot, ItemStack stack) {
+        return Math.min(JugItem.limit(stack), stack.getMaxStackSize());
     }
 }

@@ -80,13 +80,18 @@ public abstract class ContentsHandler implements IItemHandlerModifiable {
         save();
     }
 
+    /** Сколько таких предметов влезает в слот (кувшин: мелочь — 64, то, что плавится, — 16). */
+    protected int getStackLimit(int slot, ItemStack stack) {
+        return Math.min(getSlotLimit(slot), stack.getMaxStackSize());
+    }
+
     @Override
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
         if (stack.isEmpty() || !isItemValid(slot, stack)) {
             return stack;
         }
         ItemStack existing = getStackInSlot(slot);
-        int limit = Math.min(getSlotLimit(slot), stack.getMaxStackSize());
+        int limit = getStackLimit(slot, stack);
         if (!existing.isEmpty()) {
             if (!ItemStack.isSameItemSameComponents(stack, existing)) {
                 return stack;

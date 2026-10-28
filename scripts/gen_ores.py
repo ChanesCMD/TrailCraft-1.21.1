@@ -217,12 +217,16 @@ def loot():
             ]}]}],
             "random_sequence": f"{NS}:blocks/{ore}_ore",
         })
-    # Костёр: с шёлковым касанием — сам костёр, иначе свой древесный уголь вместо ванильного
+    # Костёр: с шёлковым касанием — сам костёр, иначе свой древесный уголь вместо ванильного (горящий — ничего:
+    # уголь в нём догорает)
     write("data/minecraft/loot_table/blocks/campfire.json", {
         "type": "minecraft:block",
         "pools": [{"rolls": 1, "bonus_rolls": 0, "entries": [{"type": "minecraft:alternatives", "children": [
             {"type": "minecraft:item", "name": "minecraft:campfire", "conditions": [SILK_TOUCH]},
-            {"type": "minecraft:item", "name": f"{NS}:charcoal", "conditions": [{"condition": "minecraft:survives_explosion"}]},
+            {"type": "minecraft:item", "name": f"{NS}:charcoal", "conditions": [
+                {"condition": "minecraft:survives_explosion"},
+                {"condition": "minecraft:block_state_property", "block": "minecraft:campfire",
+                 "properties": {"lit": "false"}}]},
         ]}]}],
         "random_sequence": "minecraft:blocks/campfire",
     })

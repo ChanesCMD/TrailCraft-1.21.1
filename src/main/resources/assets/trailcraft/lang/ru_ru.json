@@ -564,7 +564,6 @@
   "gui.trailcraft.belt.instruments": "Приборы",
   "gui.trailcraft.belt.instrument_hint": "Слот прибора: %s или GPS",
   "gui.trailcraft.belt.gps_blocked": "Занято: стоит GPS",
-  "gui.trailcraft.creative.gear": "Снаряжение",
   "gui.trailcraft.calendar.year": "Год %s",
   "gui.trailcraft.calendar.day": "День %s",
   "gui.trailcraft.calendar.note": "Заметка",
@@ -940,5 +939,6 @@
   "item.minecraft.chicken": "Сырое белое мясо",
   "item.minecraft.cooked_chicken": "Жареное белое мясо",
   "block.trailcraft.campfire": "Костёр",
-  "item.trailcraft.ash": "Зола"
+  "item.trailcraft.ash": "Зола",
+  "tooltip.trailcraft.jug.foreign": "С мелочью кувшин не плавится"
 }

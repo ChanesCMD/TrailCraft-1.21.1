@@ -39,8 +39,6 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 @EventBusSubscriber(modid = TrailCraft.MODID)
 public class InventoryEvents {
@@ -286,50 +284,6 @@ public class InventoryEvents {
             player.setData(ModAttachments.GEAR_SENT, flags);
             PacketDistributor.sendToPlayer(player, new GearPayload(flags));
         }
-        if (player.isCreative()) {
-            syncEquipped(player, false);
-        }
-    }
-
-    /** Что последний раз отправлено креативному игроку о кошельке, поясе и рюкзаке (EquippedPayloads). */
-    private static final Map<ServerPlayer, List<ItemStack>> EQUIPPED_SENT = new WeakHashMap<>();
-
-    /** Отправляет креативному клиенту кошелёк, пояс и рюкзак, если они изменились (или всегда, если force). */
-    private static void syncEquipped(ServerPlayer player, boolean force) {
-        PlayerSlots slots = player.getData(ModAttachments.PLAYER_SLOTS);
-        List<ItemStack> stacks = new ArrayList<>();
-        for (int slot : EquippedPayloads.SLOTS) {
-            stacks.add(slots.getStackInSlot(slot).copy());
-        }
-        List<ItemStack> sent = EQUIPPED_SENT.get(player);
-        if (force || sent == null || !sameStacks(sent, stacks)) {
-            EQUIPPED_SENT.put(player, stacks);
-            PacketDistributor.sendToPlayer(player, new EquippedPayloads.Sync(stacks));
-        }
-    }
-
-    private static boolean sameStacks(List<ItemStack> a, List<ItemStack> b) {
-        if (a.size() != b.size()) {
-            return false;
-        }
-        for (int i = 0; i < a.size(); i++) {
-            if (!ItemStack.matches(a.get(i), b.get(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /** Креатив положил предмет в слот кошелька, пояса или рюкзака (или забрал его оттуда). */
-    private static void setEquipped(ServerPlayer player, EquippedPayloads.Set payload) {
-        int slot = payload.slot();
-        ItemStack stack = payload.stack().isEmpty() ? ItemStack.EMPTY : payload.stack().copyWithCount(1);
-        PlayerSlots slots = player.getData(ModAttachments.PLAYER_SLOTS);
-        boolean known = slot == PlayerSlots.WALLET || slot == PlayerSlots.BELT || slot == PlayerSlots.BACKPACK;
-        if (player.isCreative() && known && (stack.isEmpty() || slots.isItemValid(slot, stack))) {
-            slots.setStackInSlot(slot, stack);
-        }
-        syncEquipped(player, true);
     }
 
     /** Кладёт предмет в хотбар: сначала в такие же стопки, потом в пустые слоты. @return остаток */
@@ -376,7 +330,7 @@ public class InventoryEvents {
             registrar.playToServer(OpenInventoryPayload.TYPE, OpenInventoryPayload.STREAM_CODEC,
                     (payload, context) -> context.enqueueWork(() -> {
                         if (context.player() instanceof ServerPlayer player) {
-                            open(player, payload.creative());
+                            open(player, payload);
                         }
                     }));
             registrar.playToServer(DeathLogPayloads.Request.TYPE, DeathLogPayloads.Request.STREAM_CODEC,
@@ -392,25 +346,21 @@ public class InventoryEvents {
                     (payload, context) -> context.enqueueWork(() -> ClientGear.set(payload)));
             registrar.playToClient(CosmeticPayload.TYPE, CosmeticPayload.STREAM_CODEC,
                     (payload, context) -> context.enqueueWork(() -> ClientCosmetics.set(payload)));
-            registrar.playToClient(EquippedPayloads.Sync.TYPE, EquippedPayloads.Sync.STREAM_CODEC,
-                    (payload, context) -> context.enqueueWork(() -> ClientGear.setEquipped(payload.stacks())));
-            registrar.playToServer(EquippedPayloads.Set.TYPE, EquippedPayloads.Set.STREAM_CODEC,
-                    (payload, context) -> context.enqueueWork(() -> {
-                        if (context.player() instanceof ServerPlayer player) {
-                            setEquipped(player, payload);
-                        }
-                    }));
         }
     }
 
     /**
-     * Открывает инвентарь, только если у игрока не открыт другой контейнер. Креатив пользуется ванильным, а этот
-     * открывает только плюсом у слота кошелька, пояса или рюкзака (fromCreative).
+     * Открывает инвентарь, только если у игрока не открыт другой контейнер. Креатив открывает его вкладкой «Инвентарь»
+     * креативного окна (creative); предмет, который креатив держал на курсоре, остаётся на курсоре.
      */
-    private static void open(ServerPlayer player, boolean fromCreative) {
-        if (player.containerMenu == player.inventoryMenu && (!player.isCreative() || fromCreative) && !player.isSpectator()) {
+    private static void open(ServerPlayer player, OpenInventoryPayload payload) {
+        if (player.containerMenu == player.inventoryMenu && (!player.isCreative() || payload.creative()) && !player.isSpectator()) {
             player.openMenu(new SimpleMenuProvider((id, inventory, p) -> new TrailInventoryMenu(id, inventory),
                     Component.translatable("container.trailcraft.inventory")));
+            if (player.isCreative() && !payload.carried().isEmpty() && player.containerMenu instanceof TrailInventoryMenu menu) {
+                menu.setCarried(payload.carried());
+                menu.broadcastChanges();
+            }
         }
     }
 }

@@ -8,7 +8,6 @@ import io.github.ChanesCMD.trailcraft.init.ModMenus;
 import io.github.ChanesCMD.trailcraft.init.ModSmelting;
 import io.github.ChanesCMD.trailcraft.inventory.DeathLogPayloads;
 import io.github.ChanesCMD.trailcraft.inventory.OpenInventoryPayload;
-import io.github.ChanesCMD.trailcraft.inventory.TrailInventoryMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.neoforged.api.distmarker.Dist;
@@ -23,10 +22,7 @@ import java.util.Map;
 @EventBusSubscriber(modid = TrailCraft.MODID, value = Dist.CLIENT)
 public class ClientInventoryEvents {
 
-    /** Окно, которое инвентарь TrailCraft откроет сразу (плюс у слота во вкладке креатива), см. TrailInventoryScreen.init. */
-    public static TrailInventoryMenu.Popup pendingPopup = TrailInventoryMenu.Popup.NONE;
-
-    /** Вместо ванильного инвентаря просим сервер открыть свой. В креативе остаётся ванильный креативный. */
+    /** Вместо ванильного инвентаря просим сервер открыть свой. В креативе — креативное окно (его вкладка «Инвентарь» — свой, ClientCreativeEvents). */
     @SubscribeEvent
     public static void onScreenOpening(ScreenEvent.Opening event) {
         var player = Minecraft.getInstance().player;

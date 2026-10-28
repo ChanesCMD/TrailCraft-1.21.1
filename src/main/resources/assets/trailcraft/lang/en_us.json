@@ -564,7 +564,6 @@
   "gui.trailcraft.belt.instruments": "Instruments",
   "gui.trailcraft.belt.instrument_hint": "Instrument slot: %s or GPS",
   "gui.trailcraft.belt.gps_blocked": "Taken by GPS",
-  "gui.trailcraft.creative.gear": "Gear",
   "gui.trailcraft.calendar.year": "Year %s",
   "gui.trailcraft.calendar.day": "Day %s",
   "gui.trailcraft.calendar.note": "Note",
@@ -940,5 +939,6 @@
   "item.minecraft.chicken": "Raw White Meat",
   "item.minecraft.cooked_chicken": "Cooked White Meat",
   "block.trailcraft.campfire": "Campfire",
-  "item.trailcraft.ash": "Ash"
+  "item.trailcraft.ash": "Ash",
+  "tooltip.trailcraft.jug.foreign": "A jug with odds and ends won't smelt"
 }

@@ -39,6 +39,9 @@ public class JugScreen extends AbstractContainerScreen<JugMenu> {
         super.renderLabels(g, mouseX, mouseY);
         List<ItemStack> result = Smelting.result(menu.jugItems());
         int y = JugMenu.JUG_Y + 22;
+        if (Smelting.hasForeign(menu.jugItems()) && menu.jugItems().stream().anyMatch(Smelting::melts)) {
+            centered(g, Component.translatable("tooltip.trailcraft.jug.foreign"), y, 0xFF8A5A00);
+        }
         for (ItemStack ingot : result) {
             centered(g, Component.translatable("tooltip.trailcraft.jug.result", ingot.getCount(), ingot.getHoverName()), y, 0xFF8A5A00);
             y += 10;

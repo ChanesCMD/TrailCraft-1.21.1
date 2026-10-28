@@ -198,12 +198,18 @@ public class TrailCampfireBlockEntity extends BlockEntity {
         return false;
     }
 
-    /** Что выпадает из сломанного костра: еда из слотов и брёвна (обугленные — древесным углём). */
-    public void dropContents(Level level, BlockPos pos, int logCount) {
+    /**
+     * Что выпадает из сломанного костра: еда из слотов и брёвна (обугленные — древесным углём, у горящего костра
+     * обугленные догорают и не выпадают).
+     */
+    public void dropContents(Level level, BlockPos pos, int logCount, boolean lit) {
         for (ItemStack stack : items) {
             Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), stack);
         }
         for (int i = 0; i < logCount && i < logs.size(); i++) {
+            if (lit && i < charred) {
+                continue;
+            }
             ItemStack log = i < charred ? new ItemStack(ModOres.CHARCOAL.get()) : logs.get(i);
             Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), log);
         }

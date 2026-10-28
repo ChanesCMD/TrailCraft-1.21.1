@@ -73,12 +73,25 @@ public final class ModTools {
             reg(m.id + "_throwing_spear", p -> new ThrowingSpearItem(m, p.durability(m.tier.getUses())
                     .attributes(SwordItem.createAttributes(m.tier, ModTiers.KNIFE_DAMAGE, ModTiers.KNIFE_SPEED))));
         }
+        // серпы, косы, пилы, кусачки — по виду, внутри вида по материалу (так и во вкладке креатива)
         for (Material m : Material.values()) {
             if (m.isMetal()) {
                 tool(m, "_sickle", ModTiers.SICKLE_DAMAGE, ModTiers.SICKLE_SPEED);
+            }
+        }
+        for (Material m : Material.values()) {
+            if (m.isMetal()) {
                 tool(m, "_scythe", ModTiers.SCYTHE_DAMAGE, ModTiers.SCYTHE_SPEED);
+            }
+        }
+        for (Material m : Material.values()) {
+            if (m.isMetal()) {
                 reg(m.id + "_saw", p -> new SawItem(m.tier,
                         p.attributes(DiggerItem.createAttributes(m.tier, ModTiers.SAW_DAMAGE, ModTiers.SAW_SPEED))));
+            }
+        }
+        for (Material m : Material.values()) {
+            if (m.isMetal()) {
                 tool(m, "_cutters", ModTiers.CUTTERS_DAMAGE, ModTiers.CUTTERS_SPEED);
             }
         }

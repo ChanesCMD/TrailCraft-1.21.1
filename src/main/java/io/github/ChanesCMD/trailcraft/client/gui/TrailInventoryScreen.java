@@ -3,7 +3,6 @@ package io.github.ChanesCMD.trailcraft.client.gui;
 import io.github.ChanesCMD.trailcraft.ServerConfig;
 import io.github.ChanesCMD.trailcraft.calendar.Calendar;
 import io.github.ChanesCMD.trailcraft.calendar.CalendarNotes;
-import io.github.ChanesCMD.trailcraft.client.ClientInventoryEvents;
 import io.github.ChanesCMD.trailcraft.client.voice.VoiceClient;
 import io.github.ChanesCMD.trailcraft.client.voice.VoiceHeads;
 import io.github.ChanesCMD.trailcraft.inventory.BeltHandler;
@@ -45,7 +44,8 @@ import static io.github.ChanesCMD.trailcraft.inventory.TrailInventoryMenu.*;
  * Экран инвентаря (ТЗ, часть 1, разделы 1–3). Макеты: docs/ui/01_inventory_default.png, 02_inventory_warmth.png, 04_backpack.png.
  * Слева от панели — головы голосового чата (только когда в нём хотя бы двое), в левом верхнем углу экрана — 5 кнопок.
  * Окна (рюкзак, кошелёк, пояс, календарь, журнал смертей, голосовой чат) рисуются поверх инвентаря с лёгким затемнением; закрываются Esc,
- * повторным нажатием кнопки или кликом вне окна.
+ * повторным нажатием кнопки или кликом вне окна. В креативе этот экран — вкладка «Инвентарь», над панелью вкладки
+ * креатива (CreativeTabs).
  */
 public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventoryMenu> {
     /** Головы голосового чата слева от панели: отступ, ширина столбика с обводкой, верх первой головы. */
@@ -78,6 +78,8 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
 
     private final Inventory playerInventory;
     private Button calendarButton;
+    /** Вкладки креатива над панелью (только в креативе). */
+    private CreativeTabs creativeTabs;
     private List<CornerButtons.Entry> cornerButtons = List.of();
     private VoiceChatWindow voiceWindow;
     private boolean voiceOpen;
@@ -109,6 +111,10 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         leftPos = Math.max(4 + HEADS_W + HEADS_GAP, (width - WIDTH) / 2);
         // Окно рюкзака над панелью должно влезать по высоте (GUI scale 4 на 1080p: экран 480×270)
         topPos = Math.min(Math.max((height - HEIGHT) / 2 - RAISE, 4 - BACKPACK_WIN_Y), Math.max(4, height - HEIGHT - 4));
+        creativeTabs = CreativeTabs.shown() ? new CreativeTabs(WIDTH) : null;
+        if (creativeTabs != null) {
+            creativeTabs.addButtons(leftPos, topPos, WIDTH, this::addRenderableWidget);
+        }
         cornerButtons = CornerButtons.create(this, this::toggleVoice);
         voiceWindow = new VoiceChatWindow(font);
         for (int i = 0; i < cornerButtons.size(); i++) {
@@ -134,11 +140,6 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         addWidget(noteBox);
         if (menu.popup == Popup.CALENDAR) {
             setPopupRect(calX, calY, CAL_W, CAL_H);
-        }
-        // Открыт плюсом у слота во вкладке креатива — сразу показываем его окно
-        if (ClientInventoryEvents.pendingPopup != Popup.NONE) {
-            openPopup(ClientInventoryEvents.pendingPopup);
-            ClientInventoryEvents.pendingPopup = Popup.NONE;
         }
     }
 
@@ -313,6 +314,9 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
             g.pose().translate(0, 0, Z_TOOLTIP);
             renderTooltip(g, mouseX, mouseY);
             renderInstrumentHint(g, mouseX, mouseY);
+            if (creativeTabs != null && menu.getCarried().isEmpty()) {
+                creativeTabs.renderTooltip(g, font, leftPos, topPos, WIDTH, mouseX, mouseY);
+            }
             g.pose().popPose();
         }
     }
@@ -333,7 +337,13 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
             VoiceHeads.column(g, x - HEADS_GAP - HEADS_W + 1, y + HEADS_Y, VoiceClient.heads());
         }
 
+        if (creativeTabs != null) {
+            creativeTabs.renderBehind(g, x, y);
+        }
         UiDraw.panel(g, x, y, WIDTH, HEIGHT);
+        if (creativeTabs != null) {
+            creativeTabs.renderFront(g, font, x, y, WIDTH);
+        }
         for (int i = 0; i < menu.slots.size(); i++) {
             Slot slot = menu.slots.get(i);
             if (i == RESULT || slot instanceof MenuSlot s && s.group() != GROUP_BASE) {
@@ -674,6 +684,9 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
             if (!voiceWindow.mouseClicked(mouseX, mouseY)) {
                 voiceOpen = false;
             }
+            return true;
+        }
+        if (creativeTabs != null && !overPopup(mouseX, mouseY) && creativeTabs.click(leftPos, topPos, WIDTH, mouseX, mouseY)) {
             return true;
         }
         // Кнопки окон на кошельке, поясе и рюкзаке лежат поверх всего и работают всегда: открыть, переключить, закрыть
