@@ -5,7 +5,7 @@
 Нужен Pillow (pip install pillow). Скрипт перезаписывает только свои текстуры (список — в конце файла).
 
 Тяпки — рисунок автора (головка вправо, свой черенок), посевы джута — рисунок автора scripts/templates/jute_stages.png,
-пучок джута — тонкая связка, как солома (straw_bundle).
+пучок джута — тонкая связка, как солома (straw_bundle), верёвка — моток по прототипу автора в цветах джута.
 """
 import os
 import random
@@ -696,25 +696,26 @@ JUTE_SEEDS = [
 ]
 JUTE_SEEDS_COLORS = {"l": "#8a7a52", "m": "#5e5034", "d": "#3a3020"}
 
+# Верёвка — моток по прототипу автора; цвета пучка джута (JUTE_BUNDLE_COLORS): вдоль пряди скрутка — два светлых
+# пикселя и один темнее, справа снизу всё на тон темнее; o — между витками, b — внешний контур
 ROPE = [
     "................",
     "................",
-    ".....lmlmlm.....",
-    "...lmdddddmlm...",
-    "..lmd.....dmlm..",
-    "..md.......dml..",
-    ".lm.........ml..",
-    ".md...lml...dm..",
-    ".lm..lmdml..ml..",
-    ".md..md.dm..dm..",
-    ".lm..lm.lm..ml..",
-    "..ml..mlm..lmd..",
-    "..dml.....lmd...",
-    "...dmlmlmlmd....",
-    ".....ddddd.lm...",
-    "............md..",
+    "......bbbbbb....",
+    "....bbmllllmb...",
+    "...bmlooooolb...",
+    "..bmlollmllomb..",
+    "..bmolmooododb..",
+    ".blollollomomb..",
+    ".blolomoodmomb..",
+    ".blololmdmodb...",
+    ".bmomloooommb...",
+    ".blloomdmmdb.mm.",
+    "..bldmooooommdb.",
+    "...bbdmmdmmdbb..",
+    ".....bbbbbbb....",
+    "................",
 ]
-ROPE_COLORS = {"l": "#d8bf86", "m": "#a8894e", "d": "#6e5530"}
 
 
 def berry_item(kind):
@@ -726,7 +727,7 @@ def items():
         save(berry_item(kind), f"item/{kind}")
     save(paint(blank(), JUTE_BUNDLE, {k: hx(v) for k, v in JUTE_BUNDLE_COLORS.items()}), "item/jute")
     save(paint(blank(), JUTE_SEEDS, {k: hx(v) for k, v in JUTE_SEEDS_COLORS.items()}), "item/jute_seeds")
-    save(paint(blank(), ROPE, {k: hx(v) for k, v in ROPE_COLORS.items()}), "item/rope")
+    save(paint(blank(), ROPE, {k: hx(v) for k, v in JUTE_BUNDLE_COLORS.items()}), "item/rope")
 
 
 BERRY_BUSHES = ["currant", "cloudberry", "gooseberry", "blackberry"]
