@@ -8,7 +8,6 @@
     "LeavesBlockMixin"
   ],
   "client": [
-    "CreativeScreenAccessor",
     "LevelRendererMixin",
     "LeavesBlockClientMixin"
   ],

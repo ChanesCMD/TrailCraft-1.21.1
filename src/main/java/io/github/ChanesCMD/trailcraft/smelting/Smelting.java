@@ -32,19 +32,23 @@ public final class Smelting {
 
     /** Чистые металлы (то, на что раскладывается всё в кувшине) и сплавы. Слиток — id предмета. */
     public enum Metal {
-        COPPER("minecraft:copper_ingot"), TIN("trailcraft:tin_ingot"), ZINC("create:zinc_ingot"),
-        BISMUTH("trailcraft:bismuth_ingot"), LEAD("trailcraft:lead_ingot"), GOLD("minecraft:gold_ingot"),
-        TIN_BRONZE("trailcraft:tin_bronze_ingot"), BISMUTH_BRONZE("trailcraft:bismuth_bronze_ingot"),
-        BRASS("create:brass_ingot");
+        COPPER("minecraft:copper_ingot", 0xE88454), TIN("trailcraft:tin_ingot", 0xD2D6DA),
+        ZINC("create:zinc_ingot", 0xB0BEBE), BISMUTH("trailcraft:bismuth_ingot", 0xC8AABE),
+        LEAD("trailcraft:lead_ingot", 0x828AA0), GOLD("minecraft:gold_ingot", 0xF8CC4A),
+        TIN_BRONZE("trailcraft:tin_bronze_ingot", 0xD6A050), BISMUTH_BRONZE("trailcraft:bismuth_bronze_ingot", 0xBE9664),
+        BRASS("create:brass_ingot", 0xE2BE52);
 
         public static final Codec<Metal> CODEC = Codec.STRING.xmap(id -> valueOf(id.toUpperCase(Locale.ROOT)), Metal::id);
         public static final StreamCodec<ByteBuf, Metal> STREAM_CODEC =
                 ByteBufCodecs.VAR_INT.map(i -> values()[i], Metal::ordinal);
 
         private final ResourceLocation ingot;
+        /** Цвет застывшего металла в залитой форме (как METAL_COLORS в scripts/gen_casting.py). */
+        public final int color;
 
-        Metal(String ingot) {
+        Metal(String ingot, int color) {
             this.ingot = ResourceLocation.parse(ingot);
+            this.color = color;
         }
 
         public Item ingot() {

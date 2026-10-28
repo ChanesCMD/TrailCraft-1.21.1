@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "trailcraft:item/knife_mold_filled"
+    "layer0": "trailcraft:item/knife_mold",
+    "layer1": "trailcraft:item/knife_mold_cast"
   }
 }

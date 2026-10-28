@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "trailcraft:item/axe_mold_filled"
+    "layer0": "trailcraft:item/axe_mold",
+    "layer1": "trailcraft:item/axe_mold_cast"
   }
 }

@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "trailcraft:item/shovel_mold_filled"
+    "layer0": "trailcraft:item/shovel_mold",
+    "layer1": "trailcraft:item/shovel_mold_cast"
   }
 }

@@ -55,7 +55,14 @@ public class JugScreen extends AbstractContainerScreen<JugMenu> {
         g.drawString(font, label, JugMenu.MOLD_X - 4 - font.width(label), JugMenu.MOLD_Y + 4, UiDraw.LABEL, false);
     }
 
+    /** Строка по центру окна; не влезает (длинные названия сплавов) — мельче. */
     private void centered(GuiGraphics g, Component text, int y, int color) {
-        g.drawString(font, text, (imageWidth - font.width(text)) / 2, y, color, false);
+        int width = font.width(text), room = imageWidth - 8;
+        float scale = width > room ? (float) room / width : 1;
+        g.pose().pushPose();
+        g.pose().translate((imageWidth - width * scale) / 2, y + (1 - scale) * 4, 0);
+        g.pose().scale(scale, scale, 1);
+        g.drawString(font, text, 0, 0, color, false);
+        g.pose().popPose();
     }
 }

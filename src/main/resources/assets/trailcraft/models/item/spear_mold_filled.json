@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "trailcraft:item/spear_mold_filled"
+    "layer0": "trailcraft:item/spear_mold",
+    "layer1": "trailcraft:item/spear_mold_cast"
   }
 }

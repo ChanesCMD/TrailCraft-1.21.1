@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "trailcraft:item/sickle_mold_filled"
+    "layer0": "trailcraft:item/sickle_mold",
+    "layer1": "trailcraft:item/sickle_mold_cast"
   }
 }

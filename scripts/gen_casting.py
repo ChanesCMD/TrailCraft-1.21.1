@@ -5,7 +5,8 @@
 
 Пишет: модели, рецепты (крафт инструментов из головок заменяет прежний крафт из слитков у меди и бронзы), обжиг
 на костре, переводы, текстуры (нужен Pillow): головки — текстура инструмента без черенка; формы — глиняная плитка
-с углублением по силуэту головки (у формы слитка — прямоугольное), залитая — углубление залито металлом; превью —
+с углублением по силуэту головки (у формы слитка — прямоугольное), залитая — форма и поверх серый слой металла
+(<форма>_mold_cast, в игре красится в цвет металла); превью —
 docs/textures/casting.png.
 
 Запуск из корня проекта:  python scripts/gen_casting.py   (после gen_smelting.py: берёт его кувшин и цвета глины)
@@ -71,8 +72,15 @@ HANDLE = {(69, 48, 26), (107, 76, 40), (143, 106, 58), (184, 148, 90), (212, 176
 # Формы: сырая глина (как сырой кувшин) и обожжённая (как кувшин) — gen_smelting.RAW_CLAY, FIRED_JUG
 RAW_CLAY = (160, 150, 140)
 FIRED = (184, 102, 64)
-# Застывший металл в залитой форме (один на все металлы: цвет формы от металла не зависит)
-CAST_METAL = [(92, 92, 96), (150, 150, 156), (198, 198, 204), (236, 236, 240)]
+# Застывший металл в залитой форме — отдельный серый слой (<форма>_mold_cast), игра красит его в цвет металла
+# (Metal.color, client/ClientCasting): тень у верхнего и левого края, основной, искорки, блик у нижнего и правого
+CAST_GRAYS = [120, 210, 238, 255]
+# Цвета металлов — как Metal.color в smelting/Smelting.java (здесь — только для превью)
+METAL_COLORS = {
+    "copper": (232, 132, 84), "tin": (210, 214, 218), "zinc": (176, 190, 190), "bismuth": (200, 170, 190),
+    "lead": (130, 138, 160), "gold": (248, 204, 74), "tin_bronze": (214, 160, 80),
+    "bismuth_bronze": (190, 150, 100), "brass": (226, 190, 82),
+}
 # Жидкий металл в горлышке кувшина
 MOLTEN_GLOW = [(255, 214, 90), (255, 160, 40), (226, 96, 24)]
 
@@ -145,7 +153,7 @@ def mask(img):
     return {(x, y) for y in range(16) for x in range(16) if img.getpixel((x, y))[3]}
 
 
-def mold(shape, clay, filled):
+def mold(shape, clay):
     """Форма: глиняная плитка со скруглёнными углами, свет сверху слева; в ней углубление по силуэту shape."""
     img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
     plate = {(x, y) for y in range(1, 15) for x in range(16)
@@ -157,27 +165,42 @@ def mold(shape, clay, filled):
         elif (x, y + 1) not in plate or (x + 1, y) not in plate:
             k = 0.72
         img.putpixel((x, y), shade(clay, k * (0.97 if (x * 7 + y * 3) % 5 == 0 else 1.0)))
-    for x, y in shape:
-        if (x, y) not in plate:
-            continue
-        if filled:
-            # металл: тень у верхнего и левого края углубления, блик у нижнего и правого
-            if (x, y - 1) not in shape or (x - 1, y) not in shape:
-                c = CAST_METAL[0]
-            elif (x, y + 1) not in shape or (x + 1, y) not in shape:
-                c = CAST_METAL[3]
-            else:
-                c = CAST_METAL[2 if (x + 2 * y) % 5 == 0 else 1]
-            img.putpixel((x, y), c + (255,))
+    for x, y in shape & plate:
+        # углубление: тень сверху и слева, дно темнее плитки, нижний и правый край светлее
+        if (x, y - 1) not in shape or (x - 1, y) not in shape:
+            k = 0.45
+        elif (x, y + 1) not in shape or (x + 1, y) not in shape:
+            k = 0.85
         else:
-            # углубление: тень сверху и слева, дно темнее плитки, нижний и правый край светлее
-            if (x, y - 1) not in shape or (x - 1, y) not in shape:
-                k = 0.45
-            elif (x, y + 1) not in shape or (x + 1, y) not in shape:
-                k = 0.85
-            else:
-                k = 0.62
-            img.putpixel((x, y), shade(clay, k))
+            k = 0.62
+        img.putpixel((x, y), shade(clay, k))
+    return img
+
+
+def cast(shape):
+    """Слой залитого металла: серый по силуэту углубления (в игре красится в цвет металла)."""
+    img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    for x, y in shape:
+        if not (0 <= x < 16 and 1 <= y < 15):
+            continue
+        if (x, y - 1) not in shape or (x - 1, y) not in shape:
+            g = CAST_GRAYS[0]
+        elif (x, y + 1) not in shape or (x + 1, y) not in shape:
+            g = CAST_GRAYS[3]
+        else:
+            g = CAST_GRAYS[2 if (x + 2 * y) % 5 == 0 else 1]
+        img.putpixel((x, y), (g, g, g, 255))
+    return img
+
+
+def tinted(base, layer, color):
+    """Как игра рисует залитую форму: слой металла, умноженный на цвет металла, поверх формы."""
+    img = base.copy()
+    for y in range(16):
+        for x in range(16):
+            c = layer.getpixel((x, y))
+            if c[3]:
+                img.putpixel((x, y), tuple(c[i] * color[i] // 255 for i in range(3)) + (255,))
     return img
 
 
@@ -210,9 +233,9 @@ def textures():
             if h:
                 out[f"{material}_{tool}_head"] = head(material, tool)
     for tool, shape in mold_shapes().items():
-        out[f"unfired_{tool}_mold"] = mold(shape, RAW_CLAY, False)
-        out[f"{tool}_mold"] = mold(shape, FIRED, False)
-        out[f"{tool}_mold_filled"] = mold(shape, FIRED, True)
+        out[f"unfired_{tool}_mold"] = mold(shape, RAW_CLAY)
+        out[f"{tool}_mold"] = mold(shape, FIRED)
+        out[f"{tool}_mold_cast"] = cast(shape)
     out["jug_molten"] = molten_jug()
     for name, img in out.items():
         img.save(os.path.join(TEX, name + ".png"))
@@ -220,24 +243,26 @@ def textures():
 
 
 def preview(out):
-    """Превью: ряд форм (сырая, обожжённая, залитая) и ряды головок; ×6, на сером фоне."""
-    rows = [[out[f"unfired_{t}_mold"], out[f"{t}_mold"], out[f"{t}_mold_filled"]] for t, *_ in MOLDS]
-    heads = [[out[f"{m}_{t}_head"] for t, _r, _e, h in MOLDS if h] for m in MATERIALS]
+    """Превью ×6 на сером фоне: формы (сырая, обожжённая, залитая медью и бронзой), головки, форма слитка со всеми
+    металлами, кувшин с жидким металлом и обычный."""
+    def filled(tool, metal):
+        return tinted(out[f"{tool}_mold"], out[f"{tool}_mold_cast"], METAL_COLORS[metal])
+
+    rows = [[out[f"unfired_{t}_mold"], out[f"{t}_mold"], filled(t, "copper"), filled(t, "tin_bronze")]
+            for t, *_ in MOLDS]
+    rows += [[out[f"{m}_{t}_head"] for t, _r, _e, h in MOLDS if h] for m in MATERIALS]
+    rows.append([filled("ingot", metal) for metal in METAL_COLORS])
+    rows.append([out["jug_molten"], load("jug")])
     scale, pad = 6, 6
     cell = 16 * scale + pad
-    w = max(len(r) for r in heads) * cell + pad
-    h = (len(rows) // 3 + 1 + len(heads) + 1) * cell + pad
-    sheet = Image.new("RGBA", (max(w, 9 * cell + pad), h), (60, 60, 60, 255))
-    for i, row in enumerate(rows):
-        for j, img in enumerate(row):
-            x, y = pad + ((i % 3) * 3 + j) * cell, pad + (i // 3) * cell
-            big = img.resize((16 * scale, 16 * scale), Image.NEAREST)
-            sheet.paste(big, (x, y), big)
-    top = (len(rows) + 2) // 3 * cell
-    for i, row in enumerate(heads + [[out["jug_molten"], load("jug")]]):
+    # формы — по две четвёрки в ряд
+    lines = [rows[i] + rows[i + 1] if i + 1 < len(MOLDS) else rows[i] for i in range(0, len(MOLDS), 2)]
+    lines += rows[len(MOLDS):]
+    sheet = Image.new("RGBA", (max(len(r) for r in lines) * cell + pad, len(lines) * cell + pad), (60, 60, 60, 255))
+    for i, row in enumerate(lines):
         for j, img in enumerate(row):
             big = img.resize((16 * scale, 16 * scale), Image.NEAREST)
-            sheet.paste(big, (pad + j * cell, top + pad + i * cell), big)
+            sheet.paste(big, (pad + j * cell, pad + i * cell), big)
     os.makedirs(DOCS, exist_ok=True)
     sheet.save(os.path.join(DOCS, "casting.png"))
 
@@ -254,7 +279,8 @@ def item_model(name, texture=None, parent="minecraft:item/generated", overrides=
 def assets():
     for tool, *_ in MOLDS:
         item_model(f"unfired_{tool}_mold")
-        item_model(f"{tool}_mold_filled")
+        write(f"assets/{NS}/models/item/{tool}_mold_filled.json", {"parent": "minecraft:item/generated", "textures": {
+            "layer0": f"{NS}:item/{tool}_mold", "layer1": f"{NS}:item/{tool}_mold_cast"}})
         item_model(f"{tool}_mold", overrides=[
             {"predicate": {f"{NS}:filled": 1}, "model": f"{NS}:item/{tool}_mold_filled"}])
     for material in MATERIALS:

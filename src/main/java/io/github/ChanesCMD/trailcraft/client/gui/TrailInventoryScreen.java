@@ -21,6 +21,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -108,10 +109,9 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
     @Override
     protected void init() {
         super.init();
-        leftPos = Math.max(4 + HEADS_W + HEADS_GAP, (width - WIDTH) / 2);
-        // Окно рюкзака над панелью должно влезать по высоте (GUI scale 4 на 1080p: экран 480×270)
-        topPos = Math.min(Math.max((height - HEIGHT) / 2 - RAISE, 4 - BACKPACK_WIN_Y), Math.max(4, height - HEIGHT - 4));
-        creativeTabs = CreativeTabs.shown() ? new CreativeTabs(WIDTH) : null;
+        leftPos = left(width);
+        topPos = top(height);
+        creativeTabs = CreativeTabs.shown() ? new CreativeTabs(WIDTH, CreativeTabs.inventoryTab(), TrailCreativeScreen::open) : null;
         if (creativeTabs != null) {
             creativeTabs.addButtons(leftPos, topPos, WIDTH, this::addRenderableWidget);
         }
@@ -141,6 +141,26 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         if (menu.popup == Popup.CALENDAR) {
             setPopupRect(calX, calY, CAL_W, CAL_H);
         }
+    }
+
+    /** Левый край панели на экране шириной width (и у креативного окна — оно того же размера, TrailCreativeScreen). */
+    public static int left(int width) {
+        return Math.max(4 + HEADS_W + HEADS_GAP, (width - WIDTH) / 2);
+    }
+
+    /** Верх панели: окно рюкзака над ней должно влезать по высоте (GUI scale 4 на 1080p: экран 480×270). */
+    public static int top(int height) {
+        return Math.min(Math.max((height - HEIGHT) / 2 - RAISE, 4 - BACKPACK_WIN_Y), Math.max(4, height - HEIGHT - 4));
+    }
+
+    /** Что JEI не должен закрывать: кнопки в углу экрана и вкладки креатива. */
+    public List<Rect2i> extraAreas() {
+        List<Rect2i> areas = new ArrayList<>();
+        areas.add(new Rect2i(0, 0, CornerButtons.x(cornerButtons.size()) + 2, CornerButtons.Y + CornerButtons.SIZE + 2));
+        if (creativeTabs != null) {
+            areas.add(creativeTabs.area(leftPos, topPos, WIDTH));
+        }
+        return areas;
     }
 
     @Override
@@ -338,7 +358,7 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         }
 
         if (creativeTabs != null) {
-            creativeTabs.renderBehind(g, x, y);
+            creativeTabs.renderBehind(g, x, y, WIDTH);
         }
         UiDraw.panel(g, x, y, WIDTH, HEIGHT);
         if (creativeTabs != null) {

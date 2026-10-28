@@ -3,6 +3,8 @@ package io.github.ChanesCMD.trailcraft.compat.jei;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.block.ChoppingStumpBlock;
 import io.github.ChanesCMD.trailcraft.block.TrailCampfireBlock;
+import io.github.ChanesCMD.trailcraft.client.gui.TrailCreativeScreen;
+import io.github.ChanesCMD.trailcraft.client.gui.TrailInventoryScreen;
 import io.github.ChanesCMD.trailcraft.init.ModBlocks;
 import io.github.ChanesCMD.trailcraft.init.ModItems;
 import io.github.ChanesCMD.trailcraft.init.ModSmelting;
@@ -16,10 +18,13 @@ import io.github.ChanesCMD.trailcraft.smelting.StrawEvents;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
+import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.recipe.RecipeType;
+import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -46,6 +51,23 @@ public class TrailJeiPlugin implements IModPlugin {
     @Override
     public ResourceLocation getPluginUid() {
         return ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "jei");
+    }
+
+    /** JEI обходит кнопки в углу экрана и вкладки креатива над инвентарём и креативным окном TrailCraft. */
+    @Override
+    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+        registration.addGuiContainerHandler(TrailInventoryScreen.class, new IGuiContainerHandler<>() {
+            @Override
+            public List<Rect2i> getGuiExtraAreas(TrailInventoryScreen screen) {
+                return screen.extraAreas();
+            }
+        });
+        registration.addGuiContainerHandler(TrailCreativeScreen.class, new IGuiContainerHandler<>() {
+            @Override
+            public List<Rect2i> getGuiExtraAreas(TrailCreativeScreen screen) {
+                return List.of(screen.tabsArea());
+            }
+        });
     }
 
     @Override
