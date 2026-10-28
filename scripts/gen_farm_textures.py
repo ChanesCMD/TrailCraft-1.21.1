@@ -685,7 +685,8 @@ ITEM_BERRY_COLORS = {
                    "s": "#4f7a30", "g": "#649231"},
 }
 
-# Пучки джута: 40 вариантов (K–O — по B, P–T — по C, M1–M10 — смесь B, D, K и N в цветах волокна, V1–V10 — по M10, W1–W10 — они же с прядями пучками). l/m/d — волокно (светлое, среднее, тёмное), o — контур волокна, R/r — перевязь,
+# Пучки джута: 40 вариантов (K–O — по B, P–T — по C, M1–M10 — смесь B, D, K и N в цветах волокна, V1–V10 — по M10, W1–W10 — они же с прядями пучками,
+# X1–X10 — тонкие, как солома и пшеница: straw_bundle). l/m/d — волокно (светлое, среднее, тёмное), o — контур волокна, R/r — перевязь,
 # b — контур перевязи, g/G/k — зелёные стебли и листья (сырой джут)
 JUTE_BUNDLES = {
     # A — косой сноп, перевязан посередине, концы веером
@@ -1646,6 +1647,76 @@ JUTE_BUNDLES = {
 JUTE_BUNDLE_COLORS = {"l": "#e6cf92", "m": "#c9ab66", "d": "#97793f", "o": "#5e4524", "R": "#a07a3e", "r": "#6a4e26",
                       "b": "#3e2c16", "g": "#66a03a", "G": "#7fb64a", "k": "#436f26"}
 
+
+def straw_bundle(width=3, ties=(0,), tail=None, fan=(0, 0), fray=0, spread=1, seed=1, length=(-12, 12)):
+    """Тонкая связка волокна по диагонали (снизу слева вверх вправо), как солома или ванильная пшеница.
+    d = x + y - 15 — сдвиг поперёк связки, u = x - y — вдоль неё. width — полуширина в пиксельных диагоналях,
+    ties — где перевязи (u), tail — концы бечёвки от первой перевязи ('r' вправо-вниз, 'l' влево-вверх),
+    fan — с какой длины от конца (низ, верх) пряди расходятся веером, fray — насколько неровны кончики."""
+    rnd = random.Random(seed)
+    lo, hi = length
+    grid = [["."] * 16 for _ in range(16)]
+    # как у соломы: светлая прожилка посередине, по бокам средние и тёмные, снизу-справа тёмный край
+    stripes = {-4: "o", -3: "d", -2: "m", -1: "d", 0: "m", 1: "l", 2: "m", 3: "d", 4: "o"}
+    tips = {}
+    for d in range(-12, 13):
+        tips[d] = (lo + rnd.randint(0, fray), hi - rnd.randint(0, fray))
+    for y in range(16):
+        for x in range(16):
+            u = x - y
+            d = x + y - 15
+            t_lo, t_hi = tips.get(d, (lo, hi))
+            if not (t_lo <= u <= t_hi):
+                continue
+            w = width
+            fan_lo, fan_hi = fan
+            if fan_lo and u < lo + fan_lo:
+                w += (lo + fan_lo - u) * spread // 2
+            if fan_hi and u > hi - fan_hi:
+                w += (u - (hi - fan_hi)) * spread // 2
+            if abs(d) > w:
+                continue
+            in_fan = (fan_lo and u < lo + fan_lo) or (fan_hi and u > hi - fan_hi)
+            if in_fan and abs(d) > width and d % 2:
+                continue  # в веере пряди врозь
+            if abs(d) > width:  # прядь веера
+                ch = "l" if d % 4 == 0 else "m"
+            else:
+                ch = stripes[max(-4, min(4, d))]
+            if u in (t_lo, t_hi):
+                ch = "d" if ch == "l" else ch
+            for tu in ties:
+                if tu - 1 <= u <= tu + 1 and abs(d) <= width + 1:
+                    ch = "b" if abs(d) >= width or u != tu else ("R" if d % 2 else "r")
+            grid[y][x] = ch
+    if tail:
+        tu = ties[0]
+        # концы бечёвки: от края перевязи две нитки вниз
+        side = 1 if tail == "r" else -1
+        d0 = side * (width + 2)
+        for k in range(4):
+            for u in (tu + k // 2 * side - k % 2 * side, tu + 1 + k // 2 * side):
+                x = (u + 15 + d0 + side * k) // 2
+                y = x - u
+                if 0 <= x < 16 and 0 <= y < 16 and grid[y][x] == ".":
+                    grid[y][x] = "b" if k % 2 else "R"
+    return ["".join(r) for r in grid]
+
+# X1–X10 — тонкие связки, как солома и ванильная пшеница
+STRAW_LIKE = {
+    "X1": dict(width=3, ties=(0,)),
+    "X2": dict(width=3, ties=(-3,), fan=(0, 8), spread=2, fray=2, seed=2),
+    "X3": dict(width=2, ties=(0,), tail="r", length=(-13, 13)),
+    "X4": dict(width=2, ties=(-5,), fan=(0, 11), spread=2, fray=3, seed=4, length=(-13, 13)),
+    "X5": dict(width=3, ties=(-5, 4)),
+    "X6": dict(width=3, ties=(0,), fan=(5, 5), spread=2, fray=2, seed=6),
+    "X7": dict(width=3, ties=(-6,), fan=(0, 6), spread=1, fray=1, seed=7, length=(-12, 13)),
+    "X8": dict(width=2, ties=(-5, 4), length=(-13, 13)),
+    "X9": dict(width=2, ties=(-1,), fray=3, seed=9, length=(-13, 13)),
+    "X10": dict(width=3, ties=(0,), tail="r", fan=(5, 5), spread=2, fray=1, seed=10),
+}
+JUTE_BUNDLES.update({name: straw_bundle(**params) for name, params in STRAW_LIKE.items()})
+
 JUTE_SEEDS = [
     "................",
     "................",
@@ -1769,7 +1840,7 @@ if __name__ == "__main__":
         chosen = sys.argv[sys.argv.index("--hoe") + 1].upper()
         if chosen not in HOE_VARIANTS:
             sys.exit(f"Нет варианта тяпки {chosen}, есть: {', '.join(HOE_VARIANTS)}")
-    # пучок джута — 50 вариантов (docs/textures/jute_bundles.png), другой: --jute B
+    # пучок джута — 60 вариантов (docs/textures/jute_bundles.png), другой: --jute B
     JUTE_CHOSEN = "A"
     if "--jute" in sys.argv:
         JUTE_CHOSEN = sys.argv[sys.argv.index("--jute") + 1].upper()
