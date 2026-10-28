@@ -3,11 +3,10 @@
   "category": "misc",
   "key": {
     "S": {
-      "item": "trailcraft:straw"
+      "item": "trailcraft:straw_block"
     }
   },
   "pattern": [
-    "SS",
     "SS"
   ],
   "result": {

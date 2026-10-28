@@ -89,6 +89,7 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.SHALE_PEBBLE);
                         output.accept(ModItems.FLINT);
                         output.accept(ModItems.CHOPPING_STUMP);
+                        output.accept(ModItems.STRAW_BLOCK);
                         output.accept(ModItems.STRAW_BED);
                         output.accept(ModItems.WOODEN_SUPPORT);
                         output.accept(ModItems.IRON_SUPPORT);

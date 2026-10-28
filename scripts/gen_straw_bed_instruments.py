@@ -1,14 +1,16 @@
 """
-Кровать из соломы (block/StrawBedBlock.java) и рецепты приборов пояса (высотомер, секстант, хронометр) с мини-механизмом
+Блок соломы, кровать из соломы (block/StrawBedBlock.java) и рецепты приборов пояса (высотомер, секстант, хронометр) с мини-механизмом
 точности: текстуры, модели, блокстейт, лут, рецепты, тэг мотыги, переводы и превью docs/textures/straw_bed_instruments.png.
 
 Запуск из корня проекта:  python scripts/gen_straw_bed_instruments.py   (нужен Pillow)
 
-Кровать — циновка из соломы 16×3×16: соломины вдоль X цветами предмета соломы (textures/item/straw.png), между пучками
-тёмные щели. Рецепт — 4 соломы (2×2).
+Блок соломы — 4 соломы (2×2), обратно — 4 соломы; ванильный тюк сена (HayBlock: ставится по осям, гасит урон от
+падения): бок — соломины вдоль оси и две перевязки, торец — срезы соломин. Кровать — циновка из соломы 16×3×16:
+соломины вдоль X цветами предмета соломы (textures/item/straw.png), между пучками тёмные щели. Рецепт — 2 блока
+соломы рядом.
 Приборы — из деталей Create: секстант — шестерня и 3 латунных слитка дугой; высотомер — 4 латунных листа вокруг
-пузырька с водой (ингредиент neoforge:components — зелье «вода»); хронометр — мини-механизм точности над малой доской
-любой породы (#trailcraft:small_boards). Мини-механизм — золотой лист, шестерня, вал и кусочек железа (без формы);
+пузырька с водой (ингредиент neoforge:components — зелье «вода»); хронометр — мини-механизм точности над досками
+любой породы (#minecraft:planks). Мини-механизм — золотой лист, шестерня, вал и кусочек железа (без формы);
 текстура — механизм точности Create (scripts/templates/precision_mechanism.png), уменьшенный до 12×12 в его же палитру.
 """
 import json
@@ -28,6 +30,7 @@ WATER_BOTTLE = {"type": "neoforge:components", "items": "minecraft:potion",
                 "components": {"minecraft:potion_contents": {"potion": "minecraft:water"}}}
 
 LANG = {
+    "block.trailcraft.straw_block": ("Блок соломы", "Straw Block"),
     "block.trailcraft.straw_bed": ("Кровать из соломы", "Straw Bed"),
     "block.trailcraft.straw_bed.no_spawn": ("Здесь нельзя возродиться", "You can't respawn here"),
     "item.trailcraft.mini_precision_mechanism": ("Мини-механизм точности", "Mini Precision Mechanism"),
@@ -124,9 +127,58 @@ def straw_bed():
         "random_sequence": f"{NS}:blocks/straw_bed"})
     write(f"data/{NS}/recipe/straw_bed.json", {
         "type": "minecraft:crafting_shaped", "category": "misc",
-        "key": {"S": {"item": f"{NS}:straw"}}, "pattern": ["SS", "SS"],
+        "key": {"S": {"item": f"{NS}:straw_block"}}, "pattern": ["SS"],
         "result": {"id": f"{NS}:straw_bed", "count": 1}})
-    tag("block", "minecraft:mineable/hoe", [f"{NS}:straw_bed"])
+    tag("block", "minecraft:mineable/hoe", [f"{NS}:straw_bed", f"{NS}:straw_block"])
+
+
+def straw_block():
+    """Тюк соломы: бок — соломины вдоль оси и две тёмные перевязки, торец — срезы соломин."""
+    rnd = random.Random(11)
+    dark, mid, light = straw_palette()
+    side = Image.new("RGBA", (16, 16))
+    for x in range(16):
+        y = rnd.randint(-4, 0)
+        while y < 16:
+            run = rnd.randint(3, 7)
+            c = rnd.choice(light) if (x % 4 != 3 or rnd.random() < 0.4) and rnd.random() < 0.75 else mid[1]
+            for i in range(max(0, y), min(16, y + run)):
+                side.putpixel((x, i), c)
+            y += run
+    for y in (3, 12):  # перевязки
+        for x in range(16):
+            side.putpixel((x, y), dark[1] if x % 2 else dark[0])
+    side.save(os.path.join(TEX, "block", "straw_block_side.png"))
+    top = Image.new("RGBA", (16, 16))
+    for x in range(16):
+        for y in range(16):
+            edge = x in (0, 15) or y in (0, 15)
+            c = mid[1] if edge else (rnd.choice(light) if rnd.random() < 0.65 else rnd.choice(dark + mid))
+            top.putpixel((x, y), c)
+    top.save(os.path.join(TEX, "block", "straw_block_top.png"))
+    textures = {"end": f"{NS}:block/straw_block_top", "side": f"{NS}:block/straw_block_side"}
+    write(f"assets/{NS}/models/block/straw_block.json", {"parent": "minecraft:block/cube_column", "textures": textures})
+    write(f"assets/{NS}/models/block/straw_block_horizontal.json",
+          {"parent": "minecraft:block/cube_column_horizontal", "textures": textures})
+    model, horizontal = f"{NS}:block/straw_block", f"{NS}:block/straw_block_horizontal"
+    write(f"assets/{NS}/blockstates/straw_block.json", {"variants": {
+        "axis=x": {"model": horizontal, "x": 90, "y": 90}, "axis=y": {"model": model},
+        "axis=z": {"model": horizontal, "x": 90}}})
+    write(f"assets/{NS}/models/item/straw_block.json", {"parent": model})
+    write(f"data/{NS}/loot_table/blocks/straw_block.json", {
+        "type": "minecraft:block",
+        "pools": [{"rolls": 1.0, "bonus_rolls": 0.0, "entries": [{"type": "minecraft:item", "name": f"{NS}:straw_block"}],
+                   "conditions": [{"condition": "minecraft:survives_explosion"}]}],
+        "random_sequence": f"{NS}:blocks/straw_block"})
+    write(f"data/{NS}/recipe/straw_block.json", {
+        "type": "minecraft:crafting_shaped", "category": "building",
+        "key": {"S": {"item": f"{NS}:straw"}}, "pattern": ["SS", "SS"],
+        "result": {"id": f"{NS}:straw_block", "count": 1}})
+    write(f"data/{NS}/recipe/straw_from_block.json", {
+        "type": "minecraft:crafting_shapeless", "category": "misc",
+        "ingredients": [{"item": f"{NS}:straw_block"}],
+        "result": {"id": f"{NS}:straw", "count": 4}})
+    return side, top
 
 
 def mini_mechanism():
@@ -164,7 +216,7 @@ def recipes():
         "result": {"id": f"{NS}:brass_altimeter", "count": 1}})
     write(f"data/{NS}/recipe/chronometer.json", {
         "type": "minecraft:crafting_shaped", "category": "equipment",
-        "key": {"M": {"item": f"{NS}:mini_precision_mechanism"}, "B": {"tag": f"{NS}:small_boards"}},
+        "key": {"M": {"item": f"{NS}:mini_precision_mechanism"}, "B": {"tag": "minecraft:planks"}},
         "pattern": ["M", "B"],
         "result": {"id": f"{NS}:chronometer", "count": 1}})
 
@@ -189,9 +241,10 @@ def preview(images):
 
 if __name__ == "__main__":
     top = straw_bed_textures()
+    block_side, block_top = straw_block()
     straw_bed()
     mini = mini_mechanism()
     recipes()
     lang()
-    preview([top, Image.open(os.path.join(TEX, "block", "straw_bed_side.png")), mini])
+    preview([block_side, block_top, top, Image.open(os.path.join(TEX, "block", "straw_bed_side.png")), mini])
     print("ok")

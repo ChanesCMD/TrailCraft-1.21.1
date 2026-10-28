@@ -261,6 +261,27 @@ publishing {
     }
 }
 
+// Как запустилась игра (play.bat кладёт это в TRAILCRAFT_START_STATUS: подтянуто ли с GitHub, нет доступа, незакоммиченные
+// правки…): строка висит в нижней панели Gradle рядом с «> :runClient» и «> IDLE», пока идёт игра. Операция прогресса
+// запускается из своего потока, иначе она заменила бы строку задачи; хранится в System.properties, потому что
+// с configuration cache doFirst и doLast не делят переменные скрипта.
+tasks.matching { it.name == 'runClient' }.configureEach {
+    doFirst { task ->
+        String status = System.getenv('TRAILCRAFT_START_STATUS') ?: 'Started without play.bat: no update from GitHub'
+        def factory = task.services.get(org.gradle.internal.logging.progress.ProgressLoggerFactory)
+        System.properties.remove('trailcraft.statusOp')?.completed()
+        Thread.start {
+            def op = factory.newOperation('trailcraft-start-status')
+            op.start('TrailCraft start status', 'TrailCraft: ' + status)
+            System.properties.put('trailcraft.statusOp', op)
+        }.join()
+        task.logger.lifecycle('TrailCraft: ' + status)
+    }
+    doLast {
+        System.properties.remove('trailcraft.statusOp')?.completed()
+    }
+}
+
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }

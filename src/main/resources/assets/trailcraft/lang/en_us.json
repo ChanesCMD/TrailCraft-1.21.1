@@ -1037,5 +1037,6 @@
   "item.trailcraft.steiger_hammer.lone": "Lone support: holds only %s×%s×%s — add a second post and a beam",
   "block.trailcraft.straw_bed": "Straw Bed",
   "block.trailcraft.straw_bed.no_spawn": "You can't respawn here",
-  "item.trailcraft.mini_precision_mechanism": "Mini Precision Mechanism"
+  "item.trailcraft.mini_precision_mechanism": "Mini Precision Mechanism",
+  "block.trailcraft.straw_block": "Straw Block"
 }

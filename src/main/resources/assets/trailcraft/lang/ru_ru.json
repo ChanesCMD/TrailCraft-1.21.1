@@ -1037,5 +1037,6 @@
   "item.trailcraft.steiger_hammer.lone": "Опора без рамы: держит только %s×%s×%s — поставьте вторую стойку и перекладину",
   "block.trailcraft.straw_bed": "Кровать из соломы",
   "block.trailcraft.straw_bed.no_spawn": "Здесь нельзя возродиться",
-  "item.trailcraft.mini_precision_mechanism": "Мини-механизм точности"
+  "item.trailcraft.mini_precision_mechanism": "Мини-механизм точности",
+  "block.trailcraft.straw_block": "Блок соломы"
 }

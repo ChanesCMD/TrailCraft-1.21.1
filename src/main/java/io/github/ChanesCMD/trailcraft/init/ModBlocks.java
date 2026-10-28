@@ -19,6 +19,7 @@ import io.github.ChanesCMD.trailcraft.block.GardenBedBlock;
 import io.github.ChanesCMD.trailcraft.block.JuteCropBlock;
 import io.github.ChanesCMD.trailcraft.farm.Farm;
 import net.minecraft.world.level.block.DoublePlantBlock;
+import net.minecraft.world.level.block.HayBlock;
 import net.minecraft.world.level.block.ColoredFallingBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -264,6 +265,10 @@ public class ModBlocks {
             BlockBehaviour.Properties.of().mapColor(MapColor.PODZOL).strength(0.5f).sound(SoundType.WOOD).noOcclusion()
                     .noLootTable().pushReaction(PushReaction.DESTROY)
                     .lightLevel(state -> state.getValue(TrailCampfireBlock.LIT) ? 11 + state.getValue(TrailCampfireBlock.LOGS) : 0));
+
+    /** Блок соломы (4 соломы): как ванильный тюк сена — ставится по осям, гасит урон от падения. */
+    public static final DeferredBlock<Block> STRAW_BLOCK = BLOCKS.registerBlock("straw_block", HayBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW).strength(0.5f).sound(SoundType.GRASS).ignitedByLava());
 
     /** Кровать из соломы: только точка возрождения, спать нельзя (StrawBedBlock). */
     public static final DeferredBlock<Block> STRAW_BED = BLOCKS.registerBlock("straw_bed", StrawBedBlock::new,

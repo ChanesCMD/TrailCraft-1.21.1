@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "trailcraft:straw_block"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:straw",
+    "count": 4
+  }
+}

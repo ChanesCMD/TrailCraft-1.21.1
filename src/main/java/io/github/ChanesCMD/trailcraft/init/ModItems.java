@@ -179,7 +179,8 @@ public class ModItems {
     // === ПЕНЬ ДЛЯ РУБКИ ===
     public static final DeferredItem<BlockItem> CHOPPING_STUMP = ITEMS.registerSimpleBlockItem("chopping_stump", ModBlocks.CHOPPING_STUMP);
 
-    // === КРОВАТЬ ИЗ СОЛОМЫ ===
+    // === БЛОК СОЛОМЫ И КРОВАТЬ ИЗ СОЛОМЫ ===
+    public static final DeferredItem<BlockItem> STRAW_BLOCK = ITEMS.registerSimpleBlockItem("straw_block", ModBlocks.STRAW_BLOCK);
     public static final DeferredItem<BlockItem> STRAW_BED = ITEMS.registerSimpleBlockItem("straw_bed", ModBlocks.STRAW_BED);
 
     // === ОПОРЫ ===
