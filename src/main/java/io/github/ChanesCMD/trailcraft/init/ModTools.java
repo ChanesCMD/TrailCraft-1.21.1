@@ -5,6 +5,7 @@ import io.github.ChanesCMD.trailcraft.item.SawItem;
 import io.github.ChanesCMD.trailcraft.item.SpearItem;
 import io.github.ChanesCMD.trailcraft.item.ThrowingSpearItem;
 import io.github.ChanesCMD.trailcraft.item.WateringCanItem;
+import io.github.ChanesCMD.trailcraft.item.RulerItem;
 import io.github.ChanesCMD.trailcraft.farm.Farm;
 import io.github.ChanesCMD.trailcraft.item.TieredToolItem;
 import net.minecraft.world.item.AxeItem;
@@ -86,8 +87,9 @@ public final class ModTools {
         reg("wooden_watering_can", p -> new WateringCanItem(Farm.WOODEN_CAN_WATER, p.stacksTo(1)));
         reg("bronze_watering_can", p -> new WateringCanItem(Farm.BRONZE_CAN_WATER, p.stacksTo(1)));
         reg("zinc_watering_can", p -> new WateringCanItem(Farm.ZINC_CAN_WATER, p.stacksTo(1)));
-        // TODO: уточнить, что делают линейка и метла
-        single("wooden_ruler");
+        // линейка меряет расстояние между двумя блоками (item/RulerItem)
+        reg("wooden_ruler", p -> new RulerItem(p.stacksTo(1)));
+        // TODO: уточнить, что делает метла
         single("broom");
     }
 

@@ -933,5 +933,10 @@
   "subtitles.trailcraft.entity.crow.ambient": "Crow caws",
   "subtitles.trailcraft.entity.raven.ambient": "Raven croaks",
   "tooltip.trailcraft.watering_can.water": "Water: %s/%s",
-  "tooltip.trailcraft.watering_can.use": "Right-click water to fill, a garden bed to water 3×3 for %s days"
+  "tooltip.trailcraft.watering_can.use": "Right-click fresh water to fill, a garden bed to water 3×3 for %s days",
+  "message.trailcraft.ruler.start": "Start marked — right-click the second block",
+  "message.trailcraft.ruler.reset": "Ruler mark cleared",
+  "message.trailcraft.ruler.too_far": "Too far: the ruler measures up to %s blocks",
+  "message.trailcraft.ruler.distance": "Distance: %s blocks (axes %s, %s, %s)",
+  "tooltip.trailcraft.ruler": "Right-click two blocks to measure the distance (up to %s); Shift+right-click to clear"
 }

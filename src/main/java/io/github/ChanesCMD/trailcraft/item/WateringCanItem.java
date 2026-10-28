@@ -4,6 +4,7 @@ import io.github.ChanesCMD.trailcraft.block.GardenBedBlock;
 import io.github.ChanesCMD.trailcraft.farm.Farm;
 import io.github.ChanesCMD.trailcraft.farm.Watering;
 import io.github.ChanesCMD.trailcraft.init.ModComponents;
+import io.github.ChanesCMD.trailcraft.water.Water;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -32,7 +33,7 @@ import net.minecraft.world.phys.HitResult;
 import java.util.List;
 
 /**
- * Лейка: ПКМ по воде — наполнить, ПКМ по грядке (или по растению на ней) — полить квадрат грядок вокруг
+ * Лейка: ПКМ по пресной воде — наполнить, ПКМ по грядке (или по растению на ней) — полить квадрат грядок вокруг
  * (Farm.WATERING_RADIUS): они влажные Farm.WATERED_DAYS игровых суток (farm/Watering), потом сохнут, и растения на них
  * не растут, пока грядку снова не польют (или рядом вода, или дождь). Запас — в поливах, полоска под предметом.
  */
@@ -85,8 +86,9 @@ public class WateringCanItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         BlockHitResult hit = getPlayerPOVHitResult(level, player, ClipContext.Fluid.SOURCE_ONLY);
+        // только пресная вода: морской (море и его берега) растения не поливают
         if (hit.getType() != HitResult.Type.BLOCK || !level.getFluidState(hit.getBlockPos()).is(FluidTags.WATER)
-                || water(stack) >= capacity) {
+                || Water.isSalty(level, hit.getBlockPos()) || water(stack) >= capacity) {
             return InteractionResultHolder.pass(stack);
         }
         stack.set(ModComponents.WATER.get(), capacity);

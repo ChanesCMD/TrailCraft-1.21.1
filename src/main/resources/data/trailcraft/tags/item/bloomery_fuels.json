@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:coals",
+    "trailcraft:peat"
+  ]
+}

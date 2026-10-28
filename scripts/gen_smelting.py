@@ -386,6 +386,8 @@ def data():
     clay_balls = [f"{NS}:clay_ball_{c}" for c in CLAYS]
     tag("item", f"{NS}:clay_balls", clay_balls)
     tag("item", f"{NS}:straw_tools", STRAW_TOOLS)
+    # топливо малой сыродутной печи (BloomeryBlockEntity): уголь и торф (торф горит вдвое меньше)
+    tag("item", f"{NS}:bloomery_fuels", ["#minecraft:coals", f"{NS}:peat"])
     tag("block", f"{NS}:straw_grass", STRAW_GRASS)
     tag("block", "minecraft:mineable/pickaxe", [f"{NS}:bricks_{c}" for c in CLAYS] + [f"{NS}:small_bloomery"])
     for clay in CLAYS:

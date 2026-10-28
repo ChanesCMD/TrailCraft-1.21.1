@@ -26,4 +26,8 @@ public class ModTags {
     /** Слитки бронзы (оловянной и висмутовой): из них бронзовые инструменты. */
     public static final TagKey<Item> BRONZE_INGOTS = TagKey.create(Registries.ITEM,
             ResourceLocation.fromNamespaceAndPath("c", "ingots/bronze"));
+
+    /** Топливо малой сыродутной печи: древесный и каменный уголь (#minecraft:coals) и торф. */
+    public static final TagKey<Item> BLOOMERY_FUELS = TagKey.create(Registries.ITEM,
+            ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "bloomery_fuels"));
 }

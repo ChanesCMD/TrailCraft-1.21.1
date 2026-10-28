@@ -1,12 +1,13 @@
 package io.github.ChanesCMD.trailcraft.smelting;
 
+import io.github.ChanesCMD.trailcraft.init.ModBlocks;
+import io.github.ChanesCMD.trailcraft.init.ModTags;
 import io.github.ChanesCMD.trailcraft.init.ModSmelting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -23,21 +24,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Малая сыродутная печь. Слоты: 0 — кувшин, 1 — топливо (#minecraft:coals: древесный и каменный уголь), 2..5 — слитки.
+ * Малая сыродутная печь. Слоты: 0 — кувшин, 1 — топливо (#trailcraft:bloomery_fuels: древесный и каменный уголь, торф),
+ * 2..5 — слитки.
  * Пока в кувшине есть что плавить и выход вмещает результат, печь жжёт топливо (одно на FUEL_TICKS) и копит прогресс;
  * готово — слитки в выход, кувшин пустеет и остаётся в печи. Без огня прогресс понемногу остывает.
  */
 public class BloomeryBlockEntity extends BlockEntity implements MenuProvider {
     public static final int JUG = 0, FUEL = 1, OUT = 2, SLOTS = 6;
-    /** Сколько тиков горит одно топливо. */
-    public static final int FUEL_TICKS = 1200;
+    /** Сколько тиков горит одно топливо: уголь и торф (торф — вдвое меньше). */
+    public static final int FUEL_TICKS = 1200, PEAT_TICKS = 600;
 
     private final ItemStackHandler items = new ItemStackHandler(SLOTS) {
         @Override
         public boolean isItemValid(int slot, ItemStack stack) {
             return switch (slot) {
                 case JUG -> stack.is(ModSmelting.JUG.get());
-                case FUEL -> stack.is(ItemTags.COALS);
+                case FUEL -> stack.is(ModTags.BLOOMERY_FUELS);
                 default -> false;
             };
         }
@@ -107,8 +109,8 @@ public class BloomeryBlockEntity extends BlockEntity implements MenuProvider {
             if (burn == 0) {
                 ItemStack fuel = items.getStackInSlot(FUEL);
                 if (!fuel.isEmpty()) {
+                    burn = burnMax = fuel.is(ModBlocks.PEAT.get().asItem()) ? PEAT_TICKS : FUEL_TICKS;
                     items.extractItem(FUEL, 1, false);
-                    burn = burnMax = FUEL_TICKS;
                 }
             }
             total = Smelting.time(Smelting.units(contents));

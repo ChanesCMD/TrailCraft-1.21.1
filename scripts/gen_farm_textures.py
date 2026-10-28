@@ -597,130 +597,7 @@ def wild_potato():
     return img
 
 
-# --- джут ---
-# k/K — стебель (с красноватым оттенком), L/g/G — узкие листья (светлый, средний, тёмный), y/Y — цветки
-
-WILD_JUTE_BOTTOM = [
-    "...K....k...K...",
-    "..Lk....kL..k...",
-    ".LgK....KgL.kL..",
-    "..Gk....kG..KgL.",
-    "...k...Lk...kG..",
-    "...KL.LgK...K...",
-    "...kgL.Gk..Lk...",
-    "...kG...k.LgK...",
-    "..LK....KL.Gk...",
-    ".Lgk....kgL.kL..",
-    "..GK....KG..KgL.",
-    "...k...Lk...kG..",
-    "...KL.LgK...K...",
-    "...kgL.Gk..Lk...",
-    "...kG...K.LgK...",
-    "...K....k..Gk...",
-]
-WILD_JUTE_TOP = [
-    "................",
-    "........y.......",
-    "...y...yYy..y...",
-    "..yYy...k..yYy..",
-    "...k...LkL..k...",
-    "..LK..LgKgL.K...",
-    ".Lgk....k..Lk...",
-    "..GK...LK.LgK...",
-    "...kL.Lgk..Gk...",
-    "...KgL.GK...kL..",
-    "...kG...kL..KgL.",
-    "..LK....KgL.kG..",
-    ".Lgk....kG..K...",
-    "..GK...Lk..Lk...",
-    "...kL.LgK.LgK...",
-    "...KG..Gk..Gk...",
-]
-JUTE_CROP = {
-    "stage0": [
-        "................",
-        "................",
-        "................",
-        "................",
-        "................",
-        "................",
-        "................",
-        "................",
-        "................",
-        "................",
-        "................",
-        "................",
-        "................",
-        "...L.......L....",
-        "..LgL.....LgL...",
-        "...k.......k....",
-    ],
-    "stage1": [
-        "................",
-        "................",
-        "................",
-        "................",
-        "................",
-        "................",
-        "................",
-        "................",
-        "................",
-        "...L.......L....",
-        "..LgL.....LgL...",
-        "...kL.....KgL...",
-        "..LKg.....kG....",
-        ".LgkG....LK.....",
-        "..Gk....LgkL....",
-        "...K.....Gk.....",
-    ],
-    "stage2": [
-        "................",
-        "................",
-        "................",
-        "...L............",
-        "..LgL...L.......",
-        "...k...LgL..L...",
-        "..LKG...kL.LgL..",
-        ".Lgk....KgL.k...",
-        "..Gk....kG..KgL.",
-        "...KL..Lk...kG..",
-        "...kgL.gK...K...",
-        "...KG...k..Lk...",
-        "..Lk....KL.gK...",
-        ".LgK....kgL.k...",
-        "..Gk....KG..K...",
-        "...K....k...k...",
-    ],
-    "stage3_top": [
-        "................",
-        "................",
-        "................",
-        "................",
-        "................",
-        "................",
-        "................",
-        "...L....L.......",
-        "..LgL..LgL..L...",
-        "...k....k..LgL..",
-        "..LKG..LKL..k...",
-        ".Lgk....kgL.KL..",
-        "..GK...LK...kgL.",
-        "...kL.Lgk..Lk...",
-        "...KgL.GK.LgK...",
-        "...kG...k..Gk...",
-    ],
-}
-
-
-def jute_colors():
-    leaves = pal("jute")
-    return {"k": hx("#6f7f34"), "K": hx("#7a6a34"), "L": leaves[4], "g": leaves[2], "G": leaves[0],
-            "y": hx("#d8a818"), "Y": hx("#f6d43c")}
-
-
-def jute(rows):
-    return paint(blank(), rows, jute_colors())
-
+# --- джут --- рисунок автора, scripts/templates/jute_stages.png (см. plants())
 
 # ============================== ПРЕДМЕТЫ ==============================
 
@@ -808,25 +685,202 @@ ITEM_BERRY_COLORS = {
                    "s": "#4f7a30", "g": "#649231"},
 }
 
-JUTE_ITEM = [
-    "................",
-    "............l.l.",
-    "..........l.lml.",
-    "..........lmlmd.",
-    ".........lmlmd..",
-    "........lmlmd...",
-    ".......lmlmd....",
-    "......RrRrd.....",
-    ".....rRrRr......",
-    "....lmlmd.......",
-    "...lmlmd........",
-    "..lmlmd.........",
-    ".lmlmd..........",
-    ".lml.d..........",
-    "l.l.............",
-    "................",
-]
-JUTE_ITEM_COLORS = {"l": "#e2c98a", "m": "#c9ab66", "d": "#8e7240", "r": "#6a4e26", "R": "#a07a3e"}
+# Пучки джута: 10 вариантов. l/m/d — волокно (светлое, среднее, тёмное), o — контур волокна, R/r — перевязь,
+# b — контур перевязи, g/G/k — зелёные стебли и листья (сырой джут)
+JUTE_BUNDLES = {
+    # A — косой сноп, перевязан посередине, концы веером
+    "A": [
+        "................",
+        "...........o.o..",
+        "..........olomo.",
+        ".........olmlmdo",
+        "........olmlmdo.",
+        ".......olmlmdo..",
+        "......olmlmdo...",
+        ".....bRrRrb.....",
+        "....brRrRb......",
+        "...olmlmdo......",
+        "..olmlmdo.......",
+        ".olmlmdo........",
+        "olmlmdo.........",
+        "omlodo..........",
+        ".o.o............",
+        "................",
+    ],
+    # B — прямой сноп стоймя, перевязь посередине, концы расходятся
+    "B": [
+        "................",
+        "...o..o..o..o...",
+        "..olo.lo.ol.ol..",
+        "...olmlmlmlmo...",
+        "....olmlmlmo....",
+        "....olmlmlmo....",
+        "....olmlmlmo....",
+        "....bRrRrRrb....",
+        "....brRrRrRb....",
+        "....olmlmlmo....",
+        "....olmlmldo....",
+        "...olmlmlmldo...",
+        "..olmlmlmlmldo..",
+        "..ololmlmlolo...",
+        "...o.o.o.o.o....",
+        "................",
+    ],
+    # C — моток: волокно сложено петлёй и перехвачено у сгиба
+    "C": [
+        "................",
+        "......oooo......",
+        ".....olmmlo.....",
+        "....olo..olo....",
+        "....omo..omo....",
+        "....olo..olo....",
+        "....omo..omo....",
+        "....bRrRrRb.....",
+        "....brRrRrb.....",
+        "....olmlmlo.....",
+        "....omlmlmo.....",
+        "...olmlomlmo....",
+        "...olmo.olmo....",
+        "..olmo...olmo...",
+        "..ooo.....ooo...",
+        "................",
+    ],
+    # D — свежие стебли джута с листьями, связаны пучком
+    "D": [
+        "................",
+        "..G.....G...G...",
+        ".Gg..G.gG..Gg...",
+        "..gk.Gg.k..gk...",
+        "...k..gkk.kG....",
+        "...kG..kk.k.....",
+        "....k..kkk......",
+        "....kk.kk.......",
+        "....bRrRb.......",
+        "....bRrRb.......",
+        "....kkkkk.......",
+        "...kkk.kk.......",
+        "...kk..kk.......",
+        "..kk...k.k......",
+        "..k....k..k.....",
+        "................",
+    ],
+    # E — коса из трёх прядей по диагонали
+    "E": [
+        "................",
+        "............oo..",
+        "...........olmo.",
+        "..........olmdo.",
+        ".........omldo..",
+        "........olmdo...",
+        ".......odlmo....",
+        "......olmdo.....",
+        ".....omldo......",
+        "....olmdo.......",
+        "...odlmo........",
+        "..bRrb..........",
+        ".bRrb...........",
+        "olmo............",
+        "lo.o............",
+        "................",
+    ],
+    # F — два снопа крест-накрест, перевязаны в середине
+    "F": [
+        "................",
+        ".o.o........o.o.",
+        "olmlo......olmlo",
+        ".olmlo....olmlo.",
+        "..olmlo..olmlo..",
+        "...olmlo.olmlo..",
+        "....olmlolmlo...",
+        ".....obRrRbo....",
+        ".....obrRrbo....",
+        "....olmlolmlo...",
+        "...olmlo..olmlo.",
+        "..olmlo....olmlo",
+        ".olmlo......olml",
+        "olmlo........olo",
+        ".o.o..........o.",
+        "................",
+    ],
+    # G — сноп, сложенный пополам: сгиб наверху, хвосты внизу
+    "G": [
+        "................",
+        ".....oooooo.....",
+        "....olmlmlmo....",
+        "...olmdoodlmo...",
+        "...omdo..odmo...",
+        "...olo....olo...",
+        "...bRrRrRrRrb...",
+        "...brRrRrRrRb...",
+        "...olmlmlmlmo...",
+        "...olmlmlmldo...",
+        "...olmlmlmldo...",
+        "..olmlmlmlmldo..",
+        "..olmlmlmlmldo..",
+        ".olmlolmlolmldo.",
+        ".o.o.o.o.o.o.o..",
+        "................",
+    ],
+    # H — скатанный клубок с хвостом нити
+    "H": [
+        "................",
+        "................",
+        ".....oooooo.....",
+        "....olmlmlmo....",
+        "...olmdmlmdmo...",
+        "..olmlmdmlmlmo..",
+        "..omdmlmdmlmdo..",
+        "..olmlmdmlmdmo..",
+        "..omdmlmlmdmlo..",
+        "..olmlmdmlmdmo..",
+        "...odmlmdmlmo...",
+        "....odmlmlmo....",
+        ".....oooooomo...",
+        "...........omo..",
+        "............olo.",
+        ".............o..",
+    ],
+    # I — тугой жгут волокна, перевязан в двух местах
+    "I": [
+        "................",
+        ".............oo.",
+        "............olo.",
+        "...........olmo.",
+        "..........bRrb..",
+        ".........olmdo..",
+        "........olmdo...",
+        ".......olmdo....",
+        "......olmdo.....",
+        ".....olmdo......",
+        "....bRrb........",
+        "...olmdo........",
+        "..olmdo.........",
+        ".olmlo..........",
+        ".olo............",
+        "..o.............",
+    ],
+    # J — пучок стеблей с волокном: сверху светлое волокно, снизу зелёные стебли, перевязан
+    "J": [
+        "................",
+        "...........o.o..",
+        "..........olmlo.",
+        ".........olmlmdo",
+        "........olmlmdo.",
+        ".......olmlmdo..",
+        "......olmlmdo...",
+        ".....bRrRrb.....",
+        "....brRrRb......",
+        "...kgkGkgk......",
+        "..kgkGkgk.......",
+        ".kgkGkgk........",
+        "kgkGkgk.........",
+        "kGkgk...........",
+        ".k.k............",
+        "................",
+    ],
+}
+JUTE_BUNDLE_COLORS = {"l": "#e6cf92", "m": "#c9ab66", "d": "#97793f", "o": "#5e4524", "R": "#a07a3e", "r": "#6a4e26",
+                      "b": "#3e2c16", "g": "#66a03a", "G": "#7fb64a", "k": "#436f26"}
 
 JUTE_SEEDS = [
     "................",
@@ -873,10 +927,25 @@ def berry_item(kind):
     return paint(blank(), ITEM_BERRIES[kind], {k: hx(v) for k, v in ITEM_BERRY_COLORS[kind].items()})
 
 
+def jute_bundle(variant):
+    return paint(blank(), JUTE_BUNDLES[variant], {k: hx(v) for k, v in JUTE_BUNDLE_COLORS.items()})
+
+
+def jute_bundles(chosen):
+    """Лист всех вариантов пучка джута (docs/textures/jute_bundles.png), * — в игре."""
+    out = Image.new("RGBA", (len(JUTE_BUNDLES) * 90, 110), (60, 60, 60, 255))
+    draw = ImageDraw.Draw(out)
+    for i, variant in enumerate(JUTE_BUNDLES):
+        big = jute_bundle(variant).resize((80, 80), Image.NEAREST)
+        out.paste(big, (i * 90 + 5, 5), big)
+        draw.text((i * 90 + 38, 92), variant + (" *" if variant == chosen else ""), fill=(255, 255, 255, 255))
+    out.save(os.path.join(DOCS, "jute_bundles.png"))
+
+
 def items():
     for kind in ITEM_BERRIES:
         save(berry_item(kind), f"item/{kind}")
-    save(paint(blank(), JUTE_ITEM, {k: hx(v) for k, v in JUTE_ITEM_COLORS.items()}), "item/jute")
+    save(jute_bundle(JUTE_CHOSEN), "item/jute")
     save(paint(blank(), JUTE_SEEDS, {k: hx(v) for k, v in JUTE_SEEDS_COLORS.items()}), "item/jute_seeds")
     save(paint(blank(), ROPE, {k: hx(v) for k, v in ROPE_COLORS.items()}), "item/rope")
 
@@ -890,11 +959,17 @@ def plants():
             save(bush(kind, stage), f"block/{kind}_bush_stage{stage}")
     save(wild_carrot(), "block/wild_carrot")
     save(wild_potato(), "block/wild_potato")
-    save(jute(WILD_JUTE_BOTTOM), "block/wild_jute_bottom")
-    save(jute(WILD_JUTE_TOP), "block/wild_jute_top")
-    # у посаженного джута на 3-й стадии и у спелого низ — как у дикого (wild_jute_bottom)
-    for part, rows in JUTE_CROP.items():
-        save(jute(rows), f"block/jute_crop_{part}")
+    # Джут — рисунок автора: 5 стадий по 16×32 (два блока), дикий джут — как спелый (5-я стадия, с цветами)
+    stages = Image.open(os.path.join(os.path.dirname(__file__), "templates", "jute_stages.png")).convert("RGBA")
+    for age in range(5):
+        save(stages.crop((16 * age, 16, 16 * age + 16, 32)), f"block/jute_crop_stage{age}_bottom")
+        save(stages.crop((16 * age, 0, 16 * age + 16, 16)), f"block/jute_crop_stage{age}_top")
+    save(stages.crop((64, 16, 80, 32)), "block/wild_jute_bottom")
+    save(stages.crop((64, 0, 80, 16)), "block/wild_jute_top")
+    for old in ("jute_crop_stage0", "jute_crop_stage1", "jute_crop_stage2"):
+        p = os.path.join(TEX, "block", f"{old}.png")
+        if os.path.exists(p):
+            os.remove(p)
 
 
 def preview():
@@ -905,13 +980,13 @@ def preview():
     for kind in BERRY_BUSHES:
         rows.append([load(f"block/{kind}_bush_stage{i}.png") for i in range(4)] + [load(f"item/{kind}.png")])
     tall = []
-    for top, bottom in (("wild_jute_top", "wild_jute_bottom"), ("jute_crop_stage3_top", "wild_jute_bottom")):
+    for top, bottom in [("wild_jute_top", "wild_jute_bottom")] + [(f"jute_crop_stage{i}_top", f"jute_crop_stage{i}_bottom")
+                                                                for i in range(5)]:
         im = Image.new("RGBA", (16, 32))
         im.paste(load(f"block/{top}.png"), (0, 0))
         im.paste(load(f"block/{bottom}.png"), (0, 16))
         tall.append(im)
-    rows.append([load("block/wild_carrot.png"), load("block/wild_potato.png")]
-                + [load(f"block/jute_crop_stage{i}.png") for i in range(3)])
+    rows.append([load("block/wild_carrot.png"), load("block/wild_potato.png")])
     rows.append([load("item/jute.png"), load("item/jute_seeds.png"), load("item/rope.png")])
     out = sheet(rows)
     big = sheet([[t] for t in tall], cell=32)
@@ -927,6 +1002,13 @@ if __name__ == "__main__":
         chosen = sys.argv[sys.argv.index("--hoe") + 1].upper()
         if chosen not in HOE_VARIANTS:
             sys.exit(f"Нет варианта тяпки {chosen}, есть: {', '.join(HOE_VARIANTS)}")
+    # пучок джута — 10 вариантов (docs/textures/jute_bundles.png), другой: --jute B
+    JUTE_CHOSEN = "A"
+    if "--jute" in sys.argv:
+        JUTE_CHOSEN = sys.argv[sys.argv.index("--jute") + 1].upper()
+        if JUTE_CHOSEN not in JUTE_BUNDLES:
+            sys.exit(f"Нет варианта пучка джута {JUTE_CHOSEN}, есть: {', '.join(JUTE_BUNDLES)}")
+    jute_bundles(JUTE_CHOSEN)
     hoes(chosen)
     farmlands()
     plants()

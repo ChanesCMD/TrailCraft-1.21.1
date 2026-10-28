@@ -933,5 +933,10 @@
   "subtitles.trailcraft.entity.crow.ambient": "Ворона каркает",
   "subtitles.trailcraft.entity.raven.ambient": "Ворон каркает",
   "tooltip.trailcraft.watering_can.water": "Вода: %s/%s",
-  "tooltip.trailcraft.watering_can.use": "ПКМ по воде — наполнить, по грядке — полить 3×3 на %s сут."
+  "tooltip.trailcraft.watering_can.use": "ПКМ по пресной воде — наполнить, по грядке — полить 3×3 на %s сут.",
+  "message.trailcraft.ruler.start": "Начало отмечено — ПКМ по второму блоку",
+  "message.trailcraft.ruler.reset": "Отметка линейки сброшена",
+  "message.trailcraft.ruler.too_far": "Слишком далеко: линейка меряет до %s блоков",
+  "message.trailcraft.ruler.distance": "Расстояние: %s бл. (по осям %s, %s, %s)",
+  "tooltip.trailcraft.ruler": "ПКМ по двум блокам — расстояние между ними (до %s); Shift+ПКМ — сбросить"
 }

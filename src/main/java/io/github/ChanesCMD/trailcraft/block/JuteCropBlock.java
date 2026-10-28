@@ -5,9 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -29,8 +26,9 @@ import net.neoforged.neoforge.common.CommonHooks;
 import javax.annotation.Nullable;
 
 /**
- * Посаженный джут: семена сажаются только на грядку. Растёт как ванильный кувшинчик (pitcher crop):
- * стадии 0–4, с 3-й занимает два блока, на 4-й цветёт и готов к сбору. Скорость — как у пшеницы
+ * Посаженный джут: семена сажаются только на грядку, и над ней нужен свободный блок — джут с первой стадии в два
+ * блока (рисунок автора: scripts/templates/jute_stages.png). Растёт как ванильный кувшинчик (pitcher crop):
+ * стадии 0–4, на 4-й цветёт и готов к сбору. Скорость — как у пшеницы
  * (влажная грядка быстрее сухой, соседние грядки помогают), жёлтозём/чернозём её меняют (GardenBedBlock).
  * Падает только с нижней половины (лут-таблица): спелый — джут и семена, неспелый — семена.
  */
@@ -38,16 +36,21 @@ public class JuteCropBlock extends DoublePlantBlock implements BonemealableBlock
     public static final MapCodec<JuteCropBlock> CODEC = simpleCodec(JuteCropBlock::new);
     public static final IntegerProperty AGE = BlockStateProperties.AGE_4;
     public static final int MAX_AGE = 4;
-    /** С этой стадии джут в два блока высотой. */
-    private static final int DOUBLE_AGE = 3;
+    /** С этой стадии джут в два блока высотой (с первой: на рисунке все стадии выше блока). */
+    private static final int DOUBLE_AGE = 0;
     private static final VoxelShape[] LOWER_SHAPES = {
-            Block.box(4.0, -1.0, 4.0, 12.0, 3.0, 12.0),
-            Block.box(2.0, -1.0, 2.0, 14.0, 7.0, 14.0),
-            Block.box(2.0, -1.0, 2.0, 14.0, 13.0, 14.0),
+            Block.box(5.0, -1.0, 5.0, 11.0, 16.0, 11.0),
+            Block.box(2.0, -1.0, 2.0, 14.0, 16.0, 14.0),
+            Block.box(1.0, -1.0, 1.0, 15.0, 16.0, 15.0),
             Block.box(1.0, -1.0, 1.0, 15.0, 16.0, 15.0),
             Block.box(1.0, -1.0, 1.0, 15.0, 16.0, 15.0)};
-    private static final VoxelShape UPPER_YOUNG_SHAPE = Block.box(1.0, 0.0, 1.0, 15.0, 8.0, 15.0);
-    private static final VoxelShape UPPER_SHAPE = Block.box(1.0, 0.0, 1.0, 15.0, 15.0, 15.0);
+    /** Верхняя половина — по высоте рисунка стадии. */
+    private static final VoxelShape[] UPPER_SHAPES = {
+            Block.box(5.0, 0.0, 5.0, 11.0, 3.0, 11.0),
+            Block.box(2.0, 0.0, 2.0, 14.0, 7.0, 14.0),
+            Block.box(1.0, 0.0, 1.0, 15.0, 11.0, 15.0),
+            Block.box(1.0, 0.0, 1.0, 15.0, 14.0, 15.0),
+            Block.box(1.0, 0.0, 1.0, 15.0, 16.0, 15.0)};
 
     public JuteCropBlock(Properties properties) {
         super(properties);
@@ -64,20 +67,10 @@ public class JuteCropBlock extends DoublePlantBlock implements BonemealableBlock
         super.createBlockStateDefinition(builder);
     }
 
-    /** Семена ставят только нижнюю половину — верхняя вырастет сама. */
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return defaultBlockState();
-    }
-
-    @Override
-    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-    }
-
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         if (state.getValue(HALF) == DoubleBlockHalf.UPPER) {
-            return state.getValue(AGE) >= MAX_AGE ? UPPER_SHAPE : UPPER_YOUNG_SHAPE;
+            return UPPER_SHAPES[state.getValue(AGE)];
         }
         return LOWER_SHAPES[state.getValue(AGE)];
     }

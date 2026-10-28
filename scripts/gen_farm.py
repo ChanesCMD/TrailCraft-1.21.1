@@ -182,19 +182,17 @@ def models():
     blockstate("wild_jute", {"half=lower": "wild_jute_bottom", "half=upper": "wild_jute_top"})
     item_model("wild_jute", f"{NS}:block/wild_jute_top")
 
-    # Посевы джута: 0–2 — в один блок, с 3-й — в два (низ как у дикого джута), на 4-й — цветы сверху
-    for i in range(3):
-        crop(f"jute_crop_stage{i}")
-    crop("jute_crop_bottom", "wild_jute_bottom")
-    crop("jute_crop_stage3_top")
-    crop("jute_crop_stage4_top", "wild_jute_top")
+    # Посевы джута: все стадии в два блока (рисунок автора — scripts/templates/jute_stages.png), на 4-й — цветы
     variants = {}
     for age in range(5):
-        lower = f"jute_crop_stage{age}" if age < 3 else "jute_crop_bottom"
-        # верхней половины до 3-й стадии не бывает, но у блокстейта должна быть модель для каждого состояния
-        upper = "jute_crop_stage4_top" if age == 4 else "jute_crop_stage3_top"
-        variants[f"age={age},half=lower"] = lower
-        variants[f"age={age},half=upper"] = upper
+        for half in ("bottom", "top"):
+            crop(f"jute_crop_stage{age}_{half}")
+        variants[f"age={age},half=lower"] = f"jute_crop_stage{age}_bottom"
+        variants[f"age={age},half=upper"] = f"jute_crop_stage{age}_top"
+    for old in ("jute_crop_stage0", "jute_crop_stage1", "jute_crop_stage2", "jute_crop_bottom"):
+        p = os.path.join(ROOT, "assets", NS, "models", "block", f"{old}.json")
+        if os.path.exists(p):
+            os.remove(p)
     blockstate("jute_crop", variants)
 
     for item in ("jute", "jute_seeds", "rope"):

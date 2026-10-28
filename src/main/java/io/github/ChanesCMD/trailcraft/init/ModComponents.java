@@ -2,6 +2,7 @@ package io.github.ChanesCMD.trailcraft.init;
 
 import com.mojang.serialization.Codec;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.world.item.component.ItemContainerContents;
@@ -27,6 +28,11 @@ public final class ModComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ItemContainerContents>> CONTENTS =
             COMPONENTS.registerComponentType("contents", builder -> builder.persistent(ItemContainerContents.CODEC)
                     .networkSynchronized(ItemContainerContents.STREAM_CODEC).cacheEncoding());
+
+    /** Линейка: первый отмеченный блок (с измерением), от него меряется расстояние до второго. */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<GlobalPos>> RULER_START =
+            COMPONENTS.registerComponentType("ruler_start", builder -> builder.persistent(GlobalPos.CODEC)
+                    .networkSynchronized(GlobalPos.STREAM_CODEC));
 
     private ModComponents() {}
 }
