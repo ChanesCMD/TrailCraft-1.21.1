@@ -1014,8 +1014,7 @@
   "block.trailcraft.wooden_support_beam": "Wooden Support Beam",
   "block.trailcraft.iron_support": "Iron Support",
   "block.trailcraft.iron_support_beam": "Iron Support Beam",
-  "item.trailcraft.support.range": "Holds rock and soil %s×%s×%s around it",
-  "item.trailcraft.support.beam": "Right-click the side of a support to place a beam (up to %s blocks from a post)",
+  "item.trailcraft.support.beam": "Right-click the side of a support to place a beam",
   "block.trailcraft.andesite_cobblestone": "Andesite Cobblestone",
   "block.trailcraft.basalt_cobblestone": "Basalt Cobblestone",
   "block.trailcraft.chalk_cobblestone": "Chalk Cobblestone",
@@ -1027,5 +1026,13 @@
   "block.trailcraft.limestone_cobblestone": "Limestone Cobblestone",
   "block.trailcraft.marble_cobblestone": "Marble Cobblestone",
   "block.trailcraft.sandstone_cobblestone": "Sandstone Cobblestone",
-  "block.trailcraft.shale_cobblestone": "Shale Cobblestone"
+  "block.trailcraft.shale_cobblestone": "Shale Cobblestone",
+  "item.trailcraft.support.frame": "In a frame holds rock and soil %s×%s×%s around it",
+  "item.trailcraft.support.lone": "A lone post holds only %s×%s×%s",
+  "item.trailcraft.support.column": "Places a column of up to %s posts and a beam to a post up to %s blocks away, making a frame",
+  "item.trailcraft.steiger_hammer": "Steiger's Hammer",
+  "item.trailcraft.steiger_hammer.desc": "In hand: green dots under overhanging rock are supported, red ones may collapse",
+  "item.trailcraft.steiger_hammer.desc2": "Look at a support to see what it holds",
+  "item.trailcraft.steiger_hammer.framed": "Framed support: holds %s×%s×%s",
+  "item.trailcraft.steiger_hammer.lone": "Lone support: holds only %s×%s×%s — add a second post and a beam"
 }

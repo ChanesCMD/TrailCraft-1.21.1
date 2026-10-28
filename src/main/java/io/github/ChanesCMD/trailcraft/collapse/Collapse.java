@@ -40,9 +40,9 @@ import java.util.Set;
 
 /**
  * Обвалы, как в TFC, но с предупреждением. Обваливается только природное и только когда игрок что-то выкопал рядом:
- * сломал породу, руду или крепь — с шансом {@link #TRIGGER_CHANCE} ищется нависающая порода (#trailcraft:can_collapse,
+ * сломал породу, руду или опору — с шансом {@link #TRIGGER_CHANCE} ищется нависающая порода (#trailcraft:can_collapse,
  * под ней пусто) в радиусе {@link #MIN_RADIUS}…{@link #MIN_RADIUS} + {@link #RADIUS_VARIANCE} − 1, не поставленная
- * игроком (PlacedBlocks) и не под крепью (SupportBlock). Найденное 2–5 с сыплет пылью с потолка и трещит, потом падает
+ * игроком (PlacedBlocks) и не под опорой (SupportBlock). Найденное 2–5 с сыплет пылью с потолка и трещит, потом падает
  * столбами (блоки над нижним — с шансом {@link #PROPAGATE_CHANCE} каждый): нижние две трети столба — булыжником своей
  * породы, верхняя треть — её гравием, руда — сама собой.
  * Камни бьют по {@link #DAMAGE_PER_BLOCK} за блок падения, не больше {@link #MAX_DAMAGE} (шлем снимает четверть).
@@ -58,7 +58,7 @@ public final class Collapse {
     public static final int MIN_DELAY = 40, MAX_DELAY = 100;
     public static final float DAMAGE_PER_BLOCK = 4.0f;
     public static final int MAX_DAMAGE = 12;
-    /** Дальше всего держит железная крепь: ±6 в стороны, ±3 по высоте. */
+    /** Дальше всего держит железная опора в раме: ±6 в стороны, ±3 по высоте. */
     private static final int SUPPORT_REACH_H = 6, SUPPORT_REACH_V = 3;
 
     private static final Map<Level, LevelCollapses> LEVELS = new IdentityHashMap<>();
@@ -155,7 +155,7 @@ public final class Collapse {
         if (!level.hasChunksAt(min, max)) {
             return null;
         }
-        List<BlockPos> supports = supports(level, min, max);
+        List<Support> supports = supports(level, min, max);
         List<BlockPos> starts = new ArrayList<>();
         for (BlockPos p : BlockPos.betweenClosed(min, max)) {
             int dx = p.getX() - pos.getX(), dz = p.getZ() - pos.getZ();
@@ -204,8 +204,8 @@ public final class Collapse {
         if (!level.hasChunksAt(min, max)) {
             return;
         }
-        // крепь могли поставить, пока трещало
-        List<BlockPos> supports = supports(level, min, max);
+        // опору могли поставить, пока трещало
+        List<Support> supports = supports(level, min, max);
         List<BlockPos> sorted = new ArrayList<>(pending.blocks);
         sorted.sort(Comparator.comparingInt(BlockPos::getY));
         // в каждом столбце нижние две трети (не меньше одного блока) — булыжник, остальное сверху — гравий
@@ -234,8 +234,8 @@ public final class Collapse {
         }
     }
 
-    private static boolean canCollapse(ServerLevel level, BlockPos pos, List<BlockPos> supports) {
-        return level.getBlockState(pos).is(ModTags.CAN_COLLAPSE) && !PlacedBlocks.isPlaced(level, pos) && !supported(level, pos, supports);
+    private static boolean canCollapse(ServerLevel level, BlockPos pos, List<Support> supports) {
+        return isNaturalRock(level, pos) && !supported(pos, supports);
     }
 
     /**
@@ -264,10 +264,10 @@ public final class Collapse {
         for (BlockPos p = pos; level.isLoaded(p) && isLooseSoil(level, p); p = p.above()) {
             column.add(p);
         }
-        List<BlockPos> supports = supports(level, pos, column.get(column.size() - 1));
+        List<Support> supports = supports(level, pos, column.get(column.size() - 1));
         for (BlockPos p : column) {
-            if (supported(level, p, supports)) {
-                return;  // крепь держит этот блок, а с ним и всё, что выше
+            if (supported(p, supports)) {
+                return;  // опора держит этот блок, а с ним и всё, что выше
             }
             FallingBlockEntity.fall(level, p, level.getBlockState(p));
         }
@@ -277,27 +277,39 @@ public final class Collapse {
         return level.getBlockState(pos).is(ModTags.COLLAPSIBLE_SOILS) && !PlacedBlocks.isPlaced(level, pos);
     }
 
-    // === Крепь ===
+    // === Опоры ===
 
-    /** Вся крепь, которая может держать что-то в коробке min…max. */
-    private static List<BlockPos> supports(ServerLevel level, BlockPos min, BlockPos max) {
-        List<BlockPos> found = new ArrayList<>();
+    /** Опора в pos; framed — в раме (держит больше, SupportBlock.isFramed). */
+    public record Support(BlockPos pos, SupportBlock block, boolean framed) {
+        public boolean covers(BlockPos target) {
+            return block.covers(pos, framed, target);
+        }
+    }
+
+    /** Все опоры, которые могут держать что-то в коробке min…max. */
+    public static List<Support> supports(Level level, BlockPos min, BlockPos max) {
+        List<Support> found = new ArrayList<>();
         for (BlockPos p : BlockPos.betweenClosed(min.offset(-SUPPORT_REACH_H, -SUPPORT_REACH_V, -SUPPORT_REACH_H),
                 max.offset(SUPPORT_REACH_H, SUPPORT_REACH_V, SUPPORT_REACH_H))) {
-            if (level.isLoaded(p) && level.getBlockState(p).getBlock() instanceof SupportBlock) {
-                found.add(p.immutable());
+            if (level.isLoaded(p) && level.getBlockState(p).getBlock() instanceof SupportBlock block) {
+                found.add(new Support(p.immutable(), block, SupportBlock.isFramed(level, p)));
             }
         }
         return found;
     }
 
-    private static boolean supported(ServerLevel level, BlockPos pos, List<BlockPos> supports) {
-        for (BlockPos support : supports) {
-            if (level.getBlockState(support).getBlock() instanceof SupportBlock block && block.covers(support, pos)) {
+    public static boolean supported(BlockPos pos, List<Support> supports) {
+        for (Support support : supports) {
+            if (support.covers(pos)) {
                 return true;
             }
         }
         return false;
+    }
+
+    /** Природная порода или руда (не поставлена игроком): может обвалиться, если под ней пусто и нет опоры. */
+    public static boolean isNaturalRock(Level level, BlockPos pos) {
+        return level.getBlockState(pos).is(ModTags.CAN_COLLAPSE) && !PlacedBlocks.isPlaced(level, pos);
     }
 
     private static boolean isTracked(BlockState state) {

@@ -7,6 +7,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.item.Tiers;
 import io.github.ChanesCMD.trailcraft.item.SupportItem;
+import io.github.ChanesCMD.trailcraft.item.SteigerHammerItem;
 import io.github.ChanesCMD.trailcraft.item.BackpackItem;
 import io.github.ChanesCMD.trailcraft.item.PocketItem;
 import io.github.ChanesCMD.trailcraft.item.CoinItem;
@@ -178,12 +179,15 @@ public class ModItems {
     // === ПЕНЬ ДЛЯ РУБКИ ===
     public static final DeferredItem<BlockItem> CHOPPING_STUMP = ITEMS.registerSimpleBlockItem("chopping_stump", ModBlocks.CHOPPING_STUMP);
 
-    // === КРЕПЬ ===
-    /** Крепь: стойка, а по боку другой крепи — перекладина (SupportItem). */
+    // === ОПОРЫ ===
+    /** Опора: стойка столбом до 3 блоков, а по боку другой опоры — перекладина (SupportItem). */
     public static final DeferredItem<SupportItem> WOODEN_SUPPORT = ITEMS.registerItem("wooden_support",
             props -> new SupportItem(ModBlocks.WOODEN_SUPPORT.get(), ModBlocks.WOODEN_SUPPORT_BEAM.get(), props));
     public static final DeferredItem<SupportItem> IRON_SUPPORT = ITEMS.registerItem("iron_support",
             props -> new SupportItem(ModBlocks.IRON_SUPPORT.get(), ModBlocks.IRON_SUPPORT_BEAM.get(), props));
+    /** Молоток штейгера: в руке показывает, что обвалится и что держат опоры (SteigerHammerItem). */
+    public static final DeferredItem<SteigerHammerItem> STEIGER_HAMMER = ITEMS.registerItem("steiger_hammer",
+            props -> new SteigerHammerItem(props.stacksTo(1)));
 
     // === КОСТЁР ===
     /** Костёр для креатива и JEI; в выживании его складывают огнивом. */

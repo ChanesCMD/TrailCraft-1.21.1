@@ -22,15 +22,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Крепь, как в TFC: стойка (beam = false) стоит на твёрдом блоке или на другой стойке, перекладина (beam = true)
+ * Опора, как в TFC: стойка (beam = false) стоит на твёрдом блоке или на другой стойке, перекладина (beam = true)
  * висит между стойками — в каждую сторону по прямой через другие перекладины не дальше {@link #MAX_SPAN} блоков до
- * стойки — или лежит на стойке. Любая крепь держит породу и почву в коробке ±horizontal по X и Z и ±vertical по Y
- * вокруг себя (collapse/Collapse): деревянная 9×5×9, железная 13×7×13. Ставятся одним предметом (item/SupportItem).
+ * стойки — или лежит на стойке. Опора в раме ({@link #isFramed}: перекладины, по краям которых две стойки, и столбы этих
+ * стоек) держит породу и почву в коробке ±horizontal по X и Z и ±vertical по Y вокруг себя (collapse/Collapse):
+ * деревянная 9×5×9, железная 13×7×13; одиночная стойка или перекладина без второй стойки — ±loneHorizontal,
+ * ±vertical: деревянная 3×5×3, железная 5×7×5. Ставятся одним предметом (item/SupportItem).
  * Свойства north/east/south/west — плечи к соседним перекладинам (у стойки) или к стойкам и перекладинам (у перекладины).
  */
 public class SupportBlock extends Block {
     /** Самое большее перекладин подряд от стойки. */
     public static final int MAX_SPAN = 4;
+    /** Самое большее свободных блоков между стойками, чтобы предмет сам поставил перекладину (SupportItem). */
+    public static final int MAX_GAP = 5;
     public static final Map<Direction, BooleanProperty> ARMS = new HashMap<>();
     static {
         for (Direction dir : Direction.Plane.HORIZONTAL) {
@@ -46,14 +50,15 @@ public class SupportBlock extends Block {
             Direction.EAST, Block.box(11, 10, 5, 16, 16, 11));
 
     public final boolean beam;
-    /** Сколько блоков держит в стороны (по X и Z) и вверх-вниз. */
-    public final int horizontal, vertical;
+    /** Сколько блоков держит в стороны (по X и Z) в раме и в одиночку, и вверх-вниз. */
+    public final int horizontal, loneHorizontal, vertical;
     private final Map<BlockState, VoxelShape> shapes = new HashMap<>();
 
-    public SupportBlock(Properties properties, boolean beam, int horizontal, int vertical) {
+    public SupportBlock(Properties properties, boolean beam, int horizontal, int loneHorizontal, int vertical) {
         super(properties);
         this.beam = beam;
         this.horizontal = horizontal;
+        this.loneHorizontal = loneHorizontal;
         this.vertical = vertical;
         BlockState state = stateDefinition.any();
         for (BooleanProperty arm : ARMS.values()) {
@@ -67,10 +72,62 @@ public class SupportBlock extends Block {
         builder.add(ARMS.values().toArray(BooleanProperty[]::new));
     }
 
-    /** Крепь в pos держит блок target. */
-    public boolean covers(BlockPos pos, BlockPos target) {
-        return Math.abs(target.getX() - pos.getX()) <= horizontal && Math.abs(target.getZ() - pos.getZ()) <= horizontal
+    /** Сколько блоков опора держит в стороны: в раме — horizontal, одна — loneHorizontal. */
+    public int reach(boolean framed) {
+        return framed ? horizontal : loneHorizontal;
+    }
+
+    /** Опора в pos (в раме или нет) держит блок target. */
+    public boolean covers(BlockPos pos, boolean framed, BlockPos target) {
+        int reach = reach(framed);
+        return Math.abs(target.getX() - pos.getX()) <= reach && Math.abs(target.getZ() - pos.getZ()) <= reach
                 && Math.abs(target.getY() - pos.getY()) <= vertical;
+    }
+
+    /**
+     * Опора в pos — часть рамы: перекладина, у которой по одной оси с обеих сторон (через другие перекладины) стоят
+     * стойки, или стойка, к столбу которой примыкает такая перекладина.
+     */
+    public static boolean isFramed(BlockGetter level, BlockPos pos) {
+        if (!(level.getBlockState(pos).getBlock() instanceof SupportBlock support)) {
+            return false;
+        }
+        if (support.beam) {
+            return isFramedBeam(level, pos);
+        }
+        // весь столб стоек: перекладина может примыкать к любой из них
+        BlockPos bottom = pos;
+        while (isPost(level.getBlockState(bottom.below()))) {
+            bottom = bottom.below();
+        }
+        for (BlockPos p = bottom; isPost(level.getBlockState(p)); p = p.above()) {
+            for (Direction dir : Direction.Plane.HORIZONTAL) {
+                BlockPos side = p.relative(dir);
+                if (level.getBlockState(side).getBlock() instanceof SupportBlock other && other.beam && isFramedBeam(level, side)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static boolean isFramedBeam(BlockGetter level, BlockPos pos) {
+        return postAlong(level, pos, Direction.EAST) && postAlong(level, pos, Direction.WEST)
+                || postAlong(level, pos, Direction.NORTH) && postAlong(level, pos, Direction.SOUTH);
+    }
+
+    /** По прямой от перекладины через другие перекладины есть стойка. */
+    private static boolean postAlong(BlockGetter level, BlockPos pos, Direction dir) {
+        for (int i = 1; i <= 2 * MAX_SPAN + 1; i++) {
+            BlockState next = level.getBlockState(pos.relative(dir, i));
+            if (!(next.getBlock() instanceof SupportBlock support)) {
+                return false;
+            }
+            if (!support.beam) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Состояние с плечами к соседям в pos. */
@@ -87,7 +144,7 @@ public class SupportBlock extends Block {
         return neighbor.getBlock() instanceof SupportBlock other && (beam || other.beam);
     }
 
-    private static boolean isPost(BlockState state) {
+    public static boolean isPost(BlockState state) {
         return state.getBlock() instanceof SupportBlock support && !support.beam;
     }
 

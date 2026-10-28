@@ -1,16 +1,20 @@
 """
-Крепь (block/SupportBlock.java, item/SupportItem.java, обвалы — collapse/Collapse.java): модели, блокстейты, модели
-предметов, лут, рецепты, тэги (#trailcraft:can_collapse — что обваливается, #trailcraft:collapsible_soils — какие
-почвы осыпаются, кирка/топор) и переводы.
+Опоры (block/SupportBlock.java, item/SupportItem.java, обвалы — collapse/Collapse.java) и молоток штейгера
+(item/SteigerHammerItem.java): модели, блокстейты, модели предметов, лут, рецепты, тэги (#trailcraft:can_collapse — что
+обваливается, #trailcraft:collapsible_soils — какие почвы осыпаются, кирка/топор), текстура молотка и переводы.
 
-Запуск из корня проекта:  python scripts/gen_supports.py
+Запуск из корня проекта:  python scripts/gen_supports.py   (нужен Pillow)
 
 Стойка — брус 6×6 во всю высоту блока, перекладина — брус 6×6 у верха блока (y 10–16); плечи north/east/south/west
-тянутся от середины к краю блока, к соседней крепи (одна модель плеча на север, блокстейт поворачивает). Меняя формы
-здесь, менять и SupportBlock (POST, CORE, ARM_SHAPES). Текстуры пока ванильные: окорённый дуб и железный блок.
+тянутся от середины к краю блока, к соседней опоре (одна модель плеча на север, блокстейт поворачивает). Меняя формы
+здесь, менять и SupportBlock (POST, CORE, ARM_SHAPES). Текстуры опор пока ванильные: окорённый дуб и железный блок.
+Молоток штейгера (каменный молоток + кремень) — черенок каменного молотка, металлическая головка с бойком и клювом
+поперёк черенка.
 """
 import json
 import os
+
+from PIL import Image
 
 NS = "trailcraft"
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "main", "resources")
@@ -24,14 +28,28 @@ SOILS = ["zheltozem", "burozem", "chernozem", "loam", "clay_white", "clay_blue",
 ARM_Y = {"north": 0, "east": 90, "south": 180, "west": 270}
 
 LANG = {
-    "block.trailcraft.wooden_support": ("Деревянная крепь", "Wooden Support"),
+    "block.trailcraft.wooden_support": ("Деревянная опора", "Wooden Support"),
     "block.trailcraft.wooden_support_beam": ("Деревянная перекладина", "Wooden Support Beam"),
-    "block.trailcraft.iron_support": ("Железная крепь", "Iron Support"),
+    "block.trailcraft.iron_support": ("Железная опора", "Iron Support"),
     "block.trailcraft.iron_support_beam": ("Железная перекладина", "Iron Support Beam"),
-    "item.trailcraft.support.range": ("Держит породу и почву %s×%s×%s вокруг себя",
-                                      "Holds rock and soil %s×%s×%s around it"),
-    "item.trailcraft.support.beam": ("ПКМ по боку крепи — перекладина (до %s блоков от стойки)",
-                                     "Right-click the side of a support to place a beam (up to %s blocks from a post)"),
+    "item.trailcraft.support.frame": ("В раме держит породу и почву %s×%s×%s вокруг себя",
+                                      "In a frame holds rock and soil %s×%s×%s around it"),
+    "item.trailcraft.support.lone": ("Одна стойка — только %s×%s×%s", "A lone post holds only %s×%s×%s"),
+    "item.trailcraft.support.column": ("Ставится столбом до %s стоек; до соседней стойки (не дальше %s блоков) "
+                                       "сама ставится перекладина — получается рама",
+                                       "Places a column of up to %s posts and a beam to a post up to %s blocks away, "
+                                       "making a frame"),
+    "item.trailcraft.support.beam": ("ПКМ по боку опоры — перекладина",
+                                     "Right-click the side of a support to place a beam"),
+    "item.trailcraft.steiger_hammer": ("Молоток штейгера", "Steiger's Hammer"),
+    "item.trailcraft.steiger_hammer.desc": ("В руке: под нависающей породой зелёные точки — держит опора, красные — "
+                                            "может обвалиться", "In hand: green dots under overhanging rock are "
+                                            "supported, red ones may collapse"),
+    "item.trailcraft.steiger_hammer.desc2": ("Посмотрите на опору — видно, что она держит",
+                                             "Look at a support to see what it holds"),
+    "item.trailcraft.steiger_hammer.framed": ("Опора в раме: держит %s×%s×%s", "Framed support: holds %s×%s×%s"),
+    "item.trailcraft.steiger_hammer.lone": ("Опора без рамы: держит только %s×%s×%s — поставьте вторую стойку и перекладину",
+                                            "Lone support: holds only %s×%s×%s — add a second post and a beam"),
 }
 
 
@@ -131,6 +149,46 @@ def materials():
     tag("block", "minecraft:mineable/pickaxe", [f"{NS}:iron_support", f"{NS}:iron_support_beam"])
 
 
+def steiger_hammer():
+    """Черенок каменного молотка и поперёк него металлическая головка: боёк вверху слева, клюв внизу справа."""
+    tex = os.path.join(ROOT, "assets", NS, "textures", "item")
+    src = Image.open(os.path.join(tex, "stone_hammer.png")).convert("RGBA")
+    img = Image.new("RGBA", (16, 16))
+    for y in range(16):
+        for x in range(16):
+            c = src.getpixel((x, y))
+            if c[3] and c[0] - c[2] > 25:  # только черенок
+                img.putpixel((x, y), c)
+    outline, dark, mid, light = (40, 40, 46, 255), (92, 94, 102, 255), (140, 143, 150, 255), (196, 199, 205, 255)
+    head = {}
+    for i in range(9):
+        x, y = 6 + i, 1 + i
+        head[(x, y)], head[(x, y + 1)] = mid, dark
+        if i < 6:
+            head[(x - 1, y + 1)] = light if i < 3 else mid
+    for p in [(4, 1), (5, 0), (6, 0), (4, 2), (4, 3), (5, 3)]:
+        head[p] = mid
+    for p in [(5, 1), (5, 2), (6, 1)]:
+        head[p] = light
+    for p in [(14, 10), (13, 10), (14, 11)]:  # клюв сужается
+        head.pop(p, None)
+    for p, c in head.items():
+        img.putpixel(p, c)
+    filled = {(x, y) for x in range(16) for y in range(16) if img.getpixel((x, y))[3]}
+    for x, y in list(head):
+        for q in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+            if 0 <= q[0] < 16 and 0 <= q[1] < 16 and q not in filled:
+                img.putpixel(q, outline)
+                filled.add(q)
+    img.save(os.path.join(tex, "steiger_hammer.png"))
+    write(f"assets/{NS}/models/item/steiger_hammer.json",
+          {"parent": "minecraft:item/handheld", "textures": {"layer0": f"{NS}:item/steiger_hammer"}})
+    write(f"data/{NS}/recipe/steiger_hammer.json", {
+        "type": "minecraft:crafting_shapeless", "category": "equipment",
+        "ingredients": [{"item": f"{NS}:stone_hammer"}, {"item": f"{NS}:flint"}],
+        "result": {"id": f"{NS}:steiger_hammer", "count": 1}})
+
+
 def tags():
     tag("block", f"{NS}:can_collapse", [f"#{NS}:rocks", f"#{NS}:ores"])
     tag("block", f"{NS}:collapsible_soils",
@@ -149,6 +207,7 @@ def lang():
 if __name__ == "__main__":
     templates()
     materials()
+    steiger_hammer()
     tags()
     lang()
     print("ok")

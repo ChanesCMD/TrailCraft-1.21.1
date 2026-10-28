@@ -264,13 +264,13 @@ public class ModBlocks {
                     .noLootTable().pushReaction(PushReaction.DESTROY)
                     .lightLevel(state -> state.getValue(TrailCampfireBlock.LIT) ? 11 + state.getValue(TrailCampfireBlock.LOGS) : 0));
 
-    // === КРЕПЬ (collapse/Collapse): стойка и перекладина, ставятся одним предметом (SupportItem) ===
-    /** Деревянная крепь держит породу и почву 9×5×9 вокруг себя. */
-    public static final DeferredBlock<SupportBlock> WOODEN_SUPPORT = registerSupport("wooden_support", false, 4, 2, woodSupportProps());
-    public static final DeferredBlock<SupportBlock> WOODEN_SUPPORT_BEAM = registerSupport("wooden_support_beam", true, 4, 2, woodSupportProps());
-    /** Железная крепь держит 13×7×13. */
-    public static final DeferredBlock<SupportBlock> IRON_SUPPORT = registerSupport("iron_support", false, 6, 3, ironSupportProps());
-    public static final DeferredBlock<SupportBlock> IRON_SUPPORT_BEAM = registerSupport("iron_support_beam", true, 6, 3, ironSupportProps());
+    // === ОПОРЫ (collapse/Collapse): стойка и перекладина, ставятся одним предметом (SupportItem) ===
+    /** Деревянная опора держит породу и почву 9×5×9 вокруг себя в раме, 3×5×3 — одна. */
+    public static final DeferredBlock<SupportBlock> WOODEN_SUPPORT = registerSupport("wooden_support", false, 4, 1, 2, woodSupportProps());
+    public static final DeferredBlock<SupportBlock> WOODEN_SUPPORT_BEAM = registerSupport("wooden_support_beam", true, 4, 1, 2, woodSupportProps());
+    /** Железная опора держит 13×7×13 в раме, 5×7×5 — одна. */
+    public static final DeferredBlock<SupportBlock> IRON_SUPPORT = registerSupport("iron_support", false, 6, 2, 3, ironSupportProps());
+    public static final DeferredBlock<SupportBlock> IRON_SUPPORT_BEAM = registerSupport("iron_support_beam", true, 6, 2, 3, ironSupportProps());
 
     /** Кремень на земле. Своего предмета у блока нет: ставится и выпадает как предмет trailcraft:flint. */
     public static final DeferredBlock<Block> FLINT_PEBBLE = BLOCKS.registerBlock("flint_pebble", PebbleBlock::new,
@@ -348,9 +348,9 @@ public class ModBlocks {
                         .pushReaction(PushReaction.DESTROY));
     }
 
-    private static DeferredBlock<SupportBlock> registerSupport(String name, boolean beam, int horizontal, int vertical,
-                                                               BlockBehaviour.Properties properties) {
-        return BLOCKS.registerBlock(name, props -> new SupportBlock(props, beam, horizontal, vertical), properties);
+    private static DeferredBlock<SupportBlock> registerSupport(String name, boolean beam, int horizontal, int loneHorizontal,
+                                                               int vertical, BlockBehaviour.Properties properties) {
+        return BLOCKS.registerBlock(name, props -> new SupportBlock(props, beam, horizontal, loneHorizontal, vertical), properties);
     }
 
     private static BlockBehaviour.Properties woodSupportProps() {

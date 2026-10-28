@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "trailcraft:stone_hammer"
+    },
+    {
+      "item": "trailcraft:flint"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:steiger_hammer",
+    "count": 1
+  }
+}
