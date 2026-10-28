@@ -2,17 +2,16 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "C": {
-      "item": "minecraft:copper_ingot"
+    "H": {
+      "item": "trailcraft:copper_pickaxe_head"
     },
     "S": {
       "item": "trailcraft:stick_processed"
     }
   },
   "pattern": [
-    "CCC",
-    " S ",
-    " S "
+    "H",
+    "S"
   ],
   "result": {
     "id": "trailcraft:copper_pickaxe",

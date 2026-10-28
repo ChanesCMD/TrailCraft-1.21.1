@@ -1,6 +1,10 @@
 package io.github.ChanesCMD.trailcraft.smelting;
 
+import com.mojang.serialization.Codec;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -10,22 +14,32 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 /**
- * Плавка в кувшине (как в TerraFirmaCraft). Каждый предмет в кувшине — одна единица металла (один слиток): кусок руды,
- * шихта или слиток. Шихта и слитки сплавов раскладываются на чистые металлы по своему составу. Потом весь кувшин
- * плавится разом: один металл — его слитки; доли металлов попали в состав сплава — слитки сплава (так сплав можно
- * собрать прямо в кувшине из кусков руды: 3 меди и 1 олово — 4 бронзы); иначе каждый металл отдельно (дробные
- * остатки пропадают). Железо, никель, литий и алюминий в малой сыродутной печи не плавятся — в кувшин не кладутся.
+ * Плавка в кувшине (как в TerraFirmaCraft). Каждый предмет в кувшине — одна единица металла (один слиток, UNIT mB):
+ * кусок руды, шихта или слиток. Шихта и слитки сплавов раскладываются на чистые металлы по своему составу. Потом весь
+ * кувшин плавится разом в жидкий металл (Molten): один металл — он сам; доли металлов попали в состав сплава — сплав
+ * (так сплав можно собрать прямо в кувшине из кусков руды: 3 меди и 1 олово — 4 единицы бронзы); иначе металлы не
+ * сплавляются и печь кувшин не плавит. Жидкий металл разливают по формам (Mold). Железо, никель, литий и алюминий
+ * в малой сыродутной печи не плавятся — в кувшин не кладутся.
  */
 public final class Smelting {
+    /** Жидкого металла на один слиток (одну форму), mB. */
+    public static final int UNIT = 100;
+
     /** Чистые металлы (то, на что раскладывается всё в кувшине) и сплавы. Слиток — id предмета. */
     public enum Metal {
         COPPER("minecraft:copper_ingot"), TIN("trailcraft:tin_ingot"), ZINC("create:zinc_ingot"),
         BISMUTH("trailcraft:bismuth_ingot"), LEAD("trailcraft:lead_ingot"), GOLD("minecraft:gold_ingot"),
         TIN_BRONZE("trailcraft:tin_bronze_ingot"), BISMUTH_BRONZE("trailcraft:bismuth_bronze_ingot"),
         BRASS("create:brass_ingot");
+
+        public static final Codec<Metal> CODEC = Codec.STRING.xmap(id -> valueOf(id.toUpperCase(Locale.ROOT)), Metal::id);
+        public static final StreamCodec<ByteBuf, Metal> STREAM_CODEC =
+                ByteBufCodecs.VAR_INT.map(i -> values()[i], Metal::ordinal);
 
         private final ResourceLocation ingot;
 
@@ -35,6 +49,29 @@ public final class Smelting {
 
         public Item ingot() {
             return BuiltInRegistries.ITEM.get(ingot);
+        }
+
+        public String id() {
+            return name().toLowerCase(Locale.ROOT);
+        }
+
+        /** «медь», «оловянная бронза». */
+        public String nameKey() {
+            return "metal.trailcraft." + id();
+        }
+
+        /** «Жидкая медь». */
+        public String moltenKey() {
+            return "metal.trailcraft." + id() + ".molten";
+        }
+
+        /** Материал инструментов из этого металла (головки в формах) или null: инструментов из него нет. */
+        public String toolMaterial() {
+            return switch (this) {
+                case COPPER -> "copper";
+                case TIN_BRONZE, BISMUTH_BRONZE -> "bronze";
+                default -> null;
+            };
         }
     }
 
@@ -118,17 +155,6 @@ public final class Smelting {
         return !stack.isEmpty() && MELTS.containsKey(BuiltInRegistries.ITEM.getKey(stack.getItem()));
     }
 
-    /** Сколько единиц металла (слитков) в содержимом. */
-    public static int units(List<ItemStack> contents) {
-        int n = 0;
-        for (ItemStack stack : contents) {
-            if (melts(stack)) {
-                n += stack.getCount();
-            }
-        }
-        return n;
-    }
-
     /** Сколько тиков плавить столько единиц. */
     public static int time(int units) {
         return 200 + 40 * units;
@@ -139,13 +165,13 @@ public final class Smelting {
         return contents.stream().anyMatch(stack -> !stack.isEmpty() && !melts(stack));
     }
 
-    /** Что выплавится из содержимого кувшина (пустой список — нечего плавить или в кувшине мелочь). */
-    public static List<ItemStack> result(List<ItemStack> contents) {
+    /** Во что расплавится содержимое кувшина: пусто — нечего плавить, в кувшине мелочь или металлы не сплавляются. */
+    public static Optional<Molten> melt(List<ItemStack> contents) {
+        if (hasForeign(contents)) {
+            return Optional.empty();
+        }
         Map<Metal, Double> amounts = new EnumMap<>(Metal.class);
         int total = 0;
-        if (hasForeign(contents)) {
-            return new ArrayList<>();
-        }
         for (ItemStack stack : contents) {
             if (!melts(stack)) {
                 continue;
@@ -154,9 +180,8 @@ public final class Smelting {
             MELTS.get(BuiltInRegistries.ITEM.getKey(stack.getItem()))
                     .forEach((metal, share) -> amounts.merge(metal, share * stack.getCount(), Double::sum));
         }
-        List<ItemStack> out = new ArrayList<>();
         if (total == 0) {
-            return out;
+            return Optional.empty();
         }
         Metal single = null;
         for (Map.Entry<Metal, Double> e : amounts.entrySet()) {
@@ -167,12 +192,7 @@ public final class Smelting {
         if (single == null) {
             single = alloy(amounts, total);
         }
-        if (single != null) {
-            add(out, single.ingot(), total);
-        } else {
-            amounts.forEach((metal, amount) -> add(out, metal.ingot(), (int) Math.floor(amount + 1.0E-6)));
-        }
-        return out;
+        return single == null ? Optional.empty() : Optional.of(new Molten(single, total * UNIT));
     }
 
     private static Metal alloy(Map<Metal, Double> amounts, int total) {
@@ -193,17 +213,6 @@ public final class Smelting {
             }
         }
         return null;
-    }
-
-    private static void add(List<ItemStack> out, Item item, int count) {
-        if (item == Items.AIR) {
-            return;
-        }
-        while (count > 0) {
-            int n = Math.min(count, new ItemStack(item).getMaxStackSize());
-            out.add(new ItemStack(item, n));
-            count -= n;
-        }
     }
 
     private Smelting() {}

@@ -27,7 +27,7 @@ import java.util.List;
 
 /**
  * Слепок из глины (как лепка в TerraFirmaCraft): ПКМ в правой руке — окно выбора формы (ClayShape); выбранная форма
- * заменяет один слепок (сейчас — сырой кувшин, его обжигают на костре).
+ * заменяет один слепок (сырой кувшин или сырая форма для литья, их обжигают на костре).
  */
 public class ClayMoldItem extends Item {
     public ClayMoldItem(Properties properties) {

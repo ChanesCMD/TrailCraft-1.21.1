@@ -310,12 +310,7 @@ def recipes():
         "key": {"S": {"item": f"{NS}:stick_processed"}, "B": {"item": f"{NS}:stick_branch"}}, "pattern": ["S ", " B"],
         "result": {"id": f"{NS}:firestarter", "count": 1},
     })
-    write(f"data/{NS}/recipe/bronze_pickaxe.json", {
-        "type": "minecraft:crafting_shaped", "category": "equipment",
-        "key": {"B": {"tag": "c:ingots/bronze"}, "S": {"item": f"{NS}:stick_processed"}},
-        "pattern": ["BBB", " S ", " S "],
-        "result": {"id": f"{NS}:bronze_pickaxe", "count": 1},
-    })
+    # бронзовая кирка — из отлитой головки (рецепт пишет gen_casting.py)
     # Печи нет: металлы плавят в кувшине в малой сыродутной печи
     furnace = path("data", NS, "recipe", "bootstrap_furnace.json")
     if os.path.exists(furnace):

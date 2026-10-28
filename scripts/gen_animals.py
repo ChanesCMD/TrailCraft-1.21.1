@@ -447,12 +447,12 @@ FOOD = {
 }
 # Лут: (предмет, мин, макс[, жарится — горящее животное роняет жареное]); у овцы — ванильный лут по цвету шерсти
 LOOT = {
-    "chicken": [("minecraft:feather", 0, 2), ("minecraft:chicken", 1, 1, True)],
-    "goose": [("minecraft:feather", 1, 3), ("minecraft:chicken", 1, 2, True)],
-    "duck": [("minecraft:feather", 0, 2), ("minecraft:chicken", 1, 1, True)],
-    "turkey": [("minecraft:feather", 1, 3), ("minecraft:chicken", 2, 3, True)],
-    "crow": [("minecraft:feather", 0, 2)],
-    "raven": [("minecraft:feather", 0, 2)],
+    "chicken": [("trailcraft:feather", 0, 2), ("minecraft:chicken", 1, 1, True)],
+    "goose": [("trailcraft:feather", 1, 3), ("minecraft:chicken", 1, 2, True)],
+    "duck": [("trailcraft:feather", 0, 2), ("minecraft:chicken", 1, 1, True)],
+    "turkey": [("trailcraft:feather", 1, 3), ("minecraft:chicken", 2, 3, True)],
+    "crow": [("trailcraft:feather", 0, 2)],
+    "raven": [("trailcraft:feather", 0, 2)],
     "pig": [("minecraft:porkchop", 1, 3, True)],
     "cow": [("minecraft:beef", 1, 3, True), ("minecraft:leather", 0, 2)],
     "goat": [("minecraft:mutton", 1, 2, True), ("minecraft:leather", 0, 1)],

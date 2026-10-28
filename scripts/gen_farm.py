@@ -16,9 +16,10 @@ NS = "trailcraft"
 # Тяпки: материал, чем крафтится (предмет или #тэг; None — рецепта нет), узор, названия ru / en
 HOES = [
     ("flint", f"{NS}:flint", ["MM", " S"], "Кремнёвая тяпка", "Flint Garden Hoe"),
-    ("bone", "minecraft:bone", ["MM", " S"], "Костяная тяпка", "Bone Garden Hoe"),
-    ("copper", "minecraft:copper_ingot", ["MM", " S", " S"], "Медная тяпка", "Copper Garden Hoe"),
-    ("bronze", "#c:ingots/bronze", ["MM", " S", " S"], "Бронзовая тяпка", "Bronze Garden Hoe"),
+    ("bone", "trailcraft:bone", ["MM", " S"], "Костяная тяпка", "Bone Garden Hoe"),
+    # медная и бронзовая — из отлитой головки тяпки (рецепт пишет gen_casting.py)
+    ("copper", None, None, "Медная тяпка", "Copper Garden Hoe"),
+    ("bronze", None, None, "Бронзовая тяпка", "Bronze Garden Hoe"),
     ("iron", "minecraft:iron_ingot", ["MM", " S", " S"], "Железная тяпка", "Iron Garden Hoe"),
     # TODO: уточнить — стального слитка пока нет, как и у остальных стальных инструментов
     ("steel", None, None, "Стальная тяпка", "Steel Garden Hoe"),

@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "trailcraft:item/axe_mold"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "trailcraft:filled": 1
+      },
+      "model": "trailcraft:item/axe_mold_filled"
+    }
+  ]
+}

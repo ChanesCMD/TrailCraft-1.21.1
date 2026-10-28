@@ -2,5 +2,13 @@
   "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "trailcraft:item/jug"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "trailcraft:molten": 1
+      },
+      "model": "trailcraft:item/jug_molten"
+    }
+  ]
 }

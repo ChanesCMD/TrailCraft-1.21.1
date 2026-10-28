@@ -5,7 +5,6 @@ import io.github.ChanesCMD.trailcraft.init.ModTags;
 import io.github.ChanesCMD.trailcraft.init.ModSmelting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -20,17 +19,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Малая сыродутная печь. Слоты: 0 — кувшин, 1 — топливо (#trailcraft:bloomery_fuels: древесный и каменный уголь, торф),
- * 2..5 — слитки.
- * Пока в кувшине есть что плавить и выход вмещает результат, печь жжёт топливо (одно на FUEL_TICKS) и копит прогресс;
- * готово — слитки в выход, кувшин пустеет и остаётся в печи. Без огня прогресс понемногу остывает.
+ * Малая сыродутная печь. Слоты: 0 — кувшин, 1 — топливо (#trailcraft:bloomery_fuels: древесный и каменный уголь, торф).
+ * Пока в кувшине есть что плавить (Smelting.melt), печь жжёт топливо (одно на FUEL_TICKS) и копит прогресс; готово —
+ * содержимое кувшина становится жидким металлом (Molten) в нём же, кувшин остаётся в печи. Без огня прогресс понемногу
+ * остывает.
  */
 public class BloomeryBlockEntity extends BlockEntity implements MenuProvider {
-    public static final int JUG = 0, FUEL = 1, OUT = 2, SLOTS = 6;
+    public static final int JUG = 0, FUEL = 1, SLOTS = 2;
     /** Сколько тиков горит одно топливо: уголь и торф (торф — вдвое меньше). */
     public static final int FUEL_TICKS = 1200, PEAT_TICKS = 600;
 
@@ -102,9 +98,8 @@ public class BloomeryBlockEntity extends BlockEntity implements MenuProvider {
             burn--;
         }
         ItemStack jug = items.getStackInSlot(JUG);
-        NonNullList<ItemStack> contents = jug.isEmpty() ? NonNullList.create() : JugItem.contents(jug);
-        List<ItemStack> result = Smelting.result(contents);
-        boolean work = !result.isEmpty() && fits(result);
+        Molten result = jug.isEmpty() || JugItem.molten(jug) != null ? null : Smelting.melt(JugItem.contents(jug)).orElse(null);
+        boolean work = result != null;
         if (work) {
             if (burn == 0) {
                 ItemStack fuel = items.getStackInSlot(FUEL);
@@ -113,15 +108,13 @@ public class BloomeryBlockEntity extends BlockEntity implements MenuProvider {
                     items.extractItem(FUEL, 1, false);
                 }
             }
-            total = Smelting.time(Smelting.units(contents));
+            total = Smelting.time(result.amount() / Smelting.UNIT);
             if (burn > 0) {
                 if (++progress >= total) {
-                    for (ItemStack ingot : result) {
-                        insert(ingot);
-                    }
-                    ItemStack emptied = jug.copy();
-                    JugItem.clear(emptied);
-                    items.setStackInSlot(JUG, emptied);
+                    ItemStack melted = jug.copy();
+                    JugItem.clear(melted);
+                    JugItem.setMolten(melted, result);
+                    items.setStackInSlot(JUG, melted);
                     progress = 0;
                 }
             } else {
@@ -137,55 +130,6 @@ public class BloomeryBlockEntity extends BlockEntity implements MenuProvider {
         if (work || wasLit) {
             setChanged();
         }
-    }
-
-    /** Поместятся ли все слитки в выходные слоты. */
-    private boolean fits(List<ItemStack> result) {
-        List<ItemStack> out = new ArrayList<>();
-        for (int i = OUT; i < SLOTS; i++) {
-            out.add(items.getStackInSlot(i).copy());
-        }
-        for (ItemStack ingot : result) {
-            int left = merge(out, ingot.copy());
-            if (left > 0) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private void insert(ItemStack ingot) {
-        for (int i = OUT; i < SLOTS && !ingot.isEmpty(); i++) {
-            ItemStack slot = items.getStackInSlot(i);
-            if (slot.isEmpty()) {
-                items.setStackInSlot(i, ingot.copy());
-                return;
-            }
-            if (ItemStack.isSameItemSameComponents(slot, ingot)) {
-                int n = Math.min(ingot.getCount(), slot.getMaxStackSize() - slot.getCount());
-                if (n > 0) {
-                    items.setStackInSlot(i, slot.copyWithCount(slot.getCount() + n));
-                    ingot.shrink(n);
-                }
-            }
-        }
-    }
-
-    /** Раскладывает стак по списку (как insert); возвращает, сколько не влезло. */
-    private static int merge(List<ItemStack> out, ItemStack ingot) {
-        for (int i = 0; i < out.size() && !ingot.isEmpty(); i++) {
-            ItemStack slot = out.get(i);
-            if (slot.isEmpty()) {
-                out.set(i, ingot.copy());
-                return 0;
-            }
-            if (ItemStack.isSameItemSameComponents(slot, ingot)) {
-                int n = Math.min(ingot.getCount(), slot.getMaxStackSize() - slot.getCount());
-                slot.grow(n);
-                ingot.shrink(n);
-            }
-        }
-        return ingot.getCount();
     }
 
     @Override

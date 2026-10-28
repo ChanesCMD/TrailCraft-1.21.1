@@ -11,10 +11,10 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
-/** Окно малой сыродутной печи: кувшин, топливо, 4 слота слитков и хотбар. */
+/** Окно малой сыродутной печи: кувшин, топливо и хотбар; справа — во что расплавится кувшин. */
 public class BloomeryMenu extends AbstractContainerMenu {
     public static final int WIDTH = 176, HEIGHT = 112, HOTBAR_Y = 86;
-    public static final int JUG_X = 44, JUG_Y = 17, FUEL_X = 44, FUEL_Y = 53, OUT_X = 107, OUT_Y = 26;
+    public static final int JUG_X = 44, JUG_Y = 17, FUEL_X = 44, FUEL_Y = 53, RESULT_X = 92, RESULT_Y = 30;
     private final ContainerData data;
 
     /** Клиент: слоты пустые, их заполнит синхронизация. */
@@ -27,9 +27,6 @@ public class BloomeryMenu extends AbstractContainerMenu {
         this.data = data;
         addSlot(new WriteBackSlot(items, BloomeryBlockEntity.JUG, JUG_X, JUG_Y, false));
         addSlot(new WriteBackSlot(items, BloomeryBlockEntity.FUEL, FUEL_X, FUEL_Y, false));
-        for (int i = 0; i < 4; i++) {
-            addSlot(new WriteBackSlot(items, BloomeryBlockEntity.OUT + i, OUT_X + (i % 2) * 18, OUT_Y + (i / 2) * 18, true));
-        }
         for (int i = 0; i < 9; i++) {
             addSlot(new Slot(inventory, i, 8 + i * 18, HOTBAR_Y));
         }
@@ -39,6 +36,11 @@ public class BloomeryMenu extends AbstractContainerMenu {
     /** Огонь от 0 до 1. */
     public float burn() {
         return data.get(1) == 0 ? 0 : (float) data.get(0) / data.get(1);
+    }
+
+    /** Кувшин в печи (для подписи, во что он расплавится). */
+    public ItemStack jug() {
+        return slots.get(BloomeryBlockEntity.JUG).getItem();
     }
 
     /** Прогресс плавки от 0 до 1. */

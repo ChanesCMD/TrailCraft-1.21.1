@@ -36,7 +36,7 @@ public final class ModTiers {
     public static final Tier FLINT = new SimpleTier(BlockTags.INCORRECT_FOR_STONE_TOOL, 100, 4.0f, 1.0f, 5,
             () -> Ingredient.of(ModItems.FLINT.get()));
     public static final Tier BONE = new SimpleTier(BlockTags.INCORRECT_FOR_STONE_TOOL, 120, 4.0f, 1.0f, 5,
-            () -> Ingredient.of(Items.BONE));
+            () -> Ingredient.of(ModItems.BONE.get()));
     public static final Tier AMETHYST = new SimpleTier(BlockTags.INCORRECT_FOR_STONE_TOOL, 160, 5.0f, 1.5f, 15,
             () -> Ingredient.of(Items.AMETHYST_SHARD));
     /** Медь: между камнем и железом. */

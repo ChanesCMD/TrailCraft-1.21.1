@@ -2,17 +2,16 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "M": {
-      "tag": "c:ingots/bronze"
+    "H": {
+      "item": "trailcraft:bronze_hoe_head"
     },
     "S": {
       "item": "trailcraft:stick_processed"
     }
   },
   "pattern": [
-    "MM",
-    " S",
-    " S"
+    "H",
+    "S"
   ],
   "result": {
     "id": "trailcraft:bronze_hoe",

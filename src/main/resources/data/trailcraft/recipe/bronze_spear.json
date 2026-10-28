@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "combat",
+  "category": "equipment",
   "key": {
-    "R": {
-      "tag": "c:ingots/bronze"
+    "H": {
+      "item": "trailcraft:bronze_spear_head"
     },
     "L": {
       "item": "trailcraft:long_stick"
     }
   },
   "pattern": [
-    " R",
+    " H",
     "L "
   ],
   "result": {

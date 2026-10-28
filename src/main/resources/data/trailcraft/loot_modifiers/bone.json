@@ -1,0 +1,6 @@
+{
+  "type": "trailcraft:replace_item",
+  "conditions": [],
+  "from": "minecraft:bone",
+  "to": "trailcraft:bone"
+}

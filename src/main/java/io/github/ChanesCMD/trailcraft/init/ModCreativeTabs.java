@@ -166,6 +166,12 @@ public class ModCreativeTabs {
                         output.accept(ModSmelting.CLAY_MOLD);
                         output.accept(ModSmelting.UNFIRED_JUG);
                         output.accept(ModSmelting.JUG);
+                        // Формы для литья (сырые и обожжённые) и головки инструментов из них
+                        ModSmelting.UNFIRED_MOLDS.values().forEach(output::accept);
+                        ModSmelting.MOLDS.values().forEach(output::accept);
+                        ModSmelting.HEADS.values().forEach(output::accept);
+                        output.accept(ModItems.FEATHER);
+                        output.accept(ModItems.BONE);
 
                         // Инструменты и предметы (ModTools)
                         for (var item : ModTools.ITEMS) {

@@ -52,14 +52,15 @@ LANG = {
     "item.trailcraft.jug": ("Кувшин", "Jug"),
     "block.trailcraft.small_bloomery": ("Малая сыродутная печь", "Small Bloomery"),
     "tooltip.trailcraft.clay_mold": ("ПКМ — выбрать, что вылепить", "Right-click to choose what to shape"),
-    "tooltip.trailcraft.jug.result": ("Выплавится: %s × %s", "Will smelt: %s × %s"),
+    "tooltip.trailcraft.jug.result": ("Выплавится: %s", "Will melt into: %s"),
+    "tooltip.trailcraft.jug.no_alloy": ("Эти металлы не сплавляются", "These metals don't alloy"),
     "tooltip.trailcraft.jug.foreign": ("С мелочью кувшин не плавится", "A jug with odds and ends won't smelt"),
     "gui.trailcraft.clay_mold": ("Слепок из глины", "Clay Mold"),
     "gui.trailcraft.clay_mold.hint": ("Выберите форму", "Choose a shape"),
     "item.trailcraft.cloth_blank": ("Тканевая заготовка", "Cloth Blank"),
     "jei.trailcraft.small_bloomery": ("Малая сыродутная печь", "Small Bloomery"),
     "jei.trailcraft.handwork": ("Ручная работа", "Handwork"),
-    "jei.trailcraft.bloomery.one": ("В кувшине, в печи с углём: 1 предмет — 1 слиток", "In a jug, in a bloomery with coal: 1 item = 1 ingot"),
+    "jei.trailcraft.bloomery.one": ("Кувшин в печи с углём — жидкий металл, форма слитка: 1 предмет — 1 слиток", "Jug in a bloomery with coal gives molten metal; ingot mold: 1 item = 1 ingot"),
     "jei.trailcraft.bloomery.alloy": ("Сплав прямо в кувшине: доли металлов как у сплава", "Alloy right in the jug: metal shares as in the alloy"),
     "jei.trailcraft.bloomery.mix": ("Шихта сплава плавится сразу в сплав", "Alloy mix melts straight into the alloy"),
     "jei.trailcraft.branch": ("ПКМ веткой по породе %s раз", "Right-click a rock with a branch %s times"),
@@ -337,7 +338,8 @@ def assets():
         write(f"assets/{NS}/blockstates/bricks_{clay}.json", {"variants": {"": {"model": f"{NS}:block/bricks_{clay}"}}})
         write(f"assets/{NS}/models/item/bricks_{clay}.json", {"parent": f"{NS}:block/bricks_{clay}"})
         simple_loot(f"bricks_{clay}")
-    for name in ("straw", "reinforced_brick", "clay_mold", "unfired_jug", "jug", "cloth_blank", "cloth"):
+    # модель кувшина (с видом «жидкий металл внутри») пишет gen_casting.py
+    for name in ("straw", "reinforced_brick", "clay_mold", "unfired_jug", "cloth_blank", "cloth"):
         item_model(name)
     for lit in ("", "_on"):
         write(f"assets/{NS}/models/block/small_bloomery{lit}.json", {
@@ -368,28 +370,25 @@ def backpack_result(backpack):
         {"slot": POCKETS_SLOT, "item": {"id": f"{NS}:{BACKPACK_POCKETS[backpack]}", "count": 1}}]}}
 
 
-# Мелочь, которую можно хранить в кувшине по 64 (JugHandler); то, что плавится, — по 16, как раньше. Кувшин
-# с мелочью в печи не плавится.
+# Мелочь, которую можно хранить в кувшине по 64 (JugHandler), только свои предметы, без ванильных; то, что
+# плавится, — по 16, как раньше. Кувшин с мелочью в печи не плавится.
 ROCKS = ["andesite", "basalt", "chalk", "diorite", "dolomite", "gabbro", "granite", "gray_granite", "limestone",
          "marble", "sandstone", "shale"]
 NUGGET_ORES = ["native_copper", "malachite", "tetrahedrite", "cassiterite", "sphalerite"]
 JUG_ITEMS = (
-    [f"{NS}:stick_branch", f"{NS}:stick_processed", "minecraft:stick", f"{NS}:straw"]
-    + [f"{NS}:brick_{c}" for c in CLAYS] + [f"{NS}:reinforced_brick", "minecraft:brick"]
-    + [f"#{NS}:clay_balls", "minecraft:clay_ball"]
-    + [f"{NS}:{r}_pebble" for r in ROCKS] + [f"{NS}:flint_pebble", "minecraft:flint"]
+    [f"{NS}:stick_branch", f"{NS}:stick_processed", f"{NS}:straw"]
+    + [f"{NS}:brick_{c}" for c in CLAYS] + [f"{NS}:reinforced_brick", f"#{NS}:clay_balls"]
+    + [f"{NS}:{r}_pebble" for r in ROCKS] + [f"{NS}:flint"]
     + [f"{NS}:{o}_nugget" for o in NUGGET_ORES]
-    + [f"{NS}:bituminous_coal", f"{NS}:charcoal", "minecraft:coal", "minecraft:charcoal", f"{NS}:ash", f"{NS}:apatite"]
-    + [f"{NS}:jute", f"{NS}:jute_seeds", f"{NS}:rope", "minecraft:string", "minecraft:feather"]
-    + [f"{NS}:{b}" for b in ("currant", "cloudberry", "gooseberry", "blackberry")]
-    + ["minecraft:wheat_seeds", "minecraft:bone", "minecraft:bone_meal", "minecraft:gunpowder",
-       "minecraft:iron_nugget", "minecraft:gold_nugget"])
+    + [f"{NS}:bituminous_coal", f"{NS}:charcoal", f"{NS}:ash", f"{NS}:apatite"]
+    + [f"{NS}:jute", f"{NS}:jute_seeds", f"{NS}:rope", f"{NS}:feather", f"{NS}:bone"]
+    + [f"{NS}:{b}" for b in ("currant", "cloudberry", "gooseberry", "blackberry")])
 
 
 def data():
     clay_balls = [f"{NS}:clay_ball_{c}" for c in CLAYS]
     tag("item", f"{NS}:clay_balls", clay_balls)
-    tag("item", f"{NS}:jug_items", JUG_ITEMS)
+    write(f"data/{NS}/tags/item/jug_items.json", {"replace": False, "values": JUG_ITEMS})
     tag("item", f"{NS}:straw_tools", STRAW_TOOLS)
     # топливо малой сыродутной печи (BloomeryBlockEntity): уголь и торф (торф горит вдвое меньше)
     tag("item", f"{NS}:bloomery_fuels", ["#minecraft:coals", f"{NS}:peat"])

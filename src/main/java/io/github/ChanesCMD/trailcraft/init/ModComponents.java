@@ -2,6 +2,8 @@ package io.github.ChanesCMD.trailcraft.init;
 
 import com.mojang.serialization.Codec;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
+import io.github.ChanesCMD.trailcraft.smelting.Molten;
+import io.github.ChanesCMD.trailcraft.smelting.Smelting.Metal;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -33,6 +35,16 @@ public final class ModComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<GlobalPos>> RULER_START =
             COMPONENTS.registerComponentType("ruler_start", builder -> builder.persistent(GlobalPos.CODEC)
                     .networkSynchronized(GlobalPos.STREAM_CODEC));
+
+    /** Жидкий металл в кувшине (после плавки в малой сыродутной печи). */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Molten>> MOLTEN =
+            COMPONENTS.registerComponentType("molten", builder -> builder.persistent(Molten.CODEC)
+                    .networkSynchronized(Molten.STREAM_CODEC));
+
+    /** Какой металл залит в форму (нет компонента — форма пустая). */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Metal>> CAST =
+            COMPONENTS.registerComponentType("cast", builder -> builder.persistent(Metal.CODEC)
+                    .networkSynchronized(Metal.STREAM_CODEC));
 
     private ModComponents() {}
 }

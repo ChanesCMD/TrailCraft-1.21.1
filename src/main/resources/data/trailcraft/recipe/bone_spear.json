@@ -3,7 +3,7 @@
   "category": "combat",
   "key": {
     "R": {
-      "item": "minecraft:bone"
+      "item": "trailcraft:bone"
     },
     "L": {
       "item": "trailcraft:long_stick"

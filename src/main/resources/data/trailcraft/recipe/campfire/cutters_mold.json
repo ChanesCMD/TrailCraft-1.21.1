@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "category": "misc",
+  "cookingtime": 600,
+  "experience": 0.3,
+  "ingredient": {
+    "item": "trailcraft:unfired_cutters_mold"
+  },
+  "result": {
+    "id": "trailcraft:cutters_mold",
+    "count": 1
+  }
+}

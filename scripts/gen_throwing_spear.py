@@ -95,7 +95,7 @@ def main():
             "overrides": [{"predicate": {f"{NS}:throwing": 1}, "model": f"{NS}:item/{m}_throwing_spear_throwing"}]})
         write(f"data/{NS}/recipe/{m}_throwing_spear.json", {
             "type": "minecraft:crafting_shapeless", "category": "combat",
-            "ingredients": [{"item": f"{NS}:{m}_spear"}] + [{"item": "minecraft:feather"}] * 3,
+            "ingredients": [{"item": f"{NS}:{m}_spear"}] + [{"item": f"{NS}:feather"}] * 3,
             "result": {"id": f"{NS}:{m}_throwing_spear", "count": 1}})
     for code in ("ru_ru", "en_us"):
         rel = f"assets/{NS}/lang/{code}.json"

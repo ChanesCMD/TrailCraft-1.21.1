@@ -1,13 +1,20 @@
 package io.github.ChanesCMD.trailcraft.client.gui;
 
 import io.github.ChanesCMD.trailcraft.smelting.BloomeryMenu;
+import io.github.ChanesCMD.trailcraft.smelting.JugItem;
+import io.github.ChanesCMD.trailcraft.smelting.Molten;
+import io.github.ChanesCMD.trailcraft.smelting.Smelting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
-/** Окно малой сыродутной печи: кувшин сверху, топливо снизу, между ними огонь, стрелка прогресса к слиткам. */
+/**
+ * Окно малой сыродутной печи: кувшин сверху, топливо снизу, между ними огонь, стрелка прогресса к подписи — во что
+ * расплавится кувшин (или какой жидкий металл в нём уже есть).
+ */
 public class BloomeryScreen extends AbstractContainerScreen<BloomeryMenu> {
     private static final int FLAME = 0xFFE8701A, FLAME_CORE = 0xFFFFC23A;
 
@@ -39,8 +46,8 @@ public class BloomeryScreen extends AbstractContainerScreen<BloomeryMenu> {
             g.fill(fx, fy + 14 - h, fx + 14, fy + 14, FLAME);
             g.fill(fx + 4, fy + 14 - Math.max(1, h * 2 / 3), fx + 10, fy + 14, FLAME_CORE);
         }
-        // стрелка прогресса к слиткам
-        int ax = x + BloomeryMenu.JUG_X + 26, ay = y + BloomeryMenu.OUT_Y + 10;
+        // стрелка прогресса к подписи
+        int ax = x + BloomeryMenu.JUG_X + 22, ay = y + BloomeryMenu.RESULT_Y - 2;
         UiDraw.arrow(g, ax, ay);
         int w = Math.round(22 * menu.progress());
         if (w > 0) {
@@ -50,6 +57,25 @@ public class BloomeryScreen extends AbstractContainerScreen<BloomeryMenu> {
                 g.fill(ax + 14 + i, ay + i, ax + 15 + i, ay + 15 - i, FLAME);
             }
             g.disableScissor();
+        }
+    }
+
+    @Override
+    protected void renderLabels(GuiGraphics g, int mouseX, int mouseY) {
+        super.renderLabels(g, mouseX, mouseY);
+        ItemStack jug = menu.jug();
+        Molten molten = jug.isEmpty() ? null : JugItem.molten(jug);
+        if (molten == null && !jug.isEmpty()) {
+            molten = Smelting.melt(JugItem.contents(jug)).orElse(null);
+        }
+        if (molten != null) {
+            // название сплава бывает длинным — мельче, в две строки: металл и сколько его
+            g.pose().pushPose();
+            g.pose().translate(BloomeryMenu.RESULT_X, BloomeryMenu.RESULT_Y, 0);
+            g.pose().scale(0.75f, 0.75f, 1);
+            g.drawString(font, Component.translatable(molten.metal().nameKey()), 0, 0, 0xFFB04A00, false);
+            g.drawString(font, Component.translatable("tooltip.trailcraft.molten.amount", molten.amount()), 0, 11, UiDraw.LABEL, false);
+            g.pose().popPose();
         }
     }
 }

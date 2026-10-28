@@ -23,6 +23,7 @@ import io.github.ChanesCMD.trailcraft.init.ModParticles;
 import io.github.ChanesCMD.trailcraft.init.ModSmelting;
 import io.github.ChanesCMD.trailcraft.init.ModTools;
 import io.github.ChanesCMD.trailcraft.init.ModWood;
+import io.github.ChanesCMD.trailcraft.loot.ReplaceItemModifier;
 
 @Mod(TrailCraft.MODID)
 public class TrailCraft {
@@ -54,6 +55,7 @@ public class TrailCraft {
         ModAttachments.ATTACHMENT_TYPES.register(modEventBus);
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         ModMenus.MENUS.register(modEventBus);
+        ReplaceItemModifier.SERIALIZERS.register(modEventBus);
 
         // Регистрируем конфиг
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);

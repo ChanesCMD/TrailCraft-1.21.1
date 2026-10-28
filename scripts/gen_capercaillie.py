@@ -283,7 +283,7 @@ def main():
     write(f"data/{NS}/loot_table/entities/capercaillie.json", {
         "type": "minecraft:entity", "random_sequence": f"{NS}:entities/capercaillie",
         "pools": [
-            {"rolls": 1, "bonus_rolls": 0, "entries": [{"type": "minecraft:item", "name": "minecraft:feather",
+            {"rolls": 1, "bonus_rolls": 0, "entries": [{"type": "minecraft:item", "name": "trailcraft:feather",
              "functions": [
                  {"function": "minecraft:set_count", "count": {"type": "minecraft:uniform", "min": 1, "max": 3}},
                  looting]}]},

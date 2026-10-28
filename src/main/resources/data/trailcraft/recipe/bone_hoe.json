@@ -3,7 +3,7 @@
   "category": "equipment",
   "key": {
     "M": {
-      "item": "minecraft:bone"
+      "item": "trailcraft:bone"
     },
     "S": {
       "item": "trailcraft:stick_processed"

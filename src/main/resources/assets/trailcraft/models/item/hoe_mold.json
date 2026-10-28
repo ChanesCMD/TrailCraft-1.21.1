@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "trailcraft:item/hoe_mold"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "trailcraft:filled": 1
+      },
+      "model": "trailcraft:item/hoe_mold_filled"
+    }
+  ]
+}

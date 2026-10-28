@@ -19,7 +19,8 @@ public class JugHandler extends ContentsHandler {
 
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
-        return isPresent() && JugItem.fits(stack);
+        // в кувшин с жидким металлом ничего не кладут, пока его не разольют
+        return isPresent() && JugItem.molten(owner()) == null && JugItem.fits(stack);
     }
 
     @Override

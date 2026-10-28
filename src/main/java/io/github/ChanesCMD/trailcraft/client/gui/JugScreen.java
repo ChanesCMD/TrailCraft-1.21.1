@@ -1,6 +1,7 @@
 package io.github.ChanesCMD.trailcraft.client.gui;
 
 import io.github.ChanesCMD.trailcraft.smelting.JugMenu;
+import io.github.ChanesCMD.trailcraft.smelting.Molten;
 import io.github.ChanesCMD.trailcraft.smelting.Smelting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -10,8 +11,9 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
+import java.util.Optional;
 
-/** Окно кувшина: 4 слота, ниже — что выплавится в малой сыродутной печи. */
+/** Окно кувшина: 4 слота, ниже — что выплавится в малой сыродутной печи (или жидкий металл в кувшине) и слот формы. */
 public class JugScreen extends AbstractContainerScreen<JugMenu> {
     public JugScreen(JugMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
@@ -37,15 +39,20 @@ public class JugScreen extends AbstractContainerScreen<JugMenu> {
     @Override
     protected void renderLabels(GuiGraphics g, int mouseX, int mouseY) {
         super.renderLabels(g, mouseX, mouseY);
-        List<ItemStack> result = Smelting.result(menu.jugItems());
         int y = JugMenu.JUG_Y + 22;
-        if (Smelting.hasForeign(menu.jugItems()) && menu.jugItems().stream().anyMatch(Smelting::melts)) {
-            centered(g, Component.translatable("tooltip.trailcraft.jug.foreign"), y, 0xFF8A5A00);
+        Molten molten = menu.molten();
+        List<ItemStack> items = menu.jugItems();
+        if (molten != null) {
+            centered(g, molten.describe(), y, 0xFFB04A00);
+        } else if (items.stream().anyMatch(Smelting::melts)) {
+            Optional<Molten> result = Smelting.melt(items);
+            Component text = result.isPresent()
+                    ? Component.translatable("tooltip.trailcraft.jug.result", result.get().describe())
+                    : Component.translatable(Smelting.hasForeign(items) ? "tooltip.trailcraft.jug.foreign" : "tooltip.trailcraft.jug.no_alloy");
+            centered(g, text, y, 0xFF8A5A00);
         }
-        for (ItemStack ingot : result) {
-            centered(g, Component.translatable("tooltip.trailcraft.jug.result", ingot.getCount(), ingot.getHoverName()), y, 0xFF8A5A00);
-            y += 10;
-        }
+        Component label = Component.translatable("gui.trailcraft.jug.mold");
+        g.drawString(font, label, JugMenu.MOLD_X - 4 - font.width(label), JugMenu.MOLD_Y + 4, UiDraw.LABEL, false);
     }
 
     private void centered(GuiGraphics g, Component text, int y, int color) {

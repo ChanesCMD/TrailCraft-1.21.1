@@ -6,6 +6,8 @@ import io.github.ChanesCMD.trailcraft.smelting.BloomeryMenu;
 import io.github.ChanesCMD.trailcraft.smelting.ClayMoldItem;
 import io.github.ChanesCMD.trailcraft.smelting.JugItem;
 import io.github.ChanesCMD.trailcraft.smelting.JugMenu;
+import io.github.ChanesCMD.trailcraft.smelting.Mold;
+import io.github.ChanesCMD.trailcraft.smelting.MoldItem;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
@@ -19,12 +21,14 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 
+import java.util.EnumMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Глина, кирпичи и плавка металлов (пакет smelting): кирпичи четырёх глин, солома и саманный («укреплённый») кирпич,
- * малая сыродутная печь, слепок из глины, сырой и обожжённый кувшин.
+ * малая сыродутная печь, слепок из глины, сырой и обожжённый кувшин, формы для литья и головки инструментов.
  */
 public final class ModSmelting {
     /** Цвета глины (как у clay_ball_* и clay_*) и цвет обожжённого кирпича на карте. */
@@ -64,6 +68,29 @@ public final class ModSmelting {
     public static final DeferredItem<Item> UNFIRED_JUG = ModItems.ITEMS.registerItem("unfired_jug", p -> new Item(p.stacksTo(1)));
     /** Кувшин: в него кладут металлы и плавят в малой сыродутной печи. */
     public static final DeferredItem<JugItem> JUG = ModItems.ITEMS.registerItem("jug", p -> new JugItem(p.stacksTo(1)));
+
+    /** Формы для литья (Mold): сырая (из слепка) обжигается на костре в форму. */
+    public static final Map<Mold, DeferredItem<Item>> UNFIRED_MOLDS = new EnumMap<>(Mold.class);
+    public static final Map<Mold, DeferredItem<MoldItem>> MOLDS = new EnumMap<>(Mold.class);
+    /** Материалы инструментов, которые отливаются в формах (Metal.toolMaterial). */
+    public static final List<String> CAST_MATERIALS = List.of("copper", "bronze");
+    /** Головки инструментов из форм: ключ — «материал_инструмент» (copper_pickaxe), предмет — copper_pickaxe_head. */
+    public static final Map<String, DeferredItem<Item>> HEADS = new LinkedHashMap<>();
+
+    static {
+        for (Mold mold : Mold.values()) {
+            UNFIRED_MOLDS.put(mold, ModItems.ITEMS.registerItem("unfired_" + mold.id + "_mold", p -> new Item(p.stacksTo(1))));
+            MOLDS.put(mold, ModItems.ITEMS.registerItem(mold.id + "_mold", p -> new MoldItem(mold, p.stacksTo(1))));
+        }
+        for (String material : CAST_MATERIALS) {
+            for (Mold mold : Mold.values()) {
+                if (mold != Mold.INGOT) {
+                    String key = material + "_" + mold.id;
+                    HEADS.put(key, ModItems.ITEMS.registerSimpleItem(key + "_head"));
+                }
+            }
+        }
+    }
 
     /** Малая сыродутная печь из укреплённых кирпичей. */
     public static final DeferredBlock<BloomeryBlock> SMALL_BLOOMERY = ModBlocks.BLOCKS.registerBlock("small_bloomery",

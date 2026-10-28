@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "trailcraft:item/ingot_mold"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "trailcraft:filled": 1
+      },
+      "model": "trailcraft:item/ingot_mold_filled"
+    }
+  ]
+}

@@ -223,6 +223,10 @@ public class ModItems {
     public static final DeferredItem<BlockItem> FLINT = ITEMS.registerItem("flint",
             props -> new BlockItem(ModBlocks.FLINT_PEBBLE.get(), props));
 
+    // === ПЕРО И КОСТЬ (свои вместо ванильных: с животных и из всего лута — loot/ReplaceItemModifier) ===
+    public static final DeferredItem<Item> FEATHER = ITEMS.registerSimpleItem("feather");
+    public static final DeferredItem<Item> BONE = ITEMS.registerSimpleItem("bone");
+
     // === МУСОР (пока без функционала) ===
     public static final DeferredItem<Item> METAL_SCRAP = ITEMS.registerSimpleItem("metal_scrap");
     public static final DeferredItem<Item> PAPER_SCRAPS = ITEMS.registerSimpleItem("paper_scraps");

@@ -2,15 +2,16 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "M": {
-      "tag": "c:ingots/bronze"
+    "H": {
+      "item": "trailcraft:bronze_saw_head"
     },
     "S": {
       "item": "trailcraft:stick_processed"
     }
   },
   "pattern": [
-    "SM"
+    "H",
+    "S"
   ],
   "result": {
     "id": "trailcraft:bronze_saw",
