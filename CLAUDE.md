@@ -81,7 +81,7 @@
   Все JSON (модели, блокстейты, лут, тэги, рецепты тяпок и верёвки, генерация `*_patch` и
   `neoforge/biome_modifier/wild_plants_*.json`, переводы) пишет `scripts/gen_farm.py`, текстуры —
   `scripts/gen_farm_textures.py` (нужен Pillow); тяпки в четырёх вариантах формы (в игре — D, рисунок автора) — `docs/textures/hoes.png`,
-  выбрать другой: `python scripts/gen_farm_textures.py --hoe B`; пучок джута — 10 вариантов (в игре — A),
+  выбрать другой: `python scripts/gen_farm_textures.py --hoe B`; пучок джута — 20 вариантов (K–O — по B, P–T — по C; в игре — A),
   `docs/textures/jute_bundles.png`, другой: `--jute B`.
 - Генерация мира (пресет `trailworldgen`): биомы раскладываются по `worldgen/world_preset/trailworldgen.json` — его
   целиком пишет таблица `layout()` в `scripts/gen_forests.py` (температура — полосы почв бурозём / чернозём / жёлтозём

@@ -685,7 +685,7 @@ ITEM_BERRY_COLORS = {
                    "s": "#4f7a30", "g": "#649231"},
 }
 
-# Пучки джута: 10 вариантов. l/m/d — волокно (светлое, среднее, тёмное), o — контур волокна, R/r — перевязь,
+# Пучки джута: 20 вариантов (K–O — по B, P–T — по C). l/m/d — волокно (светлое, среднее, тёмное), o — контур волокна, R/r — перевязь,
 # b — контур перевязи, g/G/k — зелёные стебли и листья (сырой джут)
 JUTE_BUNDLES = {
     # A — косой сноп, перевязан посередине, концы веером
@@ -878,6 +878,197 @@ JUTE_BUNDLES = {
         ".k.k............",
         "................",
     ],
+
+    # K (по B) — стройный сноп, перевязан в двух местах
+    "K": [
+        "................",
+        "....o..o..o.....",
+        "...olo.lo.olo...",
+        "....olmlmlmo....",
+        ".....olmlmo.....",
+        ".....bRrRrb.....",
+        ".....olmlmo.....",
+        ".....olmlmo.....",
+        ".....olmlmo.....",
+        ".....olmlmo.....",
+        ".....bRrRrb.....",
+        ".....olmlmo.....",
+        "....olmlmldo....",
+        "...olmlmlmldo...",
+        "...o.o.o.o.o....",
+        "................",
+    ],
+    # L (по B) — сноп с тонкой талией, концы широким веером сверху и снизу
+    "L": [
+        "................",
+        ".o..o..o..o..o..",
+        ".olo.lo.ol.olo..",
+        "..olmlmlmlmlo...",
+        "...olmlmlmlo....",
+        "....olmlmlo.....",
+        ".....olmlo......",
+        ".....bRrRb......",
+        ".....brRrb......",
+        ".....olmlo......",
+        "....olmlmlo.....",
+        "...olmlmlmldo...",
+        "..olmlmlmlmldo..",
+        ".olmlolmlolmldo.",
+        ".o.o.o.o.o.o.o..",
+        "................",
+    ],
+    # M (по B) — аккуратный сноп с ровно срезанными концами
+    "M": [
+        "................",
+        "................",
+        "....oooooooo....",
+        "....ollmlmlo....",
+        "....olmlmlmo....",
+        "....olmlmlmo....",
+        "....olmlmldo....",
+        "....bRrRrRrb....",
+        "....brRrRrRb....",
+        "....olmlmlmo....",
+        "....olmlmlmo....",
+        "....olmlmldo....",
+        "....olmlmldo....",
+        "....oooooooo....",
+        "................",
+        "................",
+    ],
+    # N (по B) — сноп, перевязан бечёвкой с узлом и свисающими концами
+    "N": [
+        "................",
+        "...o..o..o..o...",
+        "..olo.lo.ol.ol..",
+        "...olmlmlmlmo...",
+        "....olmlmlmo....",
+        "....olmlmlmo....",
+        "....olmlmlmo....",
+        "....bRrRrRrbb...",
+        "....brRrRrRbRb..",
+        "....olmlmlmobRb.",
+        "....olmlmldo.br.",
+        "...olmlmlmldo.b.",
+        "..olmlmlmlmldo..",
+        "..ololmlmlolo...",
+        "...o.o.o.o.o....",
+        "................",
+    ],
+    # O (по B) — короткий толстый сноп
+    "O": [
+        "................",
+        "................",
+        "................",
+        "..o.o..o..o.o...",
+        ".olololo.ololo..",
+        "..olmlmlmlmlmo..",
+        "...olmlmlmlmo...",
+        "...bRrRrRrRrb...",
+        "...brRrRrRrRb...",
+        "...olmlmlmlmo...",
+        "..olmlmlmlmldo..",
+        ".olmlmlmlmlmldo.",
+        ".olololmlmlolo..",
+        "..o.o.o.o.o.o...",
+        "................",
+        "................",
+    ],
+    # P (по C) — моток с длинной петлёй и прямыми хвостами
+    "P": [
+        ".....oooo.......",
+        "....olmmlo......",
+        "....olo.olo.....",
+        "....omo.omo.....",
+        "....olo.olo.....",
+        "....omo.omo.....",
+        "....olo.olo.....",
+        "....bRrRrRb.....",
+        "....brRrRrb.....",
+        "....olmlmlo.....",
+        "....omlmlmo.....",
+        "....olmlmlo.....",
+        "....omlomlo.....",
+        "....olmoolmo....",
+        "....ooo..ooo....",
+        "................",
+    ],
+    # Q (по C) — моток, лежащий наискось: петля справа вверху
+    "Q": [
+        "................",
+        "..........ooo...",
+        ".........olmlo..",
+        "........olo.olo.",
+        ".......olo..olo.",
+        "......olo..olo..",
+        ".....olo.olo....",
+        "....bRrRbo......",
+        "...brRrRb.......",
+        "..olmlmo........",
+        ".olmlmlo........",
+        "olmlolo.........",
+        "olo.olo.........",
+        "oo..oo..........",
+        "................",
+        "................",
+    ],
+    # R (по C) — восьмёрка: петля сверху и снизу, перехват посередине
+    "R": [
+        "................",
+        "......oooo......",
+        ".....olmmlo.....",
+        "....olo..olo....",
+        "....omo..omo....",
+        "....olo..olo....",
+        ".....olmmlo.....",
+        "....bRrRrRb.....",
+        "....brRrRrb.....",
+        ".....olmmlo.....",
+        "....olo..olo....",
+        "....omo..omo....",
+        "....olo..olo....",
+        ".....olmmlo.....",
+        "......oooo......",
+        "................",
+    ],
+    # S (по C) — моток, хвосты перехвачены второй перевязью
+    "S": [
+        "................",
+        "......oooo......",
+        ".....olmmlo.....",
+        "....olo..olo....",
+        "....omo..omo....",
+        "....olo..olo....",
+        "....bRrRrRb.....",
+        "....brRrRrb.....",
+        "....olmlmlo.....",
+        "....omlmlmo.....",
+        "....olmlmlo.....",
+        "....bRrRrRb.....",
+        "...olmlolmlo....",
+        "..olmo...olmo...",
+        "..ooo.....ooo...",
+        "................",
+    ],
+    # T (по C) — моток с узелком-петлёй для подвеса сверху
+    "T": [
+        "......bb........",
+        ".....b..b.......",
+        ".....b..b.......",
+        "......bb........",
+        ".....oRRo.......",
+        "....olmmlo......",
+        "...olo..olo.....",
+        "...omo..omo.....",
+        "...olo..olo.....",
+        "...bRrRrRb......",
+        "...brRrRrb......",
+        "...olmlmlo......",
+        "..olmlomlmo.....",
+        "..olmo.olmo.....",
+        ".olmo...olmo....",
+        ".ooo.....ooo....",
+    ],
 }
 JUTE_BUNDLE_COLORS = {"l": "#e6cf92", "m": "#c9ab66", "d": "#97793f", "o": "#5e4524", "R": "#a07a3e", "r": "#6a4e26",
                       "b": "#3e2c16", "g": "#66a03a", "G": "#7fb64a", "k": "#436f26"}
@@ -932,13 +1123,16 @@ def jute_bundle(variant):
 
 
 def jute_bundles(chosen):
-    """Лист всех вариантов пучка джута (docs/textures/jute_bundles.png), * — в игре."""
-    out = Image.new("RGBA", (len(JUTE_BUNDLES) * 90, 110), (60, 60, 60, 255))
+    """Лист всех вариантов пучка джута (docs/textures/jute_bundles.png), по 10 в ряд, * — в игре."""
+    per_row = 10
+    rows = (len(JUTE_BUNDLES) + per_row - 1) // per_row
+    out = Image.new("RGBA", (per_row * 90, rows * 110), (60, 60, 60, 255))
     draw = ImageDraw.Draw(out)
     for i, variant in enumerate(JUTE_BUNDLES):
+        x, y = i % per_row * 90, i // per_row * 110
         big = jute_bundle(variant).resize((80, 80), Image.NEAREST)
-        out.paste(big, (i * 90 + 5, 5), big)
-        draw.text((i * 90 + 38, 92), variant + (" *" if variant == chosen else ""), fill=(255, 255, 255, 255))
+        out.paste(big, (x + 5, y + 5), big)
+        draw.text((x + 38, y + 92), variant + (" *" if variant == chosen else ""), fill=(255, 255, 255, 255))
     out.save(os.path.join(DOCS, "jute_bundles.png"))
 
 
@@ -1002,7 +1196,7 @@ if __name__ == "__main__":
         chosen = sys.argv[sys.argv.index("--hoe") + 1].upper()
         if chosen not in HOE_VARIANTS:
             sys.exit(f"Нет варианта тяпки {chosen}, есть: {', '.join(HOE_VARIANTS)}")
-    # пучок джута — 10 вариантов (docs/textures/jute_bundles.png), другой: --jute B
+    # пучок джута — 20 вариантов (docs/textures/jute_bundles.png), другой: --jute B
     JUTE_CHOSEN = "A"
     if "--jute" in sys.argv:
         JUTE_CHOSEN = sys.argv[sys.argv.index("--jute") + 1].upper()
