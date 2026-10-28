@@ -2,17 +2,26 @@
   "loader": "neoforge:separate_transforms",
   "gui_light": "front",
   "base": {
-    "parent": "minecraft:item/handheld",
-    "textures": {
-      "layer0": "trailcraft:item/turf_cutter"
-    }
+    "parent": "trailcraft:item/turf_cutter_in_hand"
   },
   "perspectives": {
-    "thirdperson_righthand": {
-      "parent": "trailcraft:item/turf_cutter_long"
+    "gui": {
+      "parent": "minecraft:item/generated",
+      "textures": {
+        "layer0": "trailcraft:item/turf_cutter"
+      }
     },
-    "thirdperson_lefthand": {
-      "parent": "trailcraft:item/turf_cutter_long"
+    "fixed": {
+      "parent": "minecraft:item/generated",
+      "textures": {
+        "layer0": "trailcraft:item/turf_cutter"
+      }
+    },
+    "ground": {
+      "parent": "minecraft:item/generated",
+      "textures": {
+        "layer0": "trailcraft:item/turf_cutter"
+      }
     }
   }
 }

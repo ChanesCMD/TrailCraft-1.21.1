@@ -11,14 +11,16 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 /**
- * Сервер → клиенты: какую косметику показывать на игроке вместо брони. stacks — 4 предмета (шлем … ботинки),
- * пустой — показывать надетую броню.
+ * Сервер → клиенты: какую косметику показывать на игроке вместо брони и какой рюкзак у него на спине.
+ * stacks — 4 предмета (шлем … ботинки; пустой — показывать надетую броню) и рюкзак (пустой — рюкзака нет).
  */
 public record CosmeticPayload(int entityId, List<ItemStack> stacks) implements CustomPacketPayload {
+    /** Сколько предметов и где в списке рюкзак. */
+    public static final int SIZE = 5, BACKPACK = 4;
     public static final Type<CosmeticPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "cosmetic"));
     public static final StreamCodec<RegistryFriendlyByteBuf, CosmeticPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, CosmeticPayload::entityId,
-            ItemStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list(4)), CosmeticPayload::stacks,
+            ItemStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list(SIZE)), CosmeticPayload::stacks,
             CosmeticPayload::new);
 
     @Override

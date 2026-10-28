@@ -28,6 +28,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
@@ -40,7 +41,9 @@ import java.util.List;
 public class GraveBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
     public static final MapCodec<GraveBlock> CODEC = simpleCodec(GraveBlock::new);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    private static final VoxelShape SHAPE = Block.box(2, 0, 4, 14, 14, 12);
+    /** Как модель автора (scripts/templates/models/grave.bbmodel): плита, столб и перекладина креста. */
+    private static final VoxelShape SHAPE = Shapes.or(Block.box(3, 0, 3, 13, 1, 13), Block.box(5, 0, 6, 11, 16, 10),
+            Block.box(2, 7, 6, 14, 13, 10));
     /** Насколько далеко от места смерти искать место под могилу. */
     private static final int SEARCH_RADIUS = 16;
 

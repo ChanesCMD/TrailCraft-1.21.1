@@ -31,6 +31,12 @@ public final class ClientCosmetics {
         SHOWN.put(payload.entityId(), payload.stacks());
     }
 
+    /** Какой рюкзак надет на игроке (пустой — никакого). */
+    public static ItemStack backpack(int entityId) {
+        List<ItemStack> shown = SHOWN.get(entityId);
+        return shown == null || shown.size() <= CosmeticPayload.BACKPACK ? ItemStack.EMPTY : shown.get(CosmeticPayload.BACKPACK);
+    }
+
     /** Самый низкий приоритет: если отрисовку отменил другой мод, Post не придёт, и подменять нечего. */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onRenderPre(RenderPlayerEvent.Pre event) {

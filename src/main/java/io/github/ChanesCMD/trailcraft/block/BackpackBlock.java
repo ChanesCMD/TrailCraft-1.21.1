@@ -32,7 +32,8 @@ import javax.annotation.Nullable;
  */
 public class BackpackBlock extends BaseEntityBlock {
     public static final MapCodec<BackpackBlock> CODEC = simpleCodec(BackpackBlock::new);
-    private static final VoxelShape SHAPE = Block.box(3, 0, 4, 13, 12, 12);
+    /** По моделям автора (scripts/templates/models/*_backpack.bbmodel). */
+    private static final VoxelShape SHAPE = Block.box(4, 0, 5, 12, 9, 10);
     /** Как далеко от игрока искать место для выброшенного рюкзака. */
     private static final int SEARCH_RADIUS = 3;
 

@@ -9,7 +9,7 @@
 верхних поперёк (z 11–15 — третье, дальнее от того, кто сложил; z 1–5 — четвёртое; высота 4–8). Над пересечениями
 брёвен — слоты еды (TrailCampfireBlock.SLOTS); меняя брёвна здесь, менять и там.
 Горящий костёр: обугленные брёвна с тлеющими трещинами, тлеющая зола и ванильный огонь костра
-(minecraft:block/campfire_fire). Тарелочка под едой — campfire_plate (8×8 в середине текстуры, рисует
+(minecraft:block/campfire_fire). Тарелочка под едой — campfire_plate (6×6 в середине текстуры, рисует
 client/TrailCampfireRenderer). Кора брёвен — из коры дуба (textures/block/oak_log.png), торец — как у тонкого дуба.
 Зола-предмет — кучка пыли по шаблону scripts/templates/dust.png (dust() из gen_ore_textures.py).
 """
@@ -162,16 +162,14 @@ def ash_texture(lit):
     return img
 
 
-# Глиняная тарелочка 8×8 (сверху): o — контур, r — бортик, h — блик бортика, b — дно, d — тень на дне
+# Глиняная тарелочка 6×6 (сверху): o — контур, r — бортик, h — блик бортика, b — дно, d — тень на дне
 PLATE = [
-    "..oooo..",
-    ".ohhhro.",
-    "ohbbbbro",
-    "ohbbbbro",
-    "orbbbdro",
-    "orbbddro",
-    ".orrrro.",
-    "..oooo..",
+    ".oooo.",
+    "ohhhro",
+    "ohbbro",
+    "orbdro",
+    "orrrro",
+    ".oooo.",
 ]
 PLATE_COLORS = {"o": "#5c2e18", "r": "#b8693e", "h": "#d4895a", "b": "#a65a34", "d": "#8e4a2a"}
 
@@ -181,7 +179,7 @@ def plate_texture():
     for y, row in enumerate(PLATE):
         for x, ch in enumerate(row):
             if ch != ".":
-                img.putpixel((4 + x, 4 + y), hx(PLATE_COLORS[ch]))
+                img.putpixel((5 + x, 5 + y), hx(PLATE_COLORS[ch]))
     return img
 
 
