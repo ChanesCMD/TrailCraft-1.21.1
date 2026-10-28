@@ -16,8 +16,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public final class ModAttachments {
@@ -54,6 +56,11 @@ public final class ModAttachments {
             () -> AttachmentType.<Map<Long, Long>>builder(() -> new HashMap<>())
                     .serialize(Codec.unboundedMap(Codec.STRING.xmap(Long::parseLong, String::valueOf), Codec.LONG)
                             .xmap(map -> (Map<Long, Long>) new HashMap<>(map), map -> map)).build());
+
+    /** Породы и почвы чанка, поставленные игроком (BlockPos.asLong): они не обваливаются (collapse/PlacedBlocks). */
+    public static final Supplier<AttachmentType<Set<Long>>> PLACED_BLOCKS = ATTACHMENT_TYPES.register("placed_blocks",
+            () -> AttachmentType.<Set<Long>>builder(() -> new HashSet<>())
+                    .serialize(Codec.LONG.listOf().xmap(list -> (Set<Long>) new HashSet<>(list), set -> List.copyOf(set))).build());
 
     /** Последнее, что отправлено клиенту в GearPayload (не сохраняется: после входа отправится заново). */
     public static final Supplier<AttachmentType<Integer>> GEAR_SENT = ATTACHMENT_TYPES.register("gear_sent",

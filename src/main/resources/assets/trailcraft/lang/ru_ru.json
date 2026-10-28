@@ -1009,5 +1009,11 @@
   "tooltip.trailcraft.mold.take": "ПКМ — достать отливку",
   "tooltip.trailcraft.mold.empty": "Положить в слот формы в окне кувшина с жидким металлом",
   "item.trailcraft.feather": "Перо",
-  "item.trailcraft.bone": "Кость"
+  "item.trailcraft.bone": "Кость",
+  "block.trailcraft.wooden_support": "Деревянная крепь",
+  "block.trailcraft.wooden_support_beam": "Деревянная перекладина",
+  "block.trailcraft.iron_support": "Железная крепь",
+  "block.trailcraft.iron_support_beam": "Железная перекладина",
+  "item.trailcraft.support.range": "Держит породу и почву %s×%s×%s вокруг себя",
+  "item.trailcraft.support.beam": "ПКМ по боку крепи — перекладина (до %s блоков от стойки)"
 }

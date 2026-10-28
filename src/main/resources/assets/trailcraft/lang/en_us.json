@@ -1009,5 +1009,11 @@
   "tooltip.trailcraft.mold.take": "Right-click to take the casting out",
   "tooltip.trailcraft.mold.empty": "Put into the mold slot of a jug with molten metal",
   "item.trailcraft.feather": "Feather",
-  "item.trailcraft.bone": "Bone"
+  "item.trailcraft.bone": "Bone",
+  "block.trailcraft.wooden_support": "Wooden Support",
+  "block.trailcraft.wooden_support_beam": "Wooden Support Beam",
+  "block.trailcraft.iron_support": "Iron Support",
+  "block.trailcraft.iron_support_beam": "Iron Support Beam",
+  "item.trailcraft.support.range": "Holds rock and soil %s×%s×%s around it",
+  "item.trailcraft.support.beam": "Right-click the side of a support to place a beam (up to %s blocks from a post)"
 }

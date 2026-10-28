@@ -30,4 +30,11 @@ public class ModTags {
     /** Топливо малой сыродутной печи: древесный и каменный уголь (#minecraft:coals) и торф. */
     public static final TagKey<Item> BLOOMERY_FUELS = TagKey.create(Registries.ITEM,
             ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "bloomery_fuels"));
+
+    /** Обваливаются, если под ними пусто и рядом нет крепи (collapse/Collapse): породы и руды. */
+    public static final TagKey<Block> CAN_COLLAPSE = TagKey.create(Registries.BLOCK,
+            ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "can_collapse"));
+    /** Почвы осыпаются, как песок, когда игрок выкопал блок под ними и рядом нет крепи (collapse/Collapse). */
+    public static final TagKey<Block> COLLAPSIBLE_SOILS = TagKey.create(Registries.BLOCK,
+            ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "collapsible_soils"));
 }

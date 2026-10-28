@@ -346,6 +346,8 @@
     "trailcraft:linden_crafting_table",
     "trailcraft:pussy_willow_crafting_table",
     "trailcraft:walnut_crafting_table",
-    "trailcraft:alder_crafting_table"
+    "trailcraft:alder_crafting_table",
+    "trailcraft:wooden_support",
+    "trailcraft:wooden_support_beam"
   ]
 }

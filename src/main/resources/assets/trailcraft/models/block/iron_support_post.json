@@ -1,0 +1,8 @@
+{
+  "parent": "trailcraft:block/support_post",
+  "textures": {
+    "side": "minecraft:block/iron_block",
+    "end": "minecraft:block/iron_block",
+    "particle": "minecraft:block/iron_block"
+  }
+}

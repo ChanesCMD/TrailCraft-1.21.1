@@ -88,6 +88,8 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.SHALE_PEBBLE);
                         output.accept(ModItems.FLINT);
                         output.accept(ModItems.CHOPPING_STUMP);
+                        output.accept(ModItems.WOODEN_SUPPORT);
+                        output.accept(ModItems.IRON_SUPPORT);
                         output.accept(ModItems.DUFFEL_BACKPACK);
                         output.accept(ModItems.LEATHER_BACKPACK);
                         output.accept(ModItems.TACTICAL_BACKPACK);

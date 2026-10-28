@@ -3,6 +3,7 @@ package io.github.ChanesCMD.trailcraft.init;
 import net.minecraft.util.ColorRGBA;
 import net.minecraft.world.level.block.Block;
 import io.github.ChanesCMD.trailcraft.block.PebbleBlock;
+import io.github.ChanesCMD.trailcraft.block.SupportBlock;
 import io.github.ChanesCMD.trailcraft.block.BackpackBlock;
 import io.github.ChanesCMD.trailcraft.block.TurfBlock;
 import io.github.ChanesCMD.trailcraft.block.GraveBlock;
@@ -249,6 +250,14 @@ public class ModBlocks {
                     .noLootTable().pushReaction(PushReaction.DESTROY)
                     .lightLevel(state -> state.getValue(TrailCampfireBlock.LIT) ? 11 + state.getValue(TrailCampfireBlock.LOGS) : 0));
 
+    // === КРЕПЬ (collapse/Collapse): стойка и перекладина, ставятся одним предметом (SupportItem) ===
+    /** Деревянная крепь держит породу и почву 9×5×9 вокруг себя. */
+    public static final DeferredBlock<SupportBlock> WOODEN_SUPPORT = registerSupport("wooden_support", false, 4, 2, woodSupportProps());
+    public static final DeferredBlock<SupportBlock> WOODEN_SUPPORT_BEAM = registerSupport("wooden_support_beam", true, 4, 2, woodSupportProps());
+    /** Железная крепь держит 13×7×13. */
+    public static final DeferredBlock<SupportBlock> IRON_SUPPORT = registerSupport("iron_support", false, 6, 3, ironSupportProps());
+    public static final DeferredBlock<SupportBlock> IRON_SUPPORT_BEAM = registerSupport("iron_support_beam", true, 6, 3, ironSupportProps());
+
     /** Кремень на земле. Своего предмета у блока нет: ставится и выпадает как предмет trailcraft:flint. */
     public static final DeferredBlock<Block> FLINT_PEBBLE = BLOCKS.registerBlock("flint_pebble", PebbleBlock::new,
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(0.2f).sound(SoundType.STONE).noCollission().noOcclusion().pushReaction(PushReaction.DESTROY));
@@ -323,6 +332,21 @@ public class ModBlocks {
                 BlockBehaviour.Properties.of().mapColor(color).randomTicks().strength(0.6f).sound(SoundType.GRAVEL)
                         .isViewBlocking((state, level, pos) -> true).isSuffocating((state, level, pos) -> true)
                         .pushReaction(PushReaction.DESTROY));
+    }
+
+    private static DeferredBlock<SupportBlock> registerSupport(String name, boolean beam, int horizontal, int vertical,
+                                                               BlockBehaviour.Properties properties) {
+        return BLOCKS.registerBlock(name, props -> new SupportBlock(props, beam, horizontal, vertical), properties);
+    }
+
+    private static BlockBehaviour.Properties woodSupportProps() {
+        return BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(2.0f).sound(SoundType.WOOD).noOcclusion()
+                .ignitedByLava().pushReaction(PushReaction.DESTROY);
+    }
+
+    private static BlockBehaviour.Properties ironSupportProps() {
+        return BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()
+                .pushReaction(PushReaction.DESTROY);
     }
 
     private static DeferredBlock<Block> registerBackpack(String name, MapColor color) {
