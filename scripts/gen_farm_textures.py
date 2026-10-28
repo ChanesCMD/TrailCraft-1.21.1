@@ -1855,7 +1855,7 @@ if __name__ == "__main__":
         if chosen not in HOE_VARIANTS:
             sys.exit(f"Нет варианта тяпки {chosen}, есть: {', '.join(HOE_VARIANTS)}")
     # пучок джута — 70 вариантов (docs/textures/jute_bundles.png), другой: --jute B
-    JUTE_CHOSEN = "A"
+    JUTE_CHOSEN = "Y8"
     if "--jute" in sys.argv:
         JUTE_CHOSEN = sys.argv[sys.argv.index("--jute") + 1].upper()
         if JUTE_CHOSEN not in JUTE_BUNDLES:
