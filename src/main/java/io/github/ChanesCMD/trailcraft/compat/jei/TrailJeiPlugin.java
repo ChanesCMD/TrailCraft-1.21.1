@@ -2,12 +2,14 @@ package io.github.ChanesCMD.trailcraft.compat.jei;
 
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.block.ChoppingStumpBlock;
+import io.github.ChanesCMD.trailcraft.block.TrailCampfireBlock;
 import io.github.ChanesCMD.trailcraft.init.ModBlocks;
 import io.github.ChanesCMD.trailcraft.init.ModItems;
 import io.github.ChanesCMD.trailcraft.init.ModSmelting;
 import io.github.ChanesCMD.trailcraft.init.ModWood;
 import io.github.ChanesCMD.trailcraft.item.BranchStickItem;
 import io.github.ChanesCMD.trailcraft.item.ClothBlankItem;
+import io.github.ChanesCMD.trailcraft.item.FirestarterItem;
 import io.github.ChanesCMD.trailcraft.smelting.Smelting;
 import io.github.ChanesCMD.trailcraft.smelting.Smelting.Metal;
 import io.github.ChanesCMD.trailcraft.smelting.StrawEvents;
@@ -60,6 +62,8 @@ public class TrailJeiPlugin implements IModPlugin {
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(new ItemStack(ModSmelting.SMALL_BLOOMERY_ITEM.get()), BLOOMERY);
         registration.addRecipeCatalyst(new ItemStack(ModSmelting.JUG.get()), BLOOMERY);
+        // свой костёр жарит то же, что ванильный
+        registration.addRecipeCatalyst(new ItemStack(ModItems.CAMPFIRE.get()), RecipeTypes.CAMPFIRE_COOKING);
         // верстаки пород — то же окно крафта, что у ванильного
         for (ModWood.WoodSet set : ModWood.SETS) {
             if (set.craftingTable != null) {
@@ -128,8 +132,8 @@ public class TrailJeiPlugin implements IModPlugin {
                 tag(ItemTags.AXES)), thinLogs.isEmpty() ? ItemStack.EMPTY : thinLogs.get(0).copyWithCount(ChoppingStumpBlock.THIN_LOGS),
                 Component.translatable("jei.trailcraft.chopping", ChoppingStumpBlock.THIN_LOGS)));
         recipes.add(new TrailJeiRecipe(List.of(thinLogs, List.of(branch.copyWithCount(4)),
-                List.of(new ItemStack(ModItems.FIRESTARTER.get()))), new ItemStack(Items.CAMPFIRE),
-                Component.translatable("jei.trailcraft.campfire")));
+                List.of(new ItemStack(ModItems.FIRESTARTER.get()))), new ItemStack(ModItems.CAMPFIRE.get()),
+                Component.translatable("jei.trailcraft.campfire", FirestarterItem.LOGS, TrailCampfireBlock.MAX_LOGS)));
         return recipes;
     }
 

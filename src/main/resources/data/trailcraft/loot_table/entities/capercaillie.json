@@ -37,7 +37,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "trailcraft:raw_capercaillie",
+          "name": "minecraft:chicken",
           "functions": [
             {
               "function": "minecraft:furnace_smelt",

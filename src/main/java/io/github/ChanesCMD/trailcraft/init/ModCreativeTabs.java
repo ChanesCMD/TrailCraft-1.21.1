@@ -147,6 +147,8 @@ public class ModCreativeTabs {
                         output.accept(ModItems.STICK_PROCESSED);
                         output.accept(ModItems.LONG_STICK);
                         output.accept(ModItems.FIRESTARTER);
+                        output.accept(ModItems.CAMPFIRE);
+                        output.accept(ModItems.ASH);
                         output.accept(ModItems.STONE_HAMMER);
 
                         // Глина, кирпичи и плавка (ModSmelting)
@@ -194,8 +196,6 @@ public class ModCreativeTabs {
                         ModOres.NUGGET_ORES.forEach(ore -> output.accept(ModOres.NUGGETS.get(ore)));
                         ModOres.MIXES.forEach(output::accept);
                         ModOres.INGOTS.forEach(output::accept);
-                        output.accept(ModItems.RAW_CAPERCAILLIE);
-                        output.accept(ModItems.COOKED_CAPERCAILLIE);
                     }).build());
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TRAILCRAFT_WOOD_TAB =

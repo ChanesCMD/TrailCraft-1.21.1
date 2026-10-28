@@ -3,6 +3,7 @@ package io.github.ChanesCMD.trailcraft.init;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.block.entity.BackpackBlockEntity;
 import io.github.ChanesCMD.trailcraft.block.entity.GraveBlockEntity;
+import io.github.ChanesCMD.trailcraft.block.entity.TrailCampfireBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -17,6 +18,9 @@ public final class ModBlockEntities {
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GraveBlockEntity>> GRAVE = BLOCK_ENTITIES.register("grave",
             () -> BlockEntityType.Builder.of(GraveBlockEntity::new, ModBlocks.GRAVE.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TrailCampfireBlockEntity>> CAMPFIRE = BLOCK_ENTITIES.register("campfire",
+            () -> BlockEntityType.Builder.of(TrailCampfireBlockEntity::new, ModBlocks.CAMPFIRE.get()).build(null));
 
     private ModBlockEntities() {}
 }

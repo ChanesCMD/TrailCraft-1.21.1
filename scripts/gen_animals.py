@@ -442,8 +442,8 @@ FOOD = {
     "crow": SEEDS + BERRIES, "raven": SEEDS + BERRIES,
     "pig": BERRIES, "cow": [f"{NS}:jute"], "sheep": [f"{NS}:jute"], "goat": [f"{NS}:jute", f"{NS}:stick_branch"],
     "hare": [], "capybara": [f"{NS}:jute", "minecraft:carrot", "minecraft:potato"], "beaver": [f"{NS}:stick_branch"],
-    "fennec": BERRIES, "hedgehog": BERRIES, "manul": [f"{NS}:raw_capercaillie", "minecraft:chicken"],
-    "arctic_fox": BERRIES, "fox": BERRIES, "wolf": [f"{NS}:raw_capercaillie"],
+    "fennec": BERRIES, "hedgehog": BERRIES, "manul": ["minecraft:chicken"],
+    "arctic_fox": BERRIES, "fox": BERRIES, "wolf": ["minecraft:chicken"],
 }
 # Лут: (предмет, мин, макс[, жарится — горящее животное роняет жареное]); у овцы — ванильный лут по цвету шерсти
 LOOT = {
@@ -679,6 +679,9 @@ def spawns():
             write(rel, data)
 
 
+WHITE_MEAT = {"chicken": ("Сырое белое мясо", "Raw White Meat"), "cooked_chicken": ("Жареное белое мясо", "Cooked White Meat")}
+
+
 def lang(animals):
     for code in ("ru_ru", "en_us"):
         rel = f"assets/{NS}/lang/{code}.json"
@@ -687,6 +690,9 @@ def lang(animals):
             data[f"entity.{NS}.{name}"] = a["ru"] if code == "ru_ru" else a["en"]
             data[f"item.{NS}.{name}_spawn_egg"] = (f"Яйцо призыва {a['gen']}" if code == "ru_ru" else f"{a['en']} Spawn Egg")
         data[f"itemGroup.{NS}_spawn_eggs"] = "TrailCraft: Яйца призыва" if code == "ru_ru" else "TrailCraft: Spawn Eggs"
+        # Курятина — «белое мясо»: её роняют курица, гусь, утка, индюк и глухарь
+        for item, names in WHITE_MEAT.items():
+            data[f"item.minecraft.{item}"] = names[0 if code == "ru_ru" else 1]
         write(rel, data)
 
 

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "trailcraft:item/raw_capercaillie"
+    "layer0": "trailcraft:item/ash"
   }
 }

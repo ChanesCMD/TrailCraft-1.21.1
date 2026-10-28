@@ -7,6 +7,7 @@ import io.github.ChanesCMD.trailcraft.block.BackpackBlock;
 import io.github.ChanesCMD.trailcraft.block.TurfBlock;
 import io.github.ChanesCMD.trailcraft.block.GraveBlock;
 import io.github.ChanesCMD.trailcraft.block.ChoppingStumpBlock;
+import io.github.ChanesCMD.trailcraft.block.TrailCampfireBlock;
 import io.github.ChanesCMD.trailcraft.block.BerryBushBlock;
 import io.github.ChanesCMD.trailcraft.block.GardenBedBlock;
 import io.github.ChanesCMD.trailcraft.block.JuteCropBlock;
@@ -241,6 +242,12 @@ public class ModBlocks {
     /** Пень для рубки: бревно на нём раскалывается топором на 4 тонких ({@link ChoppingStumpBlock#THIN_LOGS}). */
     public static final DeferredBlock<Block> CHOPPING_STUMP = BLOCKS.registerBlock("chopping_stump", ChoppingStumpBlock::new,
             BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(2.0f).sound(SoundType.WOOD).ignitedByLava());
+
+    /** Костёр: зола и 0–4 тонких бревна; светит тем ярче, чем больше брёвен горит. Лут — в коде (TrailCampfireBlock). */
+    public static final DeferredBlock<TrailCampfireBlock> CAMPFIRE = BLOCKS.registerBlock("campfire", TrailCampfireBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.PODZOL).strength(0.5f).sound(SoundType.WOOD).noOcclusion()
+                    .noLootTable().pushReaction(PushReaction.DESTROY)
+                    .lightLevel(state -> state.getValue(TrailCampfireBlock.LIT) ? 11 + state.getValue(TrailCampfireBlock.LOGS) : 0));
 
     /** Кремень на земле. Своего предмета у блока нет: ставится и выпадает как предмет trailcraft:flint. */
     public static final DeferredBlock<Block> FLINT_PEBBLE = BLOCKS.registerBlock("flint_pebble", PebbleBlock::new,

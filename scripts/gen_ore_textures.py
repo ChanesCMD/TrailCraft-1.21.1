@@ -1,12 +1,14 @@
 """
 Текстуры руд в ванильном стиле: куски руды raw_* (форма и светотень — как у ванильных кусков золота, железа, меди,
-плюс пятнистая форма из образца автора), самородки (предмет и камешек на земле) и шихта.
+плюс пятнистая форма из образца автора), самородки (предмет и камешек на земле) и шихта — кучка пыли по шаблону автора
+scripts/templates/dust.png (так в ванильном Minecraft нарисованы порох, светопыль и редстоун).
 
 Запуск из корня проекта:  python scripts/gen_ore_textures.py   (нужен Pillow)
 Цвета каждой руды — RAMPS: основная гамма от тёмного к светлому и, если есть, вкрапления (ACCENTS).
 У сфалерита сохранена прежняя расцветка: серый с янтарными вкраплениями.
 """
 import os
+import random
 
 from PIL import Image
 
@@ -147,18 +149,77 @@ ACCENTS = {
 
 NUGGET_ORES = ["native_copper", "malachite", "tetrahedrite", "cassiterite", "sphalerite"]
 
-# Шихта: перекраска образца tin_bronze_mix (медные крупинки и серые крупинки) — гаммы для «медной» и «серой» части
+# Шихта — кучка пыли (dust): гамма основного металла и, у сплавов, крупинки других металлов (доля — share).
+# Гаммы — 6 цветов: контур, тени внутри шаблона, заливка от тёмной к светлой.
 METALS = {
-    "copper": ramp("5a2a14", "8c4022", "b86034", "de8852", "f4ba8c"),
-    "tin": ramp("4a4c50", "6e7278", "9a9ea4", "c4c8cc", "e4e8ec"),
-    "zinc": ramp("3e4652", "5e6a78", "8492a0", "aab6c2", "cfd8e0"),
+    "copper": ramp("3a1a0c", "5a2a14", "8c4022", "b86034", "de8852", "f4ba8c"),
+    "tin": ramp("2e3034", "4a4c50", "6e7278", "9a9ea4", "c4c8cc", "e4e8ec"),
+    "zinc": ramp("262c34", "3e4652", "5e6a78", "8492a0", "aab6c2", "cfd8e0"),
+    "bismuth": ramp("2e2232", "4a3a4e", "725a78", "9c84a2", "c4b0c8", "e8dcec"),
 }
 MIXES = {
-    "copper_mix": ("copper", "copper"),
-    "tin_mix": ("tin", "tin"),
-    "zinc_mix": ("zinc", "zinc"),
-    "brass_mix": ("copper", "zinc"),
+    "copper_mix": ("copper", (), 0, 3),
+    "tin_mix": ("tin", (), 0, 4),
+    "zinc_mix": ("zinc", (), 0, 5),
+    "tin_bronze_mix": ("copper", ("tin",), 0.3, 6),
+    "bismuth_bronze_mix": ("copper", ("bismuth", "zinc"), 0.45, 7),
+    "brass_mix": ("copper", ("zinc",), 0.3, 8),
 }
+DUST_TEMPLATE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates", "dust.png")
+
+
+def dust_mask():
+    """Шаблон кучки пыли: 'o' — контур (пиксель шаблона у края), 'a' — тень внутри, 'f' — заливка (внутри контура)."""
+    tpl = Image.open(DUST_TEMPLATE).convert("RGBA")
+    inside = lambda x, y: 0 <= x < 16 and 0 <= y < 16
+
+    def on(x, y):
+        return inside(x, y) and tpl.getpixel((x, y))[3] > 0
+
+    outside, stack = set(), [(0, 0)]
+    while stack:
+        x, y = stack.pop()
+        if (x, y) in outside or not inside(x, y) or on(x, y):
+            continue
+        outside.add((x, y))
+        stack += [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
+    mask = {}
+    for y in range(16):
+        for x in range(16):
+            near = [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
+            if on(x, y):
+                mask[(x, y)] = "o" if any(p in outside or not inside(*p) for p in near) else "a"
+            elif (x, y) not in outside:
+                mask[(x, y)] = "f"
+    return mask
+
+
+def dust(base, grains=(), share=0.0, seed=1):
+    """Кучка пыли по шаблону: свет слева сверху, к низу справа темнее, крупинки чуть светлее или темнее соседей;
+    grains — гаммы крупинок других металлов, share — их доля в заливке."""
+    mask = dust_mask()
+    rnd = random.Random(seed)
+    img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    for (x, y), kind in sorted(mask.items(), key=lambda kv: (kv[0][1], kv[0][0])):
+        if kind == "o":
+            c = base[0]
+        elif kind == "a":
+            c = base[1]
+        else:
+            rim = mask.get((x, y - 1)) == "o" or mask.get((x - 1, y)) == "o"
+            d = (x - 8) + (y - 8)
+            level = 5 if rim and d < 2 else 4 if d < -1 else 3 if d < 3 else 2
+            r = rnd.random()
+            if r < 0.18:
+                level = min(5, level + 1)
+            elif r < 0.30:
+                level = max(2, level - 1)
+            colors = base
+            if grains and rnd.random() < share:
+                colors = grains[rnd.randrange(len(grains))]
+            c = colors[level]
+        img.putpixel((x, y), c + (255,))
+    return img
 
 
 def pick(colors, level, top=9):
@@ -215,21 +276,8 @@ def nuggets():
 
 
 def mixes():
-    sample = Image.open(os.path.join(ROOT, "item", "tin_bronze_mix.png")).convert("RGBA")
-    outline = sample.getpixel((0, 0))
-    for name, (warm, cool) in MIXES.items():
-        out = sample.copy()
-        for y in range(16):
-            for x in range(16):
-                p = sample.getpixel((x, y))
-                if not p[3] or p == outline or lum(p) < 45:
-                    continue
-                coppery = p[0] > p[2] + 30
-                colors = METALS[warm if coppery else cool]
-                # Яркость крупинки сохраняется: 60..200 растягивается на всю гамму
-                level = max(0.0, min(9.0, (lum(p) - 60) / 140 * 9))
-                out.putpixel((x, y), pick(colors, level) + (255,))
-        save(out, f"item/{name}")
+    for name, (metal, others, share, seed) in MIXES.items():
+        save(dust(METALS[metal], [METALS[o] for o in others], share, seed), f"item/{name}")
 
 
 if __name__ == "__main__":

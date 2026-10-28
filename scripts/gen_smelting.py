@@ -67,7 +67,8 @@ LANG = {
     "jei.trailcraft.straw": ("Срезать траву ножом, серпом или косой", "Cut grass with a knife, sickle or scythe"),
     "jei.trailcraft.leaves_branch": ("С листвы падает ветка: 5 %, ножом 15 %", "Leaves drop a branch: 5 %, with a knife 15 %"),
     "jei.trailcraft.chopping": ("Бревно на пне — удар топором: %s тонких бревна", "Log on a chopping stump, hit with an axe: %s thin logs"),
-    "jei.trailcraft.campfire": ("Бросить на землю, зажать ПКМ огнивом", "Drop on the ground, hold right-click with a firestarter"),
+    "jei.trailcraft.campfire": ("Бросить на землю (брёвен — %s–%s), зажать ПКМ огнивом",
+                                "Drop on the ground (%s–%s logs), hold right-click with a firestarter"),
     "item.trailcraft.cloth": ("Тканевое полотно", "Cloth"),
     "tooltip.trailcraft.cloth_blank": ("В другой руке обработанная палка — зажать ПКМ", "Hold right-click with a processed stick in the other hand"),
 }

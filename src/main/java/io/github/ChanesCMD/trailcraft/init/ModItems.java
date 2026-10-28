@@ -12,7 +12,6 @@ import io.github.ChanesCMD.trailcraft.item.CoinItem;
 import io.github.ChanesCMD.trailcraft.item.FlaskItem;
 import io.github.ChanesCMD.trailcraft.item.WalletItem;
 import io.github.ChanesCMD.trailcraft.item.BranchStickItem;
-import io.github.ChanesCMD.trailcraft.animal.Capercaillie;
 import io.github.ChanesCMD.trailcraft.item.ClothBlankItem;
 import io.github.ChanesCMD.trailcraft.item.FirestarterItem;
 import io.github.ChanesCMD.trailcraft.item.HammerItem;
@@ -115,10 +114,6 @@ public class ModItems {
     public static final DeferredItem<Item> CLOTH = ITEMS.registerSimpleItem("cloth");
     public static final DeferredItem<DeferredSpawnEggItem> CAPERCAILLIE_SPAWN_EGG = ITEMS.registerItem("capercaillie_spawn_egg",
             props -> new DeferredSpawnEggItem(ModEntities.CAPERCAILLIE, 0x2F3034, 0x3E6F5F, props));
-    public static final DeferredItem<Item> RAW_CAPERCAILLIE = ITEMS.registerItem("raw_capercaillie",
-            props -> new Item(props.food(Capercaillie.RAW_FOOD)));
-    public static final DeferredItem<Item> COOKED_CAPERCAILLIE = ITEMS.registerItem("cooked_capercaillie",
-            props -> new Item(props.food(Capercaillie.COOKED_FOOD)));
 
     // === ПРЕДМЕТЫ ===
     public static final DeferredItem<Item> CLAY_BALL_WHITE = ITEMS.registerSimpleItem("clay_ball_white");
@@ -167,7 +162,7 @@ public class ModItems {
     public static final DeferredItem<Item> STICK_PROCESSED = ITEMS.registerSimpleItem("stick_processed");
     /** Длинная палка: две обработанные палки по диагонали; древко копий. */
     public static final DeferredItem<Item> LONG_STICK = ITEMS.registerSimpleItem("long_stick");
-    /** Огниво: разжигает костёр из выброшенных тонкого бревна и 4 веток (FirestarterItem). */
+    /** Огниво: складывает костёр из выброшенных тонких брёвен (1–4) и 4 веток и разжигает его (FirestarterItem). */
     public static final DeferredItem<FirestarterItem> FIRESTARTER = ITEMS.registerItem("firestarter",
             props -> new FirestarterItem(props.durability(FirestarterItem.DURABILITY)));
     /** Каменный молоток: твёрдый камешек на обработанной палке, дробит куски руды в шихту бронз (HammerItem). */
@@ -176,6 +171,12 @@ public class ModItems {
 
     // === ПЕНЬ ДЛЯ РУБКИ ===
     public static final DeferredItem<BlockItem> CHOPPING_STUMP = ITEMS.registerSimpleBlockItem("chopping_stump", ModBlocks.CHOPPING_STUMP);
+
+    // === КОСТЁР ===
+    /** Костёр для креатива и JEI; в выживании его складывают огнивом. */
+    public static final DeferredItem<BlockItem> CAMPFIRE = ITEMS.registerSimpleBlockItem("campfire", ModBlocks.CAMPFIRE);
+    /** Зола: собирается с потухшего костра лопатой или кремнёвой мотыгой. */
+    public static final DeferredItem<Item> ASH = ITEMS.registerSimpleItem("ash");
 
     // === РЮКЗАКИ ===
     /** Тир 1 — армейский вещмешок, тир 2 — кожаный рюкзак, тир 3 — большой тактический. Отличаются числом карманов. */

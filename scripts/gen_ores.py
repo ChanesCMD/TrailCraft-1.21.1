@@ -109,10 +109,10 @@ WOODS = ["oak", "birch", "acacia", "sakura", "eucalyptus", "chestnut", "thuja", 
 LANG = {
     "itemGroup.trailcraft_ores": ("TrailCraft: Руды", "TrailCraft: Ores"),
     "tooltip.trailcraft.ore.rock": ("Порода: %s", "Rock: %s"),
-    "tooltip.trailcraft.firestarter": ("Бросьте на землю тонкое бревно (%s) и ветки (%s), наведитесь на них и зажмите ПКМ",
-                                       "Drop a thin log (%s) and branches (%s) on the ground, aim at them and hold RMB"),
-    "message.trailcraft.firestarter.need_fuel": ("Для костра на земле нужны тонкое бревно (%s) и ветки (%s)",
-                                                 "A campfire needs a thin log (%s) and branches (%s) on the ground"),
+    "tooltip.trailcraft.firestarter": ("Бросьте на землю тонкие брёвна (%s–%s) и ветки (%s), наведитесь на них и зажмите ПКМ",
+                                       "Drop thin logs (%s–%s) and branches (%s) on the ground, aim at them and hold RMB"),
+    "message.trailcraft.firestarter.need_fuel": ("Для костра на земле нужны тонкие брёвна (%s–%s) и ветки (%s)",
+                                                 "A campfire needs thin logs (%s–%s) and branches (%s) on the ground"),
     "message.trailcraft.firestarter.no_place": ("Здесь костёр не разжечь", "Can't light a campfire here"),
 }
 
