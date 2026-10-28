@@ -9,6 +9,7 @@
 вариант (по умолчанию D), все варианты лежат в docs/textures/hoes/<вариант>/, а общий лист для сравнения —
 docs/textures/hoes.png. Черенок у A–C — обработанная палка (textures/item/stick_processed.png).
 """
+import math
 import os
 import random
 import sys
@@ -1772,12 +1773,127 @@ ROPE = [
 ROPE_COLORS = {"l": "#d8bf86", "m": "#a8894e", "d": "#6e5530"}
 
 
+def rope_path(points, closed=False, step=0.05):
+    """Ломаная или кривая (список точек) → плотные отсчёты (x, y, s, нормаль)."""
+    pts = points + ([points[0]] if closed else [])
+    out, s = [], 0.0
+    for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
+        seg = math.hypot(x1 - x0, y1 - y0)
+        n = max(1, int(seg / step))
+        tx, ty = (x1 - x0) / seg, (y1 - y0) / seg
+        for i in range(n):
+            t = i / n
+            out.append((x0 + (x1 - x0) * t, y0 + (y1 - y0) * t, s + seg * t, -ty, tx))
+        s += seg
+    return out, s
+
+
+def arc(cx, cy, r, a0, a1, n=40, ry=None):
+    ry = ry or r
+    return [(cx + r * math.cos(a0 + (a1 - a0) * i / n), cy + ry * math.sin(a0 + (a1 - a0) * i / n)) for i in range(n + 1)]
+
+
+def rope(paths, width=1.6, period=2.6, fray=(), bands=(), seed=0):
+    """Витая верёвка вдоль путей: тексель — в верёвке, если до пути ближе width; цвет — по фазе витка (пряди идут
+    наискось поперёк верёвки), края — тёмный контур. fray — (путь, конец 0/1, длина): конец распущен прядями;
+    bands — (путь, s): обмотка нитью."""
+    grid = [["."] * 16 for _ in range(16)]
+    sampled = [rope_path(pts) for pts in paths]
+    for py in range(16):
+        for px in range(16):
+            cx, cy = px + 0.5, py + 0.5
+            best = None
+            for pi, (samples, total) in enumerate(sampled):
+                for x, y, s, nx, ny in samples:
+                    dist = (cx - x) ** 2 + (cy - y) ** 2
+                    if best is None or dist < best[0]:
+                        best = (dist, pi, s, (cx - x) * nx + (cy - y) * ny)
+            dist, pi, s, n = best
+            if dist > width * width:
+                continue
+            phase = ((s + n * 0.9) / period) % 1.0
+            ch = "l" if phase < 0.35 else "m" if phase < 0.75 else "d"
+            if abs(n) > width - 0.6:
+                ch = "o"  # контур с обеих сторон: витки мотка не сливаются
+            for bp, bs in bands:
+                if bp == pi and abs(s - bs) < 0.9:
+                    ch = "b" if abs(n) > width - 0.6 else ("R" if s < bs else "r")
+            grid[py][px] = ch
+    for fp, end, length in fray:
+        samples, total = sampled[fp]
+        x, y, s, nx, ny = samples[-1] if end else samples[0]
+        tx, ty = (ny, -nx) if end else (-ny, nx)
+        for k, off in enumerate((-1.0, 0.0, 1.0)):
+            for i in range(1, length + 1):
+                fx = x + tx * i + nx * off * (1 + i * 0.4)
+                fy = y + ty * i + ny * off * (1 + i * 0.4)
+                ix, iy = int(fx), int(fy)
+                if 0 <= ix < 16 and 0 <= iy < 16 and grid[iy][ix] == ".":
+                    grid[iy][ix] = "l" if (i + k) % 2 else "m"
+    return ["".join(r) for r in grid]
+
+
+def spiral(cx, cy, r0, r1, turns, a0=0.0, n=160, squash=1.0):
+    return [(cx + (r0 + (r1 - r0) * i / n) * math.cos(a0 + turns * 2 * math.pi * i / n),
+             cy + (r0 + (r1 - r0) * i / n) * squash * math.sin(a0 + turns * 2 * math.pi * i / n)) for i in range(n + 1)]
+
+
+# Верёвка — 10 вариантов в цветах пучка джута (JUTE_BUNDLE_COLORS), docs/textures/ropes.png; в игре — ROPE_CHOSEN
+ROPES = {
+    # R1 — прямой отрезок витой верёвки по диагонали, концы обмотаны
+    "R1": dict(paths=[[(2.0, 14.0), (14.0, 2.0)]], bands=[(0, 1.6), (0, 15.3)]),
+    # R2 — отрезок, верхний конец распущен веером, как у пучка Y8
+    "R2": dict(paths=[[(1.5, 14.5), (11.0, 5.0)]], bands=[(0, 1.6), (0, 9.0)], fray=[(0, 1, 4)]),
+    # R3 — моток в два витка с хвостом
+    "R3": dict(paths=[spiral(7.5, 7.0, 2.2, 5.6, 1.55, a0=0.4), [(11.2, 10.5), (14.5, 14.5)]], width=1.4, fray=[(1, 1, 1)]),
+    # R4 — плотный моток кольцами
+    "R4": dict(paths=[arc(8, 8, 6.0, 0, 2 * math.pi, 60), arc(8, 8, 3.3, 0.3, 2 * math.pi + 0.3, 40)], width=1.45),
+    # R5 — моток, перехваченный обмоткой с двух сторон
+    "R5": dict(paths=[arc(8, 8, 6.3, 0, 2 * math.pi, 60, ry=4.8), arc(8, 8, 3.4, 0, 2 * math.pi, 40, ry=2.0)], width=1.4,
+               bands=[(0, 4.5), (0, 20.5)]),
+    # R6 — петля с узлом и свисающим концом
+    "R6": dict(paths=[arc(8, 6.0, 4.5, math.pi * 0.62, math.pi * 2.38, 60), [(6.0, 10.2), (4.0, 14.5)], [(10.0, 10.2), (12.0, 14.5)]],
+               width=1.4, bands=[(0, 1.0), (0, 22.5)], fray=[(1, 1, 1), (2, 1, 1)]),
+    # R7 — верёвка змейкой, концы распущены
+    "R7": dict(paths=[[(2.0, 13.0), (5.0, 9.0), (9.0, 11.0), (12.0, 6.0), (13.5, 2.5)]], width=1.4, fray=[(0, 0, 2), (0, 1, 2)]),
+    # R8 — моток, перевязанный крест-накрест
+    "R8": dict(paths=[arc(8, 8, 6.0, 0, 2 * math.pi, 60), arc(8, 8, 2.8, 0, 2 * math.pi, 40),
+                      [(3.0, 3.0), (13.0, 13.0)]], width=1.4, bands=[(2, 2.0), (2, 12.0)]),
+    # R9 — толстая верёвка с узлом посередине
+    "R9": dict(paths=[[(1.5, 14.5), (6.0, 10.0)], arc(8.0, 8.0, 2.0, math.pi * 0.75, math.pi * 2.75, 30), [(10.0, 6.0), (14.5, 1.5)]],
+               width=1.8, bands=[(0, 1.2), (2, 5.0)]),
+    # R10 — восьмёрка из верёвки с хвостом
+    "R10": dict(paths=[arc(8, 4.8, 3.4, 0, 2 * math.pi, 50), arc(8, 11.0, 3.4, 0, 2 * math.pi, 50), [(10.5, 13.5), (14.5, 15.5)]],
+                width=1.3, bands=[(0, 5.3)], fray=[(2, 1, 1)]),
+}
+
+
 def berry_item(kind):
     return paint(blank(), ITEM_BERRIES[kind], {k: hx(v) for k, v in ITEM_BERRY_COLORS[kind].items()})
 
 
 def jute_bundle(variant):
     return paint(blank(), JUTE_BUNDLES[variant], {k: hx(v) for k, v in JUTE_BUNDLE_COLORS.items()})
+
+
+def rope_item(variant):
+    """Верёвка: прежний рисунок (old) или вариант из ROPES."""
+    if variant == "OLD":
+        return paint(blank(), ROPE, {k: hx(v) for k, v in ROPE_COLORS.items()})
+    return paint(blank(), rope(**ROPES[variant]), {k: hx(v) for k, v in JUTE_BUNDLE_COLORS.items()})
+
+
+def ropes(chosen):
+    """Лист вариантов верёвки (docs/textures/ropes.png), * — в игре."""
+    names = ["OLD"] + list(ROPES)
+    out = Image.new("RGBA", (len(names) * 90, 110), (60, 60, 60, 255))
+    draw = ImageDraw.Draw(out)
+    for i, variant in enumerate(names):
+        big = rope_item(variant).resize((80, 80), Image.NEAREST)
+        out.paste(big, (i * 90 + 5, 5), big)
+        label = (variant.lower() if variant == "OLD" else variant) + (" *" if variant == chosen else "")
+        draw.text((i * 90 + 32, 92), label, fill=(255, 255, 255, 255))
+    out.save(os.path.join(DOCS, "ropes.png"))
 
 
 def jute_bundles(chosen):
@@ -1799,7 +1915,7 @@ def items():
         save(berry_item(kind), f"item/{kind}")
     save(jute_bundle(JUTE_CHOSEN), "item/jute")
     save(paint(blank(), JUTE_SEEDS, {k: hx(v) for k, v in JUTE_SEEDS_COLORS.items()}), "item/jute_seeds")
-    save(paint(blank(), ROPE, {k: hx(v) for k, v in ROPE_COLORS.items()}), "item/rope")
+    save(rope_item(ROPE_CHOSEN), "item/rope")
 
 
 BERRY_BUSHES = ["currant", "cloudberry", "gooseberry", "blackberry"]
@@ -1861,6 +1977,13 @@ if __name__ == "__main__":
         if JUTE_CHOSEN not in JUTE_BUNDLES:
             sys.exit(f"Нет варианта пучка джута {JUTE_CHOSEN}, есть: {', '.join(JUTE_BUNDLES)}")
     jute_bundles(JUTE_CHOSEN)
+    # верёвка — прежняя (old) или один из 10 вариантов (docs/textures/ropes.png): --rope R4
+    ROPE_CHOSEN = "OLD"
+    if "--rope" in sys.argv:
+        ROPE_CHOSEN = sys.argv[sys.argv.index("--rope") + 1].upper()
+        if ROPE_CHOSEN != "OLD" and ROPE_CHOSEN not in ROPES:
+            sys.exit(f"Нет варианта верёвки {ROPE_CHOSEN}, есть: old, {', '.join(ROPES)}")
+    ropes(ROPE_CHOSEN)
     hoes(chosen)
     farmlands()
     plants()
