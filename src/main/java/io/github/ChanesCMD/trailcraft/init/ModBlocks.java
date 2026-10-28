@@ -20,6 +20,7 @@ import io.github.ChanesCMD.trailcraft.block.JuteCropBlock;
 import io.github.ChanesCMD.trailcraft.farm.Farm;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.HayBlock;
+import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.ColoredFallingBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -212,6 +213,16 @@ public class ModBlocks {
             DeferredBlock<Block> stone = DeferredBlock.createBlock(ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, rock.getSerializedName()));
             COBBLESTONES.put(rock, BLOCKS.register(rock.getSerializedName() + "_cobblestone",
                     () -> new Block(BlockBehaviour.Properties.ofFullCopy(stone.get()))));
+        }
+    }
+
+    // === ПЛИТЫ ИЗ ПОРОД (12 блоков, свойства — как у своей породы): шпалы ж/д пути Create (тэг #create:sleepers) ===
+    public static final Map<Rock, DeferredBlock<SlabBlock>> SLABS = new EnumMap<>(Rock.class);
+    static {
+        for (Rock rock : Rock.values()) {
+            DeferredBlock<Block> stone = DeferredBlock.createBlock(ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, rock.getSerializedName()));
+            SLABS.put(rock, BLOCKS.register(rock.getSerializedName() + "_slab",
+                    () -> new SlabBlock(BlockBehaviour.Properties.ofFullCopy(stone.get()))));
         }
     }
 

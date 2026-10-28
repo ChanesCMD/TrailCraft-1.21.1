@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": {
+      "item": "trailcraft:cloth"
+    },
+    "S": {
+      "tag": "c:rods/wooden"
+    },
+    "A": {
+      "item": "create:andesite_alloy"
+    }
+  },
+  "pattern": [
+    "WS",
+    "SA"
+  ],
+  "result": {
+    "id": "create:white_sail",
+    "count": 2
+  }
+}

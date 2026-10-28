@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "trailcraft:block/gray_granite_slab"
+    },
+    "type=top": {
+      "model": "trailcraft:block/gray_granite_slab_top"
+    },
+    "type=double": {
+      "model": "trailcraft:block/gray_granite"
+    }
+  }
+}

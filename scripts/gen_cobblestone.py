@@ -1,5 +1,6 @@
 """
-Булыжник пород (`<порода>_cobblestone`, ModBlocks.COBBLESTONES): нижние две трети обвала падают им, верхняя треть —
+Плиты пород (`<порода>_slab`, ModBlocks.SLABS: 3 породы в ряд — 6 плит; шпалы ж/д пути Create — тэг #create:sleepers)
+и булыжник пород (`<порода>_cobblestone`, ModBlocks.COBBLESTONES): нижние две трети обвала падают им, верхняя треть —
 гравием (collapse/Collapse). Текстуры, модели, блокстейты, модели предметов, лут, тэг кирки, переводы и превью
 docs/textures/cobblestone.png.
 
@@ -66,6 +67,50 @@ def texture(rock):
     return img
 
 
+def slab(rock, ru, en, pickaxe):
+    """Плита породы: модели нижней и верхней половины на текстурах породы (у базальта торцы — basalt_top), двойная — сам
+    блок породы; лут — 2 плиты с двойной."""
+    name = f"{rock}_slab"
+    side = f"{NS}:block/{rock}"
+    end = f"{NS}:block/{rock}_top" if os.path.exists(os.path.join(TEX, f"{rock}_top.png")) else side
+    textures = {"bottom": end, "top": end, "side": side}
+    write(f"assets/{NS}/models/block/{name}.json", {"parent": "minecraft:block/slab", "textures": textures})
+    write(f"assets/{NS}/models/block/{name}_top.json", {"parent": "minecraft:block/slab_top", "textures": textures})
+    double = f"{NS}:block/{rock}"
+    write(f"assets/{NS}/blockstates/{name}.json", {"variants": {
+        "type=bottom": {"model": f"{NS}:block/{name}"}, "type=top": {"model": f"{NS}:block/{name}_top"},
+        "type=double": {"model": double}}})
+    write(f"assets/{NS}/models/item/{name}.json", {"parent": f"{NS}:block/{name}"})
+    write(f"data/{NS}/loot_table/blocks/{name}.json", {
+        "type": "minecraft:block",
+        "pools": [{"rolls": 1.0, "bonus_rolls": 0.0, "entries": [{
+            "type": "minecraft:item", "name": f"{NS}:{name}",
+            "functions": [{"function": "minecraft:set_count", "count": 2.0, "add": False, "conditions": [{
+                "condition": "minecraft:block_state_property", "block": f"{NS}:{name}",
+                "properties": {"type": "double"}}]}, {"function": "minecraft:explosion_decay"}]}]}],
+        "random_sequence": f"{NS}:blocks/{name}"})
+    write(f"data/{NS}/recipe/{name}.json", {
+        "type": "minecraft:crafting_shaped", "category": "building",
+        "key": {"R": {"item": f"{NS}:{rock}"}}, "pattern": ["RRR"],
+        "result": {"id": f"{NS}:{name}", "count": 6}})
+    if f"{NS}:{name}" not in pickaxe["values"]:
+        pickaxe["values"].append(f"{NS}:{name}")
+    # «Андезитовый гравий» → «Андезитовая плита», «Серый гранитный гравий» → «Серая гранитная плита»
+    ru[f"block.{NS}.{name}"] = " ".join(w[:-2] + "ая" if w.endswith(("ый", "ой")) else w
+                                        for w in ru[f"block.{NS}.{rock}_gravel"].replace(" гравий", " плита").split())
+    en[f"block.{NS}.{name}"] = en[f"block.{NS}.{rock}_gravel"].replace("Gravel", "Slab")
+
+
+def tag(kind, tag_id, values):
+    ns, name = tag_id.split(":")
+    rel = f"data/{ns}/tags/{kind}/{name}.json"
+    data = read(rel, {"replace": False, "values": []})
+    for v in values:
+        if v not in data["values"]:
+            data["values"].append(v)
+    write(rel, data)
+
+
 def main():
     ru, en = read(f"assets/{NS}/lang/ru_ru.json", {}), read(f"assets/{NS}/lang/en_us.json", {})
     pickaxe = read("data/minecraft/tags/block/mineable/pickaxe.json", {"replace": False, "values": []})
@@ -87,6 +132,11 @@ def main():
         # «Андезитовый гравий» → «Андезитовый булыжник»
         ru[f"block.{NS}.{name}"] = ru[f"block.{NS}.{rock}_gravel"].replace("гравий", "булыжник")
         en[f"block.{NS}.{name}"] = en[f"block.{NS}.{rock}_gravel"].replace("Gravel", "Cobblestone")
+    for rock in ROCKS:
+        slab(rock, ru, en, pickaxe)
+    slabs = [f"{NS}:{rock}_slab" for rock in ROCKS]
+    for kind in ("block", "item"):
+        tag(kind, "minecraft:slabs", slabs)
     write("data/minecraft/tags/block/mineable/pickaxe.json", pickaxe)
     write(f"assets/{NS}/lang/ru_ru.json", ru)
     write(f"assets/{NS}/lang/en_us.json", en)

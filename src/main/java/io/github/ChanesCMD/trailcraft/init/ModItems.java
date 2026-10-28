@@ -141,6 +141,7 @@ public class ModItems {
     // === БУЛЫЖНИК ИЗ ПОРОД ===
     static {
         ModBlocks.COBBLESTONES.values().forEach(ITEMS::registerSimpleBlockItem);
+        ModBlocks.SLABS.values().forEach(ITEMS::registerSimpleBlockItem);
     }
 
     // Дёрнорез: добывает блоки вместе с дёрном

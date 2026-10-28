@@ -1048,5 +1048,17 @@
   "item.trailcraft.geological_hammer.small": "Немного",
   "item.trailcraft.geological_hammer.medium": "Средне",
   "item.trailcraft.geological_hammer.large": "Много",
-  "item.trailcraft.geological_hammer.very_large": "Очень много"
+  "item.trailcraft.geological_hammer.very_large": "Очень много",
+  "block.trailcraft.andesite_slab": "Андезитовая плита",
+  "block.trailcraft.basalt_slab": "Базальтовая плита",
+  "block.trailcraft.chalk_slab": "Меловая плита",
+  "block.trailcraft.diorite_slab": "Диоритовая плита",
+  "block.trailcraft.dolomite_slab": "Доломитовая плита",
+  "block.trailcraft.gabbro_slab": "Габбровая плита",
+  "block.trailcraft.granite_slab": "Гранитная плита",
+  "block.trailcraft.gray_granite_slab": "Серая гранитная плита",
+  "block.trailcraft.limestone_slab": "Известняковая плита",
+  "block.trailcraft.marble_slab": "Мраморная плита",
+  "block.trailcraft.sandstone_slab": "Песчаниковая плита",
+  "block.trailcraft.shale_slab": "Сланцевая плита"
 }

@@ -1,0 +1,22 @@
+{
+  "replace": true,
+  "values": [
+    "trailcraft:andesite_slab",
+    "trailcraft:basalt_slab",
+    "trailcraft:chalk_slab",
+    "trailcraft:diorite_slab",
+    "trailcraft:dolomite_slab",
+    "trailcraft:gabbro_slab",
+    "trailcraft:granite_slab",
+    "trailcraft:gray_granite_slab",
+    "trailcraft:limestone_slab",
+    "trailcraft:marble_slab",
+    "trailcraft:sandstone_slab",
+    "trailcraft:shale_slab"
+  ],
+  "remove": [
+    "minecraft:andesite_slab",
+    "minecraft:smooth_stone_slab",
+    "minecraft:stone_slab"
+  ]
+}

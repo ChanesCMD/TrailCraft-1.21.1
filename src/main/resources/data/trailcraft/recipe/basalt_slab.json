@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "R": {
+      "item": "trailcraft:basalt"
+    }
+  },
+  "pattern": [
+    "RRR"
+  ],
+  "result": {
+    "id": "trailcraft:basalt_slab",
+    "count": 6
+  }
+}

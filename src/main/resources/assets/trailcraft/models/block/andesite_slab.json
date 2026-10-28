@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "trailcraft:block/andesite",
+    "top": "trailcraft:block/andesite",
+    "side": "trailcraft:block/andesite"
+  }
+}

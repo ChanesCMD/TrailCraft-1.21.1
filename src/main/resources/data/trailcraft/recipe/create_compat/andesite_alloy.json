@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "trailcraft:andesite"
+    },
+    "N": {
+      "tag": "c:nuggets/iron"
+    }
+  },
+  "pattern": [
+    "NA",
+    "AN"
+  ],
+  "result": {
+    "id": "create:andesite_alloy",
+    "count": 1
+  }
+}

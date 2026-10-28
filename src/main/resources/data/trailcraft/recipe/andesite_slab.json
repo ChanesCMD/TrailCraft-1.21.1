@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "R": {
+      "item": "trailcraft:andesite"
+    }
+  },
+  "pattern": [
+    "RRR"
+  ],
+  "result": {
+    "id": "trailcraft:andesite_slab",
+    "count": 6
+  }
+}

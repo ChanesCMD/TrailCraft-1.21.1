@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "category": "misc",
+  "ingredient": {
+    "tag": "trailcraft:rocks"
+  },
+  "result": {
+    "id": "minecraft:smooth_stone"
+  },
+  "experience": 0.1,
+  "cookingtime": 600
+}

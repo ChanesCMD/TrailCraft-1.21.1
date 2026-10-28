@@ -1,0 +1,23 @@
+{
+  "replace": true,
+  "values": [
+    "trailcraft:andesite_cobblestone",
+    "trailcraft:basalt_cobblestone",
+    "trailcraft:chalk_cobblestone",
+    "trailcraft:diorite_cobblestone",
+    "trailcraft:dolomite_cobblestone",
+    "trailcraft:gabbro_cobblestone",
+    "trailcraft:granite_cobblestone",
+    "trailcraft:gray_granite_cobblestone",
+    "trailcraft:limestone_cobblestone",
+    "trailcraft:marble_cobblestone",
+    "trailcraft:sandstone_cobblestone",
+    "trailcraft:shale_cobblestone"
+  ],
+  "remove": [
+    "minecraft:cobbled_deepslate",
+    "minecraft:cobblestone",
+    "minecraft:infested_cobblestone",
+    "minecraft:mossy_cobblestone"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "trailcraft:block/dolomite",
+    "top": "trailcraft:block/dolomite",
+    "side": "trailcraft:block/dolomite"
+  }
+}

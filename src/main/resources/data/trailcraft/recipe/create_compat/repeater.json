@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "T": {
+      "item": "minecraft:redstone_torch"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    },
+    "S": {
+      "tag": "trailcraft:rocks"
+    }
+  },
+  "pattern": [
+    "TRT",
+    "SSS"
+  ],
+  "result": {
+    "id": "minecraft:repeater",
+    "count": 1
+  }
+}

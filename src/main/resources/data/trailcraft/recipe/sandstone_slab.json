@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "R": {
+      "item": "trailcraft:sandstone"
+    }
+  },
+  "pattern": [
+    "RRR"
+  ],
+  "result": {
+    "id": "trailcraft:sandstone_slab",
+    "count": 6
+  }
+}

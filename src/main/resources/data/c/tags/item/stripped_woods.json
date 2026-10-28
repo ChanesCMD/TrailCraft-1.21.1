@@ -1,0 +1,40 @@
+{
+  "replace": true,
+  "values": [
+    "trailcraft:stripped_oak_wood",
+    "trailcraft:stripped_birch_wood",
+    "trailcraft:stripped_acacia_wood",
+    "trailcraft:stripped_sakura_wood",
+    "trailcraft:stripped_eucalyptus_wood",
+    "trailcraft:stripped_chestnut_wood",
+    "trailcraft:stripped_thuja_wood",
+    "trailcraft:stripped_pine_wood",
+    "trailcraft:stripped_fir_wood",
+    "trailcraft:stripped_spruce_wood",
+    "trailcraft:stripped_white_poplar_wood",
+    "trailcraft:stripped_ebony_wood",
+    "trailcraft:stripped_maple_wood",
+    "trailcraft:stripped_cedar_wood",
+    "trailcraft:stripped_willow_wood",
+    "trailcraft:stripped_lilac_wood",
+    "trailcraft:stripped_palm_wood",
+    "trailcraft:stripped_ironwood_wood",
+    "trailcraft:stripped_aspen_wood",
+    "trailcraft:stripped_linden_wood",
+    "trailcraft:stripped_pussy_willow_wood",
+    "trailcraft:stripped_walnut_wood",
+    "trailcraft:stripped_alder_wood"
+  ],
+  "remove": [
+    "minecraft:stripped_acacia_wood",
+    "minecraft:stripped_birch_wood",
+    "minecraft:stripped_cherry_wood",
+    "minecraft:stripped_crimson_hyphae",
+    "minecraft:stripped_dark_oak_wood",
+    "minecraft:stripped_jungle_wood",
+    "minecraft:stripped_mangrove_wood",
+    "minecraft:stripped_oak_wood",
+    "minecraft:stripped_spruce_wood",
+    "minecraft:stripped_warped_hyphae"
+  ]
+}

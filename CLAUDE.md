@@ -315,6 +315,19 @@
 - Странствующий торговец сам не приходит (`animal/NoWanderingTrader.java`: отменяется появление с типом EVENT).
 - `/time set` меняет только время суток, день календаря остаётся (`calendar/TimeSetCommand.java` подменяет обработчик
   ванильной команды).
+- Create под мир TrailCraft — `scripts/gen_create_compat.py` (берёт jar Create и клиента из кэша Gradle):
+  общие тэги — только наши предметы (`replace` и, против тэгов NeoForge, `remove`; поэтому мод грузится после NeoForge
+  и Create — `ordering = "AFTER"`): палки `c:rods/wooden` — обработанная палка, камень `c:stones` — породы, булыжник
+  `c:cobblestones`, песок `c:sands/*`, окорённые брёвна `c:stripped_logs` / `c:stripped_woods`, шпалы
+  `create:sleepers` — плиты пород (`ModBlocks.SLABS`, пишет `gen_cobblestone.py`), брёвна и доски `minecraft:logs`,
+  `minecraft:planks` — только наши; рецепты Create по тэгам берут наше сами. `RecipePruner` убирает ванильные рецепты
+  верстака, кузнечного стола, камнерезки, печи и доменной печи (коптильня и костёр — еда — остаются) и рецепты из
+  `data/trailcraft/pruned_recipes.json`: обработка Create из ванильных предметов, которых в мире нет (`DENY`), окна
+  из ванильных досок, рецепты, вместо которых свои (`REPLACED`). Свои рецепты — `recipe/create_compat/`: блоки и
+  кусочки металлов, андезитовый сплав из нашего андезита, механический сборщик из наших верстаков, редстоуновый
+  контакт, парус из полотна, стекло из песка и гладкий камень из породы на костре, рычаг, редстоуновый факел,
+  повторитель, компаратор, громоотвод, удобрение для деревьев. Цинк Create (слиток, кусочек, дроблёная руда, блок)
+  перекрашен в гамму цинка (`assets/create/textures/`).
 - Зависимости: Create — обязательная (`neoforge.mods.toml`, версии Create, Ponder, Flywheel, Registrate — в
   `gradle.properties`); e4steam (игра через Steam) — только для запуска из среды разработки, jar берётся из релизов
   GitHub (`e4steam_version` — тег без «v»).

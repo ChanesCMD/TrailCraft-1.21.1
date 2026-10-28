@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "R": {
+      "item": "trailcraft:chalk"
+    }
+  },
+  "pattern": [
+    "RRR"
+  ],
+  "result": {
+    "id": "trailcraft:chalk_slab",
+    "count": 6
+  }
+}

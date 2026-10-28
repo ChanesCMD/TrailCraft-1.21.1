@@ -1,0 +1,9 @@
+{
+  "replace": true,
+  "values": [
+    "trailcraft:stick_processed"
+  ],
+  "remove": [
+    "minecraft:stick"
+  ]
+}

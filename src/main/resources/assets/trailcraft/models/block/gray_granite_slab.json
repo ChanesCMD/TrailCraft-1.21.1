@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "trailcraft:block/gray_granite",
+    "top": "trailcraft:block/gray_granite",
+    "side": "trailcraft:block/gray_granite"
+  }
+}

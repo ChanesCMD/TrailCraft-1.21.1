@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "trailcraft:block/gabbro",
+    "top": "trailcraft:block/gabbro",
+    "side": "trailcraft:block/gabbro"
+  }
+}

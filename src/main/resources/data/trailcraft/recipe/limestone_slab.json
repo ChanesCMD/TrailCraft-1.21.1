@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "R": {
+      "item": "trailcraft:limestone"
+    }
+  },
+  "pattern": [
+    "RRR"
+  ],
+  "result": {
+    "id": "trailcraft:limestone_slab",
+    "count": 6
+  }
+}

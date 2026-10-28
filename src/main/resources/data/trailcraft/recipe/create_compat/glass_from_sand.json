@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "category": "misc",
+  "ingredient": {
+    "tag": "c:sands"
+  },
+  "result": {
+    "id": "minecraft:glass"
+  },
+  "experience": 0.1,
+  "cookingtime": 600
+}

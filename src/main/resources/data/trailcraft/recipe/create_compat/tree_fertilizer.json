@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "c:bones"
+    },
+    {
+      "item": "trailcraft:ash"
+    },
+    {
+      "item": "trailcraft:ash"
+    },
+    {
+      "tag": "minecraft:leaves"
+    }
+  ],
+  "result": {
+    "id": "create:tree_fertilizer",
+    "count": 2
+  }
+}

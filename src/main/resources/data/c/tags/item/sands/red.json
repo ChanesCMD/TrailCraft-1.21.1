@@ -1,0 +1,9 @@
+{
+  "replace": true,
+  "values": [
+    "trailcraft:sand_red"
+  ],
+  "remove": [
+    "minecraft:red_sand"
+  ]
+}

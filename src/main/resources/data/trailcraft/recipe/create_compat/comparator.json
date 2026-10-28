@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "T": {
+      "item": "minecraft:redstone_torch"
+    },
+    "Q": {
+      "tag": "c:gems/quartz"
+    },
+    "S": {
+      "tag": "trailcraft:rocks"
+    }
+  },
+  "pattern": [
+    " T ",
+    "TQT",
+    "SSS"
+  ],
+  "result": {
+    "id": "minecraft:comparator",
+    "count": 1
+  }
+}

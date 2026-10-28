@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "trailcraft:block/dolomite_slab"
+    },
+    "type=top": {
+      "model": "trailcraft:block/dolomite_slab_top"
+    },
+    "type=double": {
+      "model": "trailcraft:block/dolomite"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "trailcraft:block/diorite_slab"
+    },
+    "type=top": {
+      "model": "trailcraft:block/diorite_slab_top"
+    },
+    "type=double": {
+      "model": "trailcraft:block/diorite"
+    }
+  }
+}

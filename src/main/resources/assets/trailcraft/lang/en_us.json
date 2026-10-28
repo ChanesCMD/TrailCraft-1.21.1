@@ -1048,5 +1048,17 @@
   "item.trailcraft.geological_hammer.small": "Small amount",
   "item.trailcraft.geological_hammer.medium": "Medium amount",
   "item.trailcraft.geological_hammer.large": "Large amount",
-  "item.trailcraft.geological_hammer.very_large": "Very large amount"
+  "item.trailcraft.geological_hammer.very_large": "Very large amount",
+  "block.trailcraft.andesite_slab": "Andesite Slab",
+  "block.trailcraft.basalt_slab": "Basalt Slab",
+  "block.trailcraft.chalk_slab": "Chalk Slab",
+  "block.trailcraft.diorite_slab": "Diorite Slab",
+  "block.trailcraft.dolomite_slab": "Dolomite Slab",
+  "block.trailcraft.gabbro_slab": "Gabbro Slab",
+  "block.trailcraft.granite_slab": "Granite Slab",
+  "block.trailcraft.gray_granite_slab": "Gray Granite Slab",
+  "block.trailcraft.limestone_slab": "Limestone Slab",
+  "block.trailcraft.marble_slab": "Marble Slab",
+  "block.trailcraft.sandstone_slab": "Sandstone Slab",
+  "block.trailcraft.shale_slab": "Shale Slab"
 }
