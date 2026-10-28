@@ -4,8 +4,8 @@
 Запуск из корня проекта:  python scripts/gen_farm_textures.py
 Нужен Pillow (pip install pillow). Скрипт перезаписывает только свои текстуры (список — в конце файла).
 
-Тяпки — рисунок автора (головка вправо, свой черенок), посевы джута — рисунок автора scripts/templates/jute_stages.png,
-пучок джута — тонкая связка, как солома (straw_bundle), верёвка — моток по прототипу автора в цветах джута.
+Тяпки — рисунок автора (головка вправо, свой черенок) с обводкой головки, как у кирок и топоров (outline()), посевы джута — рисунок автора scripts/templates/jute_stages.png,
+пучок джута — тонкая связка, как солома (straw_bundle), верёвка — рисунок автора (скрипт её не перерисовывает).
 """
 import os
 import random
@@ -143,9 +143,48 @@ def hoe(material):
     return img
 
 
+# Цвета черенка (обработанная палка) — их обводка не трогает; у кости — своя пара цветов контура
+HANDLE_COLORS = {(69, 48, 26), (107, 76, 40), (143, 106, 58), (184, 148, 90), (212, 176, 122)}
+BONE_OUTLINE = ((74, 69, 53), (125, 118, 99))
+
+
+def outline_colors(material):
+    """Контур головки: (тёмный — снизу/справа, светлее — сверху/слева), по кирке того же материала."""
+    if material == "bone":
+        return BONE_OUTLINE
+    img = load(f"item/{material}_pickaxe.png")
+    tones = sorted({img.getpixel((x, y))[:3] for y in range(16) for x in range(16) if img.getpixel((x, y))[3]}
+                   - HANDLE_COLORS, key=sum)
+    if material == "flint":
+        tones = [t for t in tones if abs(t[0] - t[2]) < 12]  # у кремнёвой кирки ещё и бечёвка
+    return tones[0], tones[2]
+
+
+def outline(img, material):
+    """Обводка головки (всё, кроме черенка) в 1 пиксель снаружи; снизу и справа — тёмная, сверху и слева — светлее."""
+    dark, light = (c + (255,) for c in outline_colors(material))
+    px = img.load()
+
+    def head(x, y):
+        return 0 <= x < 16 and 0 <= y < 16 and px[x, y][3] and px[x, y][:3] not in HANDLE_COLORS
+
+    paint_ = {}
+    for y in range(16):
+        for x in range(16):
+            if px[x, y][3]:
+                continue
+            if head(x - 1, y) or head(x, y - 1):
+                paint_[x, y] = dark
+            elif head(x + 1, y) or head(x, y + 1):
+                paint_[x, y] = light
+    for (x, y), c in paint_.items():
+        px[x, y] = c
+    return img
+
+
 def hoes():
     for m in HOE_MATERIALS:
-        save(hoe(m), f"item/{m}_hoe")
+        save(outline(hoe(m), m), f"item/{m}_hoe")
 
 
 # ============================== ГРЯДКИ ==============================
@@ -696,27 +735,6 @@ JUTE_SEEDS = [
 ]
 JUTE_SEEDS_COLORS = {"l": "#8a7a52", "m": "#5e5034", "d": "#3a3020"}
 
-# Верёвка — моток по прототипу автора; цвета пучка джута (JUTE_BUNDLE_COLORS): вдоль пряди скрутка — два светлых
-# пикселя и один темнее, справа снизу всё на тон темнее; o — между витками, b — внешний контур
-ROPE = [
-    "................",
-    "................",
-    "......bbbbbb....",
-    "....bbmllllmb...",
-    "...bmlooooolb...",
-    "..bmlollmllomb..",
-    "..bmolmooododb..",
-    ".blollollomomb..",
-    ".blolomoodmomb..",
-    ".blololmdmodb...",
-    ".bmomloooommb...",
-    ".blloomdmmdb.mm.",
-    "..bldmooooommdb.",
-    "...bbdmmdmmdbb..",
-    ".....bbbbbbb....",
-    "................",
-]
-
 
 def berry_item(kind):
     return paint(blank(), ITEM_BERRIES[kind], {k: hx(v) for k, v in ITEM_BERRY_COLORS[kind].items()})
@@ -727,7 +745,7 @@ def items():
         save(berry_item(kind), f"item/{kind}")
     save(paint(blank(), JUTE_BUNDLE, {k: hx(v) for k, v in JUTE_BUNDLE_COLORS.items()}), "item/jute")
     save(paint(blank(), JUTE_SEEDS, {k: hx(v) for k, v in JUTE_SEEDS_COLORS.items()}), "item/jute_seeds")
-    save(paint(blank(), ROPE, {k: hx(v) for k, v in JUTE_BUNDLE_COLORS.items()}), "item/rope")
+    # верёвка — рисунок автора (textures/item/rope.png), скрипт её не перерисовывает
 
 
 BERRY_BUSHES = ["currant", "cloudberry", "gooseberry", "blackberry"]

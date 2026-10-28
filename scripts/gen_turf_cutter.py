@@ -29,6 +29,14 @@ HEAD_TOP, SHIFT = 3, 17
 HEAD_COLORS = {"A": (46, 48, 52, 255), "B": (201, 205, 209, 255), "C": (111, 116, 122, 255), "D": (158, 163, 168, 255)}
 # Строки 0..CUT длинной текстуры — наконечник копья с втулкой: их заменяет лопатка
 CUT = 9
+# Торец древка (нижний левый угол) — как лопатка: блик сверху слева, металл, контур снизу справа
+BUTT = [
+    "..BC",
+    ".BDCA",
+    ".CCAA",
+    "..AA",
+]
+BUTT_TOP = 28
 
 
 def lum(c):
@@ -43,6 +51,10 @@ def texture():
     for y in range(CUT + 1):
         for x in range(32):
             img.putpixel((x, y), (0, 0, 0, 0))
+    for dy, row in enumerate(BUTT):
+        for x, ch in enumerate(row):
+            if ch != ".":
+                img.putpixel((x, BUTT_TOP + dy), HEAD_COLORS[ch])
     for dy, row in enumerate(HEAD):
         for x, ch in enumerate(row):
             if ch != ".":
