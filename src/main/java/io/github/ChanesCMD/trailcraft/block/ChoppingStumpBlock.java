@@ -27,11 +27,13 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 /**
  * Пень для рубки. На него ставят бревно (обычное или обтёсанное) и бьют топором:
- * бревно раскалывается на 2 тонких бревна той же породы.
+ * бревно раскалывается на {@link #THIN_LOGS} тонких бревна той же породы.
  */
 @EventBusSubscriber(modid = TrailCraft.MODID)
 public class ChoppingStumpBlock extends Block {
     public static final MapCodec<ChoppingStumpBlock> CODEC = simpleCodec(ChoppingStumpBlock::new);
+    /** Сколько тонких брёвен даёт одно бревно. */
+    public static final int THIN_LOGS = 4;
     /** Широкое основание 3 пикселя и столб 14x14 до самого верха, чтобы бревно лежало вплотную. */
     private static final VoxelShape SHAPE = Shapes.or(Block.box(0, 0, 0, 16, 3, 16), Block.box(1, 3, 1, 15, 16, 15));
 
@@ -83,7 +85,7 @@ public class ChoppingStumpBlock extends Block {
         level.levelEvent(2001, pos, Block.getId(log)); // частицы и звук разрушения
         level.removeBlock(pos, false);
         level.playSound(null, pos, SoundEvents.AXE_STRIP, SoundSource.BLOCKS, 1.0f, 0.8f);
-        Block.popResource(level, pos, new ItemStack(set.thinLog.get(), 2));
+        Block.popResource(level, pos, new ItemStack(set.thinLog.get(), THIN_LOGS));
         tool.hurtAndBreak(1, event.getEntity(), EquipmentSlot.MAINHAND);
     }
 }

@@ -829,7 +829,7 @@
   "jei.trailcraft.clay_mold": "ПКМ слепком — выбрать форму",
   "jei.trailcraft.straw": "Срезать траву ножом, серпом или косой",
   "jei.trailcraft.leaves_branch": "С листвы падает ветка: 5 %, ножом 15 %",
-  "jei.trailcraft.chopping": "Бревно на пне — удар топором: 2 тонких бревна",
+  "jei.trailcraft.chopping": "Бревно на пне — удар топором: %s тонких бревна",
   "jei.trailcraft.campfire": "Бросить на землю, зажать ПКМ огнивом",
   "item.trailcraft.oak_small_board": "Малая доска дуба",
   "block.trailcraft.oak_crafting_table": "Верстак из дуба",

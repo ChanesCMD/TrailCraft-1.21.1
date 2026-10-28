@@ -1,6 +1,7 @@
 package io.github.ChanesCMD.trailcraft.compat.jei;
 
 import io.github.ChanesCMD.trailcraft.TrailCraft;
+import io.github.ChanesCMD.trailcraft.block.ChoppingStumpBlock;
 import io.github.ChanesCMD.trailcraft.init.ModBlocks;
 import io.github.ChanesCMD.trailcraft.init.ModItems;
 import io.github.ChanesCMD.trailcraft.init.ModSmelting;
@@ -124,8 +125,8 @@ public class TrailJeiPlugin implements IModPlugin {
         List<ItemStack> thinLogs = items(id -> id.getNamespace().equals(TrailCraft.MODID) && id.getPath().startsWith("thin_")
                 && id.getPath().endsWith("_log"));
         recipes.add(new TrailJeiRecipe(List.of(logs, List.of(new ItemStack(ModBlocks.CHOPPING_STUMP.get())),
-                tag(ItemTags.AXES)), thinLogs.isEmpty() ? ItemStack.EMPTY : thinLogs.get(0).copyWithCount(2),
-                Component.translatable("jei.trailcraft.chopping")));
+                tag(ItemTags.AXES)), thinLogs.isEmpty() ? ItemStack.EMPTY : thinLogs.get(0).copyWithCount(ChoppingStumpBlock.THIN_LOGS),
+                Component.translatable("jei.trailcraft.chopping", ChoppingStumpBlock.THIN_LOGS)));
         recipes.add(new TrailJeiRecipe(List.of(thinLogs, List.of(branch.copyWithCount(4)),
                 List.of(new ItemStack(ModItems.FIRESTARTER.get()))), new ItemStack(Items.CAMPFIRE),
                 Component.translatable("jei.trailcraft.campfire")));

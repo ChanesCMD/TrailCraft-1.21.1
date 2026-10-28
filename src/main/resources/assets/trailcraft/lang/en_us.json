@@ -829,7 +829,7 @@
   "jei.trailcraft.clay_mold": "Right-click the mold to choose a shape",
   "jei.trailcraft.straw": "Cut grass with a knife, sickle or scythe",
   "jei.trailcraft.leaves_branch": "Leaves drop a branch: 5 %, with a knife 15 %",
-  "jei.trailcraft.chopping": "Log on a chopping stump, hit with an axe: 2 thin logs",
+  "jei.trailcraft.chopping": "Log on a chopping stump, hit with an axe: %s thin logs",
   "jei.trailcraft.campfire": "Drop on the ground, hold right-click with a firestarter",
   "item.trailcraft.oak_small_board": "Small Oak Board",
   "block.trailcraft.oak_crafting_table": "Oak Crafting Table",

@@ -238,7 +238,7 @@ public class ModBlocks {
     public static final DeferredBlock<Block> FALLEN_BRANCH = BLOCKS.registerBlock("fallen_branch", PebbleBlock::new,
             BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instabreak().sound(SoundType.WOOD).noCollission().noOcclusion().ignitedByLava().pushReaction(PushReaction.DESTROY));
 
-    /** Пень для рубки: бревно на нём раскалывается топором на 2 тонких. */
+    /** Пень для рубки: бревно на нём раскалывается топором на 4 тонких ({@link ChoppingStumpBlock#THIN_LOGS}). */
     public static final DeferredBlock<Block> CHOPPING_STUMP = BLOCKS.registerBlock("chopping_stump", ChoppingStumpBlock::new,
             BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(2.0f).sound(SoundType.WOOD).ignitedByLava());
 
