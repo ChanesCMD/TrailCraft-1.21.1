@@ -303,8 +303,11 @@ def sheep():
     return dict(ru="Овца", en="Sheep", gen="овцы", lie=7, parts=[
         part("body", (0, 13, 0), [box(-4, -3, -7, 8, 6, 14, P(0xD8C8B0, m=0.2))]),
         part("wool", (0, 13, 0), [box(-5, -4, -8, 10, 8, 16, wool)], "wool"),
+        # после стрижки — короткая шерсть (TrailAnimalModel: обе шерсти красятся в цвет овцы)
+        part("short_wool", (0, 13, 0), [box(-4.5, -3.5, -7.5, 9, 7, 15, P(0xE2E0D8, m=0.3))], "short_wool"),
         part("head", (0, 11, -7), [box(-2.5, -3, -5, 5, 5, 6, P(0xDCCDB4, m=0.15, feyes=(1, 0, 0x3A2A1C, "in")))], "head"),
-        part("head_wool", (0, 0, 0), [box(-3, -4, -3.5, 6, 2, 4, P(0xE8E6DE, m=0.4))], "wool", parent="head"),
+        # шерсть на темени и затылке
+        part("head_wool", (0, 0, 0), [box(-3, -4, -3.5, 6, 3, 5, P(0xE8E6DE, m=0.4))], "wool", parent="head"),
         part("nose", (0, 0, 0), [box(-1.5, -0.5, -5.5, 3, 2, 1, P(0xC8B49A, m=0.1, px=[("front", 1, 0, 0x6A5444)]))], parent="head"),
         *ears("head", -2, 3, -2, 1, 3, 2, P(0xDCCDB4, m=0.1), rotation=(0, 0, -1.2)),
         part("tail", (0, 10, 8), [box(-1, 0, -1, 2, 4, 2, wool)], "tail", rotation=(0.3, 0, 0)),

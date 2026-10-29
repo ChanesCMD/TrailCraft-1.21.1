@@ -14,6 +14,7 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
@@ -35,7 +36,7 @@ import java.util.Map;
  * Модель животного из assets/trailcraft/geo/<id>.json (пишет scripts/gen_animals.py вместе с текстурой): коробки
  * частей, у части — роль, по ней она двигается. Роли: head (смотрит), leg_fr/leg_fl/leg_br/leg_bl (шаг четвероногого),
  * leg_r/leg_l (шаг птицы), wing_r/wing_l (взмах), tail (покачивается, у волка — угол хвоста), wool (видна, пока овца
- * не острижена), horn_r/horn_l (у козы, пока рог цел). Лёжа (лиса спит или сидит, волк сидит) модель опускается
+ * не острижена), short_wool (видна у остриженной; обе шерсти красятся в цвет овцы), horn_r/horn_l (у козы, пока рог цел). Лёжа (лиса спит или сидит, волк сидит) модель опускается
  * на lie пикселей, ноги подогнуты.
  */
 public class TrailAnimalModel<T extends LivingEntity> extends HierarchicalModel<T> {
@@ -44,6 +45,8 @@ public class TrailAnimalModel<T extends LivingEntity> extends HierarchicalModel<
     private final float lie;
     /** Взмах крыльев (у птиц — как у курицы и попугая), считает рендер. */
     float flap;
+    /** Цвет шерсти овцы (ARGB), -1 — не овца. */
+    private int woolColor = -1;
 
     public TrailAnimalModel(ModelPart root, JsonObject geo) {
         this.root = root;
@@ -149,8 +152,11 @@ public class TrailAnimalModel<T extends LivingEntity> extends HierarchicalModel<
             role("leg_r").forEach(part -> part.xRot = 1.2f);
             role("leg_l").forEach(part -> part.xRot = 1.2f);
         }
+        woolColor = -1;
         if (entity instanceof Sheep sheep) {
             role("wool").forEach(part -> part.visible = !sheep.isSheared());
+            role("short_wool").forEach(part -> part.visible = sheep.isSheared());
+            woolColor = Sheep.getColor(sheep.getColor());
         }
         if (entity instanceof Goat goat) {
             role("horn_l").forEach(part -> part.visible = goat.hasLeftHorn());
@@ -169,14 +175,30 @@ public class TrailAnimalModel<T extends LivingEntity> extends HierarchicalModel<
     @Override
     public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int light, int overlay, int color) {
         if (!young) {
-            super.renderToBuffer(poseStack, buffer, light, overlay, color);
+            draw(poseStack, buffer, light, overlay, color);
             return;
         }
         poseStack.pushPose();
         poseStack.translate(0, 1.5 * 0.5, 0);
         poseStack.scale(0.5f, 0.5f, 0.5f);
-        super.renderToBuffer(poseStack, buffer, light, overlay, color);
+        draw(poseStack, buffer, light, overlay, color);
         poseStack.popPose();
+    }
+
+    /** Шерсть овцы — вторым проходом, в цвете овцы (как ванильный слой шерсти); остальное — как есть. */
+    private void draw(PoseStack poseStack, VertexConsumer buffer, int light, int overlay, int color) {
+        List<ModelPart> wool = new ArrayList<>(role("wool"));
+        wool.addAll(role("short_wool"));
+        if (woolColor == -1 || wool.isEmpty()) {
+            super.renderToBuffer(poseStack, buffer, light, overlay, color);
+            return;
+        }
+        wool.forEach(part -> part.skipDraw = true);
+        super.renderToBuffer(poseStack, buffer, light, overlay, color);
+        root.getAllParts().forEach(part -> part.skipDraw = true);
+        wool.forEach(part -> part.skipDraw = false);
+        super.renderToBuffer(poseStack, buffer, light, overlay, FastColor.ARGB32.multiply(color, woolColor));
+        root.getAllParts().forEach(part -> part.skipDraw = false);
     }
 
     /** Птицы машут крыльями, как курица (Chicken.flap) и попугай (FlyingBird.flap). */
