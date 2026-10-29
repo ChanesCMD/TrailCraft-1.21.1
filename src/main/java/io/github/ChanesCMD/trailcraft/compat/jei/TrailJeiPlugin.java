@@ -8,6 +8,7 @@ import io.github.ChanesCMD.trailcraft.client.gui.TrailInventoryScreen;
 import io.github.ChanesCMD.trailcraft.init.ModBlocks;
 import io.github.ChanesCMD.trailcraft.init.ModItems;
 import io.github.ChanesCMD.trailcraft.init.ModSmelting;
+import io.github.ChanesCMD.trailcraft.init.ModTags;
 import io.github.ChanesCMD.trailcraft.init.ModWood;
 import io.github.ChanesCMD.trailcraft.item.BranchStickItem;
 import io.github.ChanesCMD.trailcraft.item.ClothBlankItem;
@@ -18,6 +19,9 @@ import io.github.ChanesCMD.trailcraft.smelting.StrawEvents;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
+import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.recipe.IRecipeManager;
+import mezz.jei.api.runtime.IJeiRuntime;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
@@ -98,6 +102,53 @@ public class TrailJeiPlugin implements IModPlugin {
                 registration.addRecipeCatalyst(new ItemStack(set.craftingTable.get()), RecipeTypes.CRAFTING);
             }
         }
+    }
+
+    /**
+     * Убирает из JEI то, чего в мире TrailCraft нет: печь, коптильню, доменную печь, варку зелий (и автоматическую варку
+     * Create в смесителе), компостер, топливо; ванильное на наковальне и точиле (Create остаётся); верстаки из
+     * автоматического сжатия Create; ванильные костры, сёдла, конскую броню, ванильные траву и семена.
+     */
+    @Override
+    public void onRuntimeAvailable(IJeiRuntime runtime) {
+        IRecipeManager recipes = runtime.getRecipeManager();
+        for (RecipeType<?> type : List.of(RecipeTypes.SMELTING, RecipeTypes.SMOKING, RecipeTypes.BLASTING,
+                RecipeTypes.BREWING, RecipeTypes.COMPOSTING, RecipeTypes.FUELING)) {
+            recipes.hideRecipeCategory(type);
+        }
+        recipes.getRecipeType(ResourceLocation.fromNamespaceAndPath("create", "automatic_brewing"))
+                .ifPresent(recipes::hideRecipeCategory);
+        recipes.hideRecipes(RecipeTypes.ANVIL, recipes.createRecipeLookup(RecipeTypes.ANVIL).get()
+                .filter(r -> vanilla(r.getLeftInputs())).toList());
+        recipes.hideRecipes(RecipeTypes.GRINDSTONE, recipes.createRecipeLookup(RecipeTypes.GRINDSTONE).get()
+                .filter(r -> vanilla(r.getTopInputs())).toList());
+        recipes.getRecipeType(ResourceLocation.fromNamespaceAndPath("create", "packing"))
+                .ifPresent(type -> hideWorkbenches(recipes, type));
+        List<ItemStack> hidden = new ArrayList<>();
+        for (Item item : List.of(Items.CAMPFIRE, Items.SOUL_CAMPFIRE, Items.SADDLE, Items.LEATHER_HORSE_ARMOR,
+                Items.IRON_HORSE_ARMOR, Items.GOLDEN_HORSE_ARMOR, Items.DIAMOND_HORSE_ARMOR, Items.SHORT_GRASS,
+                Items.TALL_GRASS, Items.FERN, Items.LARGE_FERN, Items.WHEAT_SEEDS, Items.BEETROOT_SEEDS)) {
+            hidden.add(new ItemStack(item));
+        }
+        runtime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, hidden);
+    }
+
+    /** Все предметы — ванильные (minecraft). */
+    private static boolean vanilla(List<ItemStack> stacks) {
+        return !stacks.isEmpty() && stacks.stream().allMatch(s -> BuiltInRegistries.ITEM.getKey(s.getItem()).getNamespace().equals("minecraft"));
+    }
+
+    /** Рецепты автоматического сжатия Create, которые дают верстак (4 малые доски — верстак). */
+    private static <T> void hideWorkbenches(IRecipeManager recipes, RecipeType<T> type) {
+        var access = net.minecraft.client.Minecraft.getInstance().level == null ? null
+                : net.minecraft.client.Minecraft.getInstance().level.registryAccess();
+        if (access == null) return;
+        List<T> found = recipes.createRecipeLookup(type).get().filter(r -> {
+            Object recipe = r instanceof net.minecraft.world.item.crafting.RecipeHolder<?> holder ? holder.value() : r;
+            return recipe instanceof net.minecraft.world.item.crafting.Recipe<?> rec
+                    && rec.getResultItem(access).is(ModTags.WORKBENCHES);
+        }).toList();
+        recipes.hideRecipes(type, found);
     }
 
     @Override

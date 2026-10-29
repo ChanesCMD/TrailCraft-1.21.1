@@ -15,7 +15,7 @@
 пальмовом берегу; какао — на стволах пальм и эбеновых деревьев (CocoaPodFeature). Семена пшеницы падают с травы
 (вместо ванильных), реже — семена сахарной свёклы.
 Рецепты: на костре водоросль — сушёная водоросль, кактус — свой зелёный краситель, тесто Create — хлеб; 9 сушёных
-водорослей — блок; тростник и свёкла — сахар; зелёный краситель и пшеничная мука Create — слизь.
+водорослей — блок; тростник и свёкла — сахар; зелёный краситель — из кактуса.
 """
 import colorsys
 import json
@@ -260,7 +260,6 @@ def recipes():
     shapeless("dried_seaweed", [{"item": f"{NS}:dried_seaweed_block"}], f"{NS}:dried_seaweed", 9)
     shapeless("sugar_from_cane", [{"item": f"{NS}:sugar_cane"}], "minecraft:sugar")
     shapeless("sugar_from_beet", [{"item": f"{NS}:sugar_beet"}], "minecraft:sugar")
-    shapeless("slime_ball", [{"item": f"{NS}:green_dye"}, {"item": "create:wheat_flour"}], "minecraft:slime_ball")
     shapeless("super_glue_from_resin", [{"tag": "c:plates/iron"}, {"tag": "c:nuggets/iron"}, {"item": f"{NS}:resin"}],
               "create:super_glue")
 

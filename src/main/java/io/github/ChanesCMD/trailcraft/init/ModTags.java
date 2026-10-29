@@ -16,6 +16,9 @@ public class ModTags {
     public static final TagKey<Block> GRASS_PLANTABLE = TagKey.create(Registries.BLOCK,
             ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "grass_plantable"));
 
+    /** Верстаки пород (scripts/gen_workbench.py). */
+    public static final TagKey<Item> WORKBENCHES = TagKey.create(Registries.ITEM,
+            ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "workbenches"));
     /** Тонкие брёвна: одно такое бревно и 4 ветки, разожжённые огнивом, дают костёр. */
     public static final TagKey<Item> THIN_LOGS = TagKey.create(Registries.ITEM,
             ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "thin_logs"));

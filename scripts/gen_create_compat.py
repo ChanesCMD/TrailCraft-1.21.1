@@ -72,6 +72,12 @@ REPLACED = [
     "create:sequenced_assembly/sturdy_sheet",
     # блок киновари (c:ores/quicksilver) — свой рецепт, с редстоуном
     "create:crushing/quicksilver_ore",
+    # убраны по просьбе автора: ванильные трава и семена, сёдла и конская броня, кварц из диорита, блок рудного
+    # цинка, бумага из тростника
+    "create:milling/short_grass", "create:milling/tall_grass", "create:milling/fern", "create:milling/large_fern",
+    "create:milling/beetroot", "create:milling/saddle", "create:crushing/leather_horse_armor",
+    "create:crushing/iron_horse_armor", "create:crushing/golden_horse_armor", "create:crushing/diorite_recycling",
+    "create:crafting/materials/raw_zinc_block", "create:crafting/materials/raw_zinc", "create:pressing/sugar_cane",
 ] + [f"create:crushing/raw_{m}" for m in ("copper", "iron", "gold", "zinc", "tin", "lead", "nickel", "aluminum")]
 # Дробление наших кусков руды и блоков руды (с шёлковым касанием): руда → дроблёная руда Create (+ побочное с шансом);
 # рецепты Create по тэгам c:raw_materials/* заменены этими, чтобы у куска был один рецепт
@@ -92,7 +98,6 @@ SUBSTITUTED = {
     "create:crafting/kinetics/hose_pulley": {"minecraft:dried_kelp_block": f"{NS}:dried_seaweed_block"},
     "create:milling/wheat": {"minecraft:wheat": f"{NS}:wheat", "minecraft:wheat_seeds": f"{NS}:wheat_seeds"},
     "create:milling/sugar_cane": {"minecraft:sugar_cane": f"{NS}:sugar_cane"},
-    "create:pressing/sugar_cane": {"minecraft:sugar_cane": f"{NS}:sugar_cane"},
     "create:mixing/chocolate": {"minecraft:cocoa_beans": f"{NS}:cocoa_beans"},
     "create:milling/cocoa_beans": {"minecraft:cocoa_beans": f"{NS}:cocoa_beans"},
     # хронометр вместо ванильных часов (их рецепта нет)
