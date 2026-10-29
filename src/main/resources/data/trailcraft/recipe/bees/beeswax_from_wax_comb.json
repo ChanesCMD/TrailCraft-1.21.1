@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "category": "misc",
+  "ingredient": {
+    "item": "trailcraft:wax_comb"
+  },
+  "result": {
+    "id": "trailcraft:beeswax",
+    "count": 2
+  },
+  "experience": 0.1,
+  "cookingtime": 400
+}

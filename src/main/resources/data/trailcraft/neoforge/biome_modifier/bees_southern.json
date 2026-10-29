@@ -1,0 +1,18 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "trailcraft:zheltozem_plains",
+    "trailcraft:savanna",
+    "trailcraft:desert",
+    "trailcraft:red_desert",
+    "trailcraft:eucalyptus_forest",
+    "trailcraft:ebony_forest",
+    "trailcraft:ironwood_forest",
+    "trailcraft:lilac_grove",
+    "trailcraft:sakura_grove"
+  ],
+  "features": [
+    "trailcraft:southern_hive"
+  ],
+  "step": "vegetal_decoration"
+}

@@ -1,0 +1,18 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "trailcraft:wax_comb"
+    }
+  ],
+  "results": [
+    {
+      "id": "trailcraft:beeswax",
+      "count": 3
+    },
+    {
+      "id": "create:honey",
+      "amount": 100
+    }
+  ]
+}

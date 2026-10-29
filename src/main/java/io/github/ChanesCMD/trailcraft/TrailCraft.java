@@ -22,6 +22,7 @@ import io.github.ChanesCMD.trailcraft.init.ModMenus;
 import io.github.ChanesCMD.trailcraft.init.ModOres;
 import io.github.ChanesCMD.trailcraft.init.ModParticles;
 import io.github.ChanesCMD.trailcraft.init.ModSmelting;
+import io.github.ChanesCMD.trailcraft.init.ModBees;
 import io.github.ChanesCMD.trailcraft.init.ModTools;
 import io.github.ChanesCMD.trailcraft.init.ModWood;
 import io.github.ChanesCMD.trailcraft.loot.ReplaceItemModifier;
@@ -44,6 +45,8 @@ public class TrailCraft {
         ModSmelting.init();
         // Животные (animal/Species) регистрируются в статическом блоке ModAnimals
         ModAnimals.init();
+        // Пчёлы, ульи и пасека (пакет bee)
+        ModBees.init();
 
         // Регистрируем блоки и предметы
         ModBlocks.BLOCKS.register(modEventBus);

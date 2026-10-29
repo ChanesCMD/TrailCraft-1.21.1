@@ -51,6 +51,9 @@ public final class ModBlockEntities {
             // топливо в угольную горелку — воронками и желобами Create
             event.registerBlockEntity(net.neoforged.neoforge.capabilities.Capabilities.ItemHandler.BLOCK, COAL_BURNER.get(),
                     (burner, side) -> burner.fuelSlot);
+            // пасека: пчёл кладут, соты и новых пчёл забирают воронками
+            event.registerBlockEntity(net.neoforged.neoforge.capabilities.Capabilities.ItemHandler.BLOCK, ModBees.APIARY_ENTITY.get(),
+                    (apiary, side) -> apiary.automation);
         }
     }
 

@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:forest_bee",
+    "trailcraft:meadow_bee",
+    "trailcraft:steppe_bee",
+    "trailcraft:southern_bee",
+    "trailcraft:marsh_bee",
+    "trailcraft:honey_bee",
+    "trailcraft:wax_bee",
+    "trailcraft:resin_bee",
+    "trailcraft:sugar_bee",
+    "trailcraft:industrious_bee"
+  ]
+}

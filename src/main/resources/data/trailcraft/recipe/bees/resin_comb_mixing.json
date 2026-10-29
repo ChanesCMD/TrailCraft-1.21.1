@@ -1,0 +1,14 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "trailcraft:resin_comb"
+    }
+  ],
+  "results": [
+    {
+      "id": "trailcraft:resin",
+      "count": 3
+    }
+  ]
+}

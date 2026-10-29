@@ -1,0 +1,16 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "trailcraft:burozem_taiga",
+    "trailcraft:pine_forest",
+    "trailcraft:birch_forest",
+    "trailcraft:burozem_forest",
+    "trailcraft:maple_forest",
+    "trailcraft:alder_forest",
+    "trailcraft:thuja_forest"
+  ],
+  "features": [
+    "trailcraft:forest_hive"
+  ],
+  "step": "vegetal_decoration"
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "trailcraft:resin_comb"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:resin",
+    "count": 2
+  }
+}

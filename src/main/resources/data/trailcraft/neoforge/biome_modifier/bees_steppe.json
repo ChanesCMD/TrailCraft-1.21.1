@@ -1,0 +1,12 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "trailcraft:chernozem_plains",
+    "trailcraft:chernozem_forest_steppe",
+    "trailcraft:walnut_grove"
+  ],
+  "features": [
+    "trailcraft:steppe_hive"
+  ],
+  "step": "vegetal_decoration"
+}

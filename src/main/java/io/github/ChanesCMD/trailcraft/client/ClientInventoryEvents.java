@@ -53,6 +53,7 @@ public class ClientInventoryEvents {
             event.register(ModMenus.INVENTORY.get(), TrailInventoryScreen::new);
             event.register(ModSmelting.JUG_MENU.get(), JugScreen::new);
             event.register(ModSmelting.BLOOMERY_MENU.get(), BloomeryScreen::new);
+            event.register(io.github.ChanesCMD.trailcraft.init.ModBees.APIARY_MENU.get(), io.github.ChanesCMD.trailcraft.client.gui.ApiaryScreen::new);
         }
     }
 }

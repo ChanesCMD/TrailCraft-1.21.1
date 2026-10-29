@@ -28,6 +28,8 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import io.github.ChanesCMD.trailcraft.bee.BeeSpecies;
+import io.github.ChanesCMD.trailcraft.init.ModBees;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -47,6 +49,7 @@ import java.util.function.Predicate;
 public class TrailJeiPlugin implements IModPlugin {
     static final RecipeType<TrailJeiRecipe> BLOOMERY = RecipeType.create(TrailCraft.MODID, "small_bloomery", TrailJeiRecipe.class);
     static final RecipeType<TrailJeiRecipe> HANDWORK = RecipeType.create(TrailCraft.MODID, "handwork", TrailJeiRecipe.class);
+    static final RecipeType<TrailJeiRecipe> APIARY = RecipeType.create(TrailCraft.MODID, "apiary", TrailJeiRecipe.class);
 
     @Override
     public ResourceLocation getPluginUid() {
@@ -77,13 +80,16 @@ public class TrailJeiPlugin implements IModPlugin {
                 new TrailJeiCategory(gui, BLOOMERY, Component.translatable("jei.trailcraft.small_bloomery"),
                         new ItemStack(ModSmelting.SMALL_BLOOMERY_ITEM.get())),
                 new TrailJeiCategory(gui, HANDWORK, Component.translatable("jei.trailcraft.handwork"),
-                        new ItemStack(ModItems.STICK_PROCESSED.get())));
+                        new ItemStack(ModItems.STICK_PROCESSED.get())),
+                new TrailJeiCategory(gui, APIARY, Component.translatable("block.trailcraft.apiary"),
+                        new ItemStack(ModBees.APIARY_ITEM.get())));
     }
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(new ItemStack(ModSmelting.SMALL_BLOOMERY_ITEM.get()), BLOOMERY);
         registration.addRecipeCatalyst(new ItemStack(ModSmelting.JUG.get()), BLOOMERY);
+        registration.addRecipeCatalyst(new ItemStack(ModBees.APIARY_ITEM.get()), APIARY);
         // свой костёр жарит то же, что ванильный
         registration.addRecipeCatalyst(new ItemStack(ModItems.CAMPFIRE.get()), RecipeTypes.CAMPFIRE_COOKING);
         // верстаки пород — то же окно крафта, что у ванильного
@@ -98,6 +104,27 @@ public class TrailJeiPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         registration.addRecipes(BLOOMERY, bloomery());
         registration.addRecipes(HANDWORK, handwork());
+        registration.addRecipes(APIARY, apiary());
+    }
+
+    /** Пасека: соты каждого вида, виды, которые выводятся из двух других, и дикие ульи. */
+    private static List<TrailJeiRecipe> apiary() {
+        List<TrailJeiRecipe> recipes = new ArrayList<>();
+        for (BeeSpecies species : BeeSpecies.values()) {
+            ItemStack bee = new ItemStack(ModBees.BEES.get(species).get());
+            ItemStack comb = stack(TrailCraft.MODID + ":" + species.comb).copyWithCount(species.combs);
+            recipes.add(new TrailJeiRecipe(List.of(List.of(bee)), comb,
+                    Component.translatable("jei.trailcraft.apiary.comb", species.cycle / 20)));
+            if (species.wild()) {
+                recipes.add(new TrailJeiRecipe(List.of(List.of(new ItemStack(ModBees.HIVE_ITEMS.get(species).get()))), bee,
+                        Component.translatable("tooltip.trailcraft.bee.wild." + species.id)));
+            } else {
+                recipes.add(new TrailJeiRecipe(List.of(List.of(new ItemStack(ModBees.BEES.get(species.parentA).get())),
+                        List.of(new ItemStack(ModBees.BEES.get(species.parentB).get()))), bee,
+                        Component.translatable("jei.trailcraft.apiary.mutation", Math.round(BeeSpecies.MUTATION_CHANCE * 100))));
+            }
+        }
+        return recipes;
     }
 
     private static List<TrailJeiRecipe> bloomery() {

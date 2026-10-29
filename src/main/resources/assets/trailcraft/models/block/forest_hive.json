@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "trailcraft:block/forest_hive_top",
+    "side": "trailcraft:block/forest_hive_front",
+    "bottom": "trailcraft:block/forest_hive_bottom"
+  }
+}

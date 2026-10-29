@@ -1,0 +1,18 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "trailcraft:sugar_comb"
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:sugar",
+      "count": 3
+    },
+    {
+      "id": "create:honey",
+      "amount": 100
+    }
+  ]
+}

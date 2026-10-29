@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "tag": "trailcraft:small_boards"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "C": {
+      "tag": "trailcraft:combs"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "PCP",
+    "PPP"
+  ],
+  "result": {
+    "id": "trailcraft:apiary",
+    "count": 1
+  }
+}
