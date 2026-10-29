@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "W": {
+      "tag": "minecraft:wool"
+    },
+    "L": {
+      "tag": "c:leathers"
+    }
+  },
+  "pattern": [
+    "L L",
+    "LWL",
+    "LWL"
+  ],
+  "result": {
+    "id": "trailcraft:sheepskin_coat",
+    "count": 1
+  }
+}

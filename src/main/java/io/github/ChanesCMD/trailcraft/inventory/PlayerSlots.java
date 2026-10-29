@@ -1,6 +1,7 @@
 package io.github.ChanesCMD.trailcraft.inventory;
 
 import io.github.ChanesCMD.trailcraft.TrailCraft;
+import io.github.ChanesCMD.trailcraft.item.WarmClothingItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -39,7 +40,9 @@ public class PlayerSlots extends ItemStackHandler {
 
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
-        if (slot >= WARMTH && slot < ACCESSORIES) return stack.is(WARM_CLOTHING); // TODO: уточнить, делить ли тёплые вещи по типам
+        // тёплая одежда — каждая в свой слот (шапка, куртка, штаны, обувь); чужая из тэга — в любой
+        if (slot >= WARMTH && slot < ACCESSORIES) return stack.getItem() instanceof WarmClothingItem w
+                ? w.part() == slot - WARMTH : stack.is(WARM_CLOTHING);
         if (slot >= ACCESSORIES && slot < WALLET) return stack.is(ACCESSORY_ITEMS);
         if (slot == WALLET) return stack.is(WALLETS);
         if (slot == BELT) return stack.is(BELTS);

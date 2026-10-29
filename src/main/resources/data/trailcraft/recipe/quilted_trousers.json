@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "W": {
+      "tag": "minecraft:wool"
+    },
+    "C": {
+      "item": "trailcraft:cloth"
+    }
+  },
+  "pattern": [
+    "CWC",
+    "C C",
+    "C C"
+  ],
+  "result": {
+    "id": "trailcraft:quilted_trousers",
+    "count": 1
+  }
+}

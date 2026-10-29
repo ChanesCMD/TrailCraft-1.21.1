@@ -1281,5 +1281,13 @@
   "block.trailcraft.reinforced_portable_fluid_interface": "Reinforced Portable Fluid Interface",
   "block.trailcraft.reinforced_fluid_tank": "Reinforced Fluid Tank",
   "block.trailcraft.reinforced_glass_fluid_pipe": "Reinforced Glass Fluid Pipe",
-  "block.trailcraft.reinforced_encased_fluid_pipe": "Reinforced Encased Fluid Pipe"
+  "block.trailcraft.reinforced_encased_fluid_pipe": "Reinforced Encased Fluid Pipe",
+  "item.trailcraft.fur_hat": "Fur Hat",
+  "item.trailcraft.sheepskin_coat": "Sheepskin Coat",
+  "item.trailcraft.quilted_trousers": "Quilted Trousers",
+  "item.trailcraft.felt_boots": "Felt Boots",
+  "tooltip.trailcraft.warm_clothing": "Warmth: +%s °C",
+  "tooltip.trailcraft.crop_temperature": "Grows at %s…%s °C",
+  "gui.trailcraft.hud.temperature": "%s °C",
+  "commands.trailcraft.calendar.temperature": "Temperature here: %s °C (daily mean %s °C)"
 }

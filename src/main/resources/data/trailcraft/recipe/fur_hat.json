@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "W": {
+      "tag": "minecraft:wool"
+    },
+    "L": {
+      "tag": "c:leathers"
+    }
+  },
+  "pattern": [
+    "WLW",
+    "L L"
+  ],
+  "result": {
+    "id": "trailcraft:fur_hat",
+    "count": 1
+  }
+}

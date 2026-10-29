@@ -1,5 +1,6 @@
 package io.github.ChanesCMD.trailcraft.client.hud;
 
+import io.github.ChanesCMD.trailcraft.climate.Climate;
 import io.github.ChanesCMD.trailcraft.ServerConfig;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.calendar.Calendar;
@@ -42,6 +43,8 @@ import java.util.List;
  */
 @EventBusSubscriber(modid = TrailCraft.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class TrailHud {
+    /** Температура в HUD и тик, когда её считали (-1 — ещё не считали). */
+    private static int temperature, temperatureTick = -1;
     private static final int ROW = 10, STEP = 8;
     /** Цвета частей тела по состоянию (ТЗ, 4.1) и контур. */
     private static final int OUTLINE = 0xFF1A1A1A, DESTROYED_OUTLINE = 0xFF6A6A6A;
@@ -118,6 +121,13 @@ public class TrailHud {
                 lines.add(Component.literal(date.time()));
             }
         }
+        // температура воздуха с огнём рядом (без одежды) — раз в секунду (climate/Climate)
+        if (temperatureTick < 0 || Math.abs(player.tickCount - temperatureTick) >= 20) {
+            temperatureTick = player.tickCount;
+            temperature = Math.round(Climate.air(player.level(), player.blockPosition())
+                    + Climate.heat(player.level(), player.blockPosition()));
+        }
+        lines.add(Component.translatable("gui.trailcraft.hud.temperature", temperature));
         int textH = lines.size() * 10, gap = showMap && textH > 0 ? 3 : 0;
         int blockH = (showMap ? size : 0) + gap + textH;
         int top = corner.bottom() ? g.guiHeight() - 6 - blockH : 6;

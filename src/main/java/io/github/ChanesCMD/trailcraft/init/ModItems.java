@@ -15,6 +15,7 @@ import io.github.ChanesCMD.trailcraft.item.SteigerHammerItem;
 import io.github.ChanesCMD.trailcraft.item.GeologicalHammerItem;
 import io.github.ChanesCMD.trailcraft.item.BackpackItem;
 import io.github.ChanesCMD.trailcraft.item.PocketItem;
+import io.github.ChanesCMD.trailcraft.item.WarmClothingItem;
 import io.github.ChanesCMD.trailcraft.item.CoinItem;
 import io.github.ChanesCMD.trailcraft.item.FlaskItem;
 import io.github.ChanesCMD.trailcraft.item.WalletItem;
@@ -310,6 +311,16 @@ public class ModItems {
             props -> new PocketItem(props.stacksTo(16), BackpackItem.MEDIUM_POCKET_SLOTS));
     public static final DeferredItem<PocketItem> LARGE_POCKET = ITEMS.registerItem("large_pocket",
             props -> new PocketItem(props.stacksTo(16), BackpackItem.LARGE_POCKET_SLOTS));
+
+    // === ТЁПЛАЯ ОДЕЖДА (слоты «Тепло»; градусы тепла — climate/ClimateEvents) ===
+    public static final DeferredItem<WarmClothingItem> FUR_HAT = ITEMS.registerItem("fur_hat",
+            props -> new WarmClothingItem(props, 0, 4));
+    public static final DeferredItem<WarmClothingItem> SHEEPSKIN_COAT = ITEMS.registerItem("sheepskin_coat",
+            props -> new WarmClothingItem(props, 1, 10));
+    public static final DeferredItem<WarmClothingItem> QUILTED_TROUSERS = ITEMS.registerItem("quilted_trousers",
+            props -> new WarmClothingItem(props, 2, 6));
+    public static final DeferredItem<WarmClothingItem> FELT_BOOTS = ITEMS.registerItem("felt_boots",
+            props -> new WarmClothingItem(props, 3, 5));
 
     // === КРЕМЕНЬ ===
     /** Новый кремень: ставится на землю как камушек (блок flint_pebble) и выпадает из него; ПКМ по породе — оббивка. */

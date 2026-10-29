@@ -1,5 +1,6 @@
 package io.github.ChanesCMD.trailcraft.block;
 
+import io.github.ChanesCMD.trailcraft.climate.CropClimate;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.ChanesCMD.trailcraft.farm.Farm;
@@ -48,7 +49,7 @@ public class FruitLeavesBlock extends LeavesBlock {
             return;
         }
         BlockPos below = pos.below();
-        if (level.isEmptyBlock(below) && !fruitNearby(level, below)) {
+        if (level.isEmptyBlock(below) && !fruitNearby(level, below) && CropClimate.canGrow(level, pos, this)) {
             level.setBlock(below, fruit.get().defaultBlockState(), Block.UPDATE_ALL);
         }
     }

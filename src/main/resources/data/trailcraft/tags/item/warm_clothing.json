@@ -1,4 +1,9 @@
 {
   "replace": false,
-  "values": []
+  "values": [
+    "trailcraft:fur_hat",
+    "trailcraft:sheepskin_coat",
+    "trailcraft:quilted_trousers",
+    "trailcraft:felt_boots"
+  ]
 }

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "W": {
+      "tag": "minecraft:wool"
+    }
+  },
+  "pattern": [
+    "W W",
+    "W W"
+  ],
+  "result": {
+    "id": "trailcraft:felt_boots",
+    "count": 1
+  }
+}

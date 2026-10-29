@@ -123,6 +123,10 @@ public class ModCreativeTabs {
                         output.accept(ModItems.DUFFEL_BACKPACK);
                         output.accept(ModItems.LEATHER_BACKPACK);
                         output.accept(ModItems.TACTICAL_BACKPACK);
+                        output.accept(ModItems.FUR_HAT);
+                        output.accept(ModItems.SHEEPSKIN_COAT);
+                        output.accept(ModItems.QUILTED_TROUSERS);
+                        output.accept(ModItems.FELT_BOOTS);
                         output.accept(ModItems.SMALL_POCKET);
                         output.accept(ModItems.MEDIUM_POCKET);
                         output.accept(ModItems.LARGE_POCKET);

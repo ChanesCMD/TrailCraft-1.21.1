@@ -37,6 +37,11 @@ public class CalendarEvents {
                     cal.dayOfSeason(), cal.daysPerSeason(), cal.time()), false);
             source.sendSuccess(() -> Component.translatable("commands.trailcraft.calendar.settings",
                     ServerConfig.daysPerSeason(), ServerConfig.dayLengthMinutes()), false);
+            // температура там, откуда вызвана команда (climate/Climate): сейчас и средняя за сутки
+            net.minecraft.core.BlockPos pos = net.minecraft.core.BlockPos.containing(source.getPosition());
+            source.sendSuccess(() -> Component.translatable("commands.trailcraft.calendar.temperature",
+                    Math.round(io.github.ChanesCMD.trailcraft.climate.Climate.air(source.getLevel(), pos)),
+                    Math.round(io.github.ChanesCMD.trailcraft.climate.Climate.mean(source.getLevel(), pos))), false);
             return 1;
         }));
     }

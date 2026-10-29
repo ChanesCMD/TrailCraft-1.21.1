@@ -1,5 +1,6 @@
 package io.github.ChanesCMD.trailcraft.block;
 
+import io.github.ChanesCMD.trailcraft.climate.CropClimate;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -104,7 +105,8 @@ public class FruitBlock extends Block implements BonemealableBlock {
 
     @Override
     protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        if (state.getValue(AGE) < MAX_AGE && random.nextInt(Farm.FRUIT_GROWTH_CHANCE) == 0) {
+        if (state.getValue(AGE) < MAX_AGE && random.nextInt(Farm.FRUIT_GROWTH_CHANCE) == 0
+                && CropClimate.canGrow(level, pos, this)) {
             BlockState grown = state.setValue(AGE, state.getValue(AGE) + 1);
             level.setBlock(pos, grown, Block.UPDATE_CLIENTS);
             level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(grown));
