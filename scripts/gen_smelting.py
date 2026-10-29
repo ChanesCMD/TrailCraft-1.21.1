@@ -148,22 +148,22 @@ BRICK_SHAPE = [
     "................",
     "................",
     "..........aa....",
-    "......aaaadms...",
-    "...aaadmmmmmms..",
-    "aaadmmmmmmmmmms.",
-    "hmmmmmmmmmmmhhds",
-    "dhmmmmmmmhhhdsso",
-    "ddhmmhhhhdssssso",
-    "dddhhdsssssssseo",
-    "sddmsssssssseoo.",
-    "asdmssssseooo...",
-    ".asmseoooo......",
-    "..aaoo..........",
+    ".......aaadms...",
+    "....aaadmmmmms..",
+    ".aaadmmmmmmmmms.",
+    "ahmmmmmmmmmmhhds",
+    "adhmmmmmmhhhdsso",
+    "addhmmhhhdssssso",
+    "adddhhdssssssseo",
+    "asddmssssssseoo.",
+    ".asdmsssseooo...",
+    "..asmseooo......",
+    "...aaoo.........",
     "................",
     "................",
 ]
 # яркость оттенков ванильного кирпича относительно основного (m = #B5593F)
-BRICK_SHADES = {"h": 1.09, "m": 1.0, "d": 0.77, "s": 0.69, "e": 0.53, "a": 0.40, "o": 0.24}
+BRICK_SHADES = {"h": 1.09, "m": 1.0, "d": 0.78, "s": 0.69, "e": 0.53, "a": 0.40, "o": 0.25}
 
 # Слепок из глины — по форме ванильного зелёного красителя (minecraft:item/green_dye)
 MOLD_SHAPE = [

@@ -6,9 +6,13 @@ scripts/templates/dust.png (так в ванильном Minecraft нарисо�
 Запуск из корня проекта:  python scripts/gen_ore_textures.py   (нужен Pillow)
 Цвета каждой руды — RAMPS: основная гамма от тёмного к светлому и, если есть, вкрапления (ACCENTS).
 У сфалерита сохранена прежняя расцветка: серый с янтарными вкраплениями.
+Кварцевая жила — кристаллы ванильной кварцевой руды Нижнего мира на наших породах (quartz_veins), апатит-предмет —
+ванильный кварц в цветах апатита (apatite_item); ванильные текстуры — из jar клиента в кэше Gradle.
 """
 import os
 import random
+import zipfile
+from io import BytesIO
 
 from PIL import Image
 
@@ -143,8 +147,6 @@ RAMPS = {
 # цветам породы — перекрашиваются по яркости, обводка под породу остаётся): руда → (гамма, {порода: донор})
 VEINS = {
     "cinnabar": (RAMPS["cinnabar"][1], {"shale": "hematite", "basalt": "pentlandite"}),
-    "quartz": (ramp("6c6872", "96929c", "bab6c0", "d6d2da", "ebe8ee", "fbfafd"),
-               {"granite": "cassiterite", "gray_granite": "cassiterite"}),
 }
 # Вкрапления (буквы в форме); у руд без них буквы берут основную гамму
 ACCENTS = {
@@ -308,9 +310,64 @@ def mixes():
         save(dust(METALS[metal], [METALS[o] for o in others], share, seed), f"item/{name}")
 
 
+def vanilla(rel):
+    from gen_create_compat import find_jar  # gen_create_compat сам импортирует этот модуль
+    with zipfile.ZipFile(find_jar("minecraft_1.21.1_client.jar")) as jar:
+        return Image.open(BytesIO(jar.read(f"assets/minecraft/textures/{rel}.png"))).convert("RGBA")
+
+
+QUARTZ_ROCKS = ["granite", "gray_granite"]
+
+
+def quartz_veins():
+    """Кварцевая жила: светлые кристаллы ванильной кварцевой руды (без незерака) с тенью поверх породы; вторая и третья
+    текстуры — та же жила, отражённая и повёрнутая."""
+    ore = vanilla("block/nether_quartz_ore")
+    crystal = Image.new("RGBA", ore.size)
+    for y in range(ore.height):
+        for x in range(ore.width):
+            r, g, b, a = ore.getpixel((x, y))
+            if a and min(r, g, b) > 150 and max(r, g, b) - min(r, g, b) < 60:
+                crystal.putpixel((x, y), (r, g, b, a))
+    # тень под кристаллами (снизу и справа) — иначе на светлом граните их почти не видно
+    shadow = crystal.copy()
+    for y in range(ore.height):
+        for x in range(ore.width):
+            if not crystal.getpixel((x, y))[3] and any(
+                    0 <= x - dx < ore.width and 0 <= y - dy < ore.height and crystal.getpixel((x - dx, y - dy))[3]
+                    for dx, dy in ((1, 0), (0, 1), (1, 1))):
+                shadow.putpixel((x, y), (40, 28, 30, 150))
+    crystal = shadow
+    variants = [crystal, crystal.transpose(Image.FLIP_LEFT_RIGHT), crystal.transpose(Image.ROTATE_180)]
+    os.makedirs(os.path.join(ROOT, "block", "ore", "quartz"), exist_ok=True)
+    for rock in QUARTZ_ROCKS:
+        for n, img in enumerate(variants, 1):
+            img.save(os.path.join(ROOT, "block", "ore", "quartz", f"{rock}_{n}.png"))
+
+
+APATITE = ramp("1c3a5a", "2c5c84", "4682ac", "6aa8cc", "98cce4", "c8ecf6")
+
+
+def apatite_item():
+    """Апатит — ванильный кварц (кристаллы) в голубых цветах апатита: перекраска по яркости."""
+    quartz = vanilla("item/quartz")
+    px = [quartz.getpixel((x, y)) for y in range(16) for x in range(16)]
+    lums = sorted({lum(c) for c in px if c[3]})
+    out = Image.new("RGBA", quartz.size)
+    for y in range(16):
+        for x in range(16):
+            c = quartz.getpixel((x, y))
+            if c[3]:
+                k = lums.index(lum(c)) / max(1, len(lums) - 1)
+                out.putpixel((x, y), APATITE[min(len(APATITE) - 1, int(k * len(APATITE)))] + (c[3],))
+    out.save(os.path.join(ROOT, "item", "apatite.png"))
+
+
 if __name__ == "__main__":
     raws()
     veins()
+    quartz_veins()
+    apatite_item()
     nuggets()
     mixes()
     print("ok")

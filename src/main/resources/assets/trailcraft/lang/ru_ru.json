@@ -1264,5 +1264,8 @@
   "block.trailcraft.walnut_barrel": "Бочка из ореха",
   "block.trailcraft.alder_barrel": "Бочка из ольхи",
   "block.trailcraft.amadzu_barrel": "Бочка из амадзу",
-  "biome.trailcraft.dripstone_caves": "Пещеры натёчного камня"
+  "biome.trailcraft.dripstone_caves": "Пещеры натёчного камня",
+  "block.minecraft.granite": "Древний гранит",
+  "block.minecraft.diorite": "Древний диорит",
+  "block.minecraft.andesite": "Древний андезит"
 }

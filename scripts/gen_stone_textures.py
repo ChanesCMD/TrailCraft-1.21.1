@@ -1,10 +1,12 @@
 """
 Текстуры пород, которые правятся из исходника в scripts/templates/: диорит — трещины не доходят до краёв блока
 (иначе на стене из диорита трещины сливаются в сетку): тёмные пиксели трещин по краю (EDGE пикселей) заменяются
-цветом соседнего светлого пикселя внутри; андезит — ванильный андезит, смешанный с нашим (ANDESITE_OURS — доля нашего).
+цветом соседнего светлого пикселя внутри, а сами трещины светлее (смешаны со средним цветом камня на CRACK_SOFTEN);
+андезит — ванильный андезит, смешанный с нашим (ANDESITE_OURS — доля нашего).
 
 Запуск из корня проекта:  python scripts/gen_stone_textures.py   (нужен Pillow и jar клиента в кэше Gradle)
 """
+import json
 import os
 import zipfile
 from io import BytesIO
@@ -17,6 +19,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 TEX = os.path.join(HERE, "..", "src", "main", "resources", "assets", "trailcraft", "textures", "block")
 EDGE = 2
 CRACK = 130  # яркость пикселей трещин — не выше
+CRACK_SOFTEN = 0.5  # насколько трещины диорита приближены к цвету камня (0 — как в исходнике)
 ANDESITE_OURS = 0.25
 
 
@@ -40,6 +43,13 @@ def diorite():
                 if lum(c) > CRACK:
                     out.putpixel((x, y), c)
                     break
+    stone = [c for c in img.get_flattened_data() if lum(c) > CRACK]
+    mean = tuple(sum(c[i] for c in stone) // len(stone) for i in range(3))
+    for y in range(n):
+        for x in range(n):
+            c = out.getpixel((x, y))
+            if lum(c) <= CRACK:
+                out.putpixel((x, y), tuple(round(c[i] + (mean[i] - c[i]) * CRACK_SOFTEN) for i in range(3)) + (c[3],))
     out.save(os.path.join(TEX, "diorite.png"))
 
 
@@ -49,7 +59,25 @@ def andesite(client):
     Image.blend(vanilla, ours, ANDESITE_OURS).save(os.path.join(TEX, "andesite.png"))
 
 
+# Ванильные гранит, диорит, андезит (самый глубокий слой пород) — «древние», чтобы не путать с нашими (id прежние)
+ANCIENT = {"granite": ("Древний гранит", "Ancient Granite"), "diorite": ("Древний диорит", "Ancient Diorite"),
+           "andesite": ("Древний андезит", "Ancient Andesite")}
+
+
+def lang():
+    for code, k in (("ru_ru", 0), ("en_us", 1)):
+        p = os.path.join(HERE, "..", "src", "main", "resources", "assets", "trailcraft", "lang", f"{code}.json")
+        with open(p, encoding="utf-8") as f:
+            data = json.load(f)
+        for rock, names in ANCIENT.items():
+            data[f"block.minecraft.{rock}"] = names[k]
+        with open(p, "w", encoding="utf-8", newline="\n") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+            f.write("\n")
+
+
 if __name__ == "__main__":
+    lang()
     diorite()
     andesite(zipfile.ZipFile(find_jar("minecraft_1.21.1_client.jar")))
     print("ok")

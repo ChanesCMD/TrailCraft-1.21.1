@@ -1264,5 +1264,8 @@
   "block.trailcraft.walnut_barrel": "Walnut Barrel",
   "block.trailcraft.alder_barrel": "Alder Barrel",
   "block.trailcraft.amadzu_barrel": "Amadzu Barrel",
-  "biome.trailcraft.dripstone_caves": "Dripstone Caves"
+  "biome.trailcraft.dripstone_caves": "Dripstone Caves",
+  "block.minecraft.granite": "Ancient Granite",
+  "block.minecraft.diorite": "Ancient Diorite",
+  "block.minecraft.andesite": "Ancient Andesite"
 }
