@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/** Лёд, намёрзший зимой, не зимой в тёплых биомах тает обратно в воду (season/Seasons.melts). */
+/** Лёд, намёрзший зимой, где стало тепло для дождя, медленно тает обратно в воду (season/Seasons.melts, meltChance). */
 @Mixin(IceBlock.class)
 public abstract class IceBlockMixin {
     @Shadow
@@ -21,7 +21,7 @@ public abstract class IceBlockMixin {
 
     @Inject(method = "randomTick", at = @At("HEAD"), cancellable = true)
     private void trailcraft$melt(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo ci) {
-        if (Seasons.melts(level, pos)) {
+        if (random.nextFloat() < Seasons.meltChance(level) && Seasons.melts(level, pos)) {
             melt(state, level, pos);
             ci.cancel();
         }

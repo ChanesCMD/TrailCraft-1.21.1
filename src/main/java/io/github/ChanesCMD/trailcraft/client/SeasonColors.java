@@ -39,7 +39,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * спрайт trailcraft:block/X подменяется trailcraft:block/season/&lt;сезон&gt;/X (пишет scripts/gen_season_textures.py;
  * модели оборачивает ClientEvents.wrapPipeModels); трава весной зеленее, осенью желтее, зимой в инее, а под снегом
  * белая — {@link #grass}. В тёплых биомах (Seasons.isWarm) весной и осенью как летом, зимой листва (block/season/warm_winter/X)
- * и трава чуть желтеют. Сменился сезон — чанки перестраиваются.
+ * и трава чуть желтеют. Переход в последние дни сезона (Seasons.stageProgress, раз в день): трава смешивает цвета двух
+ * сезонов, листва меняется блок за блоком — у каждой клетки 3×3 столбца свой порог {@link #shift}, кроны желтеют и
+ * белеют пятнами. Сменился сезон или день перехода — чанки перестраиваются.
  */
 @EventBusSubscriber(modid = TrailCraft.MODID, value = Dist.CLIENT)
 public final class SeasonColors {
@@ -50,9 +52,15 @@ public final class SeasonColors {
     private static final float WARM_WINTER_MIX = 0.12f;
     /** Листва в тёплом биоме — кладётся в ModelData при сборке чанка (LeavesModel.getModelData). */
     private static final ModelProperty<Boolean> WARM = new ModelProperty<>();
+    /** Порог перехода листвы этого места (0..1) — кладётся в ModelData вместе с WARM. */
+    private static final ModelProperty<Float> SHIFT = new ModelProperty<>();
+    /** Листва меняется пятнами такого размера (в блоках по X и Z). */
+    private static final int LEAF_PATCH = 3;
 
-    /** Сезон, в котором нарисованы чанки. */
-    private static volatile Calendar.Season shown = Calendar.Season.SUMMER;
+    /** Сезон, следующий за ним и доля перехода, в которых нарисованы чанки. */
+    private record Look(Calendar.Season season, Calendar.Season next, float progress) {}
+
+    private static volatile Look shown = new Look(Calendar.Season.SUMMER, Calendar.Season.AUTUMN, 0f);
     /** Папка сезонных текстур (autumn, winter, warm_winter) → спрайт листвы → сезонный. */
     private static final Map<String, Map<TextureAtlasSprite, TextureAtlasSprite>> SPRITES = new ConcurrentHashMap<>();
 
@@ -65,24 +73,49 @@ public final class SeasonColors {
             return;
         }
         Seasons.update(mc.level.getDayTime());
-        Calendar.Season season = Seasons.current();
-        if (season != shown) {
-            shown = season;
+        Look look = new Look(Seasons.current(), Seasons.next(), Seasons.stageProgress());
+        if (!look.equals(shown)) {
+            shown = look;
             mc.levelRenderer.allChanged();
         }
     }
 
     /** Цвет травы с поправкой на сезон; pos == null — предмет или без мира. */
     public static int grass(int rgb, @Nullable BlockAndTintGetter level, @Nullable BlockPos pos) {
-        if (isWarm(pos)) {
-            return shown == Calendar.Season.WINTER ? mix(rgb, AUTUMN_GRASS, WARM_WINTER_MIX) : rgb;
+        Look look = shown;
+        boolean warm = isWarm(pos);
+        boolean snowed = level != null && pos != null && level.getBlockState(pos.above()).is(Blocks.SNOW);
+        int from = grass(rgb, look.season(), warm, snowed);
+        return look.progress() == 0f ? from : mix(from, grass(rgb, look.next(), warm, snowed), look.progress());
+    }
+
+    private static int grass(int rgb, Calendar.Season season, boolean warm, boolean snowed) {
+        if (warm) {
+            return season == Calendar.Season.WINTER ? mix(rgb, AUTUMN_GRASS, WARM_WINTER_MIX) : rgb;
         }
-        return switch (shown) {
+        return switch (season) {
             case SPRING -> mix(rgb, SPRING_GRASS, SPRING_MIX);
             case SUMMER -> rgb;
             case AUTUMN -> mix(rgb, AUTUMN_GRASS, AUTUMN_MIX);
-            case WINTER -> mix(rgb, WINTER_GRASS, level != null && pos != null
-                    && level.getBlockState(pos.above()).is(Blocks.SNOW) ? SNOWED_MIX : FROST_MIX);
+            case WINTER -> mix(rgb, WINTER_GRASS, snowed ? SNOWED_MIX : FROST_MIX);
+        };
+    }
+
+    /** Порог перехода листвы (0..1): одинаковый в клетке LEAF_PATCH×LEAF_PATCH столбцов, как у одной кроны. */
+    private static float shift(BlockPos pos) {
+        long h = Math.floorDiv(pos.getX(), LEAF_PATCH) * 0x9E3779B97F4A7C15L ^ Math.floorDiv(pos.getZ(), LEAF_PATCH) * 0xC2B2AE3D27D4EB4FL;
+        h ^= h >>> 29;
+        h *= 0xBF58476D1CE4E5B9L;
+        h ^= h >>> 32;
+        return (h & 0xFFFF) / 65536f;
+    }
+
+    /** Папка сезонных текстур листвы, или null — летняя. */
+    private static @Nullable String leafFolder(Calendar.Season season, boolean warm) {
+        return switch (season) {
+            case SPRING, SUMMER -> null;
+            case AUTUMN -> warm ? null : "autumn";
+            case WINTER -> warm ? "warm_winter" : "winter";
         };
     }
 
@@ -153,7 +186,7 @@ public final class SeasonColors {
         @Override
         public @NotNull ModelData getModelData(@NotNull BlockAndTintGetter level, @NotNull BlockPos pos, @NotNull BlockState state,
                                                @NotNull ModelData data) {
-            return super.getModelData(level, pos, state, data).derive().with(WARM, isWarm(pos)).build();
+            return super.getModelData(level, pos, state, data).derive().with(WARM, isWarm(pos)).with(SHIFT, shift(pos)).build();
         }
 
         @Override
@@ -163,12 +196,11 @@ public final class SeasonColors {
             if (state == null) {
                 return quads;
             }
-            boolean warm = Boolean.TRUE.equals(data.get(WARM));
-            return switch (shown) {
-                case SPRING, SUMMER -> quads;
-                case AUTUMN -> warm ? quads : swap(quads, "autumn");
-                case WINTER -> swap(quads, warm ? "warm_winter" : "winter");
-            };
+            Look look = shown;
+            Float shift = data.get(SHIFT);
+            boolean changed = shift != null && shift < look.progress();
+            String folder = leafFolder(changed ? look.next() : look.season(), Boolean.TRUE.equals(data.get(WARM)));
+            return folder == null ? quads : swap(quads, folder);
         }
     }
 }

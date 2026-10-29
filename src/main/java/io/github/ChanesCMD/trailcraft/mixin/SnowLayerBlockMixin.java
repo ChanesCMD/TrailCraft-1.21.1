@@ -11,12 +11,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/** Не зимой снег в тёплых биомах тает по слою за случайный тик (season/Seasons.melts). */
+/** Где стало тепло для дождя, снег медленно тает по слою (season/Seasons.melts, meltChance). */
 @Mixin(SnowLayerBlock.class)
 public abstract class SnowLayerBlockMixin {
     @Inject(method = "randomTick", at = @At("HEAD"), cancellable = true)
     private void trailcraft$melt(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo ci) {
-        if (Seasons.melts(level, pos)) {
+        if (random.nextFloat() < Seasons.meltChance(level) && Seasons.melts(level, pos)) {
             int layers = state.getValue(SnowLayerBlock.LAYERS);
             if (layers > 1) {
                 level.setBlockAndUpdate(pos, state.setValue(SnowLayerBlock.LAYERS, layers - 1));
