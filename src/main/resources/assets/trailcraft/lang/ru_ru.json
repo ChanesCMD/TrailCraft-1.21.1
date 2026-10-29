@@ -1,5 +1,8 @@
 {
   "itemGroup.trailcraft": "TrailCraft",
+  "itemGroup.trailcraft_tools": "TrailCraft: Инструменты",
+  "itemGroup.trailcraft_plant_food": "TrailCraft: Растительная еда",
+  "itemGroup.trailcraft_animal_food": "TrailCraft: Животная еда",
   "block.trailcraft.andesite": "Андезит",
   "block.trailcraft.basalt": "Базальт",
   "block.trailcraft.chalk": "Мел",

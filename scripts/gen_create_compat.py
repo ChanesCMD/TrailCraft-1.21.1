@@ -70,6 +70,8 @@ REPLACED = [
     "create:crafting/kinetics/millstone",
     # прочный лист — из лавы и обсидиана, которых в мире нет; свой рецепт — gen_reinforced_pipe.py
     "create:sequenced_assembly/sturdy_sheet",
+    # блок киновари (c:ores/quicksilver) — свой рецепт, с редстоуном
+    "create:crushing/quicksilver_ore",
 ] + [f"create:crushing/raw_{m}" for m in ("copper", "iron", "gold", "zinc", "tin", "lead", "nickel", "aluminum")]
 # Дробление наших кусков руды и блоков руды (с шёлковым касанием): руда → дроблёная руда Create (+ побочное с шансом);
 # рецепты Create по тэгам c:raw_materials/* заменены этими, чтобы у куска был один рецепт
@@ -333,10 +335,16 @@ def recipes():
             "type": "create:crushing", "ingredients": [item(f"{NS}:{ore}_ore")], "processing_time": 250,
             "results": [{"id": f"create:crushed_raw_{metal}"}, {"id": f"create:crushed_raw_{metal}", "chance": 0.75},
                         {"id": "create:experience_nugget", "chance": 0.75}] + side})
-    # киноварь — в редстоун: дробилка, жёрнов
+    # киноварь — в редстоун: дробилка, жёрнов; дробилка даёт ещё дроблёную рудную ртуть Create
+    quicksilver = "create:crushed_raw_quicksilver"
     write(f"data/{NS}/recipe/crushing/raw_cinnabar.json", {
         "type": "create:crushing", "ingredients": [item(f"{NS}:raw_cinnabar")], "processing_time": 250,
-        "results": [{"id": "minecraft:redstone", "count": 3}, {"id": "minecraft:redstone", "chance": 0.5}]})
+        "results": [{"id": "minecraft:redstone", "count": 3}, {"id": "minecraft:redstone", "chance": 0.5},
+                    {"id": quicksilver}]})
+    write(f"data/{NS}/recipe/crushing/cinnabar_ore.json", {
+        "type": "create:crushing", "ingredients": [item(f"{NS}:cinnabar_ore")], "processing_time": 250,
+        "results": [{"id": quicksilver}, {"id": quicksilver, "chance": 0.75}, {"id": "minecraft:redstone", "count": 3},
+                    {"id": "create:experience_nugget", "chance": 0.75}]})
     write(f"data/{NS}/recipe/milling/raw_cinnabar.json", {
         "type": "create:milling", "ingredients": [item(f"{NS}:raw_cinnabar")], "processing_time": 150,
         "results": [{"id": "minecraft:redstone", "count": 3}]})

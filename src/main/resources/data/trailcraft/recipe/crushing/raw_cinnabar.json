@@ -14,6 +14,9 @@
     {
       "id": "minecraft:redstone",
       "chance": 0.5
+    },
+    {
+      "id": "create:crushed_raw_quicksilver"
     }
   ]
 }

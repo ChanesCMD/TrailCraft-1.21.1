@@ -1,5 +1,8 @@
 {
   "itemGroup.trailcraft": "TrailCraft",
+  "itemGroup.trailcraft_tools": "TrailCraft: Tools",
+  "itemGroup.trailcraft_plant_food": "TrailCraft: Plant Food",
+  "itemGroup.trailcraft_animal_food": "TrailCraft: Animal Food",
   "block.trailcraft.andesite": "Andesite",
   "block.trailcraft.basalt": "Basalt",
   "block.trailcraft.chalk": "Chalk",

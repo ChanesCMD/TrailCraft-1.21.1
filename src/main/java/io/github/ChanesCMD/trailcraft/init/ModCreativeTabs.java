@@ -1,14 +1,18 @@
 package io.github.ChanesCMD.trailcraft.init;
 
+import com.simibubi.create.AllItems;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.ore.Ore;
 import io.github.ChanesCMD.trailcraft.ore.Rock;
 
+/** Вкладки по порядку: общая, деревья, руды, инструменты, растительная еда, животная еда, яйца призыва. */
 public class ModCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, TrailCraft.MODID);
@@ -93,10 +97,7 @@ public class ModCreativeTabs {
                         output.accept(ModItems.RAW_HIDE);
                         output.accept(ModItems.SCRAPED_HIDE);
                         output.accept(ModItems.LEATHER);
-                        output.accept(ModItems.EGG);
-                        output.accept(ModItems.APPLE);
                         output.accept(ModItems.SEAWEED);
-                        output.accept(ModItems.DRIED_SEAWEED);
                         output.accept(ModItems.DRIED_SEAWEED_BLOCK);
                         output.accept(ModItems.CACTUS);
                         output.accept(ModItems.GREEN_DYE);
@@ -104,7 +105,6 @@ public class ModCreativeTabs {
                         output.accept(ModItems.WHEAT);
                         output.accept(ModItems.SUGAR_CANE);
                         output.accept(ModItems.SUGAR_BEET_SEEDS);
-                        output.accept(ModItems.SUGAR_BEET);
                         output.accept(ModItems.COCOA_BEANS);
                         output.accept(ModItems.BITUMINOUS_COAL_BLOCK);
                         output.accept(ModItems.COAL_BURNER);
@@ -120,8 +120,6 @@ public class ModCreativeTabs {
                         output.accept(ModItems.STRAW_BED);
                         output.accept(ModItems.WOODEN_SUPPORT);
                         output.accept(ModItems.IRON_SUPPORT);
-                        output.accept(ModItems.STEIGER_HAMMER);
-                        output.accept(ModItems.GEOLOGICAL_HAMMER);
                         output.accept(ModItems.DUFFEL_BACKPACK);
                         output.accept(ModItems.LEATHER_BACKPACK);
                         output.accept(ModItems.TACTICAL_BACKPACK);
@@ -154,15 +152,11 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.GRASS_SMALL);
                         output.accept(ModBlocks.GRASS_TALL);
 
-                        // Дикие растения, ягоды, джут
+                        // Дикие растения, джут
                         output.accept(ModItems.CURRANT_BUSH);
                         output.accept(ModItems.CLOUDBERRY_BUSH);
                         output.accept(ModItems.GOOSEBERRY_BUSH);
                         output.accept(ModItems.BLACKBERRY_BUSH);
-                        output.accept(ModItems.CURRANT);
-                        output.accept(ModItems.CLOUDBERRY);
-                        output.accept(ModItems.GOOSEBERRY);
-                        output.accept(ModItems.BLACKBERRY);
                         output.accept(ModItems.WILD_CARROT);
                         output.accept(ModItems.WILD_POTATO);
                         output.accept(ModItems.WILD_JUTE);
@@ -171,7 +165,6 @@ public class ModCreativeTabs {
                         output.accept(ModItems.ROPE);
 
                         // Предметы
-                        output.accept(ModItems.TURF_CUTTER);
                         output.accept(ModItems.CLAY_BALL_WHITE);
                         output.accept(ModItems.CLAY_BALL_BLUE);
                         output.accept(ModItems.CLAY_BALL_GRAY);
@@ -181,13 +174,11 @@ public class ModCreativeTabs {
                         output.accept(ModItems.STICK_BRANCH);
                         output.accept(ModItems.STICK_PROCESSED);
                         output.accept(ModItems.LONG_STICK);
-                        output.accept(ModItems.FIRESTARTER);
                         output.accept(ModItems.CAMPFIRE);
                         output.accept(ModItems.ASH);
                         output.accept(ModItems.BARK);
                         output.accept(ModItems.RESIN);
                         output.accept(ModItems.JUTE_THREAD);
-                        output.accept(ModItems.STONE_HAMMER);
 
                         // Глина, кирпичи и плавка (ModSmelting)
                         for (var brick : ModSmelting.BRICKS.values()) {
@@ -211,21 +202,30 @@ public class ModCreativeTabs {
                         output.accept(ModItems.FEATHER);
                         output.accept(ModItems.BONE);
 
-                        // Инструменты и предметы (ModTools)
-                        for (var item : ModTools.ITEMS) {
-                            output.accept(item);
-                        }
-
                         // Мусор
                         output.accept(ModItems.METAL_SCRAP);
                         output.accept(ModItems.PAPER_SCRAPS);
                         output.accept(ModItems.PLASTIC_WASTE);
                     }).build());
 
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TRAILCRAFT_WOOD_TAB =
+            CREATIVE_MODE_TABS.register("trailcraft_wood_tab", () -> CreativeModeTab.builder()
+                    .title(Component.translatable("itemGroup.trailcraft_wood"))
+                    .withTabsBefore(TRAILCRAFT_TAB.getId())
+                    .icon(() -> ModWood.SETS.get(0).log.get().asItem().getDefaultInstance())
+                    .displayItems((parameters, output) -> {
+                        for (ModWood.WoodSet set : ModWood.SETS) {
+                            for (var item : set.items) {
+                                output.accept(item);
+                            }
+                        }
+                    }).build());
+
     /** Руды (каждая во всех своих породах), то, что с них падает, уголь, шихта и слитки. */
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TRAILCRAFT_ORES_TAB =
             CREATIVE_MODE_TABS.register("trailcraft_ores_tab", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.trailcraft_ores"))
+                    .withTabsBefore(TRAILCRAFT_WOOD_TAB.getId())
                     .icon(() -> ModOres.BLOCK_ITEMS.get(Ore.MALACHITE).get().getDefaultInstance())
                     .displayItems((parameters, output) -> {
                         for (Ore ore : Ore.values()) {
@@ -239,24 +239,72 @@ public class ModCreativeTabs {
                         output.accept(ModOres.CHARCOAL);
                         ModOres.NUGGET_ORES.forEach(ore -> output.accept(ModOres.NUGGETS.get(ore)));
                         ModOres.MIXES.forEach(output::accept);
+                        // слитки меди, железа и золота — ванильные, цинка и латуни — Create
+                        output.accept(Items.COPPER_INGOT);
+                        output.accept(Items.IRON_INGOT);
+                        output.accept(Items.GOLD_INGOT);
+                        output.accept(AllItems.ZINC_INGOT.get());
+                        output.accept(AllItems.BRASS_INGOT.get());
                         ModOres.INGOTS.forEach(output::accept);
                     }).build());
 
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TRAILCRAFT_WOOD_TAB =
-            CREATIVE_MODE_TABS.register("trailcraft_wood_tab", () -> CreativeModeTab.builder()
-                    .title(Component.translatable("itemGroup.trailcraft_wood"))
-                    .icon(() -> ModWood.SETS.get(0).log.get().asItem().getDefaultInstance())
+    /** Инструменты и оружие: ModTools (по виду, внутри — по материалу), молотки, дёрнорез, огниво. */
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TOOLS_TAB =
+            CREATIVE_MODE_TABS.register("trailcraft_tools_tab", () -> CreativeModeTab.builder()
+                    .title(Component.translatable("itemGroup.trailcraft_tools"))
+                    .withTabsBefore(TRAILCRAFT_ORES_TAB.getId())
+                    .icon(() -> ModTools.ITEMS.get(0).get().getDefaultInstance())
                     .displayItems((parameters, output) -> {
-                        for (ModWood.WoodSet set : ModWood.SETS) {
-                            for (var item : set.items) {
-                                output.accept(item);
-                            }
+                        output.accept(ModItems.STONE_HAMMER);
+                        output.accept(ModItems.STEIGER_HAMMER);
+                        output.accept(ModItems.GEOLOGICAL_HAMMER);
+                        output.accept(ModItems.TURF_CUTTER);
+                        output.accept(ModItems.FIRESTARTER);
+                        for (var item : ModTools.ITEMS) {
+                            output.accept(item);
                         }
+                    }).build());
+
+    /** Растительная еда: плоды, ягоды, овощи, хлеб. */
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> PLANT_FOOD_TAB =
+            CREATIVE_MODE_TABS.register("trailcraft_plant_food_tab", () -> CreativeModeTab.builder()
+                    .title(Component.translatable("itemGroup.trailcraft_plant_food"))
+                    .withTabsBefore(TOOLS_TAB.getId())
+                    .icon(() -> ModItems.APPLE.get().getDefaultInstance())
+                    .displayItems((parameters, output) -> {
+                        output.accept(ModItems.APPLE);
+                        output.accept(ModItems.CURRANT);
+                        output.accept(ModItems.CLOUDBERRY);
+                        output.accept(ModItems.GOOSEBERRY);
+                        output.accept(ModItems.BLACKBERRY);
+                        output.accept(Items.CARROT);
+                        output.accept(Items.POTATO);
+                        output.accept(Items.BAKED_POTATO);
+                        output.accept(ModItems.SUGAR_BEET);
+                        output.accept(ModItems.DRIED_SEAWEED);
+                        output.accept(Items.BREAD);
+                    }).build());
+
+    /** Животная еда: мясо сырое и жареное (курятина — «белое мясо»), рыба, яйцо, мёд. */
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> ANIMAL_FOOD_TAB =
+            CREATIVE_MODE_TABS.register("trailcraft_animal_food_tab", () -> CreativeModeTab.builder()
+                    .title(Component.translatable("itemGroup.trailcraft_animal_food"))
+                    .withTabsBefore(PLANT_FOOD_TAB.getId())
+                    .icon(() -> Items.COOKED_BEEF.getDefaultInstance())
+                    .displayItems((parameters, output) -> {
+                        for (Item item : new Item[] {Items.BEEF, Items.COOKED_BEEF, Items.PORKCHOP, Items.COOKED_PORKCHOP,
+                                Items.MUTTON, Items.COOKED_MUTTON, Items.CHICKEN, Items.COOKED_CHICKEN, Items.RABBIT,
+                                Items.COOKED_RABBIT, Items.COD, Items.COOKED_COD, Items.SALMON, Items.COOKED_SALMON}) {
+                            output.accept(item);
+                        }
+                        output.accept(ModItems.EGG);
+                        output.accept(Items.HONEY_BOTTLE);
                     }).build());
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> SPAWN_EGGS_TAB =
             CREATIVE_MODE_TABS.register("trailcraft_spawn_eggs_tab", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.trailcraft_spawn_eggs"))
+                    .withTabsBefore(ANIMAL_FOOD_TAB.getId())
                     .icon(() -> ModItems.CAPERCAILLIE_SPAWN_EGG.get().getDefaultInstance())
                     .displayItems((parameters, output) -> {
                         output.accept(ModItems.CAPERCAILLIE_SPAWN_EGG);

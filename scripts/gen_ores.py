@@ -251,6 +251,8 @@ def tags():
         tag(kind, f"{NS}:ores", add=blocks)
         for o in ORES:
             tag(kind, f"c:ores/{o[1]}", add=[f"{NS}:{o[0]}_ore"])
+        # киноварь — ещё и ртутная руда: без неё Create прячет свою дроблёную рудную ртуть
+        tag(kind, "c:ores/quicksilver", add=[f"{NS}:cinnabar_ore"])
     raws = [o for o in ORES if o[4].startswith("raw_")]
     tag("item", "c:raw_materials", add=[f"{NS}:{o[4]}" for o in raws])
     for o in raws:
