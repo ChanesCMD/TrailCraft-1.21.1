@@ -1,5 +1,8 @@
 package io.github.ChanesCMD.trailcraft.animal;
 
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.sounds.SoundEvents;
+import io.github.ChanesCMD.trailcraft.init.ModItems;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
@@ -43,12 +46,21 @@ public class TrailBird extends Chicken {
         return stack.is(species().food);
     }
 
+    /** Ванильное яйцо курица не несёт (eggTime на время aiStep — заведомо большой), своё — по своему счётчику. */
     @Override
     public void aiStep() {
+        int ownEggTime = eggTime;
+        eggTime = Integer.MAX_VALUE;
+        super.aiStep();
+        eggTime = ownEggTime;
         if (species() != Species.CHICKEN) {
             eggTime = Integer.MAX_VALUE;
+        } else if (!level().isClientSide && isAlive() && !isBaby() && !isChickenJockey() && --eggTime <= 0) {
+            playSound(SoundEvents.CHICKEN_EGG, 1.0f, (random.nextFloat() - random.nextFloat()) * 0.2f + 1.0f);
+            spawnAtLocation(ModItems.EGG.get());
+            gameEvent(GameEvent.ENTITY_PLACE);
+            eggTime = random.nextInt(6000) + 6000;
         }
-        super.aiStep();
     }
 
     @Override

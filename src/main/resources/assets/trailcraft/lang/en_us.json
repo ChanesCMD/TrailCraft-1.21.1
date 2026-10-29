@@ -1080,5 +1080,12 @@
   "item.trailcraft.sugar_beet": "Sugar Beet",
   "item.trailcraft.sugar_beet_seeds": "Sugar Beet Seeds",
   "block.trailcraft.cocoa": "Cocoa",
-  "item.trailcraft.cocoa_beans": "Cocoa Beans"
+  "item.trailcraft.cocoa_beans": "Cocoa Beans",
+  "block.trailcraft.apple_leaves": "Apple Leaves",
+  "block.trailcraft.apple_sapling": "Apple Sapling",
+  "item.trailcraft.raw_hide": "Raw Hide",
+  "item.trailcraft.scraped_hide": "Scraped Hide",
+  "item.trailcraft.leather": "Leather",
+  "item.trailcraft.egg": "Egg",
+  "item.trailcraft.apple": "Apple"
 }

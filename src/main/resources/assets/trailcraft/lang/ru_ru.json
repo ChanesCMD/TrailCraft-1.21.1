@@ -1080,5 +1080,12 @@
   "item.trailcraft.sugar_beet": "Сахарная свёкла",
   "item.trailcraft.sugar_beet_seeds": "Семена сахарной свёклы",
   "block.trailcraft.cocoa": "Какао",
-  "item.trailcraft.cocoa_beans": "Какао-бобы"
+  "item.trailcraft.cocoa_beans": "Какао-бобы",
+  "block.trailcraft.apple_leaves": "Листва яблони",
+  "block.trailcraft.apple_sapling": "Саженец яблони",
+  "item.trailcraft.raw_hide": "Сырая шкура",
+  "item.trailcraft.scraped_hide": "Выскобленная шкура",
+  "item.trailcraft.leather": "Кожа",
+  "item.trailcraft.egg": "Яйцо",
+  "item.trailcraft.apple": "Яблоко"
 }

@@ -1,6 +1,7 @@
 package io.github.ChanesCMD.trailcraft.init;
 
 import io.github.ChanesCMD.trailcraft.init.ModTiers.Material;
+import io.github.ChanesCMD.trailcraft.item.KnifeItem;
 import io.github.ChanesCMD.trailcraft.item.SawItem;
 import io.github.ChanesCMD.trailcraft.item.SpearItem;
 import io.github.ChanesCMD.trailcraft.item.ThrowingSpearItem;
@@ -62,7 +63,7 @@ public final class ModTools {
             }
         }
         for (Material m : Material.values()) {
-            reg(m.id + "_knife", p -> new SwordItem(m.tier,
+            reg(m.id + "_knife", p -> new KnifeItem(m.tier,
                     p.attributes(SwordItem.createAttributes(m.tier, ModTiers.KNIFE_DAMAGE, ModTiers.KNIFE_SPEED))));
         }
         for (Material m : Material.values()) {

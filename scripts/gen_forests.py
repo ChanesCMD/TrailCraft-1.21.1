@@ -107,6 +107,7 @@ REMOVED_BIOMES = ["zheltozem_forest", "acacia_grove", "palm_grove"]
 PLAINS_TREES = [
     ("lone_lilacs", {"young_lilac": 1}, ("rarity", 16)),
     ("lone_pussy_willows", {"pussy_willow": 1}, ("rarity", 16)),
+    ("lone_apples", {"apple": 1}, ("rarity", 20)),
 ]
 PLAINS = ["burozem_plains", "chernozem_plains", "zheltozem_plains"]
 
@@ -134,6 +135,8 @@ FOREST_GROUND = {
 # Варианты листвы на чужой древесине (ModWood.addLeafVariant): вид -> порода древесины, листва ru / en, саженец ru / en
 LEAF_VARIANTS = {
     "red_maple": ("maple", "Листва красного клёна", "Red Maple Leaves", "Саженец красного клёна", "Red Maple Sapling"),
+    # яблоня: листва с яблоками на дубе (текстуры и яблоки в луте листвы — scripts/gen_animal_goods.py, запускать после)
+    "apple": ("oak", "Листва яблони", "Apple Leaves", "Саженец яблони", "Apple Sapling"),
 }
 
 # === РАСКЛАДКА БИОМОВ (multi_noise) ===

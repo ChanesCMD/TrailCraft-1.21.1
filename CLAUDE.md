@@ -250,6 +250,12 @@
   (`SugarBeetBlock`, семена — с травы, реже пшеничных) — сахар, какао (`TrailCocoaBlock` на пальме и эбеновом дереве,
   `#trailcraft:cocoa_logs`; в мире — `worldgen/CocoaPodFeature.java`) — шоколад Create, коричневый краситель. Клей Create —
   ещё из железного листа, кусочка и смолы. Рецепты Create с нашими растениями — `SUBSTITUTED` в `gen_create_compat.py`.
+- Шкура и кожа, яйцо, яблоко — `scripts/gen_animal_goods.py` (после `gen_forests.py`): с животных вместо ванильной кожи
+  падает сырая шкура (модификатор лута `leather.json`, как перо и кость), её выскабливают ножом (`item/KnifeItem.java`:
+  нож остаётся и теряет прочность) и дубят 2 корами — своя кожа (`c:leathers` без ванильной; смеситель Create —
+  выскобленная шкура, кора и вода). Курица несёт своё яйцо (`TrailBird.aiStep`, ванильное в луте — тоже своё), `c:eggs`.
+  Яблоня — вариант листвы на дубе (`ModWood.addLeafVariant("apple", "oak")`, `LEAF_VARIANTS`), с листвы — яблоко (8 %),
+  одинокие яблони на равнинах (`PLAINS_TREES`). Наши ягоды и яблоко — в рецептах Create (глазированные ягоды, яблоко в мёде).
 - Линейка (`item/RulerItem.java`): ПКМ по двум блокам — расстояние по прямой между центрами (до 32) и сдвиги по осям
   над хотбаром, пунктир частиц; первая отметка — компонент `trailcraft:ruler_start`, Shift+ПКМ сбрасывает.
 - Инвентарь: `inventory/TrailInventoryMenu.java` + `client/gui/TrailInventoryScreen.java`. Дополнительные слоты

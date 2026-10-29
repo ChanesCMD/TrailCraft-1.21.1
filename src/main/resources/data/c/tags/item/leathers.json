@@ -1,0 +1,9 @@
+{
+  "replace": true,
+  "values": [
+    "trailcraft:leather"
+  ],
+  "remove": [
+    "minecraft:leather"
+  ]
+}

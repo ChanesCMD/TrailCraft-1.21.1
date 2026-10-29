@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "trailcraft:raw_hide"
+    },
+    {
+      "tag": "trailcraft:knives"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:scraped_hide",
+    "count": 1
+  }
+}

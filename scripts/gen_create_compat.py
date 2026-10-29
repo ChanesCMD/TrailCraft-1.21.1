@@ -91,6 +91,9 @@ SUBSTITUTED = {
     "create:pressing/sugar_cane": {"minecraft:sugar_cane": f"{NS}:sugar_cane"},
     "create:mixing/chocolate": {"minecraft:cocoa_beans": f"{NS}:cocoa_beans"},
     "create:milling/cocoa_beans": {"minecraft:cocoa_beans": f"{NS}:cocoa_beans"},
+    # наши ягоды и яблоко (scripts/gen_animal_goods.py, gen_farm.py)
+    "create:filling/chocolate_glazed_berries": {"minecraft:sweet_berries": f"#{NS}:berries"},
+    "create:filling/honeyed_apple": {"minecraft:apple": f"{NS}:apple"},
 }
 # Ванильные красители: что заменить своим, какие не копировать (свёкла у нас сахарная, белая)
 DYE_SWAPS = {"minecraft:cocoa_beans": f"{NS}:cocoa_beans"}
@@ -149,6 +152,8 @@ def tags(external):
         "c:stripped_logs": stripped_logs,
         "c:stripped_woods": stripped_woods,
         "create:sleepers": [f"{NS}:{r}_slab" for r in ROCKS],
+        "c:leathers": [f"{NS}:leather"],
+        "c:eggs": [f"{NS}:egg"],
     }
     for tag_id, values in replaced.items():
         ns, name = tag_id.split(":")
@@ -164,6 +169,8 @@ def tags(external):
         write(rel, {"replace": True, "values": data["values"]})
     # предметы пород и гравия одним тэгом (рычаг, повторитель, гладкий камень, жёрнов)
     write(f"data/{NS}/tags/item/rocks.json", {"replace": False, "values": [f"{NS}:{r}" for r in ROCKS]})
+    write(f"data/{NS}/tags/item/berries.json", {"replace": False, "values": [
+        f"{NS}:{b}" for b in ("currant", "cloudberry", "gooseberry", "blackberry")]})
     write(f"data/{NS}/tags/item/gravels.json", {"replace": False, "values": [f"{NS}:{r}_gravel" for r in ROCKS]})
 
 
@@ -360,6 +367,8 @@ def substitute(create):
             if old.startswith("#"):  # тэг → предмет или тэг
                 new_key = "tag" if new.startswith("#") else "item"
                 text = re.sub(r'"tag"\s*:\s*"%s"' % re.escape(old[1:]), '"%s": "%s"' % (new_key, new.lstrip("#")), text)
+            elif new.startswith("#"):  # предмет → тэг (только в ингредиентах)
+                text = re.sub(r'"item"\s*:\s*"%s"' % re.escape(old), '"tag": "%s"' % new[1:], text)
             else:  # предмет — везде, и в ингредиентах, и в результатах
                 text = text.replace(f'"{old}"', f'"{new}"')
         write(f"data/{NS}/recipe/create_compat/{rid.split(':')[1].replace('/', '_')}.json", json.loads(text))

@@ -184,6 +184,19 @@ public class ModItems {
     // === ПЕНЬ ДЛЯ РУБКИ ===
     public static final DeferredItem<BlockItem> CHOPPING_STUMP = ITEMS.registerSimpleBlockItem("chopping_stump", ModBlocks.CHOPPING_STUMP);
 
+    // === ШКУРА И КОЖА, ЯЙЦО, ЯБЛОКО (scripts/gen_animal_goods.py) ===
+    /** Сырая шкура: падает с животных вместо ванильной кожи (loot/ReplaceItemModifier). С ножом — выскобленная. */
+    public static final DeferredItem<Item> RAW_HIDE = ITEMS.registerSimpleItem("raw_hide");
+    /** Выскобленная шкура: с 2 корами (дубление) — кожа. */
+    public static final DeferredItem<Item> SCRAPED_HIDE = ITEMS.registerSimpleItem("scraped_hide");
+    /** Своя кожа (c:leathers вместо ванильной). */
+    public static final DeferredItem<Item> LEATHER = ITEMS.registerSimpleItem("leather");
+    /** Куриное яйцо: курица несёт его вместо ванильного (TrailBird), c:eggs. */
+    public static final DeferredItem<Item> EGG = ITEMS.registerSimpleItem("egg");
+    /** Яблоко: падает с листвы яблони (вариант листвы дуба). */
+    public static final DeferredItem<Item> APPLE = ITEMS.registerItem("apple",
+            props -> new Item(props.food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.3f).build())));
+
     // === СВОИ РАСТЕНИЯ (scripts/gen_plants.py) ===
     public static final DeferredItem<BlockItem> SEAWEED = ITEMS.registerSimpleBlockItem("seaweed", ModBlocks.SEAWEED);
     /** Сушёная водоросль (костёр): съедобна, как ванильная сушёная ламинария; ремни, воронки, туннели Create. */

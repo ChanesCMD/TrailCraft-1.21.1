@@ -90,6 +90,11 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.SHALE_PEBBLE);
                         output.accept(ModItems.FLINT);
                         output.accept(ModItems.CHOPPING_STUMP);
+                        output.accept(ModItems.RAW_HIDE);
+                        output.accept(ModItems.SCRAPED_HIDE);
+                        output.accept(ModItems.LEATHER);
+                        output.accept(ModItems.EGG);
+                        output.accept(ModItems.APPLE);
                         output.accept(ModItems.SEAWEED);
                         output.accept(ModItems.DRIED_SEAWEED);
                         output.accept(ModItems.DRIED_SEAWEED_BLOCK);

@@ -40,7 +40,7 @@ import java.util.function.Function;
 
 /**
  * 23 вида деревьев: по 16 блоков на вид (бревно, тонкое бревно, древесина, обтёсанные, листва, саженец, доски, ступени, плита, забор, калитка, дверь, люк, кнопка, нажимная плита).
- * Плюс красный клён: только своя листва и саженец, древесина — клёна (addLeafVariant).
+ * Плюс красный клён и яблоня: только своя листва и саженец, древесина — клёна и дуба (addLeafVariant).
  */
 public final class ModWood {
     public static final class WoodSet {
@@ -80,6 +80,7 @@ public final class ModWood {
         add("ebony", MapColor.COLOR_BLACK, MapColor.COLOR_BLACK);
         add("maple", MapColor.COLOR_ORANGE, MapColor.COLOR_BROWN);
         addLeafVariant("red_maple", "maple");
+        addLeafVariant("apple", "oak");
         add("cedar", MapColor.TERRACOTTA_RED, MapColor.TERRACOTTA_ORANGE);
         add("willow", MapColor.COLOR_YELLOW, MapColor.COLOR_GRAY);
         add("lilac", MapColor.COLOR_PURPLE, MapColor.COLOR_BROWN);
