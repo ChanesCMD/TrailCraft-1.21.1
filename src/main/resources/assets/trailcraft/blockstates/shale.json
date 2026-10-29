@@ -1,5 +1,20 @@
 {
   "variants": {
-    "": { "model": "trailcraft:block/shale" }
+    "": [
+      {
+        "model": "trailcraft:block/shale"
+      },
+      {
+        "model": "trailcraft:block/shale_mirrored"
+      },
+      {
+        "model": "trailcraft:block/shale",
+        "y": 180
+      },
+      {
+        "model": "trailcraft:block/shale_mirrored",
+        "y": 180
+      }
+    ]
   }
 }

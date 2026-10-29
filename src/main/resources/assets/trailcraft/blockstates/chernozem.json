@@ -1,5 +1,21 @@
 {
   "variants": {
-    "": { "model": "trailcraft:block/chernozem" }
+    "": [
+      {
+        "model": "trailcraft:block/chernozem"
+      },
+      {
+        "model": "trailcraft:block/chernozem",
+        "y": 90
+      },
+      {
+        "model": "trailcraft:block/chernozem",
+        "y": 180
+      },
+      {
+        "model": "trailcraft:block/chernozem",
+        "y": 270
+      }
+    ]
   }
 }

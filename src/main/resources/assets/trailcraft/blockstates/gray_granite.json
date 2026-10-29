@@ -1,5 +1,20 @@
 {
   "variants": {
-    "": { "model": "trailcraft:block/gray_granite" }
+    "": [
+      {
+        "model": "trailcraft:block/gray_granite"
+      },
+      {
+        "model": "trailcraft:block/gray_granite_mirrored"
+      },
+      {
+        "model": "trailcraft:block/gray_granite",
+        "y": 180
+      },
+      {
+        "model": "trailcraft:block/gray_granite_mirrored",
+        "y": 180
+      }
+    ]
   }
 }

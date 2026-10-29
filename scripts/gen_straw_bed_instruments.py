@@ -158,7 +158,24 @@ def straw_bed():
                 v["y"] = y
             variants[f"facing={facing},part={part}"] = v
     write(f"assets/{NS}/blockstates/straw_bed.json", {"variants": variants})
-    write(f"assets/{NS}/models/item/straw_bed.json", {"parent": f"{NS}:block/straw_bed_head"})
+    # предмет — кровать целиком (изголовье и изножье), иначе в инвентаре видна половина без одного торца
+    item_faces = lambda top, end_face: {
+        "up": {"uv": [0, 0, 16, 16], "texture": top}, "down": {"uv": [0, 0, 16, 16], "texture": top},
+        "east": side, "west": side, end_face: end}
+    write(f"assets/{NS}/models/item/straw_bed.json", {
+        "parent": "minecraft:block/block",
+        "textures": {"particle": f"{NS}:block/straw_bed_head", "head": f"{NS}:block/straw_bed_head",
+                     "foot": f"{NS}:block/straw_bed_foot", "side": f"{NS}:block/straw_bed_side",
+                     "end": f"{NS}:block/straw_bed_end"},
+        "elements": [{"from": [0, 0, -8], "to": [16, 4, 8], "faces": item_faces("#head", "north")},
+                     {"from": [0, 0, 8], "to": [16, 4, 24], "faces": item_faces("#foot", "south")}],
+        "display": {
+            "gui": {"rotation": [30, 225, 0], "translation": [0, 2, 0], "scale": [0.45, 0.45, 0.45]},
+            "ground": {"rotation": [0, 0, 0], "translation": [0, 3, 0], "scale": [0.25, 0.25, 0.25]},
+            "fixed": {"rotation": [0, 0, 0], "translation": [0, 0, 0], "scale": [0.5, 0.5, 0.5]},
+            "thirdperson_righthand": {"rotation": [75, 45, 0], "translation": [0, 2.5, 0], "scale": [0.3, 0.3, 0.3]},
+            "firstperson_righthand": {"rotation": [0, 45, 0], "translation": [0, 0, 0], "scale": [0.3, 0.3, 0.3]},
+            "firstperson_lefthand": {"rotation": [0, 225, 0], "translation": [0, 0, 0], "scale": [0.3, 0.3, 0.3]}}})
     write(f"data/{NS}/loot_table/blocks/straw_bed.json", {
         "type": "minecraft:block",
         "pools": [{"rolls": 1.0, "bonus_rolls": 0.0, "entries": [{"type": "minecraft:item", "name": f"{NS}:straw_bed"}],

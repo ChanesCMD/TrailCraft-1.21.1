@@ -1,5 +1,21 @@
 {
   "variants": {
-    "": { "model": "trailcraft:block/clay_white" }
+    "": [
+      {
+        "model": "trailcraft:block/clay_white"
+      },
+      {
+        "model": "trailcraft:block/clay_white",
+        "y": 90
+      },
+      {
+        "model": "trailcraft:block/clay_white",
+        "y": 180
+      },
+      {
+        "model": "trailcraft:block/clay_white",
+        "y": 270
+      }
+    ]
   }
 }

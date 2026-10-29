@@ -1,5 +1,20 @@
 {
   "variants": {
-    "": { "model": "trailcraft:block/gabbro" }
+    "": [
+      {
+        "model": "trailcraft:block/gabbro"
+      },
+      {
+        "model": "trailcraft:block/gabbro_mirrored"
+      },
+      {
+        "model": "trailcraft:block/gabbro",
+        "y": 180
+      },
+      {
+        "model": "trailcraft:block/gabbro_mirrored",
+        "y": 180
+      }
+    ]
   }
 }

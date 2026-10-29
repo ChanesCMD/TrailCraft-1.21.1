@@ -89,7 +89,16 @@ def convert(name, bb):
         model["ambientocclusion"] = False
     write(f"models/block/{name}.json", model)
     if name not in NO_ITEM:
-        write(f"models/item/{name}.json", {"parent": f"{NS}:block/{name}"})
+        item = {"parent": f"{NS}:block/{name}"}
+        if name.endswith("_backpack"):  # рюкзак маленький — в инвентаре и в руке крупнее блока
+            item["display"] = {
+                "gui": {"rotation": [30, 225, 0], "translation": [0, 3.5, 0], "scale": [1.15, 1.15, 1.15]},
+                "ground": {"rotation": [0, 0, 0], "translation": [0, 3, 0], "scale": [0.5, 0.5, 0.5]},
+                "fixed": {"rotation": [0, 0, 0], "translation": [0, 3, 0], "scale": [1.0, 1.0, 1.0]},
+                "thirdperson_righthand": {"rotation": [75, 45, 0], "translation": [0, 2.5, 0], "scale": [0.55, 0.55, 0.55]},
+                "firstperson_righthand": {"rotation": [0, 45, 0], "translation": [0, 2, 0], "scale": [0.6, 0.6, 0.6]},
+                "firstperson_lefthand": {"rotation": [0, 225, 0], "translation": [0, 2, 0], "scale": [0.6, 0.6, 0.6]}}
+        write(f"models/item/{name}.json", item)
 
 
 def main():

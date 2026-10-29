@@ -1,5 +1,20 @@
 {
   "variants": {
-    "": { "model": "trailcraft:block/chalk" }
+    "": [
+      {
+        "model": "trailcraft:block/chalk"
+      },
+      {
+        "model": "trailcraft:block/chalk_mirrored"
+      },
+      {
+        "model": "trailcraft:block/chalk",
+        "y": 180
+      },
+      {
+        "model": "trailcraft:block/chalk_mirrored",
+        "y": 180
+      }
+    ]
   }
 }

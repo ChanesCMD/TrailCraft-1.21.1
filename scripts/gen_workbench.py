@@ -128,9 +128,14 @@ def from_template(name, wood_color, mat=False):
                 im.putpixel((x, y), px)
             elif mat and px[:3] not in TOP_FRAME:
                 im.putpixel((x, y), recolor(px, VANILLA_MAT, STRAW) + (px[3],))
-            elif not mat and px[:3] in SIDE_MAT and 4 <= x <= 10 and y < 15:
+            elif not mat and px[:3] in SIDE_MAT and 4 <= x <= 10 and y < 2:
                 # свисающее полотно в тени, но чуть светлее ванильного, иначе солома выходит болотной
                 im.putpixel((x, y), shade(recolor(px, VANILLA_MAT, STRAW), 1.3) + (px[3],))
+            elif not mat and px[:3] in SIDE_MAT and 4 <= x <= 10 and y < 4:
+                im.putpixel((x, y), px)  # верх полосы под полотном — как у ванильного верстака
+            elif not mat and px[:3] in SIDE_MAT and 4 <= x <= 10 and y < 15:
+                # полоса посередине — тёмные доски, а не продолжение полотна
+                im.putpixel((x, y), shade(recolor(px, VANILLA_MAT, wood_color), 0.8) + (px[3],))
             else:
                 im.putpixel((x, y), recolor(px, VANILLA_WOOD, wood_color) + (px[3],))
     return im

@@ -1,5 +1,20 @@
 {
   "variants": {
-    "": { "model": "trailcraft:block/andesite" }
+    "": [
+      {
+        "model": "trailcraft:block/andesite"
+      },
+      {
+        "model": "trailcraft:block/andesite_mirrored"
+      },
+      {
+        "model": "trailcraft:block/andesite",
+        "y": 180
+      },
+      {
+        "model": "trailcraft:block/andesite_mirrored",
+        "y": 180
+      }
+    ]
   }
 }

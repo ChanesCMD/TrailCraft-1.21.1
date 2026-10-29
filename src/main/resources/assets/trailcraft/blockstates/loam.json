@@ -1,5 +1,21 @@
 {
   "variants": {
-    "": { "model": "trailcraft:block/loam" }
+    "": [
+      {
+        "model": "trailcraft:block/loam"
+      },
+      {
+        "model": "trailcraft:block/loam",
+        "y": 90
+      },
+      {
+        "model": "trailcraft:block/loam",
+        "y": 180
+      },
+      {
+        "model": "trailcraft:block/loam",
+        "y": 270
+      }
+    ]
   }
 }

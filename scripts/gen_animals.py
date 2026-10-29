@@ -89,8 +89,9 @@ def col(c):
 
 
 def paint(spec, face, a, b, size, rnd, cell):
-    """Цвет текселя. Глаза: eyes — на боках (ряд, от переда, цвет[, бровь]), feyes — спереди (ряд, от края, цвет[,
-    где белок: "in" — со стороны носа, "out" — с внешней стороны, "up" — над глазом]). a, b у боков (west/east) — от переда назад и сверху вниз; у переда и зада (front/back) — слева
+    """Цвет текселя. Глаза: eyes — на боках (ряд, от переда, цвет[, бровь или None[, белок: −1 перед глазом, +1 за ним]]),
+    feyes — спереди (ряд, от края, цвет[, где белок: "in" — со стороны носа, "out" — с внешней стороны, "up" — над
+    глазом[, цвет рамки вокруг глаза и белка]]). a, b у боков (west/east) — от переда назад и сверху вниз; у переда и зада (front/back) — слева
     направо и сверху вниз; у верха и низа (top/bottom) — поперёк и от переда назад. size = (w, h, d)."""
     w, h, d = size
     base = spec["c"]
@@ -145,14 +146,21 @@ def paint(spec, face, a, b, size, rnd, cell):
         er, ez, ec = spec["eyes"][:3]
         if row == er and z == ez:
             color = col(ec)
-        if len(spec["eyes"]) > 3 and row == er - 1 and z == ez:  # бровь / ободок над глазом
+        if len(spec["eyes"]) > 3 and spec["eyes"][3] is not None and row == er - 1 and z == ez:  # бровь над глазом
             color = col(spec["eyes"][3])
+        if len(spec["eyes"]) > 4 and row == er and z == ez + spec["eyes"][4]:  # белок: −1 — перед глазом, +1 — за ним
+            color = WHITE
     if face == "front" and "feyes" in spec:  # глаза спереди: два, симметрично (столбец от края)
         er, ec, cc = spec["feyes"][:3]
         if row == er and a in (ec, w - 1 - ec):
             color = col(cc)
         if len(spec["feyes"]) > 3:  # белок, как у ванильных: рядом с глазом — внутрь, наружу или сверху
             dx, dy = {"in": (1, 0), "out": (-1, 0), "up": (0, -1)}[spec["feyes"][3]]
+            if len(spec["feyes"]) > 4:  # рамка вокруг глаза с белком, чтобы белок не сливался со светлой шерстью
+                left = (min(ec, ec + dx), max(ec, ec + dx))
+                cols = set(range(left[0], left[1] + 1)) | {w - 1 - c for c in range(left[0], left[1] + 1)}
+                if (row in (er - 1, er + 1) and a in cols) or (row == er and a in (left[0] - 1, w - left[0])):
+                    color = col(spec["feyes"][4])
             if row == er + dy and a in (ec + dx, w - 1 - ec - dx):
                 color = WHITE
     for fface, fa, fb, fc in spec.get("px", []):
@@ -278,7 +286,7 @@ def cow():
     return dict(ru="Корова", en="Cow", gen="коровы", lie=8, parts=[
         part("body", (0, 11, 0), [box(-6, -5, -9, 12, 10, 18, hide)]),
         part("udder", (0, 16, 5), [box(-2, 0, -2, 4, 1, 4, P(0xE6A8A0, m=0.1))]),
-        part("head", (0, 8, -9), [box(-4, -4, -6, 8, 8, 6, P(0x2A2624, m=0.12, front=0xEAE6DE, feyes=(3, 1, EYE, "in")))], "head"),
+        part("head", (0, 8, -9), [box(-4, -4, -6, 8, 8, 6, P(0x2A2624, m=0.12, front=0xEAE6DE, feyes=(3, 1, EYE, "in", 0x2A2624)))], "head"),
         part("muzzle", (0, 0, 0), [box(-3, 1, -8, 6, 3, 2, P(0xE6B0A8, m=0.1, px=[("front", 1, 1, 0x5A3A38),
                                                                                 ("front", 4, 1, 0x5A3A38)]))], parent="head"),
         part("horn_r", (-4, -4, -3), [dict(box(-1, -3, -0.5, 1, 3, 1, P(0xDCCFB0, m=0, ttip=(0x5A5040, 1))), key="horn")],
@@ -351,7 +359,7 @@ def beaver():
     fur = P(0x6E482C, m=0.35, belly=(0x8A603C, 1))
     return dict(ru="Бобр", en="Beaver", gen="бобра", lie=0, parts=[
         part("body", (0, 18, 0), [box(-3.5, -3, -5, 7, 6, 10, fur)]),
-        part("head", (0, 17, -5), [box(-2.5, -3, -4, 5, 4, 4, P(0x6E482C, m=0.3, feyes=(0, 1, EYE),
+        part("head", (0, 17, -5), [box(-2.5, -3, -4, 5, 4, 4, P(0x6E482C, m=0.3, eyes=(1, 1, EYE, None, -1),
                                                              px=[("front", 2, 3, 0x1E1614), ("front", 2, 2, 0x2A201A)]))], "head"),
         part("teeth", (0, 0, 0), [box(-1, 1, -4.2, 2, 1, 1, P(0xE08A2A, m=0))], parent="head"),
         *ears("head", -3, 2.5, -1, 1, 1, 1, P(0x4E3220, m=0)),
@@ -361,9 +369,9 @@ def beaver():
     ])
 
 
-def fox_like(ru, en, gen, fur, light, dark, ear_size, ear_inner, tail_tip, legs):
+def fox_like(ru, en, gen, fur, light, dark, ear_size, ear_inner, tail_tip, legs, eye_frame=None):
     f = P(fur, m=0.25, belly=(light, 2))
-    head = P(fur, m=0.2, feyes=(1, 1, 0x2A1E10, "out"), bot=(light, 1))
+    head = P(fur, m=0.2, feyes=(1, 1, 0x2A1E10, "out") + ((eye_frame,) if eye_frame else ()), bot=(light, 1))
     ew, eh = ear_size
     return dict(ru=ru, en=en, gen=gen, lie=5, parts=[
         part("body", (0, 16.5, 0), [box(-2.5, -2.5, -5, 5, 5, 10, f)]),
@@ -385,7 +393,8 @@ def fennec():
 
 
 def arctic_fox():
-    return fox_like("Песец", "Arctic Fox", "песца", 0xECECE8, 0xFAFAFA, 0xC8CCD2, (2, 1), 0xD8D8D8, 0xFAFAFA, 0xE2E2DE)
+    return fox_like("Песец", "Arctic Fox", "песца", 0xECECE8, 0xFAFAFA, 0xC8CCD2, (2, 1), 0xD8D8D8, 0xFAFAFA, 0xE2E2DE,
+                    eye_frame=0x9EA2AA)
 
 
 def fox():

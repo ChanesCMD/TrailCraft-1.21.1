@@ -1,5 +1,21 @@
 {
   "variants": {
-    "": { "model": "trailcraft:block/burozem_grass" }
+    "": [
+      {
+        "model": "trailcraft:block/burozem_grass"
+      },
+      {
+        "model": "trailcraft:block/burozem_grass",
+        "y": 90
+      },
+      {
+        "model": "trailcraft:block/burozem_grass",
+        "y": 180
+      },
+      {
+        "model": "trailcraft:block/burozem_grass",
+        "y": 270
+      }
+    ]
   }
 }

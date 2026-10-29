@@ -1,5 +1,20 @@
 {
   "variants": {
-    "": { "model": "trailcraft:block/diorite" }
+    "": [
+      {
+        "model": "trailcraft:block/diorite"
+      },
+      {
+        "model": "trailcraft:block/diorite_mirrored"
+      },
+      {
+        "model": "trailcraft:block/diorite",
+        "y": 180
+      },
+      {
+        "model": "trailcraft:block/diorite_mirrored",
+        "y": 180
+      }
+    ]
   }
 }

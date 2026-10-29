@@ -1,5 +1,20 @@
 {
   "variants": {
-    "": { "model": "trailcraft:block/sandstone" }
+    "": [
+      {
+        "model": "trailcraft:block/sandstone"
+      },
+      {
+        "model": "trailcraft:block/sandstone_mirrored"
+      },
+      {
+        "model": "trailcraft:block/sandstone",
+        "y": 180
+      },
+      {
+        "model": "trailcraft:block/sandstone_mirrored",
+        "y": 180
+      }
+    ]
   }
 }

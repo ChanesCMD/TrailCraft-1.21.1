@@ -1,5 +1,20 @@
 {
   "variants": {
-    "": { "model": "trailcraft:block/dolomite" }
+    "": [
+      {
+        "model": "trailcraft:block/dolomite"
+      },
+      {
+        "model": "trailcraft:block/dolomite_mirrored"
+      },
+      {
+        "model": "trailcraft:block/dolomite",
+        "y": 180
+      },
+      {
+        "model": "trailcraft:block/dolomite_mirrored",
+        "y": 180
+      }
+    ]
   }
 }

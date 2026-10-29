@@ -1,16 +1,20 @@
 {
   "variants": {
-    "axis=x": {
-      "model": "trailcraft:block/basalt",
-      "x": 90,
-      "y": 90
-    },
-    "axis=y": {
-      "model": "trailcraft:block/basalt"
-    },
-    "axis=z": {
-      "model": "trailcraft:block/basalt",
-      "x": 90
-    }
+    "": [
+      {
+        "model": "trailcraft:block/basalt"
+      },
+      {
+        "model": "trailcraft:block/basalt_mirrored"
+      },
+      {
+        "model": "trailcraft:block/basalt",
+        "y": 180
+      },
+      {
+        "model": "trailcraft:block/basalt_mirrored",
+        "y": 180
+      }
+    ]
   }
 }

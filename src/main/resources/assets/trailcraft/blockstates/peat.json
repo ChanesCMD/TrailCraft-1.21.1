@@ -1,5 +1,21 @@
 {
   "variants": {
-    "": { "model": "trailcraft:block/peat" }
+    "": [
+      {
+        "model": "trailcraft:block/peat"
+      },
+      {
+        "model": "trailcraft:block/peat",
+        "y": 90
+      },
+      {
+        "model": "trailcraft:block/peat",
+        "y": 180
+      },
+      {
+        "model": "trailcraft:block/peat",
+        "y": 270
+      }
+    ]
   }
 }
