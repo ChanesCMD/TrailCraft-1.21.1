@@ -152,6 +152,15 @@
   `docs/textures/weather_particles.png`). Вкл/выкл и плотность — `ClientConfig.WEATHER_PARTICLES`, `WEATHER_DENSITY`.
   Временный биом `trailcraft:winter_test` (копия буроземной равнины с температурой −0,5, в генерацию не входит) — чтобы
   посмотреть снег: `/fillbiome ~-28 ~-4 ~-28 ~28 ~4 ~28 trailcraft:winter_test`; осадки берутся по биому у земли.
+- Сезоны (по календарю, `season/Seasons.java`, числа там же): летом всё как было; осенью листва лиственных (не хвоя;
+  красный клён остаётся красным) жёлтая, трава слегка желтеет, перерыв между дождями — 2/3 обычного
+  (`season/SeasonEvents.java`); зимой биомы холоднее на 1 (`mixin/BiomeMixin`, сдвиг после кэша температуры) — снег везде,
+  где есть осадки, вода замерзает, листва белая, трава в инее, под снегом — белая; весной трава зеленее, снег и лёд
+  (не поставленные игроком) в тёплых биомах тают по случайным тикам (`mixin/SnowLayerBlockMixin`, `IceBlockMixin`).
+  Сезон считают и сервер, и клиент из dayTime. Цвета — `client/SeasonColors.java`: трава — поправка к цвету в
+  `ClientEvents.blockColors`, листва — обёртка моделей (`ClientEvents.wrapPipeModels`) подменяет спрайт
+  `block/X` на `block/season/<сезон>/X` (текстуры пишет `scripts/gen_season_textures.py`); сменился сезон — чанки
+  перестраиваются.
 - С листвы сакуры падают розовые лепестки, с ивы — листья, как у ванильной вишни (`client/LeafParticles.java`, вызов —
   `mixin/LeavesBlockClientMixin`; частица — ванильный лепесток вишни `CherryParticle` со своими текстурами: кадры
   ванильного лепестка в цветах листвы, `scripts/gen_leaf_particles.py`).

@@ -5,13 +5,16 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "AxisPipeBlockMixin",
+    "BiomeMixin",
     "BoilerDataMixin",
     "EncasedPipeBlockMixin",
     "FluidPipeBlockMixin",
     "FoodDataAccessor",
     "FluidTransportBehaviourMixin",
+    "IceBlockMixin",
     "LeavesBlockMixin",
     "SmartBlockEntityMixin",
+    "SnowLayerBlockMixin",
     "TreeFertilizerItemMixin"
   ],
   "client": [

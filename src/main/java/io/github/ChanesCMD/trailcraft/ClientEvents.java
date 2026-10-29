@@ -94,6 +94,17 @@ public class ClientEvents {
         // укреплённые трубы (и помпа, умная труба, вентиль): ободки, стыки, сливы и корпус Create дорисовывает
         // своими моделями (PipeAttachmentModel, как у его труб) — в нашей гамме
         io.github.ChanesCMD.trailcraft.client.model.ReinforcedSprites.clearCache();
+        // листва по сезонам (client/SeasonColors): осенью и зимой — свои текстуры; у хвои их нет, она не меняется
+        io.github.ChanesCMD.trailcraft.client.SeasonColors.clearCache();
+        for (net.minecraft.world.level.block.Block block : net.minecraft.core.registries.BuiltInRegistries.BLOCK) {
+            if (block instanceof net.minecraft.world.level.block.LeavesBlock
+                    && TrailCraft.MODID.equals(net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(block).getNamespace())) {
+                for (var state : block.getStateDefinition().getPossibleStates()) {
+                    e.getModels().computeIfPresent(net.minecraft.client.renderer.block.BlockModelShaper.stateToModelLocation(state),
+                            (location, model) -> new io.github.ChanesCMD.trailcraft.client.SeasonColors.LeavesModel(model));
+                }
+            }
+        }
         for (net.minecraft.world.level.block.Block pipe : java.util.List.<net.minecraft.world.level.block.Block>of(
                 ModBlocks.REINFORCED_FLUID_PIPE.get(), ModBlocks.REINFORCED_GLASS_FLUID_PIPE.get(),
                 ModBlocks.REINFORCED_ENCASED_FLUID_PIPE.get(), io.github.ChanesCMD.trailcraft.init.ModReinforced.PUMP.get(),
@@ -118,9 +129,10 @@ public class ClientEvents {
     @SubscribeEvent
     public static void blockColors(RegisterColorHandlersEvent.Block e) {
         e.register((state, level, pos, tint) ->
-                        USE_BIOME_TINT && level != null && pos != null
-                                ? BiomeColors.getAverageGrassColor(level, pos)
-                                : GRASS_COLOR,
+                        io.github.ChanesCMD.trailcraft.client.SeasonColors.grass(
+                                USE_BIOME_TINT && level != null && pos != null
+                                        ? BiomeColors.getAverageGrassColor(level, pos)
+                                        : GRASS_COLOR, level, pos),
                 // дёрн
                 ModBlocks.BUROZEM_GRASS.get(),
                 ModBlocks.CHERNOZEM_GRASS.get(),
