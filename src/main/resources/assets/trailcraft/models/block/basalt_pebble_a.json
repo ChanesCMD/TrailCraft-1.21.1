@@ -1,8 +1,8 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "particle": "trailcraft:block/basalt",
-    "all": "trailcraft:block/basalt"
+    "particle": "minecraft:block/basalt_side",
+    "all": "minecraft:block/basalt_side"
   },
   "elements": [
     {

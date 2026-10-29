@@ -13,12 +13,10 @@ docs/textures/cobblestone.png.
 """
 import json
 import os
-import zipfile
-from io import BytesIO
 
 from PIL import Image
 
-from gen_create_compat import FOREIGN_ROCKS as FOREIGN, find_jar, rock_block, rock_texture
+from gen_create_compat import FOREIGN_ROCKS as FOREIGN, rock_block, rock_image, rock_texture
 
 NS = "trailcraft"
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -28,14 +26,6 @@ DOCS = os.path.join(HERE, "..", "docs", "textures")
 ROCKS = ["andesite", "basalt", "chalk", "diorite", "dolomite", "gabbro", "granite", "gray_granite", "limestone",
          "marble", "sandstone", "shale"]
 CONTRAST = 0.35
-def rock_image(rock):
-    if rock in FOREIGN:
-        ns, rel = FOREIGN[rock][1].split(":")
-        with zipfile.ZipFile(find_jar("create-1.21.1-*-slim.jar")) as jar:
-            return Image.open(BytesIO(jar.read(f"assets/{ns}/textures/{rel}.png"))).convert("RGBA")
-    return Image.open(os.path.join(TEX, f"{rock}.png")).convert("RGBA")
-
-
 def path(rel):
     return os.path.join(ROOT, *rel.split("/"))
 
@@ -80,17 +70,18 @@ def texture(rock):
 
 def slab(rock, ru, en, pickaxe):
     """Плита породы: модели нижней и верхней половины на текстурах породы (у базальта торцы — basalt_top), двойная — сам
-    блок породы; лут — 2 плиты с двойной."""
+    блок породы (у чужих пород — своя модель-колонна); лут — 2 плиты с двойной."""
     name = f"{rock}_slab"
     side = rock_texture(rock)
-    end = f"{NS}:block/{rock}_top" if os.path.exists(os.path.join(TEX, f"{rock}_top.png")) else side
+    end = FOREIGN[rock][2] if rock in FOREIGN else (
+        f"{NS}:block/{rock}_top" if os.path.exists(os.path.join(TEX, f"{rock}_top.png")) else side)
     textures = {"bottom": end, "top": end, "side": side}
     write(f"assets/{NS}/models/block/{name}.json", {"parent": "minecraft:block/slab", "textures": textures})
     write(f"assets/{NS}/models/block/{name}_top.json", {"parent": "minecraft:block/slab_top", "textures": textures})
     double = f"{NS}:block/{rock}" if rock not in FOREIGN else f"{NS}:block/{rock}_slab_double"
     if rock in FOREIGN:
-        write(f"assets/{NS}/models/block/{rock}_slab_double.json", {"parent": "minecraft:block/cube_all",
-                                                                    "textures": {"all": side}})
+        write(f"assets/{NS}/models/block/{rock}_slab_double.json", {"parent": "minecraft:block/cube_column",
+                                                                    "textures": {"side": side, "end": end}})
     write(f"assets/{NS}/blockstates/{name}.json", {"variants": {
         "type=bottom": {"model": f"{NS}:block/{name}"}, "type=top": {"model": f"{NS}:block/{name}_top"},
         "type=double": {"model": double}}})

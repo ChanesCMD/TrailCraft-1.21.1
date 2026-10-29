@@ -48,8 +48,6 @@ public class ModBlocks {
     public static final DeferredBlock<Block> ANDESITE = BLOCKS.registerSimpleBlock("andesite",
             BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(3.0f, 12.0f).requiresCorrectToolForDrops().sound(SoundType.STONE));
 
-    public static final DeferredBlock<Block> BASALT = BLOCKS.registerBlock("basalt", RotatedPillarBlock::new,
-            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(4.0f, 16.0f).requiresCorrectToolForDrops().sound(SoundType.STONE));
 
     public static final DeferredBlock<Block> CHALK = BLOCKS.registerSimpleBlock("chalk",
             BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).strength(0.8f, 3.2f).requiresCorrectToolForDrops().sound(SoundType.STONE));
@@ -69,9 +67,11 @@ public class ModBlocks {
     public static final DeferredBlock<Block> GRAY_GRANITE = BLOCKS.registerSimpleBlock("gray_granite",
             BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(3.5f, 14.0f).requiresCorrectToolForDrops().sound(SoundType.STONE));
 
-    /** Свойства булыжника и плиты известняка (сам известняк — create:limestone, ore/Rock). */
-    private static BlockBehaviour.Properties limestoneProps() {
-        return BlockBehaviour.Properties.of().mapColor(MapColor.SAND).strength(2.0f, 8.0f).requiresCorrectToolForDrops().sound(SoundType.STONE);
+    /** Свойства булыжника и плиты чужих пород (известняк — create:limestone, базальт — minecraft:basalt, ore/Rock). */
+    private static BlockBehaviour.Properties foreignRockProps(Rock rock) {
+        return rock == Rock.BASALT
+                ? BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(4.0f, 16.0f).requiresCorrectToolForDrops().sound(SoundType.STONE)
+                : BlockBehaviour.Properties.of().mapColor(MapColor.SAND).strength(2.0f, 8.0f).requiresCorrectToolForDrops().sound(SoundType.STONE);
     }
 
     public static final DeferredBlock<Block> MARBLE = BLOCKS.registerSimpleBlock("marble",
@@ -223,7 +223,7 @@ public class ModBlocks {
         for (Rock rock : Rock.values()) {
             DeferredBlock<Block> stone = DeferredBlock.createBlock(ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, rock.getSerializedName()));
             COBBLESTONES.put(rock, BLOCKS.register(rock.getSerializedName() + "_cobblestone",
-                    () -> new Block(rock == Rock.LIMESTONE ? limestoneProps() : BlockBehaviour.Properties.ofFullCopy(stone.get()))));
+                    () -> new Block(rock.isForeign() ? foreignRockProps(rock) : BlockBehaviour.Properties.ofFullCopy(stone.get()))));
         }
     }
 
@@ -233,7 +233,7 @@ public class ModBlocks {
         for (Rock rock : Rock.values()) {
             DeferredBlock<Block> stone = DeferredBlock.createBlock(ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, rock.getSerializedName()));
             SLABS.put(rock, BLOCKS.register(rock.getSerializedName() + "_slab",
-                    () -> new SlabBlock(rock == Rock.LIMESTONE ? limestoneProps() : BlockBehaviour.Properties.ofFullCopy(stone.get()))));
+                    () -> new SlabBlock(rock.isForeign() ? foreignRockProps(rock) : BlockBehaviour.Properties.ofFullCopy(stone.get()))));
         }
     }
 

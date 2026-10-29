@@ -10,7 +10,8 @@ import java.util.Locale;
 
 /**
  * Породы, в которых лежат руды. Имя совпадает с id блока породы (trailcraft:gabbro и т. д.), кроме известняка — это
- * известняк Create (create:limestone); булыжник, гравий, плита и камешек известняка — свои (trailcraft:limestone_*).
+ * известняк Create (create:limestone) — и базальта (ванильный minecraft:basalt); их булыжник, гравий, плита и камешек —
+ * свои (trailcraft:limestone_*, trailcraft:basalt_*).
  */
 public enum Rock implements StringRepresentable {
     ANDESITE, BASALT, CHALK, DIORITE, DOLOMITE, GABBRO, GRANITE, GRAY_GRANITE, LIMESTONE, MARBLE, SANDSTONE, SHALE;
@@ -22,10 +23,18 @@ public enum Rock implements StringRepresentable {
         return id;
     }
 
+    /** Порода — блок другого мода или ванильный (свойства её булыжника и плиты задаются отдельно). */
+    public boolean isForeign() {
+        return !TrailCraft.MODID.equals(blockId().getNamespace());
+    }
+
     /** Id блока самой породы. */
     public ResourceLocation blockId() {
-        return this == LIMESTONE ? ResourceLocation.fromNamespaceAndPath("create", id)
-                : ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, id);
+        return switch (this) {
+            case LIMESTONE -> ResourceLocation.fromNamespaceAndPath("create", id);
+            case BASALT -> ResourceLocation.withDefaultNamespace(id);
+            default -> ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, id);
+        };
     }
 
     public Block block() {

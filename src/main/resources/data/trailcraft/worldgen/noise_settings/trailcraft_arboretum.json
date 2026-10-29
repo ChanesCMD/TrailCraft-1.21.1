@@ -8054,7 +8054,7 @@
                   "then_run": {
                     "type": "minecraft:block",
                     "result_state": {
-                      "Name": "trailcraft:basalt"
+                      "Name": "minecraft:basalt"
                     }
                   }
                 },
@@ -8267,7 +8267,7 @@
                   "then_run": {
                     "type": "minecraft:block",
                     "result_state": {
-                      "Name": "trailcraft:basalt"
+                      "Name": "minecraft:basalt"
                     }
                   }
                 }

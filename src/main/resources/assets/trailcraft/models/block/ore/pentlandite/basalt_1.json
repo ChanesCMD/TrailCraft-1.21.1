@@ -1,7 +1,7 @@
 {
   "parent": "trailcraft:block/ore_layered",
   "textures": {
-    "rock": "trailcraft:block/basalt",
+    "rock": "minecraft:block/basalt_side",
     "ore": "trailcraft:block/ore/pentlandite/basalt_1"
   }
 }

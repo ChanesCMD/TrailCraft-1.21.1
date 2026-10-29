@@ -289,7 +289,8 @@ def veins():
     dist = lambda a, b: sum((a[i] - b[i]) ** 2 for i in range(3))
     for ore, (colors, donors) in VEINS.items():
         for rock, donor in donors.items():
-            rock_colors = {c[:3] for c in Image.open(os.path.join(ROOT, "block", f"{rock}.png")).convert("RGBA").getdata()}
+            from gen_create_compat import rock_image  # gen_create_compat сам импортирует этот модуль
+            rock_colors = {c[:3] for c in rock_image(rock).get_flattened_data()}
             donor_colors = list(RAMPS[donor][1]) + list(ACCENTS.get(donor, []))
             os.makedirs(os.path.join(ROOT, "block", "ore", ore), exist_ok=True)
             for n in (1, 2, 3):

@@ -19,7 +19,7 @@
       {
         "target": {
           "predicate_type": "minecraft:block_match",
-          "block": "trailcraft:basalt"
+          "block": "minecraft:basalt"
         },
         "state": {
           "Name": "trailcraft:pentlandite_ore",

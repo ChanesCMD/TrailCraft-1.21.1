@@ -24,7 +24,6 @@ public class ModCreativeTabs {
                     .displayItems((parameters, output) -> {
                         // Камни (12)
                         output.accept(ModBlocks.ANDESITE);
-                        output.accept(ModBlocks.BASALT);
                         output.accept(ModBlocks.CHALK);
                         output.accept(ModBlocks.DIORITE);
                         output.accept(ModBlocks.DOLOMITE);

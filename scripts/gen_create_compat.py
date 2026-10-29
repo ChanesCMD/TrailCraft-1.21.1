@@ -46,8 +46,11 @@ ROOT = os.path.join(HERE, "..", "src", "main", "resources")
 GRADLE = os.path.join(os.path.expanduser("~"), ".gradle", "caches")
 ROCKS = ["andesite", "basalt", "chalk", "diorite", "dolomite", "gabbro", "granite", "gray_granite", "limestone",
          "marble", "sandstone", "shale"]
-# Порода — блок другого мода (известняк — Create): id блока и текстура; булыжник, гравий, плита, камешек — свои
-FOREIGN_ROCKS = {"limestone": ("create:limestone", "create:block/palettes/stone_types/limestone")}
+# Порода — блок другого мода (известняк — Create, базальт — ванильный): id блока, текстура боков и торцов; булыжник,
+# гравий, плита, камешек — свои
+FOREIGN_ROCKS = {"limestone": ("create:limestone", "create:block/palettes/stone_types/limestone",
+                               "create:block/palettes/stone_types/limestone"),
+                 "basalt": ("minecraft:basalt", "minecraft:block/basalt_side", "minecraft:block/basalt_top")}
 
 
 def rock_block(rock):
@@ -56,6 +59,17 @@ def rock_block(rock):
 
 def rock_texture(rock):
     return FOREIGN_ROCKS[rock][1] if rock in FOREIGN_ROCKS else f"{NS}:block/{rock}"
+
+
+def rock_image(rock):
+    """Текстура породы картинкой: своя — из ресурсов, чужая — из jar Create или клиента."""
+    from PIL import Image
+    if rock in FOREIGN_ROCKS:
+        ns, rel = FOREIGN_ROCKS[rock][1].split(":")
+        name = "create-1.21.1-*-slim.jar" if ns == "create" else "minecraft_1.21.1_client.jar"
+        with zipfile.ZipFile(find_jar(name)) as jar:
+            return Image.open(BytesIO(jar.read(f"assets/{ns}/textures/{rel}.png"))).convert("RGBA")
+    return Image.open(os.path.join(ROOT, "assets", NS, "textures", "block", f"{rock}.png")).convert("RGBA")
 VANILLA_WOODS = ["oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "bamboo", "crimson",
                  "warped"]
 

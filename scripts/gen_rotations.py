@@ -14,7 +14,7 @@ SOILS = ["zheltozem", "burozem", "chernozem", "loam", "clay_white", "clay_blue",
 SANDS = ["sand_gray", "sand_red", "sand_white", "sand_yellow"]
 GRAVELS = [f"{r}_gravel" for r in ["andesite", "basalt", "chalk", "diorite", "dolomite", "gabbro", "granite",
                                      "gray_granite", "limestone", "marble", "sandstone", "shale"]]
-ROCKS = ["andesite", "basalt", "chalk", "diorite", "dolomite", "gabbro", "granite", "gray_granite", "marble",
+ROCKS = ["andesite", "chalk", "diorite", "dolomite", "gabbro", "granite", "gray_granite", "marble",
          "sandstone", "shale"]
 
 
