@@ -6,7 +6,8 @@
   "mixins": [
     "FoodDataAccessor",
     "FluidTransportBehaviourMixin",
-    "LeavesBlockMixin"
+    "LeavesBlockMixin",
+    "TreeFertilizerItemMixin"
   ],
   "client": [
     "LevelRendererMixin",

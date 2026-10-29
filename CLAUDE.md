@@ -188,7 +188,9 @@
   железный блок).
 - Mixin (`trailcraft.mixins.json`, пакет `mixin/`): `LeavesBlockMixin` — любая листва без столкновений, внутри
   замедляет и гасит падение (`makeStuckInBlock`); листва у тонких брёвен (`#trailcraft:thin_logs`, их нет
-  в `#minecraft:logs`) не опадает. `FoodDataAccessor` — истощение для HUD.
+  в `#minecraft:logs`) не опадает. `FoodDataAccessor` — истощение для HUD. `TreeFertilizerItemMixin` — удобрение
+  для деревьев Create не роняет саженцы (дерево ставится через `destroyBlock` с дропом: саженец и заменяемое деревом —
+  без дропа).
 - Лава с водой даёт серый гранит вместо булыжника (`block/FluidMixEvents.java`, `BlockEvent.FluidPlaceBlockEvent`).
 - Глина и плавка — `init/ModSmelting.java`, пакет `smelting/`; JSON и текстуры пишет `scripts/gen_smelting.py`.
   Кирпич `brick_<глина>` — комок глины на костре, блок `bricks_<глина>` — 4 кирпича. Солома — трава (`#trailcraft:straw_grass`),
