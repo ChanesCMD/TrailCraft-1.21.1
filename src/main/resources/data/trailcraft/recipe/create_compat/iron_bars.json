@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "pattern": [
+    "III",
+    "III"
+  ],
+  "result": {
+    "id": "minecraft:iron_bars",
+    "count": 16
+  }
+}

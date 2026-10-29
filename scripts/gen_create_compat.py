@@ -20,10 +20,12 @@ Create под мир TrailCraft: что из рецептов Create убрат�
    железа и золота (медные — рецепты Create); андезитовый сплав из нашего андезита (верстак и смешивание, с железом и
    цинком); механический сборщик из наших верстаков; редстоуновый контакт из нашего булыжника; парус из тканевого
    полотна; на костре — стекло из песка (временно) и гладкий камень из любой породы; рычаг, редстоуновый факел,
-   повторитель, компаратор из наших пород и палок; громоотвод из меди; удобрение для деревьев из кости, золы и листвы.
-4. Цинк Create (слиток, кусочек, дроблёная руда, блок) — в гамме цинка METALS["zinc"] из gen_ore_textures.py (как
-   шихта цинка):
-   слиток — наш образец слитка (оловянный слиток), остальное — формы Create по яркости. Лежит в assets/create/…:
+   повторитель, компаратор из наших пород и палок; громоотвод из меди; удобрение для деревьев из кости, золы и листвы;
+   жёрнов из гравия; наблюдатель; железные прутья и люк; компас из магнетита; лук из обработанных палок и нитей,
+   раздатчик из булыжника; костная мука из нашей кости; жезл симметрии с аметистом вместо жемчуга (SUBSTITUTED); еда на костре и в коптильне
+   (FOOD, recipe/food/); красители из цветов и смесей — копии ванильных (recipe/dyes/).
+4. Цинк Create (слиток, кусочек, дроблёная руда, блок) — формы Create в гамме цинка METALS["zinc"] из
+   gen_ore_textures.py (как шихта цинка), по яркости. Лежит в assets/create/…:
    ресурсы TrailCraft грузятся после Create (ordering = AFTER в neoforge.mods.toml).
 """
 import glob
@@ -64,7 +66,15 @@ REPLACED = [
     "create:mixing/andesite_alloy", "create:mixing/andesite_alloy_from_zinc",
     "create:crafting/kinetics/mechanical_crafter", "create:crafting/logistics/redstone_contact",
     "create:crafting/appliances/tree_fertilizer", "create:crafting/tree_fertilizer",
+    "create:crafting/kinetics/millstone",
 ]
+# Рецепты Create, в которых меняются ингредиенты: id → {что: на что}; копия ложится в create_compat/, оригинал уходит
+SUBSTITUTED = {
+    "create:mechanical_crafting/wand_of_symmetry": {"#c:ender_pearls": "minecraft:amethyst_shard"},
+}
+# Ванильная еда на костре и в коптильне: свои рецепты (ванильные RecipePruner убирает)
+FOOD = {"potato": "baked_potato", "beef": "cooked_beef", "chicken": "cooked_chicken", "mutton": "cooked_mutton",
+        "porkchop": "cooked_porkchop", "rabbit": "cooked_rabbit", "cod": "cooked_cod", "salmon": "cooked_salmon"}
 # Папки Create, где рецепты обработки (их убираем по DENY); верстак и механический сборщик правятся вручную
 PROCESSING = ("blasting", "smelting", "smoking", "campfire_cooking", "compacting", "crushing", "cutting", "deploying",
               "emptying", "filling", "haunting", "item_application", "milling", "mixing", "pressing",
@@ -129,8 +139,9 @@ def tags(external):
         rel = f"data/minecraft/tags/item/{name}.json"
         data = read(rel, {"values": []})
         write(rel, {"replace": True, "values": data["values"]})
-    # предметы пород одним тэгом (рычаг, повторитель, гладкий камень)
+    # предметы пород и гравия одним тэгом (рычаг, повторитель, гладкий камень, жёрнов)
     write(f"data/{NS}/tags/item/rocks.json", {"replace": False, "values": [f"{NS}:{r}" for r in ROCKS]})
+    write(f"data/{NS}/tags/item/gravels.json", {"replace": False, "values": [f"{NS}:{r}_gravel" for r in ROCKS]})
 
 
 # ---------------------------------------------------------------- 2. что убрать
@@ -188,7 +199,7 @@ def ingredients(obj):
 
 
 def pruned(create, tags):
-    out = set(REPLACED)
+    out = set(REPLACED) | set(SUBSTITUTED)
     for name in create.namelist():
         m = re.match(r"data/create/recipe/(.+)\.json$", name)
         if not m or "/compat/" in name:
@@ -265,6 +276,50 @@ def recipes():
     shaped("lightning_rod", ["C", "C", "C"], {"C": item("minecraft:copper_ingot")}, "minecraft:lightning_rod")
     shapeless("tree_fertilizer", [tag("c:bones"), item(f"{NS}:ash"), item(f"{NS}:ash"), tag("minecraft:leaves")],
               "create:tree_fertilizer", 2)
+    shaped("millstone", ["C", "S", "G"], {"C": item("create:cogwheel"), "S": item("create:andesite_casing"),
+                                          "G": tag(f"{NS}:gravels")}, "create:millstone")
+    cobble, quartz = tag("c:cobblestones"), tag("c:gems/quartz")
+    shaped("observer", ["CCC", "RRQ", "CCC"], {"C": cobble, "R": redstone, "Q": quartz}, "minecraft:observer")
+    iron = item("minecraft:iron_ingot")
+    shaped("iron_bars", ["III", "III"], {"I": iron}, "minecraft:iron_bars", 16)
+    shaped("iron_trapdoor", ["II", "II"], {"I": iron}, "minecraft:iron_trapdoor")
+    shaped("compass", [" I ", "IMI", " I "], {"I": iron, "M": item(f"{NS}:raw_magnetite")}, "minecraft:compass")
+    shaped("bow", [" SR", "S R", " SR"], {"S": stick, "R": tag("c:strings")}, "minecraft:bow")
+    shaped("dispenser", ["CCC", "CBC", "CRC"], {"C": cobble, "B": item("minecraft:bow"), "R": redstone},
+           "minecraft:dispenser")
+    shapeless("bone_meal", [tag("c:bones")], "minecraft:bone_meal", 3)
+    for raw, cooked in FOOD.items():
+        for kind, time in (("campfire_cooking", 600), ("smoking", 100)):
+            write(f"data/{NS}/recipe/food/{cooked}_from_{kind}.json", {
+                "type": f"minecraft:{kind}", "category": "food", "cookingtime": time, "experience": 0.35,
+                "ingredient": {"item": f"minecraft:{raw}"}, "result": {"id": f"minecraft:{cooked}"}})
+
+
+def dyes(vanilla):
+    """Красители из цветов и смеси красителей — копии ванильных рецептов верстака (ванильные RecipePruner убирает)."""
+    for name in vanilla.namelist():
+        m = re.match(r"data/minecraft/recipe/(\w+_dye(_from_\w+)?)\.json$", name)
+        if not m or name.endswith("armor_dye.json"):
+            continue
+        data = json.loads(vanilla.read(name))
+        if data["type"] not in ("minecraft:crafting_shaped", "minecraft:crafting_shapeless"):
+            continue
+        used = re.findall(r'"(minecraft:[a-z_]+)"', json.dumps({k: v for k, v in data.items() if k != "result"}))
+        if any(DENY.match(i) for i in used):
+            continue
+        write(f"data/{NS}/recipe/dyes/{m.group(1)}.json", data)
+
+
+def substitute(create):
+    """Копии рецептов Create с заменёнными ингредиентами (SUBSTITUTED)."""
+    for rid, swaps in SUBSTITUTED.items():
+        text = create.read(f"data/create/recipe/{rid.split(':')[1]}.json").decode("utf-8")
+        for old, new in swaps.items():
+            key = "tag" if old.startswith("#") else "item"
+            new_key = "tag" if new.startswith("#") else "item"
+            text = re.sub(r'"%s"\s*:\s*"%s"' % (key, re.escape(old.lstrip("#"))),
+                          '"%s": "%s"' % (new_key, new.lstrip("#")), text)
+        write(f"data/{NS}/recipe/create_compat/{rid.split('/')[-1]}.json", json.loads(text))
 
 
 # ---------------------------------------------------------------- 4. цинк
@@ -287,12 +342,10 @@ def recolor(img, palette):
 
 def zinc(create):
     palette = METALS["zinc"]
-    ours = os.path.join(ROOT, "assets", NS, "textures", "item", "tin_ingot.png")
     out = os.path.join(ROOT, "assets", "create", "textures")
     os.makedirs(os.path.join(out, "item"), exist_ok=True)
     os.makedirs(os.path.join(out, "block"), exist_ok=True)
-    recolor(Image.open(ours), palette).save(os.path.join(out, "item", "zinc_ingot.png"))
-    for rel in ("item/zinc_nugget.png", "item/crushed_raw_zinc.png", "block/zinc_block.png"):
+    for rel in ("item/zinc_ingot.png", "item/zinc_nugget.png", "item/crushed_raw_zinc.png", "block/zinc_block.png"):
         src = Image.open(BytesIO(create.read(f"assets/create/textures/{rel}")))
         recolor(src, palette).save(os.path.join(out, *rel.split("/")))
 
@@ -303,6 +356,8 @@ if __name__ == "__main__":
     neoforge = zipfile.ZipFile(find_jar("neoforge-21.1.*-universal.jar"))
     tags(load_tags([vanilla, neoforge, create], ours=False))
     recipes()
+    dyes(vanilla)
+    substitute(create)
     write(f"data/{NS}/pruned_recipes.json", pruned(create, load_tags([vanilla, neoforge, create])))
     zinc(create)
     print("ok")

@@ -1060,5 +1060,8 @@
   "block.trailcraft.limestone_slab": "Известняковая плита",
   "block.trailcraft.marble_slab": "Мраморная плита",
   "block.trailcraft.sandstone_slab": "Песчаниковая плита",
-  "block.trailcraft.shale_slab": "Сланцевая плита"
+  "block.trailcraft.shale_slab": "Сланцевая плита",
+  "item.trailcraft.bark": "Кора",
+  "item.trailcraft.resin": "Смола",
+  "item.trailcraft.jute_thread": "Джутовая нить"
 }

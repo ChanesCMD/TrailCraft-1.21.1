@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "tag": "c:cobblestones"
+    },
+    "B": {
+      "item": "minecraft:bow"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "pattern": [
+    "CCC",
+    "CBC",
+    "CRC"
+  ],
+  "result": {
+    "id": "minecraft:dispenser",
+    "count": 1
+  }
+}

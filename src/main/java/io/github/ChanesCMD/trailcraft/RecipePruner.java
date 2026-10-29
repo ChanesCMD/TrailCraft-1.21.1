@@ -19,9 +19,9 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 
 /**
- * Убирает ванильные рецепты (namespace minecraft) верстака, кузнечного стола, камнерезки, печи и доменной печи —
- * с ними уходит и массовая плавка Create вентилятором (брони в самородки и т. п.); коптильня и костёр остаются: на них
- * готовят еду. Ещё убирает рецепты по списку {@link #LIST} (data/trailcraft/pruned_recipes.json, пишет
+ * Убирает все ванильные рецепты (namespace minecraft): верстака, кузнечного стола, камнерезки, печи, доменной печи,
+ * коптильни и костра — с ними уходит и массовая плавка Create вентилятором (брони в самородки и т. п.); еда на костре и
+ * в коптильне, красители — свои копии (recipe/food/, recipe/dyes/). Ещё убирает рецепты по списку {@link #LIST} (data/trailcraft/pruned_recipes.json, пишет
  * scripts/gen_create_compat.py): рецепты Create из ванильных предметов, которых в мире нет, и рецепты Create, вместо
  * которых есть свои. Наши слушатель стоит в конце списка, поэтому срабатывает после загрузки рецептов.
  */
@@ -79,6 +79,7 @@ public class RecipePruner {
         if (!"minecraft".equals(holder.id().getNamespace())) return false;
         RecipeType<?> type = holder.value().getType();
         return type == RecipeType.CRAFTING || type == RecipeType.SMITHING || type == RecipeType.STONECUTTING
-                || type == RecipeType.SMELTING || type == RecipeType.BLASTING;
+                || type == RecipeType.SMELTING || type == RecipeType.BLASTING || type == RecipeType.SMOKING
+                || type == RecipeType.CAMPFIRE_COOKING;
     }
 }

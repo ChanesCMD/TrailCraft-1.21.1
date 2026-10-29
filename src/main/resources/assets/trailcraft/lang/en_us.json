@@ -1060,5 +1060,8 @@
   "block.trailcraft.limestone_slab": "Limestone Slab",
   "block.trailcraft.marble_slab": "Marble Slab",
   "block.trailcraft.sandstone_slab": "Sandstone Slab",
-  "block.trailcraft.shale_slab": "Shale Slab"
+  "block.trailcraft.shale_slab": "Shale Slab",
+  "item.trailcraft.bark": "Bark",
+  "item.trailcraft.resin": "Resin",
+  "item.trailcraft.jute_thread": "Jute Thread"
 }

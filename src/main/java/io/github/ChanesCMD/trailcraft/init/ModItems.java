@@ -203,6 +203,12 @@ public class ModItems {
     public static final DeferredItem<BlockItem> CAMPFIRE = ITEMS.registerSimpleBlockItem("campfire", ModBlocks.CAMPFIRE);
     /** Зола: собирается с потухшего костра лопатой или кремнёвой мотыгой. */
     public static final DeferredItem<Item> ASH = ITEMS.registerSimpleItem("ash");
+    /** Кора: падает при окорке бревна топором; 2 коры с водой в смесителе Create — бумага. */
+    public static final DeferredItem<Item> BARK = ITEMS.registerSimpleItem("bark");
+    /** Смола: с шансом при окорке хвойных (StrippableLogBlock); из неё клей Create. */
+    public static final DeferredItem<Item> RESIN = ITEMS.registerSimpleItem("resin");
+    /** Джутовая нить (в c:strings): 1 джут — 2 нити. */
+    public static final DeferredItem<Item> JUTE_THREAD = ITEMS.registerSimpleItem("jute_thread");
 
     // === РЮКЗАКИ ===
     /** Тир 1 — армейский вещмешок, тир 2 — кожаный рюкзак, тир 3 — большой тактический. Отличаются числом карманов. */

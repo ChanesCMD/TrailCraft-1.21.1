@@ -1,0 +1,21 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "trailcraft:bark"
+    },
+    {
+      "item": "trailcraft:bark"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 250,
+      "fluid": "minecraft:water"
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:paper"
+    }
+  ]
+}

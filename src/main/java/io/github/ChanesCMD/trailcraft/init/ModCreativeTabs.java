@@ -158,6 +158,9 @@ public class ModCreativeTabs {
                         output.accept(ModItems.FIRESTARTER);
                         output.accept(ModItems.CAMPFIRE);
                         output.accept(ModItems.ASH);
+                        output.accept(ModItems.BARK);
+                        output.accept(ModItems.RESIN);
+                        output.accept(ModItems.JUTE_THREAD);
                         output.accept(ModItems.STONE_HAMMER);
 
                         // Глина, кирпичи и плавка (ModSmelting)

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": {
+      "item": "trailcraft:stick_processed"
+    },
+    "R": {
+      "tag": "c:strings"
+    }
+  },
+  "pattern": [
+    " SR",
+    "S R",
+    " SR"
+  ],
+  "result": {
+    "id": "minecraft:bow",
+    "count": 1
+  }
+}

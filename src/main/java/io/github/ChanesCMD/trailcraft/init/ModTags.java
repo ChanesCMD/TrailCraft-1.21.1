@@ -37,4 +37,7 @@ public class ModTags {
     /** Почвы осыпаются, как песок, когда игрок выкопал блок под ними и рядом нет крепи (collapse/Collapse). */
     public static final TagKey<Block> COLLAPSIBLE_SOILS = TagKey.create(Registries.BLOCK,
             ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "collapsible_soils"));
+    /** Хвойные брёвна: при окорке с них, кроме коры, падает смола (StrippableLogBlock). */
+    public static final TagKey<Block> RESIN_LOGS = TagKey.create(Registries.BLOCK,
+            ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "resin_logs"));
 }

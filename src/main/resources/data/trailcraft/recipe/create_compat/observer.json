@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "tag": "c:cobblestones"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    },
+    "Q": {
+      "tag": "c:gems/quartz"
+    }
+  },
+  "pattern": [
+    "CCC",
+    "RRQ",
+    "CCC"
+  ],
+  "result": {
+    "id": "minecraft:observer",
+    "count": 1
+  }
+}

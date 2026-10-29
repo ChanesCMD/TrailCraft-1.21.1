@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "create:cogwheel"
+    },
+    "S": {
+      "item": "create:andesite_casing"
+    },
+    "G": {
+      "tag": "trailcraft:gravels"
+    }
+  },
+  "pattern": [
+    "C",
+    "S",
+    "G"
+  ],
+  "result": {
+    "id": "create:millstone",
+    "count": 1
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "trailcraft:jute"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:jute_thread",
+    "count": 2
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:pine_log",
+    "trailcraft:pine_wood",
+    "trailcraft:fir_log",
+    "trailcraft:fir_wood",
+    "trailcraft:spruce_log",
+    "trailcraft:spruce_wood",
+    "trailcraft:cedar_log",
+    "trailcraft:cedar_wood",
+    "trailcraft:thuja_log",
+    "trailcraft:thuja_wood"
+  ]
+}
