@@ -1270,5 +1270,14 @@
   "gui.trailcraft.barrel.empty": "Пусто",
   "gui.trailcraft.barrel.amount": "%s / %s mB",
   "gui.trailcraft.barrel.need_tannin": "Нужно %s mB танина",
-  "jei.trailcraft.tanning": "Бочка с танином (от %s mB): до %s выскобленных шкур за полдня дубятся в кожу, каждая тратит %s mB"
+  "jei.trailcraft.tanning": "Бочка с танином (от %s mB): до %s выскобленных шкур за полдня дубятся в кожу, каждая тратит %s mB",
+  "block.trailcraft.reinforced_mechanical_pump": "Укреплённая механическая помпа",
+  "block.trailcraft.reinforced_smart_fluid_pipe": "Укреплённая умная жидкостная труба",
+  "block.trailcraft.reinforced_fluid_valve": "Укреплённый жидкостный вентиль",
+  "block.trailcraft.reinforced_valve_handle": "Укреплённая ручка вентиля",
+  "block.trailcraft.reinforced_hose_pulley": "Укреплённый шкив шланга",
+  "block.trailcraft.reinforced_spout": "Укреплённый носик",
+  "block.trailcraft.reinforced_item_drain": "Укреплённый слив",
+  "block.trailcraft.reinforced_portable_fluid_interface": "Укреплённый переносной интерфейс жидкостей",
+  "block.trailcraft.reinforced_fluid_tank": "Укреплённый жидкостный бак"
 }

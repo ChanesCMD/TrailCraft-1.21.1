@@ -1270,5 +1270,14 @@
   "gui.trailcraft.barrel.empty": "Empty",
   "gui.trailcraft.barrel.amount": "%s / %s mB",
   "gui.trailcraft.barrel.need_tannin": "Needs %s mB of tannin",
-  "jei.trailcraft.tanning": "Barrel with tannin (%s mB or more): up to %s scraped hides tan into leather in half a day, %s mB each"
+  "jei.trailcraft.tanning": "Barrel with tannin (%s mB or more): up to %s scraped hides tan into leather in half a day, %s mB each",
+  "block.trailcraft.reinforced_mechanical_pump": "Reinforced Mechanical Pump",
+  "block.trailcraft.reinforced_smart_fluid_pipe": "Reinforced Smart Fluid Pipe",
+  "block.trailcraft.reinforced_fluid_valve": "Reinforced Fluid Valve",
+  "block.trailcraft.reinforced_valve_handle": "Reinforced Valve Handle",
+  "block.trailcraft.reinforced_hose_pulley": "Reinforced Hose Pulley",
+  "block.trailcraft.reinforced_spout": "Reinforced Spout",
+  "block.trailcraft.reinforced_item_drain": "Reinforced Item Drain",
+  "block.trailcraft.reinforced_portable_fluid_interface": "Reinforced Portable Fluid Interface",
+  "block.trailcraft.reinforced_fluid_tank": "Reinforced Fluid Tank"
 }

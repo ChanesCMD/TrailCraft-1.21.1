@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "create:hose_pulley"
+    },
+    {
+      "item": "create:sturdy_sheet"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:reinforced_hose_pulley",
+    "count": 1
+  }
+}

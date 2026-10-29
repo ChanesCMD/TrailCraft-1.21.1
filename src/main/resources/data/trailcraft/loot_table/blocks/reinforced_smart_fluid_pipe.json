@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "trailcraft:blocks/reinforced_smart_fluid_pipe",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "trailcraft:reinforced_smart_fluid_pipe"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ]
+    }
+  ]
+}

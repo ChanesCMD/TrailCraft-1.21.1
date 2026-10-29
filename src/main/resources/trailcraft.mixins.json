@@ -8,6 +8,7 @@
     "FoodDataAccessor",
     "FluidTransportBehaviourMixin",
     "LeavesBlockMixin",
+    "SmartBlockEntityMixin",
     "TreeFertilizerItemMixin"
   ],
   "client": [

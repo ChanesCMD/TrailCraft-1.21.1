@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "create:spout"
+    },
+    {
+      "item": "create:sturdy_sheet"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:reinforced_spout",
+    "count": 1
+  }
+}

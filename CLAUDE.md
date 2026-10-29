@@ -430,8 +430,16 @@
   Create остаётся (берёт топливо по времени горения — `data_maps/item/furnace_fuels.json`, пишет `gen_ores.py`: каменный
   и древесный уголь, блок угля, торф). JSON и текстуры — `scripts/gen_burner.py`.
   Лава в трубах Create: обычная медная труба (и стеклянная, и в корпусе), по которой течёт лава, дымит и через 20 с
-  прогорает без дропа (`pipe/LavaPipes.java`, вызов — `mixin/FluidTransportBehaviourMixin`); помпы, вентили, умные трубы
-  держат. Укреплённая труба (`pipe/ReinforcedPipeBlock.java`, наследник трубы Create с её блок-сущностью —
+  прогорает без дропа (`pipe/LavaPipes.java`, вызов — `mixin/FluidTransportBehaviourMixin`); так же прогорают медные
+  помпа, умная труба, вентиль и детали, в которых лава лежит, — шкив шланга, носик, слив, интерфейс жидкостей, бак
+  (`mixin/SmartBlockEntityMixin`, `LavaPipes.tickContainer`; творческий бак — нет). Их укреплённые версии держат лаву —
+  `init/ModReinforced.java`: те же блоки Create с их блок-сущностями (добавлены в типы Create), ручка вентиля — чёрная
+  ручка Create, бак — `pipe/ReinforcedFluidTankBlock` со своим типом блок-сущности (с медными баками не сливается;
+  жидкость трубам отдаёт бак-контроллер, рендер — бака Create); нагрузка — как у деталей Create; рецепт — деталь Create
+  и прочный лист (бак — 2). Модели — копии моделей Create с медью в тёмной гамме прочного листа, рецепты, переводы —
+  `scripts/gen_reinforced_parts.py` (части, которые рисует рендер Create, — шестерня помпы, катушка шкива и т. п. —
+  остаются медными). Паровой двигатель и свисток на укреплённом баке перекрашиваются так же
+  (`client/model/ReinforcedAttachmentModel`, подмена спрайтов в квадах, обёртка — `ClientEvents.wrapPipeModels`). Укреплённая труба (`pipe/ReinforcedPipeBlock.java`, наследник трубы Create с её блок-сущностью —
   `BlockEntityTypeAddBlocksEvent` в `ModBlockEntities.CreatePipes`; ключом в стеклянную не превращается, в корпус не
   одевается; модель оборачивает `PipeAttachmentModel` в `ClientEvents.wrapPipeModels`) — 2 прочных листа и медный
   слиток, 4 шт. Прочный лист — без лавы: жёрнов мелет обсидиан в обсидиановый порошок Create (`milling/obsidian`;

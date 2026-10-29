@@ -107,6 +107,7 @@ public class ModCreativeTabs {
                         output.accept(ModItems.BITUMINOUS_COAL_BLOCK);
                         output.accept(ModItems.COAL_BURNER);
                         output.accept(ModItems.REINFORCED_FLUID_PIPE);
+                        ModReinforced.ITEMS.forEach(output::accept);
                         ModBees.HIVE_ITEMS.values().forEach(output::accept);
                         ModBees.BEES.values().forEach(output::accept);
                         ModBees.COMB_ITEMS.forEach(output::accept);

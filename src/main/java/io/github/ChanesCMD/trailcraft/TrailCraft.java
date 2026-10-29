@@ -50,6 +50,8 @@ public class TrailCraft {
         ModBees.init();
         // Креозот и танин (жидкости, их блоки и вёдра)
         ModFluids.init();
+        // Укреплённые жидкостные детали Create (init/ModReinforced)
+        io.github.ChanesCMD.trailcraft.init.ModReinforced.init();
 
         // Регистрируем блоки и предметы
         ModBlocks.BLOCKS.register(modEventBus);

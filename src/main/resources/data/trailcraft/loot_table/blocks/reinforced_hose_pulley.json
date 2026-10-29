@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "trailcraft:blocks/reinforced_hose_pulley",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "trailcraft:reinforced_hose_pulley"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ]
+    }
+  ]
+}

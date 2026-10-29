@@ -37,6 +37,9 @@ public class ClientEvents {
         e.registerEntityRenderer(ModEntities.CAPERCAILLIE.get(), CapercaillieRenderer::new);
         e.registerBlockEntityRenderer(ModBlockEntities.CAMPFIRE.get(), TrailCampfireRenderer::new);
         e.registerBlockEntityRenderer(ModBlockEntities.WOOD_CHEST.get(), io.github.ChanesCMD.trailcraft.client.WoodChestRenderer::new);
+        // укреплённый бак — свой тип блок-сущности, рисуется рендером бака Create (жидкость внутри)
+        e.registerBlockEntityRenderer(io.github.ChanesCMD.trailcraft.init.ModReinforced.TANK_ENTITY.get(),
+                com.simibubi.create.content.fluids.tank.FluidTankRenderer::new);
         for (Species species : Species.values()) {
             e.registerEntityRenderer(ModAnimals.type(species), context -> new TrailAnimalRenderer<>(context, species));
         }
@@ -91,6 +94,15 @@ public class ClientEvents {
         for (var state : ModBlocks.REINFORCED_FLUID_PIPE.get().getStateDefinition().getPossibleStates()) {
             e.getModels().computeIfPresent(net.minecraft.client.renderer.block.BlockModelShaper.stateToModelLocation(state),
                     (location, model) -> com.simibubi.create.content.fluids.PipeAttachmentModel.withAO(model));
+        }
+        // паровой двигатель и свисток на укреплённом баке — в его гамме (client/model/ReinforcedAttachmentModel)
+        io.github.ChanesCMD.trailcraft.client.model.ReinforcedAttachmentModel.clearCache();
+        for (net.minecraft.world.level.block.Block block : java.util.List.<net.minecraft.world.level.block.Block>of(
+                com.simibubi.create.AllBlocks.STEAM_ENGINE.get(), com.simibubi.create.AllBlocks.STEAM_WHISTLE.get())) {
+            for (var state : block.getStateDefinition().getPossibleStates()) {
+                e.getModels().computeIfPresent(net.minecraft.client.renderer.block.BlockModelShaper.stateToModelLocation(state),
+                        (location, model) -> new io.github.ChanesCMD.trailcraft.client.model.ReinforcedAttachmentModel(model));
+            }
         }
     }
 

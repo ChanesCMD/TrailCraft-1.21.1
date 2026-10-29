@@ -90,6 +90,15 @@
     "trailcraft:quartz_ore",
     "trailcraft:bituminous_coal_block",
     "trailcraft:coal_burner",
-    "trailcraft:reinforced_fluid_pipe"
+    "trailcraft:reinforced_fluid_pipe",
+    "trailcraft:reinforced_mechanical_pump",
+    "trailcraft:reinforced_smart_fluid_pipe",
+    "trailcraft:reinforced_fluid_valve",
+    "trailcraft:reinforced_valve_handle",
+    "trailcraft:reinforced_hose_pulley",
+    "trailcraft:reinforced_spout",
+    "trailcraft:reinforced_item_drain",
+    "trailcraft:reinforced_portable_fluid_interface",
+    "trailcraft:reinforced_fluid_tank"
   ]
 }

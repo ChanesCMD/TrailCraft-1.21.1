@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "trailcraft:blocks/reinforced_fluid_valve",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "trailcraft:reinforced_fluid_valve"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ]
+    }
+  ]
+}
