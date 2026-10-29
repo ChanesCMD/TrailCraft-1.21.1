@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "trailcraft:blocks/plum_fruit",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "trailcraft:plum"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "trailcraft:plum_fruit",
+          "properties": {
+            "age": "3"
+          }
+        }
+      ]
+    }
+  ]
+}

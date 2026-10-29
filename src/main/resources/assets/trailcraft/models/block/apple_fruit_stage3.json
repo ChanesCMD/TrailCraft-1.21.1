@@ -1,0 +1,146 @@
+{
+  "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "fruit": "trailcraft:block/apple_fruit",
+    "particle": "trailcraft:block/apple_fruit"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        5,
+        5
+      ],
+      "to": [
+        11,
+        11,
+        11
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            6,
+            6
+          ],
+          "texture": "#fruit"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            6,
+            6
+          ],
+          "texture": "#fruit"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            6,
+            6
+          ],
+          "texture": "#fruit"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            6,
+            6
+          ],
+          "texture": "#fruit"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            6,
+            6
+          ],
+          "texture": "#fruit"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            6,
+            6
+          ],
+          "texture": "#fruit"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        11,
+        7.5
+      ],
+      "to": [
+        8.5,
+        16,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            12,
+            8,
+            13.0,
+            13
+          ],
+          "texture": "#fruit"
+        },
+        "south": {
+          "uv": [
+            12,
+            8,
+            13.0,
+            13
+          ],
+          "texture": "#fruit"
+        },
+        "east": {
+          "uv": [
+            12,
+            8,
+            13.0,
+            13
+          ],
+          "texture": "#fruit"
+        },
+        "west": {
+          "uv": [
+            12,
+            8,
+            13.0,
+            13
+          ],
+          "texture": "#fruit"
+        },
+        "up": {
+          "uv": [
+            12,
+            8,
+            13.0,
+            9.0
+          ],
+          "texture": "#fruit"
+        },
+        "down": {
+          "uv": [
+            12,
+            8,
+            13.0,
+            9.0
+          ],
+          "texture": "#fruit"
+        }
+      }
+    }
+  ]
+}

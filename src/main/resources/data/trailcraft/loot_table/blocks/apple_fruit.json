@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "trailcraft:blocks/apple_fruit",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "trailcraft:apple"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "trailcraft:apple_fruit",
+          "properties": {
+            "age": "3"
+          }
+        }
+      ]
+    }
+  ]
+}

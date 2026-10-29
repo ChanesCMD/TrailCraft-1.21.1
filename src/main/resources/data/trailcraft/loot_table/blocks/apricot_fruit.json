@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "trailcraft:blocks/apricot_fruit",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "trailcraft:apricot"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "trailcraft:apricot_fruit",
+          "properties": {
+            "age": "3"
+          }
+        }
+      ]
+    }
+  ]
+}

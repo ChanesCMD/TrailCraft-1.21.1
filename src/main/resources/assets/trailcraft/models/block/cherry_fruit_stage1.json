@@ -1,0 +1,282 @@
+{
+  "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "fruit": "trailcraft:block/cherry_fruit",
+    "particle": "trailcraft:block/cherry_fruit"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        11,
+        6
+      ],
+      "to": [
+        6,
+        12,
+        7
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            8,
+            1,
+            9
+          ],
+          "texture": "#fruit"
+        },
+        "south": {
+          "uv": [
+            0,
+            8,
+            1,
+            9
+          ],
+          "texture": "#fruit"
+        },
+        "east": {
+          "uv": [
+            0,
+            8,
+            1,
+            9
+          ],
+          "texture": "#fruit"
+        },
+        "west": {
+          "uv": [
+            0,
+            8,
+            1,
+            9
+          ],
+          "texture": "#fruit"
+        },
+        "up": {
+          "uv": [
+            0,
+            8,
+            1,
+            9
+          ],
+          "texture": "#fruit"
+        },
+        "down": {
+          "uv": [
+            0,
+            8,
+            1,
+            9
+          ],
+          "texture": "#fruit"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        12,
+        6
+      ],
+      "to": [
+        6,
+        16,
+        7
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            12,
+            8,
+            13,
+            12
+          ],
+          "texture": "#fruit"
+        },
+        "south": {
+          "uv": [
+            12,
+            8,
+            13,
+            12
+          ],
+          "texture": "#fruit"
+        },
+        "east": {
+          "uv": [
+            12,
+            8,
+            13,
+            12
+          ],
+          "texture": "#fruit"
+        },
+        "west": {
+          "uv": [
+            12,
+            8,
+            13,
+            12
+          ],
+          "texture": "#fruit"
+        },
+        "up": {
+          "uv": [
+            12,
+            8,
+            13,
+            9
+          ],
+          "texture": "#fruit"
+        },
+        "down": {
+          "uv": [
+            12,
+            8,
+            13,
+            9
+          ],
+          "texture": "#fruit"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        10,
+        9
+      ],
+      "to": [
+        11,
+        11,
+        10
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            8,
+            1,
+            9
+          ],
+          "texture": "#fruit"
+        },
+        "south": {
+          "uv": [
+            0,
+            8,
+            1,
+            9
+          ],
+          "texture": "#fruit"
+        },
+        "east": {
+          "uv": [
+            0,
+            8,
+            1,
+            9
+          ],
+          "texture": "#fruit"
+        },
+        "west": {
+          "uv": [
+            0,
+            8,
+            1,
+            9
+          ],
+          "texture": "#fruit"
+        },
+        "up": {
+          "uv": [
+            0,
+            8,
+            1,
+            9
+          ],
+          "texture": "#fruit"
+        },
+        "down": {
+          "uv": [
+            0,
+            8,
+            1,
+            9
+          ],
+          "texture": "#fruit"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        11,
+        9
+      ],
+      "to": [
+        11,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            12,
+            8,
+            13,
+            13
+          ],
+          "texture": "#fruit"
+        },
+        "south": {
+          "uv": [
+            12,
+            8,
+            13,
+            13
+          ],
+          "texture": "#fruit"
+        },
+        "east": {
+          "uv": [
+            12,
+            8,
+            13,
+            13
+          ],
+          "texture": "#fruit"
+        },
+        "west": {
+          "uv": [
+            12,
+            8,
+            13,
+            13
+          ],
+          "texture": "#fruit"
+        },
+        "up": {
+          "uv": [
+            12,
+            8,
+            13,
+            9
+          ],
+          "texture": "#fruit"
+        },
+        "down": {
+          "uv": [
+            12,
+            8,
+            13,
+            9
+          ],
+          "texture": "#fruit"
+        }
+      }
+    }
+  ]
+}

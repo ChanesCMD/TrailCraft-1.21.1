@@ -4,6 +4,7 @@ import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -423,8 +424,8 @@ public class TrailTreeFeature extends Feature<TrailTreeConfig> {
             return true;
         }
 
-        /** Фруктовое дерево на амадзу (по мотивам цуйхуа): невысокий ствол, короткие ветви и одна широкая
-         *  приплюснутая крона-шапка. */
+        /** Фруктовое дерево на амадзу (по мотивам цуйхуа): невысокий ствол, короткие ветви и одна широкая крона —
+         *  плотный купол, скруглённый сверху; ветви внутри обложены листвой, чтобы тонкие брёвна не торчали из дыр. */
         boolean orchard() {
             int h = old ? 4 + r.nextInt(2) : 2 + r.nextInt(2);
             if (!trunkFree(h)) return false;
@@ -435,10 +436,28 @@ public class TrailTreeFeature extends Feature<TrailTreeConfig> {
             for (int i = 0; i < n; i++) {
                 branch(top, dir(top, a0 + i * Math.PI * 2 / n + r.nextDouble() * 0.5, old ? 2 : 1, 1), false);
             }
-            double rad = old ? 3.6 : 2.6;
-            blob(top.above(old ? 2 : 1), rad, old ? 2.2 : 1.8, rad);
+            BlockPos c = top.above(old ? 2 : 1);
+            dome(c, old ? 3.4 : 2.5, old ? 2.6 : 2.0);
+            dome(c.above(old ? 2 : 1), old ? 2.0 : 1.5, old ? 1.4 : 1.2); // макушка
+            for (BlockPos p : List.copyOf(logs.keySet())) {
+                if (p.getY() < top.getY()) continue;
+                for (Direction d : Direction.values()) {
+                    if (d != Direction.DOWN || p.getY() > top.getY()) leaf(p.relative(d));
+                }
+            }
             if (old) roots(40);
             return true;
+        }
+
+        /** Плотная крона-эллипсоид: край прореживается слабее, чем у blob, чтобы в кроне не было дыр. */
+        void dome(BlockPos c, double rxz, double ry) {
+            int ixz = Mth.ceil(rxz), iy = Mth.ceil(ry);
+            for (int dx = -ixz; dx <= ixz; dx++)
+                for (int dy = -iy; dy <= iy; dy++)
+                    for (int dz = -ixz; dz <= ixz; dz++) {
+                        double d = sq(dx / rxz) + sq(dy / ry) + sq(dz / rxz);
+                        if (d <= 1.0 && !(d > 0.85 && r.nextFloat() < 0.25)) leaf(c.offset(dx, dy, dz));
+                    }
         }
 
         /** Касается ли будущее дерево (гранью или тем же блоком) чужих брёвен или листвы. */

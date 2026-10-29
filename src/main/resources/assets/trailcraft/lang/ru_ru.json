@@ -1193,5 +1193,10 @@
   "item.trailcraft.pear": "Груша",
   "item.trailcraft.plum": "Слива",
   "item.trailcraft.cherry": "Вишня",
-  "item.trailcraft.apricot": "Абрикос"
+  "item.trailcraft.apricot": "Абрикос",
+  "block.trailcraft.apple_fruit": "Яблоко на ветке",
+  "block.trailcraft.pear_fruit": "Груша на ветке",
+  "block.trailcraft.plum_fruit": "Слива на ветке",
+  "block.trailcraft.cherry_fruit": "Вишня на ветке",
+  "block.trailcraft.apricot_fruit": "Абрикос на ветке"
 }

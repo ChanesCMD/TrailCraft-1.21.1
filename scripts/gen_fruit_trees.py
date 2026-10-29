@@ -1,13 +1,16 @@
 """
-Фруктовые деревья на древесине амадзу (LEAF_VARIANTS в gen_forests.py, ModWood.FRUIT_TREES): плоды (ModItems — еда),
-листва с плодами, саженцы, плоды в луте листвы, переводы и превью docs/textures/fruit_trees.png.
+Фруктовые деревья на древесине амадзу (LEAF_VARIANTS в gen_forests.py, ModWood.FRUIT_TREES): плоды-предметы (ModItems —
+еда), плоды на дереве (блок <плод>_fruit, block/FruitBlock: блокстейт, модели стадий, текстура, лут), листва, саженцы,
+переводы и превью docs/textures/fruit_trees.png.
 
 Запуск из корня проекта:  python scripts/gen_fruit_trees.py   (нужен Pillow; ванильное яблоко — из jar клиента в кэше
-Gradle). Запускать после gen_wood.py и gen_forests.py: тот копирует лут листвы с амадзу и стирает в нём плоды.
+Gradle). Запускать после gen_wood.py и gen_forests.py: тот копирует лут листвы с амадзу.
 
-С листвы (не ножницами) падает плод (CHANCE). Одинокие фруктовые деревья растут на равнинах (PLAINS_TREES в
-gen_forests.py). Текстуры: листва — листва амадзу с плодами, саженец — саженец амадзу с цветками или завязями,
-яблоко — ванильное чуть краснее, остальные плоды рисуются здесь же (shape: круги, тень от света сверху слева).
+Деревья растут без плодов; природная листва завязывает под собой плод (block/FruitLeavesBlock), он растёт от цветка
+до спелого (4 стадии, модели — кубики на черенке: SHAPES), спелый собирается ПКМ. Одинокие фруктовые деревья растут
+на равнинах (PLAINS_TREES в gen_forests.py). Текстуры: листва — листва амадзу чуть другого оттенка (LEAF_TINT), саженец —
+саженец амадзу с цветками, плод на дереве — развёртка 16×16 (спелая, полуспелая и зелёная кожица, цветок, черенок),
+яблоко-предмет — ванильное чуть краснее, остальные плоды рисуются здесь же (круги, тень от света сверху слева).
 """
 import colorsys
 import json
@@ -26,30 +29,31 @@ ROOT = os.path.join(HERE, "..", "src", "main", "resources")
 TEX = os.path.join(ROOT, "assets", NS, "textures")
 DOCS = os.path.join(HERE, "..", "docs", "textures")
 BASE = "amadzu"
-CHANCE = 0.08
 
 
 def hx(c):
     return tuple(int(c[i:i + 2], 16) for i in (0, 2, 4))
 
 
-# плод: ru, en, гамма плода от тёмной к светлой (контур, тень, цвет, свет, блик), где плоды на листве (левый верхний
-# пиксель), вид на листве ("big" — 2×2, "pair" — две ягоды по диагонали), цвет цветков на саженце
+# плод: ru, en, гамма плода от тёмной к светлой (контур, тень, цвет, свет, блик), форма на дереве (SHAPES),
+# сколько плодов со спелого (как count у FruitBlock в ModWood), цвет цветков (на саженце и на дереве),
+# оттенок листвы (сдвиг тона, насыщенность ×, яркость ×), имя плода на дереве ru, en
 FRUITS = {
-    "apple": ("Яблоко", "Apple", [hx(c) for c in ("6e0c10", "a8161a", "d22a24", "e8584a", "f6a090")],
-              [(3, 3), (10, 1), (6, 10), (12, 9)], "big", hx("f4dce0")),
-    "pear": ("Груша", "Pear", [hx(c) for c in ("5a5414", "8c8424", "bcb43a", "dcd668", "f2eeaa")],
-             [(2, 5), (9, 2), (5, 11), (12, 8)], "big", hx("f6f4ec")),
-    "plum": ("Слива", "Plum", [hx(c) for c in ("2a1036", "4a2060", "6c3486", "9256aa", "c49cd6")],
-             [(4, 2), (11, 4), (2, 10), (9, 11)], "big", hx("f6f4ec")),
-    "cherry": ("Вишня", "Cherry", [hx(c) for c in ("4a0610", "7c0c1a", "a81424", "d2343c", "f08a8a")],
-               [(3, 2), (10, 3), (5, 9), (12, 11), (8, 6)], "pair", hx("f8d4dc")),
-    "apricot": ("Абрикос", "Apricot", [hx(c) for c in ("8a3c10", "c0601c", "e88c34", "f6b25a", "fde0a0")],
-                [(3, 4), (10, 2), (6, 11), (12, 8)], "big", hx("f8dcd4")),
+    "apple": ("Яблоко", "Apple", [hx(c) for c in ("6e0c10", "a8161a", "d22a24", "e8584a", "f6a090")], "round", 1,
+              hx("f4dce0"), (0, 1, 1), "Яблоко на ветке", "Apple on Branch"),
+    "pear": ("Груша", "Pear", [hx(c) for c in ("5a5414", "8c8424", "bcb43a", "dcd668", "f2eeaa")], "pear", 1,
+             hx("f6f4ec"), (0.01, 0.95, 1.04), "Груша на ветке", "Pear on Branch"),
+    "plum": ("Слива", "Plum", [hx(c) for c in ("2a1036", "4a2060", "6c3486", "9256aa", "c49cd6")], "round", 1,
+             hx("f6f4ec"), (-0.01, 1, 0.94), "Слива на ветке", "Plum on Branch"),
+    "cherry": ("Вишня", "Cherry", [hx(c) for c in ("4a0610", "7c0c1a", "a81424", "d2343c", "f08a8a")], "cherry", 2,
+               hx("f8d4dc"), (-0.005, 1.05, 0.97), "Вишня на ветке", "Cherries on Branch"),
+    "apricot": ("Абрикос", "Apricot", [hx(c) for c in ("8a3c10", "c0601c", "e88c34", "f6b25a", "fde0a0")], "round", 1,
+                hx("f8dcd4"), (0.015, 0.95, 1.03), "Абрикос на ветке", "Apricot on Branch"),
 }
-LEAF = "#"  # пиксели плода на листве
 STEM, STEM_DARK = hx("6a4628"), hx("3e2818")
 LEAF_GREEN, LEAF_DARK = hx("4e8a30"), hx("2e5a1c")
+UNRIPE = [hx(c) for c in ("2e4a14", "4a6e20", "6a9430", "8cb44a", "b4d47a")]
+FLOWER_CENTER = hx("e8c43c")
 
 
 def path(rel):
@@ -162,19 +166,10 @@ DRAW = {"pear": pear, "plum": plum, "cherry": cherry, "apricot": apricot}
 
 # ---------------------------------------------------------------- листва и саженцы
 
-def fruit_leaves(leaves, colors, spots, kind):
-    img = leaves.copy()
-    for x, y in spots:
-        if kind == "pair":  # две ягоды по диагонали
-            for dx, dy in ((0, 0), (1, 1)):
-                img.putpixel((x + dx, y + dy), colors[2] + (255,))
-            img.putpixel((x, y), colors[3] + (255,))
-            img.putpixel((x + 1, y), STEM_DARK + (255,))
-        else:
-            for dx, dy, c in ((0, 0, colors[3]), (1, 0, colors[2]), (0, 1, colors[2]), (1, 1, colors[1])):
-                img.putpixel((x + dx, y + dy), c + (255,))
-            img.putpixel((x, y), colors[4] + (255,))  # блик
-    return img
+def fruit_leaves(leaves, tint):
+    """Листва амадзу чуть другого оттенка — чтобы деревья различались и без плодов."""
+    dh, ks, kv = tint
+    return hsv_map(leaves, lambda h, s, v: (h + dh, s * ks, min(1, v * kv)))
 
 
 def fruit_sapling(sapling, flower, n):
@@ -189,14 +184,105 @@ def fruit_sapling(sapling, flower, n):
     return img
 
 
+# ---------------------------------------------------------------- плод на дереве
+
+def skin(colors, size=8):
+    """Кожица size×size: светлее к левому верхнему углу, у угла блик, по краю снизу и справа темнее."""
+    img = Image.new("RGBA", (size, size))
+    for y in range(size):
+        for x in range(size):
+            t = (x + y) / (2 * size - 2)
+            c = colors[3] if t < 0.25 else colors[2] if t < 0.6 else colors[1]
+            if x == size - 1 or y == size - 1:
+                c = colors[1] if t < 0.6 else colors[0]
+            img.putpixel((x, y), c + (255,))
+    img.putpixel((1, 1), colors[4] + (255,))
+    return img
+
+
+def fruit_texture(colors, flower):
+    """Развёртка плода на дереве 16×16: спелая кожица (0, 0), полуспелая (8, 0), зелёная (0, 8), цветок 4×4 (8, 8),
+    черенок — столбики (12, 8) и (13, 8)."""
+    img = Image.new("RGBA", (16, 16))
+    half = [tuple((a + b) // 2 for a, b in zip(c, u)) for c, u in zip(colors, UNRIPE)]
+    img.alpha_composite(skin(colors), (0, 0))
+    img.alpha_composite(skin(half), (8, 0))
+    img.alpha_composite(skin(UNRIPE), (0, 8))
+    for y in range(8, 12):
+        for x in range(8, 12):
+            img.putpixel((x, y), (FLOWER_CENTER if (x, y) in ((9, 9), (10, 10)) else flower) + (255,))
+    for y in range(8, 16):
+        img.putpixel((12, y), STEM + (255,))
+        img.putpixel((13, y), STEM_DARK + (255,))
+    for y in range(8, 16):
+        for x in (14, 15):
+            img.putpixel((x, y), (LEAF_GREEN if (x + y) % 2 else LEAF_DARK) + (255,))
+    return img
+
+
+# Области развёртки: спелая, полуспелая, зелёная кожица, цветок, черенок
+UV = {"ripe": (0, 0), "half": (8, 0), "green": (0, 8), "flower": (8, 8), "stem": (12, 8)}
+
+
+def cube(frm, to, region):
+    """Кубик модели: все грани берут кусок развёртки нужного размера от угла области."""
+    u, v = UV[region]
+    w, h, d = (to[i] - frm[i] for i in range(3))
+    size = {"north": (w, h), "south": (w, h), "east": (d, h), "west": (d, h), "up": (w, d), "down": (w, d)}
+    return {"from": frm, "to": to, "faces": {
+        face: {"uv": [u, v, u + fw, v + fh], "texture": "#fruit"} for face, (fw, fh) in size.items()}}
+
+
+def stalk(x, z, bottom):
+    return cube([x, bottom, z], [x + 1, 16, z + 1], "stem")
+
+
+def blossom():
+    return [cube([6.5, 13, 6.5], [9.5, 14, 9.5], "flower"), stalk(7.5, 7.5, 14)]
+
+
+# Формы плодов на дереве по стадиям: 0 — цветок, 1 — завязь, 2 — полуспелый, 3 — спелый (висят от верха блока)
+SHAPES = {
+    "round": [blossom(),
+              [cube([7, 11, 7], [9, 13, 9], "green"), stalk(7.5, 7.5, 13)],
+              [cube([6, 8, 6], [10, 12, 10], "half"), stalk(7.5, 7.5, 12)],
+              [cube([5, 5, 5], [11, 11, 11], "ripe"), stalk(7.5, 7.5, 11)]],
+    "pear": [blossom(),
+             [cube([7, 10, 7], [9, 13, 9], "green"), stalk(7.5, 7.5, 13)],
+             [cube([6, 7, 6], [10, 10, 10], "half"), cube([7, 10, 7], [9, 12, 9], "half"), stalk(7.5, 7.5, 12)],
+             [cube([5, 4, 5], [11, 9, 11], "ripe"), cube([6, 9, 6], [10, 12, 10], "ripe"), stalk(7.5, 7.5, 12)]],
+    "cherry": [blossom(),
+               [cube([5, 11, 6], [6, 12, 7], "green"), stalk(5, 6, 12), cube([10, 10, 9], [11, 11, 10], "green"),
+                stalk(10, 9, 11)],
+               [cube([4.5, 8, 5.5], [6.5, 10, 7.5], "half"), stalk(5, 6, 10), cube([9.5, 7, 8.5], [11.5, 9, 10.5], "half"),
+                stalk(10, 9, 9)],
+               [cube([4, 6, 5], [7, 9, 8], "ripe"), stalk(5, 6, 9), cube([9, 5, 8], [12, 8, 11], "ripe"), stalk(10, 9, 8)]],
+}
+
+
+def fruit_block(fruit, shape, count):
+    block = f"{fruit}_fruit"
+    for age, elements in enumerate(SHAPES[shape]):
+        write(f"assets/{NS}/models/block/{block}_stage{age}.json", {
+            "ambientocclusion": False, "render_type": "minecraft:cutout",
+            "textures": {"fruit": f"{NS}:block/{block}", "particle": f"{NS}:block/{block}"},
+            "elements": elements})
+    write(f"assets/{NS}/blockstates/{block}.json", {"variants": {
+        f"age={age}": {"model": f"{NS}:block/{block}_stage{age}"} for age in range(4)}})
+    entry = {"type": "minecraft:item", "name": f"{NS}:{fruit}"}
+    if count > 1:
+        entry["functions"] = [{"function": "minecraft:set_count", "count": count}]
+    write(f"data/{NS}/loot_table/blocks/{block}.json", {
+        "type": "minecraft:block", "random_sequence": f"{NS}:blocks/{block}",
+        "pools": [{"rolls": 1.0, "bonus_rolls": 0.0, "entries": [entry], "conditions": [{
+            "condition": "minecraft:block_state_property", "block": f"{NS}:{block}", "properties": {"age": "3"}}]}]})
+
+
 def loot(fruit):
+    """С листвы плоды не падают (растут отдельным блоком): убрать пул плода, если остался."""
     rel = f"data/{NS}/loot_table/blocks/{fruit}_leaves.json"
     table = read(rel)
     table["pools"] = [p for p in table["pools"] if f'"{NS}:{fruit}"' not in json.dumps(p)]
-    table["pools"].append({"rolls": 1.0, "bonus_rolls": 0.0, "entries": [{"type": "minecraft:item", "name": f"{NS}:{fruit}"}],
-                           "conditions": [{"condition": "minecraft:inverted", "term": {
-                               "condition": "minecraft:match_tool", "predicate": {"items": "minecraft:shears"}}},
-                                          {"condition": "minecraft:random_chance", "chance": CHANCE}]})
     write(rel, table)
 
 
@@ -206,6 +292,7 @@ def lang():
         data = read(rel, {})
         for fruit, spec in FRUITS.items():
             data[f"item.{NS}.{fruit}"] = spec[k]
+            data[f"block.{NS}.{fruit}_fruit"] = spec[7 + k]
         write(rel, data)
 
 
@@ -226,8 +313,8 @@ if __name__ == "__main__":
     vanilla_apple = Image.open(BytesIO(client.read("assets/minecraft/textures/item/apple.png")))
     leaves = Image.open(os.path.join(TEX, "block", f"{BASE}_leaves.png")).convert("RGBA")
     sapling = Image.open(os.path.join(TEX, "block", f"{BASE}_sapling.png")).convert("RGBA")
-    items, leaf_images, saplings = [], [], []
-    for n, (fruit, (ru, en, colors, spots, kind, flower)) in enumerate(FRUITS.items()):
+    items, leaf_images, saplings, fruit_images = [], [], [], []
+    for n, (fruit, (ru, en, colors, shape, count, flower, tint, *_)) in enumerate(FRUITS.items()):
         if fruit == "apple":
             item = hsv_map(vanilla_apple, lambda h, s, v: (h - 0.01 if h > 0.8 or h < 0.1 else h, min(1, s * 1.1), v))
         else:
@@ -235,14 +322,18 @@ if __name__ == "__main__":
         item.save(os.path.join(TEX, "item", f"{fruit}.png"))
         write(f"assets/{NS}/models/item/{fruit}.json",
               {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/{fruit}"}})
-        leaf = fruit_leaves(leaves, colors, spots, kind)
+        leaf = fruit_leaves(leaves, tint)
         leaf.save(os.path.join(TEX, "block", f"{fruit}_leaves.png"))
+        tex = fruit_texture(colors, flower)
+        tex.save(os.path.join(TEX, "block", f"{fruit}_fruit.png"))
+        fruit_block(fruit, shape, count)
         sap = fruit_sapling(sapling, flower, n)
         sap.save(os.path.join(TEX, "block", f"{fruit}_sapling.png"))
         loot(fruit)
         items.append(item)
         leaf_images.append(leaf)
         saplings.append(sap)
+        fruit_images.append(tex)
     lang()
-    preview([items, leaf_images, saplings])
+    preview([items, leaf_images, saplings, fruit_images])
     print("ok")

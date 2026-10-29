@@ -1193,5 +1193,10 @@
   "item.trailcraft.pear": "Pear",
   "item.trailcraft.plum": "Plum",
   "item.trailcraft.cherry": "Cherry",
-  "item.trailcraft.apricot": "Apricot"
+  "item.trailcraft.apricot": "Apricot",
+  "block.trailcraft.apple_fruit": "Apple on Branch",
+  "block.trailcraft.pear_fruit": "Pear on Branch",
+  "block.trailcraft.plum_fruit": "Plum on Branch",
+  "block.trailcraft.cherry_fruit": "Cherries on Branch",
+  "block.trailcraft.apricot_fruit": "Apricot on Branch"
 }

@@ -107,31 +107,6 @@
           "condition": "minecraft:survives_explosion"
         }
       ]
-    },
-    {
-      "rolls": 1.0,
-      "bonus_rolls": 0.0,
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "trailcraft:cherry"
-        }
-      ],
-      "conditions": [
-        {
-          "condition": "minecraft:inverted",
-          "term": {
-            "condition": "minecraft:match_tool",
-            "predicate": {
-              "items": "minecraft:shears"
-            }
-          }
-        },
-        {
-          "condition": "minecraft:random_chance",
-          "chance": 0.08
-        }
-      ]
     }
   ],
   "random_sequence": "trailcraft:blocks/cherry_leaves"

@@ -3,7 +3,7 @@ package io.github.ChanesCMD.trailcraft.farm;
 import net.minecraft.world.food.FoodProperties;
 
 /**
- * Все числа земледелия в одном месте: скорость роста на грядках, ягодные кусты, ягоды.
+ * Все числа земледелия в одном месте: скорость роста на грядках, ягодные кусты, ягоды, плоды на деревьях.
  * TODO: уточнить — значения черновые.
  */
 public final class Farm {
@@ -30,6 +30,14 @@ public final class Farm {
     public static final int BERRIES_MIN = 1, BERRIES_MAX = 2;
     /** Ягоды: сытость и насыщение — как у сладких ягод. */
     public static final FoodProperties BERRY_FOOD = new FoodProperties.Builder().nutrition(2).saturationModifier(0.1f).build();
+
+    // === ПЛОДЫ ФРУКТОВЫХ ДЕРЕВЬЕВ (block/FruitLeavesBlock, block/FruitBlock) ===
+    /** Природная листва фруктового дерева завязывает под собой плод за случайный тик с шансом 1 из стольких. */
+    public static final int FRUIT_SET_CHANCE = 20;
+    /** Плоды не ближе стольких блоков друг к другу по горизонтали (и ±1 по высоте). */
+    public static final int FRUIT_SPACING = 2;
+    /** Плод подрастает (цветок 0 → спелый 3) за случайный тик с шансом 1 из стольких. */
+    public static final int FRUIT_GROWTH_CHANCE = 6;
 
     private Farm() {}
 }

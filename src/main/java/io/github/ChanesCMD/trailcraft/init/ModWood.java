@@ -1,9 +1,12 @@
 package io.github.ChanesCMD.trailcraft.init;
 
 import io.github.ChanesCMD.trailcraft.TrailCraft;
+import io.github.ChanesCMD.trailcraft.block.FruitBlock;
+import io.github.ChanesCMD.trailcraft.block.FruitLeavesBlock;
 import io.github.ChanesCMD.trailcraft.block.StrippableLogBlock;
 import io.github.ChanesCMD.trailcraft.block.ThinLogBlock;
 import io.github.ChanesCMD.trailcraft.block.WoodCraftingTableBlock;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -37,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * 24 вида деревьев: по 16 блоков на вид (бревно, тонкое бревно, древесина, обтёсанные, листва, саженец, доски, ступени, плита, забор, калитка, дверь, люк, кнопка, нажимная плита).
@@ -49,6 +53,8 @@ public final class ModWood {
         /** Малая доска (доски + пила) и верстак из 4 малых досок; у вариантов листвы — null. */
         public DeferredItem<Item> smallBoard;
         public DeferredBlock<Block> craftingTable;
+        /** Плод под листвой фруктового дерева (FruitBlock); у остальных — null. */
+        public DeferredBlock<Block> fruit;
         public final List<DeferredItem<? extends Item>> items = new ArrayList<>();
         WoodSet(String id) { this.id = id; }
     }
@@ -58,7 +64,7 @@ public final class ModWood {
     /** Деревья из четырёх саженцев квадратом 2×2: порода -> configured_feature (реликтовый эвкалипт — ствол 2×2). */
     private static final Map<String, String> MEGA_TREES = Map.of("eucalyptus", "relict_eucalyptus_tree");
 
-    /** Фруктовые деревья на древесине амадзу: листва с плодами (плоды — ModItems), саженец. */
+    /** Фруктовые деревья на древесине амадзу: своя листва, на которой растут плоды (FruitBlock, плоды — ModItems), саженец. */
     public static final List<String> FRUIT_TREES = List.of("apple", "pear", "plum", "cherry", "apricot");
 
     /**
@@ -96,7 +102,7 @@ public final class ModWood {
         // амадзу (по мотивам цуйхуа из Genshin Impact) — древесина фруктовых деревьев
         add("amadzu", MapColor.TERRACOTTA_RED, MapColor.TERRACOTTA_BROWN);
         for (String fruit : FRUIT_TREES) {
-            addLeafVariant(fruit, "amadzu");
+            addFruitTree(fruit, "amadzu");
         }
     }
 
@@ -155,22 +161,50 @@ public final class ModWood {
      * Его деревья (configured_feature <id>_tree) растут из своего саженца, ствол — из брёвен baseId.
      */
     private static void addLeafVariant(String id, String baseId) {
-        WoodSet base = SETS.stream().filter(b -> b.id.equals(baseId)).findFirst().orElseThrow();
-        WoodSet s = new WoodSet(id);
-        s.log = base.log; s.thinLog = base.thinLog; s.strippedLog = base.strippedLog; s.wood = base.wood;
-        s.strippedWood = base.strippedWood; s.planks = base.planks; s.stairs = base.stairs; s.slab = base.slab;
-        s.fence = base.fence; s.gate = base.gate; s.door = base.door; s.trapdoor = base.trapdoor;
-        s.button = base.button; s.plate = base.plate;
+        WoodSet s = variant(id, baseId);
         s.leaves = leaves(id);
         s.sapling = sapling(id);
         item(s, id + "_leaves", s.leaves); item(s, id + "_sapling", s.sapling);
         SETS.add(s);
     }
 
+    /**
+     * Фруктовое дерево — вариант листвы на baseId: дерево растёт без плодов, его природная листва завязывает под собой
+     * плоды (FruitLeavesBlock → FruitBlock <id>_fruit), спелые собираются ПКМ. Плод — предмет trailcraft:<id>.
+     */
+    private static void addFruitTree(String id, String baseId) {
+        WoodSet s = variant(id, baseId);
+        s.leaves = reg(id + "_leaves", p -> new FruitLeavesBlock(p, () -> s.fruit.get()), leafProperties());
+        // вишня висит гроздью из двух ягод
+        int count = id.equals("cherry") ? 2 : 1;
+        Supplier<Item> fruitItem = () -> BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, id));
+        s.fruit = reg(id + "_fruit", p -> new FruitBlock(p, () -> s.leaves.get(), fruitItem, count),
+                BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollission().randomTicks().strength(0.2f)
+                        .sound(SoundType.CROP).noOcclusion().pushReaction(PushReaction.DESTROY));
+        s.sapling = sapling(id);
+        item(s, id + "_leaves", s.leaves); item(s, id + "_sapling", s.sapling);
+        SETS.add(s);
+    }
+
+    /** Набор варианта: всё, кроме листвы и саженца, — от вида baseId. */
+    private static WoodSet variant(String id, String baseId) {
+        WoodSet base = SETS.stream().filter(b -> b.id.equals(baseId)).findFirst().orElseThrow();
+        WoodSet s = new WoodSet(id);
+        s.log = base.log; s.thinLog = base.thinLog; s.strippedLog = base.strippedLog; s.wood = base.wood;
+        s.strippedWood = base.strippedWood; s.planks = base.planks; s.stairs = base.stairs; s.slab = base.slab;
+        s.fence = base.fence; s.gate = base.gate; s.door = base.door; s.trapdoor = base.trapdoor;
+        s.button = base.button; s.plate = base.plate;
+        return s;
+    }
+
     private static DeferredBlock<Block> leaves(String id) {
-        return reg(id + "_leaves", LeavesBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).strength(0.2f).randomTicks()
+        return reg(id + "_leaves", LeavesBlock::new, leafProperties());
+    }
+
+    private static BlockBehaviour.Properties leafProperties() {
+        return BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).strength(0.2f).randomTicks()
                 .sound(SoundType.GRASS).noOcclusion().isValidSpawn((st, lv, pos, e) -> false).isSuffocating((st, lv, pos) -> false)
-                .isViewBlocking((st, lv, pos) -> false).ignitedByLava().pushReaction(PushReaction.DESTROY));
+                .isViewBlocking((st, lv, pos) -> false).ignitedByLava().pushReaction(PushReaction.DESTROY);
     }
 
     /** Саженец растит дерево configured_feature trailcraft:<id>_tree, четыре саженца квадратом — дерево из MEGA_TREES. */
