@@ -457,6 +457,24 @@ def stonecutting(vanilla):
             "result": {"id": f"{NS}:{rock}_slab", "count": 2}})
 
 
+def striated_ores(create):
+    """Слои руд Create (кримзит, охрум, веридий, азурин и известняк): их фича ищет ванильный камень и ставится в ванильные
+    биомы, поэтому в нашем мире её нет. Своя копия — те же узоры слоёв, но заменяют наши породы (#trailcraft:rocks),
+    в наших биомах, так же редко (раз в 18 чанков, Y от −30 до 70)."""
+    feature = json.loads(create.read("data/create/worldgen/configured_feature/striated_ores_overworld.json"))
+    target = {"predicate_type": "minecraft:tag_match", "tag": f"{NS}:rocks"}
+    for pattern in feature["config"]["layer_patterns"]:
+        for layer in pattern:
+            layer["targets"] = [[{"state": alt[0]["state"], "target": target}] for alt in layer["targets"]]
+    write(f"data/{NS}/worldgen/configured_feature/striated_ores.json", feature)
+    placed = json.loads(create.read("data/create/worldgen/placed_feature/striated_ores_overworld.json"))
+    placed["feature"] = f"{NS}:striated_ores"
+    write(f"data/{NS}/worldgen/placed_feature/striated_ores.json", placed)
+    write(f"data/{NS}/neoforge/biome_modifier/striated_ores.json", {
+        "type": "neoforge:add_features", "biomes": f"#{NS}:trailworldgen_biomes",
+        "features": f"{NS}:striated_ores", "step": "underground_ores"})
+
+
 if __name__ == "__main__":
     create = zipfile.ZipFile(find_jar("create-1.21.1-*-slim.jar"))
     vanilla = zipfile.ZipFile(find_jar("minecraft_1.21.1_client.jar"))
@@ -464,6 +482,7 @@ if __name__ == "__main__":
     tags(load_tags([vanilla, neoforge, create], ours=False))
     recipes()
     stonecutting(vanilla)
+    striated_ores(create)
     dyes(vanilla)
     substitute(create)
     write(f"data/{NS}/pruned_recipes.json", pruned(create, load_tags([vanilla, neoforge, create])))
