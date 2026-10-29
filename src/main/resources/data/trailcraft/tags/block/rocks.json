@@ -12,6 +12,10 @@
     "create:limestone",
     "trailcraft:marble",
     "trailcraft:sandstone",
-    "trailcraft:shale"
+    "trailcraft:shale",
+    "minecraft:granite",
+    "minecraft:diorite",
+    "minecraft:andesite",
+    "minecraft:deepslate"
   ]
 }

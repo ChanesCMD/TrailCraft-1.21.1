@@ -185,6 +185,28 @@
       {
         "type": "minecraft:condition",
         "if_true": {
+          "type": "minecraft:vertical_gradient",
+          "random_name": "trailcraft:deepslate_floor",
+          "true_at_and_below": {
+            "above_bottom": 4
+          },
+          "false_at_and_above": {
+            "above_bottom": 7
+          }
+        },
+        "then_run": {
+          "type": "minecraft:block",
+          "result_state": {
+            "Name": "minecraft:deepslate",
+            "Properties": {
+              "axis": "y"
+            }
+          }
+        }
+      },
+      {
+        "type": "minecraft:condition",
+        "if_true": {
           "type": "minecraft:biome",
           "biome_is": [
             "trailcraft:desert"
@@ -7917,12 +7939,75 @@
             "type": "minecraft:condition",
             "if_true": {
               "type": "minecraft:vertical_gradient",
-              "random_name": "trailcraft:rock_bottom_mid",
+              "random_name": "trailcraft:rock_deep_bottom",
               "true_at_and_below": {
-                "absolute": -22
+                "absolute": -48
               },
               "false_at_and_above": {
+                "absolute": -36
+              }
+            },
+            "then_run": {
+              "type": "minecraft:sequence",
+              "sequence": [
+                {
+                  "type": "minecraft:condition",
+                  "if_true": {
+                    "type": "minecraft:noise_threshold",
+                    "noise": "trailcraft:rock_deep",
+                    "min_threshold": -2.0,
+                    "max_threshold": -0.1
+                  },
+                  "then_run": {
+                    "type": "minecraft:block",
+                    "result_state": {
+                      "Name": "minecraft:granite"
+                    }
+                  }
+                },
+                {
+                  "type": "minecraft:condition",
+                  "if_true": {
+                    "type": "minecraft:noise_threshold",
+                    "noise": "trailcraft:rock_deep",
+                    "min_threshold": -0.1,
+                    "max_threshold": 0.1
+                  },
+                  "then_run": {
+                    "type": "minecraft:block",
+                    "result_state": {
+                      "Name": "minecraft:diorite"
+                    }
+                  }
+                },
+                {
+                  "type": "minecraft:condition",
+                  "if_true": {
+                    "type": "minecraft:noise_threshold",
+                    "noise": "trailcraft:rock_deep",
+                    "min_threshold": 0.1,
+                    "max_threshold": 2.0
+                  },
+                  "then_run": {
+                    "type": "minecraft:block",
+                    "result_state": {
+                      "Name": "minecraft:andesite"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "minecraft:condition",
+            "if_true": {
+              "type": "minecraft:vertical_gradient",
+              "random_name": "trailcraft:rock_bottom_mid",
+              "true_at_and_below": {
                 "absolute": -10
+              },
+              "false_at_and_above": {
+                "absolute": 2
               }
             },
             "then_run": {
@@ -8027,10 +8112,10 @@
               "type": "minecraft:vertical_gradient",
               "random_name": "trailcraft:rock_mid_top",
               "true_at_and_below": {
-                "absolute": 34
+                "absolute": 32
               },
               "false_at_and_above": {
-                "absolute": 46
+                "absolute": 44
               }
             },
             "then_run": {
