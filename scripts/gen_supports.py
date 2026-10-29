@@ -167,14 +167,15 @@ def materials():
 
 
 def hammer_texture(name, head, outline):
-    """Черенок каменного молотка и поперёк него головка head ({(x, y): цвет}), обведённая outline."""
+    """Черенок каменного молотка (без кусков под его головкой) и поперёк него головка head ({(x, y): цвет}),
+    обведённая outline."""
     tex = os.path.join(ROOT, "assets", NS, "textures", "item")
     src = Image.open(os.path.join(tex, "stone_hammer.png")).convert("RGBA")
     img = Image.new("RGBA", (16, 16))
     for y in range(16):
         for x in range(16):
             c = src.getpixel((x, y))
-            if c[3] and c[0] - c[2] > 25:  # только черенок
+            if c[3] and c[0] - c[2] > 25 and not (x >= 8 and y >= 8):  # только черенок
                 img.putpixel((x, y), c)
     for p, c in head.items():
         img.putpixel(p, c)
@@ -189,19 +190,36 @@ def hammer_texture(name, head, outline):
           {"parent": "minecraft:item/handheld", "textures": {"layer0": f"{NS}:item/{name}"}})
 
 
+def head_band(head, t0, t1, mid, dark, light=None):
+    """Короткий обух поперёк черенка: шаг t — по диагонали вниз-вправо от конца черенка (9, 6); снизу темнее,
+    с light — толщиной 3 со светлой кромкой сверху."""
+    for t in range(t0, t1 + 1):
+        x, y = 9 + t, 6 + t
+        head[(x, y)], head[(x, y + 1)] = mid, dark
+        if light:
+            head[(x, y - 1)] = light
+
+
+def head_face(head, x0, y0, w, h, dark, mid, light):
+    """Боёк w×h: снизу и справа темнее, левый верхний угол светлый."""
+    for x in range(x0, x0 + w):
+        for y in range(y0, y0 + h):
+            head[(x, y)] = dark if x == x0 + w - 1 or y == y0 + h - 1 else mid
+    head[(x0, y0)] = light
+    if w > 2:
+        head[(x0 + 1, y0)] = light
+    if h > 2:
+        head[(x0, y0 + 1)] = light
+
+
 def steiger_hammer():
-    """Железная головка поперёк черенка: маленький боёк вверху слева, клюв внизу справа."""
+    """Железная головка поперёк черенка: короткий обух, маленький боёк 2×2 вверху слева, клюв сужается внизу справа."""
     outline, dark, mid, light = (40, 40, 46, 255), (92, 94, 102, 255), (140, 143, 150, 255), (196, 199, 205, 255)
     head = {}
-    for i in range(7):
-        x, y = 7 + i, 2 + i
-        head[(x, y)], head[(x, y + 1)] = mid, dark
-    for p in [(6, 2), (6, 3), (7, 1)]:
-        head[p] = light
-    head[(6, 1)] = mid
-    head.pop((13, 9), None)  # клюв сужается
-    head.pop((12, 9), None)
-    head[(13, 8)] = dark
+    head_band(head, -2, 3, mid, dark)
+    head_face(head, 5, 3, 2, 2, dark, mid, light)
+    head.pop((12, 10))
+    head[(12, 9)] = dark
     hammer_texture("steiger_hammer", head, outline)
     write(f"data/{NS}/recipe/steiger_hammer.json", {
         "type": "minecraft:crafting_shapeless", "category": "equipment",
@@ -210,20 +228,14 @@ def steiger_hammer():
 
 
 def geological_hammer():
-    """Медная головка: широкий плоский боёк 3×3 вверху слева, короткое долото внизу справа."""
+    """Медная головка: короткий толстый обух со светлой кромкой, широкий плоский боёк 3×3 вверху слева, острый конец
+    внизу справа."""
     outline, dark, mid, light = (58, 30, 18, 255), (140, 74, 40, 255), (196, 110, 62, 255), (236, 160, 110, 255)
     head = {}
-    for i in range(6):
-        x, y = 8 + i, 3 + i
-        head[(x, y)], head[(x, y + 1)] = mid, dark
-    for x in (5, 6, 7):
-        for y in (1, 2, 3):
-            head[(x, y)] = mid
-    for p in [(5, 1), (6, 1), (5, 2)]:
-        head[p] = light
-    head[(7, 3)] = dark
-    head.pop((13, 9), None)
-    head[(13, 8)] = dark
+    head_band(head, -1, 2, mid, dark, light)
+    head_face(head, 5, 2, 3, 3, dark, mid, light)
+    head.pop((11, 9))
+    head[(11, 8)] = dark
     hammer_texture("geological_hammer", head, outline)
     write(f"data/{NS}/recipe/geological_hammer.json", {
         "type": "minecraft:crafting_shaped", "category": "equipment",
