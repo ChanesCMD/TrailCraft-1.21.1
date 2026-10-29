@@ -83,14 +83,14 @@
       "name": "ear_r",
       "parent": "head",
       "pivot": [
-        -1.5,
+        -2,
         -2.5,
         -2
       ],
       "rotation": [
         0,
         0,
-        0.15
+        -0.15
       ],
       "cubes": [
         {
@@ -113,14 +113,14 @@
       "name": "ear_l",
       "parent": "head",
       "pivot": [
-        1.5,
+        2,
         -2.5,
         -2
       ],
       "rotation": [
         0,
         0,
-        -0.15
+        0.15
       ],
       "cubes": [
         {

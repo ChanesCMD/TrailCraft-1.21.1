@@ -42,16 +42,14 @@ def neck(a, b):
 def paint_head(face, a, b):
     # a, b — см. paint_box; голова 4×7×4: верхние 3 ряда — голова, ниже — шея
     if face == "front":
+        if b <= 1 and a in (0, 3):
+            return RED if b == 0 else (10, 10, 12)     # глаза спереди, над ними красные брови
         if b <= 1:
             return SLATE_DARK
         return BLACK if 1 <= a <= 2 else BLACK_LIGHT  # горло — чёрная «борода»
     if face in ("west", "east"):
-        if b == 1 and a <= 1:
-            return RED                                 # красная бровь
-        if b == 2 and a == 1:
-            return (10, 10, 12)                        # глаз
-        if b == 2 and a == 0:
-            return RED
+        if b == 1 and a <= 1 or b == 2 and a == 0:
+            return RED                                 # красная голая кожа у глаза
         if b >= 3 and a == 0:
             return BLACK
         return neck(a, b)

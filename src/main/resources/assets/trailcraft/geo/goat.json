@@ -171,9 +171,9 @@
       "name": "ear_r",
       "parent": "neck",
       "pivot": [
-        -2.5,
+        -2.2,
         -5,
-        -3.5
+        -1.5
       ],
       "rotation": [
         0,
@@ -201,9 +201,9 @@
       "name": "ear_l",
       "parent": "neck",
       "pivot": [
-        2.5,
+        2.2,
         -5,
-        -3.5
+        -1.5
       ],
       "rotation": [
         0,

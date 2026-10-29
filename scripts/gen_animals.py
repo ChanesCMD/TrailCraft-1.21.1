@@ -47,12 +47,12 @@ def legs4(y, h, x, zf, zb, w, paint, d=None):
 
 
 def legs2(y, h, x, z, paint, foot):
-    """Две ноги птицы с пальцами (foot — краска пальцев)."""
+    """Две ноги птицы с пальцами (foot — краска пальцев); нога кончается на пальцах, низ у них не общий."""
     def cubes(mirror):
         if mirror:
-            return [box(-0.5, 0, -0.5, 1, h, 1, mirror=True, same="leg"),
+            return [box(-0.5, 0, -0.5, 1, h - 1, 1, mirror=True, same="leg"),
                     box(-1, h - 1, -2, 2, 1, 2, mirror=True, same="toes")]
-        return [dict(box(-0.5, 0, -0.5, 1, h, 1, paint), key="leg"), dict(box(-1, h - 1, -2, 2, 1, 2, foot), key="toes")]
+        return [dict(box(-0.5, 0, -0.5, 1, h - 1, 1, paint), key="leg"), dict(box(-1, h - 1, -2, 2, 1, 2, foot), key="toes")]
     return [part("leg_r", (-x, y, z), cubes(False), "leg_r"), part("leg_l", (x, y, z), cubes(True), "leg_l")]
 
 
@@ -89,7 +89,7 @@ def col(c):
 
 
 def paint(spec, face, a, b, size, rnd, cell):
-    """Цвет текселя. a, b у боков (west/east) — от переда назад и сверху вниз; у переда и зада (front/back) — слева
+    """Цвет текселя. Глаза: eyes — на боках (ряд, от переда, цвет[, бровь]), feyes — спереди (ряд, от края, цвет). a, b у боков (west/east) — от переда назад и сверху вниз; у переда и зада (front/back) — слева
     направо и сверху вниз; у верха и низа (top/bottom) — поперёк и от переда назад. size = (w, h, d)."""
     w, h, d = size
     base = spec["c"]
@@ -146,6 +146,10 @@ def paint(spec, face, a, b, size, rnd, cell):
             color = col(ec)
         if len(spec["eyes"]) > 3 and row == er - 1 and z == ez:  # бровь / ободок над глазом
             color = col(spec["eyes"][3])
+    if face == "front" and "feyes" in spec:  # глаза спереди: два, симметрично (столбец от края)
+        er, ec, cc = spec["feyes"]
+        if row == er and a in (ec, w - 1 - ec):
+            color = col(cc)
     for fface, fa, fb, fc in spec.get("px", []):
         if face == fface and a == fa and b == fb:
             color = col(fc)
@@ -163,7 +167,7 @@ def chicken():
     body = P(0xAC5C30, m=0.3, belly=(0xC27A4A, 2))
     return dict(ru="Курица", en="Chicken", gen="курицы", lie=0, parts=[
         part("body", (0, 16, 0), [box(-3, -3, -4, 6, 6, 8, body)]),
-        part("head", (0, 14, -3), [box(-2, -5, -2, 4, 5, 4, P(0xB86434, m=0.2, eyes=(2, 0, EYE)))], "head"),
+        part("head", (0, 14, -3), [box(-2, -5, -2, 4, 5, 4, P(0xB86434, m=0.2, feyes=(1, 0, EYE)))], "head"),
         part("comb", (0, 0, 0), [box(-0.5, -7, -2, 1, 2, 3, P(0xD02C24, m=0.1))], parent="head"),
         part("beak", (0, 0, 0), [box(-1, -3, -4, 2, 1, 2, P(0xE0A030, m=0))], parent="head"),
         part("wattle", (0, 0, 0), [box(-1, -2, -3, 2, 2, 1, P(0xD02C24, m=0.1))], parent="head"),
@@ -177,8 +181,8 @@ def goose():
     grey = P(0x8C8276, m=0.3, belly=(0xD6D2C8, 3))
     return dict(ru="Гусь", en="Goose", gen="гуся", lie=0, parts=[
         part("body", (0, 15, 0), [box(-3.5, -3, -5, 7, 6, 10, grey)]),
-        part("neck", (0, 13, -4), [box(-1, -8, -1, 2, 9, 2, P(0x6E665E, m=0.2, belly=(0xBEB8AE, 2)))], "head"),
-        part("head", (0, 0, 0), [box(-1.5, -11, -2, 3, 3, 4, P(0x5E5850, m=0.15, eyes=(1, 0, EYE)))], parent="neck"),
+        part("neck", (0, 13, -3.5), [box(-1, -8, -1, 2, 9, 2, P(0x6E665E, m=0.2, belly=(0xBEB8AE, 2)))], "head"),
+        part("head", (0, 0, 0), [box(-1.5, -11, -2, 3, 3, 4, P(0x5E5850, m=0.15, feyes=(0, 0, EYE)))], parent="neck"),
         part("beak", (0, 0, 0), [box(-1, -10, -5, 2, 1, 3, P(0xE8872C, m=0, px=[("front", 0, 0, 0xF0E8D8),
                                                                               ("front", 1, 0, 0xF0E8D8)]))], parent="neck"),
         part("tail", (0, 13, 5), [box(-2, -2, 0, 4, 2, 3, P(0x6E665E, m=0.2, tip=(0xE8E4DC, 1)))], rotation=(-0.3, 0, 0)),
@@ -192,7 +196,7 @@ def duck():
         part("body", (0, 19, 0), [box(-2.5, -2, -3.5, 5, 4, 7, P(0x8C8A88, m=0.35, belly=(0xC8C4BE, 1),
                                                                    px=[("front", c, r, 0x7A3E28) for c in range(5) for r in range(3)]))]),
         part("neck", (0, 18, -3), [box(-1, -3, -1, 2, 3, 2, P(0x2E6E3A, m=0.2, belly=(0xF2F0EA, 1)))], "head"),
-        part("head", (0, 0, 0), [box(-1.5, -6, -2, 3, 3, 4, P(0x2E6E3A, m=0.25, eyes=(1, 1, EYE)))], parent="neck"),
+        part("head", (0, 0, 0), [box(-1.5, -6, -2, 3, 3, 4, P(0x2E6E3A, m=0.25, feyes=(0, 0, EYE)))], parent="neck"),
         part("beak", (0, 0, 0), [box(-1, -5, -5, 2, 1, 3, P(0xE2C23A, m=0))], parent="neck"),
         part("tail", (0, 18, 3.5), [box(-1.5, -2, 0, 3, 2, 2, P(0x2A2A2E, m=0.2, ttip=(0xF2F0EA, 1)))], rotation=(-0.5, 0, 0)),
         *wings(2.5, 17.5, 0, 3, 6, P(0x7A6650, m=0.35, px=[("west", 1, 1, 0x3A4EA0), ("west", 2, 1, 0x3A4EA0),
@@ -208,10 +212,10 @@ def turkey():
         part("tail", (0, 11, 5), [box(-6, -10, 0, 12, 10, 1, P(0x5A4430, m=0.3, ttip=(0xE6DCC8, 1),
                                                              px=[(f, a, 2, 0x2A2016) for f in ("front", "back") for a in range(12)]))],
              rotation=(-0.2, 0, 0)),
-        part("neck", (0, 11, -4), [box(-1, -6, -1, 2, 6, 2, P(0x8098B0, m=0.15))], "head"),
-        part("head", (0, 0, 0), [box(-1.5, -9, -2, 3, 3, 3, P(0x8CA4BC, m=0.1, eyes=(1, 0, EYE)))], parent="neck"),
+        part("neck", (0, 11, -3.5), [box(-1, -6, -1, 2, 6, 2, P(0x8098B0, m=0.15))], "head"),
+        part("head", (0, 0, 0), [box(-1.5, -9, -2, 3, 3, 3, P(0x8CA4BC, m=0.1, feyes=(0, 0, EYE)))], parent="neck"),
         part("wattle", (0, 0, 0), [box(-1, -7, -3, 2, 4, 1, P(0xC82828, m=0.15))], parent="neck"),
-        part("beak", (0, 0, 0), [box(-1, -9, -4, 2, 1, 1, P(0xD8CCA8, m=0))], parent="neck"),
+        part("beak", (0, 0, 0), [box(-1, -8, -4, 2, 1, 2, P(0xD8CCA8, m=0))], parent="neck"),  # у морды, над серёжкой
         *wings(4, 11, 0, 6, 9, P(0x6A5640, m=0.35, rings=(0xD8D0C0, 2, 1))),
         *legs2(18, 6, 2, 0.5, P(0xC89A8A, m=0), P(0xB08878, m=0)),
     ])
@@ -235,7 +239,7 @@ def corvid(ru, en, gen, size, body_color, head_color, wing_color):
         part("body", (0, 18.5, 0), [box(-2.5, -2.5, -4, 5, 5, 8, body)]),
         part("head", (0, 17, -4), [box(-2, -4, -3, 4, 4, 4, dark)], "head"),
         part("beak", (0, 0, 0), [box(-1, -3, -6, 2, 2, 3, P(0x18181C, m=0))], parent="head"),
-        part("throat", (0, 0, 0), [box(-1.5, -1, -3, 3, 2, 1, P(0x22222A, m=0.3))], parent="head"),
+        part("throat", (0, 0, 0), [box(-1.5, -1, -3.5, 3, 2, 1, P(0x22222A, m=0.3))], parent="head"),
         part("tail", (0, 17.5, 4), [box(-2, -0.5, 0, 4, 1, 5, wing)], rotation=(-0.25, 0, 0)),
         *wings(2.5, 16.5, 0, 4, 9, wing),
         *legs2(21, 3, 1.2, 0.5, P(0x18181C, m=0), P(0x18181C, m=0)),
@@ -254,7 +258,7 @@ def pig():
     pink = P(0xE2A096, m=0.25, belly=(0xEAB4AA, 2))
     return dict(ru="Свинья", en="Pig", gen="свиньи", lie=6, parts=[
         part("body", (0, 14, 0), [box(-5, -4, -7, 10, 8, 14, pink)]),
-        part("head", (0, 13, -7), [box(-3.5, -3, -6, 7, 7, 6, P(0xE2A096, m=0.2, eyes=(2, 1, EYE)))], "head"),
+        part("head", (0, 13, -7), [box(-3.5, -3, -6, 7, 7, 6, P(0xE2A096, m=0.2, feyes=(2, 1, EYE)))], "head"),
         part("snout", (0, 0, 0), [box(-2, 0, -8, 4, 3, 2, P(0xD48C86, m=0.1, px=[("front", 1, 1, 0x7A4A48),
                                                                                ("front", 2, 1, 0x7A4A48)]))], parent="head"),
         *ears("head", -3, 2.5, -2, 2, 2, 1, P(0xD8948C, m=0.1), rotation=(0.4, 0, -0.5)),
@@ -268,7 +272,7 @@ def cow():
     return dict(ru="Корова", en="Cow", gen="коровы", lie=8, parts=[
         part("body", (0, 11, 0), [box(-6, -5, -9, 12, 10, 18, hide)]),
         part("udder", (0, 16, 5), [box(-2, 0, -2, 4, 1, 4, P(0xE6A8A0, m=0.1))]),
-        part("head", (0, 8, -9), [box(-4, -4, -6, 8, 8, 6, P(0x2A2624, m=0.12, front=0xEAE6DE, eyes=(3, 1, EYE)))], "head"),
+        part("head", (0, 8, -9), [box(-4, -4, -6, 8, 8, 6, P(0x2A2624, m=0.12, front=0xEAE6DE, feyes=(3, 1, EYE)))], "head"),
         part("muzzle", (0, 0, 0), [box(-3, 1, -8, 6, 3, 2, P(0xE6B0A8, m=0.1, px=[("front", 1, 1, 0x5A3A38),
                                                                                 ("front", 4, 1, 0x5A3A38)]))], parent="head"),
         part("horn_r", (-4, -4, -3), [dict(box(-1, -3, -0.5, 1, 3, 1, P(0xDCCFB0, m=0, ttip=(0x5A5040, 1))), key="horn")],
@@ -285,9 +289,9 @@ def sheep():
     return dict(ru="Овца", en="Sheep", gen="овцы", lie=7, parts=[
         part("body", (0, 13, 0), [box(-4, -3, -7, 8, 6, 14, P(0xD8C8B0, m=0.2))]),
         part("wool", (0, 13, 0), [box(-5, -4, -8, 10, 8, 16, wool)], "wool"),
-        part("head", (0, 11, -7), [box(-2.5, -3, -5, 5, 5, 6, P(0xDCCDB4, m=0.15, eyes=(1, 1, 0x3A2A1C)))], "head"),
-        part("head_wool", (0, 0, 0), [box(-3, -4, -3, 6, 2, 4, P(0xE8E6DE, m=0.4))], "wool", parent="head"),
-        part("nose", (0, 0, 0), [box(-1.5, 0, -5.5, 3, 2, 1, P(0xC8B49A, m=0.1, px=[("front", 1, 0, 0x6A5444)]))], parent="head"),
+        part("head", (0, 11, -7), [box(-2.5, -3, -5, 5, 5, 6, P(0xDCCDB4, m=0.15, feyes=(1, 0, 0x3A2A1C)))], "head"),
+        part("head_wool", (0, 0, 0), [box(-3, -4, -3.5, 6, 2, 4, P(0xE8E6DE, m=0.4))], "wool", parent="head"),
+        part("nose", (0, 0, 0), [box(-1.5, -0.5, -5.5, 3, 2, 1, P(0xC8B49A, m=0.1, px=[("front", 1, 0, 0x6A5444)]))], parent="head"),
         *ears("head", -2, 3, -2, 1, 3, 2, P(0xDCCDB4, m=0.1), rotation=(0, 0, -1.2)),
         part("tail", (0, 10, 8), [box(-1, 0, -1, 2, 4, 2, wool)], "tail", rotation=(0.3, 0, 0)),
         *legs4(17, 7, 2.5, -5, 5, 3, P(0xDCCDB4, m=0.15, bot=(0x4A3C30, 1))),
@@ -305,7 +309,7 @@ def goat():
              "horn_r", parent="neck", rotation=(-0.6, 0, -0.15)),
         part("horn_l", (1.2, -6, -2.5), [box(-0.5, -4, -0.5, 1, 4, 1, mirror=True, same="horn")], "horn_l", parent="neck",
              rotation=(-0.6, 0, 0.15)),
-        *ears("neck", -5, 2.5, -3.5, 1, 2, 1, P(0xCFC8BA, m=0.1), rotation=(0, 0, -1.4)),
+        *ears("neck", -5, 2.2, -1.5, 1, 2, 1, P(0xCFC8BA, m=0.1), rotation=(0, 0, -1.4)),  # за глазом
         part("tail", (0, 9, 6), [box(-0.5, -1, 0, 1, 2, 2, coat)], "tail", rotation=(-0.6, 0, 0)),
         *legs4(16, 8, 2, -5, 5, 2, P(0xD0CABC, m=0.2, bot=(0x4A4038, 1))),
     ])
@@ -315,7 +319,7 @@ def hare():
     fur = P(0x967652, m=0.4, belly=(0xF0E8DC, 1))
     return dict(ru="Заяц", en="Hare", gen="зайца", lie=0, parts=[
         part("body", (0, 18.5, 0), [box(-2.5, -2.5, -4, 5, 5, 8, fur)]),
-        part("head", (0, 16.5, -4), [box(-2, -3, -3.5, 4, 4, 4, P(0x9E7E58, m=0.3, eyes=(1, 1, 0x3A2410),
+        part("head", (0, 16.5, -4), [box(-2, -3, -3.5, 4, 4, 4, P(0x9E7E58, m=0.3, feyes=(1, 0, 0x3A2410),
                                                                    px=[("front", 1, 3, 0xF0E8DC), ("front", 2, 3, 0xF0E8DC)]))], "head"),
         *ears("head", -3, 1, -1, 1, 6, 2, P(0x9E7E58, m=0.2, ttip=(0x1E1A16, 1), inner=(0xD8B0A0, 0)), rotation=(-0.25, 0, 0.1)),
         part("tail", (0, 16.5, 4), [box(-1, -1, 0, 2, 2, 2, P(0xF6F2EA, m=0.1, top=(0x4A3A28, 1)))], "tail"),
@@ -341,7 +345,7 @@ def beaver():
     fur = P(0x6E482C, m=0.35, belly=(0x8A603C, 1))
     return dict(ru="Бобр", en="Beaver", gen="бобра", lie=0, parts=[
         part("body", (0, 18, 0), [box(-3.5, -3, -5, 7, 6, 10, fur)]),
-        part("head", (0, 17, -5), [box(-2.5, -3, -4, 5, 4, 4, P(0x6E482C, m=0.3, eyes=(0, 1, EYE),
+        part("head", (0, 17, -5), [box(-2.5, -3, -4, 5, 4, 4, P(0x6E482C, m=0.3, feyes=(0, 1, EYE),
                                                              px=[("front", 2, 2, 0x1E1614), ("front", 2, 1, 0x2A201A)]))], "head"),
         part("teeth", (0, 0, 0), [box(-1, 1, -4.2, 2, 1, 1, P(0xE08A2A, m=0))], parent="head"),
         *ears("head", -3, 2.5, -1, 1, 1, 1, P(0x4E3220, m=0)),
@@ -353,15 +357,17 @@ def beaver():
 
 def fox_like(ru, en, gen, fur, light, dark, ear_size, ear_inner, tail_tip, legs):
     f = P(fur, m=0.25, belly=(light, 2))
-    head = P(fur, m=0.2, eyes=(1, 1, 0x2A1E10), bot=(light, 1))
+    head = P(fur, m=0.2, feyes=(1, 1, 0x2A1E10), bot=(light, 1))
     ew, eh = ear_size
     return dict(ru=ru, en=en, gen=gen, lie=5, parts=[
         part("body", (0, 16.5, 0), [box(-2.5, -2.5, -5, 5, 5, 10, f)]),
         part("head", (0, 15, -5), [box(-2.5, -2.5, -4, 5, 4, 4, head)], "head"),
         part("snout", (0, 0, 0), [box(-1, 0, -6, 2, 2, 2, P(light, m=0.1, px=[("front", 0, 0, 0x141210),
                                                                             ("front", 1, 0, 0x141210)]))], parent="head"),
-        *ears("head", -2.5, 1.5, -2, ew, eh, 1, P(fur, m=0.1, ttip=(dark, 1), inner=(ear_inner, 0 if ew < 2 else 1 // 1)),
-              rotation=(0, 0, 0.15 if ew > 2 else 0)),
+        # большие уши фенека — шире расставлены и отклонены наружу, иначе заходят друг на друга
+        *ears("head", -2.5, 2 if ew > 2 else 1.5, -2, ew, eh, 1,
+              P(fur, m=0.1, ttip=(dark, 1), inner=(ear_inner, 0 if ew < 2 else 1 // 1)),
+              rotation=(0, 0, -0.15 if ew > 2 else 0)),
         part("tail", (0, 15, 5), [box(-1.5, -1.5, 0, 3, 3, 8, P(fur, m=0.25, tip=(tail_tip, 2)))], "tail",
              rotation=(-0.5, 0, 0)),
         *legs4(19, 5, 1.5, -3.5, 3.5, 2, P(legs, m=0.15)),
@@ -373,18 +379,18 @@ def fennec():
 
 
 def arctic_fox():
-    return fox_like("Песец", "Arctic Fox", "песца", 0xECECE8, 0xFAFAFA, 0xC8CCD2, (2, 2), 0xD8D8D8, 0xFAFAFA, 0xE2E2DE)
+    return fox_like("Песец", "Arctic Fox", "песца", 0xECECE8, 0xFAFAFA, 0xC8CCD2, (2, 1), 0xD8D8D8, 0xFAFAFA, 0xE2E2DE)
 
 
 def fox():
-    return fox_like("Лиса", "Fox", "лисы", 0xD66E28, 0xF4F0E8, 0x2A2420, (2, 3), 0xF4F0E8, 0xF4F0E8, 0x2A2420)
+    return fox_like("Лиса", "Fox", "лисы", 0xD66E28, 0xF4F0E8, 0x2A2420, (2, 2), 0xF4F0E8, 0xF4F0E8, 0x2A2420)
 
 
 def hedgehog():
     return dict(ru="Ёж", en="Hedgehog", gen="ежа", lie=0, parts=[
         part("body", (0, 20, 0), [box(-3, -3, -4, 6, 5, 8, P(0xC8B496, m=0.2))]),
-        part("spines", (0, 20, 0), [box(-3.5, -3.5, -4.5, 7, 4, 9, P(0x5A4632, m=0.2, spots=(0xE0D6C2, 0.3), bot=(0x5A4632, 0)))]),
-        part("head", (0, 20, -4), [box(-2, -1.5, -3, 4, 3, 3, P(0xC8B496, m=0.15, eyes=(0, 1, EYE)))], "head"),
+        part("spines", (0, 20, 0), [box(-3.5, -3.5, -4.5, 7, 4, 9, P(0x5A4632, m=0.12, spots=(0x6E5A44, 0.15), bot=(0x5A4632, 0)))]),
+        part("head", (0, 20, -4), [box(-2, -1.5, -3, 4, 3, 3, P(0xC8B496, m=0.15, feyes=(0, 0, EYE)))], "head"),
         part("snout", (0, 0, 0), [box(-1, 0, -4.5, 2, 1, 2, P(0xBCA888, m=0, px=[("front", 0, 0, 0x141210),
                                                                                ("front", 1, 0, 0x141210)]))], parent="head"),
         *legs4(22, 2, 1.8, -2.5, 2.5, 1, P(0x8A7660, m=0)),
@@ -396,15 +402,16 @@ def manul():
     return dict(ru="Манул", en="Pallas's Cat", gen="манула", lie=5, parts=[
         part("body", (0, 16, 0), [box(-3.5, -3, -6, 7, 6, 12, P(0x968C7E, m=0.45, belly=(0xB4AA9A, 2),
                                                              rings=(0x6E665A, 4, 1)))]),
-        part("head", (0, 14, -6), [box(-3, -2.5, -4, 6, 5, 4, P(0x9E9484, m=0.35, eyes=(1, 0, 0xC8B030),
+        part("head", (0, 14, -6), [box(-3, -2.5, -4, 6, 5, 4, P(0x9E9484, m=0.35,
                                                             px=[("front", c, 0, 0x3A342C) for c in (1, 3, 5)]
                                                             + [("front", 1, 1, 0xD2CC9A), ("front", 4, 1, 0xD2CC9A),
                                                                ("front", 1, 2, 0x2A2420), ("front", 4, 2, 0x2A2420),
                                                                ("front", 0, 3, 0x3A342C), ("front", 5, 3, 0x3A342C)]))],
              "head"),
-        part("muzzle", (0, 0, 0), [box(-1.5, 0.5, -5, 3, 2, 1, P(0xE0DACC, m=0.1, px=[("front", 1, 0, 0x2A2420)]))],
+        part("muzzle", (0, 0, 0), [box(-2, 0.5, -5, 4, 2, 1, P(0xE0DACC, m=0.1, px=[("front", 1, 0, 0x2A2420),
+                                                                                ("front", 2, 0, 0x2A2420)]))],
              parent="head"),
-        *ears("head", -2, 2, -2, 2, 1, 1, P(0x8A8070, m=0.1, ttip=(0x3A342C, 1))),
+        *ears("head", -2.5, 2, -2, 2, 1, 1, P(0x8A8070, m=0.1, ttip=(0x3A342C, 1))),  # на макушке, не вровень с боком
         part("tail", (0, 14, 6), [box(-1, -1, 0, 2, 2, 8, P(0x8A8070, m=0.3, rings=(0x2A2420, 3, 1), tip=(0x1E1A16, 2)))],
              "tail", rotation=(-0.6, 0, 0)),
         *legs4(19, 5, 2, -4, 4, 2, fur),
@@ -416,7 +423,7 @@ def wolf():
     return dict(ru="Волк", en="Wolf", gen="волка", lie=6, parts=[
         part("body", (0, 14, 1), [box(-3, -3, -6, 6, 6, 11, grey)]),
         part("mane", (0, 14, -4), [box(-4, -4, -3, 8, 8, 6, P(0x8E8C86, m=0.4, belly=(0xBCB8B0, 3), top=(0x5C5A58, 1)))]),
-        part("head", (0, 12.5, -7), [box(-3, -3, -4, 6, 6, 4, P(0x8A8882, m=0.3, eyes=(2, 0, 0xB89A30), bot=(0xC8C4BC, 1)))],
+        part("head", (0, 12.5, -7), [box(-3, -3, -4, 6, 6, 4, P(0x8A8882, m=0.3, feyes=(2, 1, 0xB89A30), bot=(0xC8C4BC, 1)))],
              "head"),
         part("snout", (0, 0, 0), [box(-1.5, 0, -7, 3, 3, 3, P(0x9C9890, m=0.2, bot=(0xD4D0C8, 1),
                                                             px=[("front", 1, 0, 0x141210)]))], parent="head"),
@@ -634,6 +641,77 @@ def preview(animal, tex, yaw=math.radians(35), pitch=0.4, px=9, size=300):
     return img
 
 
+# ---------------------------------------------------------------- проверка: рябь
+
+BOX_FACES = [(0, 1, 2, 3), (4, 5, 6, 7), (0, 1, 5, 4), (3, 2, 6, 7), (0, 3, 7, 4), (1, 2, 6, 5)]
+
+
+def model_faces(animal, young=False):
+    """Грани коробок в пространстве модели в покое (у детёныша голова ×1.4, как в TrailAnimalModel):
+    (имя коробки, углы, внешняя нормаль, расстояние плоскости от начала)."""
+    parts = {p["name"]: p for p in animal["parts"]}
+
+    def to_model(name, point):
+        p = parts[name]
+        if young and p["role"] == "head":
+            point = tuple(v * 1.4 for v in point)
+        point = rot(point, *(p["rotation"] or (0, 0, 0)))
+        point = tuple(point[i] + p["pivot"][i] for i in range(3))
+        return to_model(p["parent"], point) if p["parent"] else point
+
+    out = []
+    for p in animal["parts"]:
+        for i, c in enumerate(p["cubes"]):
+            x, y, z, w, h, d = c["box"]
+            v = [to_model(p["name"], q) for q in ((x, y, z), (x + w, y, z), (x + w, y + h, z), (x, y + h, z),
+                                                  (x, y, z + d), (x + w, y, z + d), (x + w, y + h, z + d), (x, y + h, z + d))]
+            center = [sum(q[k] for q in v) / 8 for k in range(3)]
+            for f in BOX_FACES:
+                q = [v[k] for k in f]
+                e1, e2 = [q[1][k] - q[0][k] for k in range(3)], [q[3][k] - q[0][k] for k in range(3)]
+                n = [e1[1] * e2[2] - e1[2] * e2[1], e1[2] * e2[0] - e1[0] * e2[2], e1[0] * e2[1] - e1[1] * e2[0]]
+                length = math.sqrt(sum(t * t for t in n)) or 1
+                n = [t / length for t in n]
+                if sum((sum(pt[k] for pt in q) / 4 - center[k]) * n[k] for k in range(3)) < 0:
+                    n = [-t for t in n]
+                out.append((f"{p['name']}#{i}", q, n, sum(n[k] * q[0][k] for k in range(3))))
+    return out
+
+
+def inside(point, quad, n):
+    """Лежит ли точка (в плоскости грани) внутри грани."""
+    sign = None
+    for i in range(4):
+        a, b = quad[i], quad[(i + 1) % 4]
+        e, r = [b[k] - a[k] for k in range(3)], [point[k] - a[k] for k in range(3)]
+        c = (e[1] * r[2] - e[2] * r[1]) * n[0] + (e[2] * r[0] - e[0] * r[2]) * n[1] + (e[0] * r[1] - e[1] * r[0]) * n[2]
+        if abs(c) < 1e-6:
+            return False
+        if sign is None:
+            sign = c > 0
+        elif (c > 0) != sign:
+            return False
+    return True
+
+
+def ripples(animal):
+    """Грани разных коробок в одной плоскости и смотрящие в одну сторону — в игре они мерцают рябью."""
+    found = set()
+    steps = (0.1, 0.3, 0.5, 0.7, 0.9)
+    for young in (False, True):
+        faces = model_faces(animal, young)
+        for i, (na, qa, a, da) in enumerate(faces):
+            for nb, qb, b, db in faces[i + 1:]:
+                if na == nb or sum(a[k] * b[k] for k in range(3)) < 0.9999 or abs(da - db) > 1e-4:
+                    continue
+                for q1, q2, n in ((qa, qb, a), (qb, qa, b)):
+                    if any(inside([q1[0][k] + (q1[1][k] - q1[0][k]) * s + (q1[3][k] - q1[0][k]) * t for k in range(3)], q2, n)
+                           for s in steps for t in steps):
+                        found.add(f"{na} / {nb}{' (детёныш)' if young else ''}")
+                        break
+    return sorted(found)
+
+
 # ---------------------------------------------------------------- запись
 
 def write(rel, data):
@@ -698,6 +776,9 @@ def lang(animals):
 
 def main():
     animals = {name: make() for name, make in ANIMALS.items()}
+    bad = [f"{name}: {r}" for name, a in animals.items() for r in ripples(a)]
+    if bad:
+        raise SystemExit("Совпадающие грани (рябь):\n" + "\n".join(bad))
     previews = []
     for name, a in animals.items():
         size = layout(a)
