@@ -17,6 +17,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
+import io.github.ChanesCMD.trailcraft.init.ModItems;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
@@ -269,21 +270,35 @@ public class InventoryEvents {
         }
     }
 
-    /** Отправляет клиенту, есть ли в рюкзаке атлас и календарь и какие приборы на поясе, когда это меняется. */
+    /**
+     * Отправляет клиенту, есть ли в рюкзаке атлас и календарь и какие приборы на поясе, когда это меняется; календарь и
+     * хронометр считаются и в хотбаре.
+     */
     private static void syncGear(ServerPlayer player, BackpackHandler backpack) {
         BeltHandler belt = BeltHandler.of(player);
         ItemStack flask = belt.flask();
         int flags = (backpack.has(BackpackItem.ATLAS) ? GearPayload.ATLAS : 0)
-                | (backpack.has(BackpackItem.CALENDAR) ? GearPayload.CALENDAR : 0)
+                | (backpack.has(BackpackItem.CALENDAR) || inHotbar(player, ModItems.CALENDAR.get()) ? GearPayload.CALENDAR : 0)
                 | (!flask.isEmpty() && FlaskItem.water(flask) < Water.FLASK_SIPS ? GearPayload.FLASK : 0)
                 | (belt.hasInstrument(BeltHandler.ALTIMETER) ? GearPayload.ALTIMETER : 0)
                 | (belt.hasInstrument(BeltHandler.SEXTANT) ? GearPayload.SEXTANT : 0)
-                | (belt.hasInstrument(BeltHandler.CHRONOMETER) ? GearPayload.CHRONOMETER : 0)
+                | (belt.hasInstrument(BeltHandler.CHRONOMETER) || inHotbar(player, ModItems.CHRONOMETER.get())
+                        ? GearPayload.CHRONOMETER : 0)
                 | (belt.hasGps() ? GearPayload.GPS : 0);
         if (flags != player.getData(ModAttachments.GEAR_SENT)) {
             player.setData(ModAttachments.GEAR_SENT, flags);
             PacketDistributor.sendToPlayer(player, new GearPayload(flags));
         }
+    }
+
+    /** Календарь и хронометр работают и из хотбара. */
+    private static boolean inHotbar(ServerPlayer player, net.minecraft.world.item.Item item) {
+        for (int i = 0; i < Inventory.getSelectionSize(); i++) {
+            if (player.getInventory().getItem(i).is(item)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Кладёт предмет в хотбар: сначала в такие же стопки, потом в пустые слоты. @return остаток */

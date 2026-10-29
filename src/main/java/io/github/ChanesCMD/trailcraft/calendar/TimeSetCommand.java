@@ -38,10 +38,12 @@ public final class TimeSetCommand {
     /** Время суток {@code time} в текущем дне каждого измерения. */
     private static int set(CommandSourceStack source, int time) {
         for (ServerLevel level : source.getServer().getAllLevels()) {
-            level.setDayTime(Math.floorDiv(level.getDayTime(), DAY) * DAY + time);
+            // день календаря начинается в полночь (Calendar.MIDNIGHT_OFFSET): время ставится внутри него
+            long shift = Calendar.MIDNIGHT_OFFSET;
+            level.setDayTime(Math.floorDiv(level.getDayTime() + shift, DAY) * DAY + Math.floorMod(time + shift, DAY) - shift);
         }
         source.sendSuccess(() -> Component.translatable("commands.time.set", time), true);
-        return (int) (source.getLevel().getDayTime() % DAY);
+        return (int) Math.floorMod(source.getLevel().getDayTime(), DAY);
     }
 
     private TimeSetCommand() {}
