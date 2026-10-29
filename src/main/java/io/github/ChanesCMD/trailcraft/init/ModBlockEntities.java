@@ -31,7 +31,9 @@ public final class ModBlockEntities {
             () -> BlockEntityType.Builder.of(TrailCampfireBlockEntity::new, ModBlocks.CAMPFIRE.get()).build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WaterBarrelBlockEntity>> WATER_BARREL = BLOCK_ENTITIES.register("water_barrel",
-            () -> BlockEntityType.Builder.of(WaterBarrelBlockEntity::new, ModBlocks.WATER_BARREL.get()).build(null));
+            () -> BlockEntityType.Builder.of(WaterBarrelBlockEntity::new, java.util.stream.Stream.concat(
+                    java.util.stream.Stream.of(ModBlocks.WATER_BARREL.get()), ModChests.BARRELS.values().stream().map(DeferredBlock::get))
+                    .toArray(net.minecraft.world.level.block.Block[]::new)).build(null));
 
     /** Сундуки по породам (ModChests): один тип на все. */
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WoodChestBlockEntity>> WOOD_CHEST = BLOCK_ENTITIES.register("wood_chest",

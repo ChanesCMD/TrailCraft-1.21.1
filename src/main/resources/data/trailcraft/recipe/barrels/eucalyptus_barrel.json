@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "item": "trailcraft:eucalyptus_planks"
+    },
+    "B": {
+      "item": "trailcraft:eucalyptus_small_board"
+    }
+  },
+  "pattern": [
+    "PBP",
+    "P P",
+    "PBP"
+  ],
+  "result": {
+    "id": "trailcraft:eucalyptus_barrel",
+    "count": 1
+  }
+}

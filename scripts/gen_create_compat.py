@@ -154,6 +154,11 @@ def items_of(tag_rel):
     return [v for v in read(tag_rel, {"values": []})["values"]]
 
 
+# Породы бочек и сундуков — как WOODS в gen_storage.py
+STORAGE_WOODS = ["oak", "birch", "acacia", "sakura", "eucalyptus", "chestnut", "thuja", "pine", "fir", "spruce",
+                 "white_poplar", "ebony", "maple", "cedar", "willow", "lilac", "palm", "ironwood", "aspen", "linden",
+                 "pussy_willow", "walnut", "alder", "amadzu"]
+
 def tags(external):
     stripped_logs = items_of(f"data/{NS}/tags/item/stripped_logs.json")
     stripped_woods = [v.replace("_log", "_wood") for v in stripped_logs
@@ -169,7 +174,7 @@ def tags(external):
         "create:sleepers": [f"{NS}:{r}_slab" for r in ROCKS],
         "c:leathers": [f"{NS}:leather"],
         "c:eggs": [f"{NS}:egg"],
-        "c:barrels/wooden": [f"{NS}:water_barrel"],
+        "c:barrels/wooden": [f"{NS}:water_barrel"] + [f"{NS}:{w}_barrel" for w in STORAGE_WOODS if w != "oak"],
     }
     for tag_id, values in replaced.items():
         ns, name = tag_id.split(":")

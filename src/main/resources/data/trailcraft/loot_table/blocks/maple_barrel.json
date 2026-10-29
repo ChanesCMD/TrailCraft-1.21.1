@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "trailcraft:blocks/maple_barrel",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "trailcraft:maple_barrel",
+          "functions": [
+            {
+              "function": "minecraft:copy_components",
+              "source": "block_entity",
+              "include": [
+                "trailcraft:water",
+                "trailcraft:salty",
+                "trailcraft:tannin"
+              ]
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ]
+    }
+  ]
+}

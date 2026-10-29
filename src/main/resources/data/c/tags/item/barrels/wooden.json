@@ -1,7 +1,30 @@
 {
   "replace": true,
   "values": [
-    "trailcraft:water_barrel"
+    "trailcraft:water_barrel",
+    "trailcraft:birch_barrel",
+    "trailcraft:acacia_barrel",
+    "trailcraft:sakura_barrel",
+    "trailcraft:eucalyptus_barrel",
+    "trailcraft:chestnut_barrel",
+    "trailcraft:thuja_barrel",
+    "trailcraft:pine_barrel",
+    "trailcraft:fir_barrel",
+    "trailcraft:spruce_barrel",
+    "trailcraft:white_poplar_barrel",
+    "trailcraft:ebony_barrel",
+    "trailcraft:maple_barrel",
+    "trailcraft:cedar_barrel",
+    "trailcraft:willow_barrel",
+    "trailcraft:lilac_barrel",
+    "trailcraft:palm_barrel",
+    "trailcraft:ironwood_barrel",
+    "trailcraft:aspen_barrel",
+    "trailcraft:linden_barrel",
+    "trailcraft:pussy_willow_barrel",
+    "trailcraft:walnut_barrel",
+    "trailcraft:alder_barrel",
+    "trailcraft:amadzu_barrel"
   ],
   "remove": [
     "minecraft:barrel"

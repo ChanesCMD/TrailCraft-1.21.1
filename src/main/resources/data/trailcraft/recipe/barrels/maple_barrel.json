@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "item": "trailcraft:maple_planks"
+    },
+    "B": {
+      "item": "trailcraft:maple_small_board"
+    }
+  },
+  "pattern": [
+    "PBP",
+    "P P",
+    "PBP"
+  ],
+  "result": {
+    "id": "trailcraft:maple_barrel",
+    "count": 1
+  }
+}

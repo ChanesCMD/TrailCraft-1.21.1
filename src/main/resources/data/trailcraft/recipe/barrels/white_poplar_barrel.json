@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "item": "trailcraft:white_poplar_planks"
+    },
+    "B": {
+      "item": "trailcraft:white_poplar_small_board"
+    }
+  },
+  "pattern": [
+    "PBP",
+    "P P",
+    "PBP"
+  ],
+  "result": {
+    "id": "trailcraft:white_poplar_barrel",
+    "count": 1
+  }
+}

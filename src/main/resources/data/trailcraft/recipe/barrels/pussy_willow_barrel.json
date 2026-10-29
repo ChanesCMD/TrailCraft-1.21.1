@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "item": "trailcraft:pussy_willow_planks"
+    },
+    "B": {
+      "item": "trailcraft:pussy_willow_small_board"
+    }
+  },
+  "pattern": [
+    "PBP",
+    "P P",
+    "PBP"
+  ],
+  "result": {
+    "id": "trailcraft:pussy_willow_barrel",
+    "count": 1
+  }
+}

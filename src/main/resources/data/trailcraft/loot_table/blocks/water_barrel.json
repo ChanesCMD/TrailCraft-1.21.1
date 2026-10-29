@@ -15,7 +15,8 @@
               "source": "block_entity",
               "include": [
                 "trailcraft:water",
-                "trailcraft:salty"
+                "trailcraft:salty",
+                "trailcraft:tannin"
               ]
             }
           ]

@@ -115,6 +115,7 @@ public class ModCreativeTabs {
                         output.accept(ModBees.BEESWAX);
                         output.accept(ModBees.APIARY_ITEM);
                         output.accept(ModItems.WATER_BARREL);
+                        ModChests.BARREL_ITEMS.values().forEach(output::accept);
                         ModChests.ITEMS.values().forEach(output::accept);
                         output.accept(ModItems.STRAW_BLOCK);
                         output.accept(ModItems.STRAW_BED);

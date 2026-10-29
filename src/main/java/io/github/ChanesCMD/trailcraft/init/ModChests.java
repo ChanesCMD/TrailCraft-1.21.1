@@ -1,5 +1,6 @@
 package io.github.ChanesCMD.trailcraft.init;
 
+import io.github.ChanesCMD.trailcraft.block.WaterBarrelBlock;
 import io.github.ChanesCMD.trailcraft.block.WoodChestBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.SoundType;
@@ -14,11 +15,15 @@ import java.util.Map;
 
 /**
  * Сундуки по породам древесины (8 досок породы — сундук): <порода>_chest, кроме вариантов листвы (красный клён, яблоня —
- * у них доски клёна и дуба). JSON и текстуры — scripts/gen_chests.py.
+ * у них доски клёна и дуба). Бочки по породам (WaterBarrelBlock): <порода>_barrel, дубовая — прежняя water_barrel.
+ * JSON и текстуры — scripts/gen_storage.py.
  */
 public final class ModChests {
     public static final Map<String, DeferredBlock<WoodChestBlock>> CHESTS = new LinkedHashMap<>();
     public static final Map<String, DeferredItem<BlockItem>> ITEMS = new LinkedHashMap<>();
+    /** Бочки по породам, кроме дуба (дубовая — ModBlocks.WATER_BARREL). */
+    public static final Map<String, DeferredBlock<WaterBarrelBlock>> BARRELS = new LinkedHashMap<>();
+    public static final Map<String, DeferredItem<BlockItem>> BARREL_ITEMS = new LinkedHashMap<>();
 
     static {
         for (ModWood.WoodSet set : ModWood.SETS) {
@@ -31,6 +36,16 @@ public final class ModChests {
                             .strength(2.5f).sound(SoundType.WOOD).ignitedByLava());
             CHESTS.put(set.id, block);
             ITEMS.put(set.id, ModItems.ITEMS.registerSimpleBlockItem(id, block));
+        }
+        for (ModWood.WoodSet set : ModWood.SETS) {
+            if (set.smallBoard == null || set.id.equals("oak")) {
+                continue;
+            }
+            String id = set.id + "_barrel";
+            DeferredBlock<WaterBarrelBlock> block = ModBlocks.BLOCKS.registerBlock(id, WaterBarrelBlock::new,
+                    BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(2.5f).sound(SoundType.WOOD).ignitedByLava());
+            BARRELS.put(set.id, block);
+            BARREL_ITEMS.put(set.id, ModItems.ITEMS.registerSimpleBlockItem(id, block));
         }
     }
 

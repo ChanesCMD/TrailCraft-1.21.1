@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "trailcraft:block/amadzu_barrel_top",
+    "side": "trailcraft:block/amadzu_barrel_side",
+    "bottom": "trailcraft:block/amadzu_barrel_bottom"
+  }
+}

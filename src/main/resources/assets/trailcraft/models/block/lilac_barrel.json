@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "trailcraft:block/lilac_barrel_top",
+    "side": "trailcraft:block/lilac_barrel_side",
+    "bottom": "trailcraft:block/lilac_barrel_bottom"
+  }
+}

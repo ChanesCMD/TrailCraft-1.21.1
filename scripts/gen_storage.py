@@ -32,7 +32,6 @@ WOODS = ["oak", "birch", "acacia", "sakura", "eucalyptus", "chestnut", "thuja", 
 PARTS = {"": "normal", "_left": "normal_left", "_right": "normal_right"}
 
 LANG = {
-    "block.trailcraft.water_barrel": ("Бочка", "Barrel"),
     "block.trailcraft.water_barrel.amount": ("Вода: %s / %s mB (%s)", "Water: %s / %s mB (%s)"),
     "block.trailcraft.water_barrel.fresh": ("пресная", "fresh"),
     "block.trailcraft.water_barrel.salty": ("морская", "salty"),
@@ -153,30 +152,43 @@ def chests(client):
 
 
 def barrel(client):
-    color = wood_color("oak")
-    images = []
-    for part in ("top", "side", "bottom"):
-        src = Image.open(BytesIO(client.read(f"assets/minecraft/textures/block/barrel_{part}.png")))
-        img = repaint(src, color)
-        img.save(os.path.join(TEX, "block", f"water_barrel_{part}.png"))
-        images.append(img)
-    write(f"assets/{NS}/models/block/water_barrel.json", {"parent": "minecraft:block/cube_bottom_top", "textures": {
-        "top": f"{NS}:block/water_barrel_top", "side": f"{NS}:block/water_barrel_side",
-        "bottom": f"{NS}:block/water_barrel_bottom"}})
-    write(f"assets/{NS}/blockstates/water_barrel.json", {"variants": {"": {"model": f"{NS}:block/water_barrel"}}})
-    write(f"assets/{NS}/models/item/water_barrel.json", {"parent": f"{NS}:block/water_barrel"})
-    write(f"data/{NS}/loot_table/blocks/water_barrel.json", {
-        "type": "minecraft:block", "random_sequence": f"{NS}:blocks/water_barrel",
-        "pools": [{"rolls": 1.0, "bonus_rolls": 0.0, "entries": [{"type": "minecraft:item", "name": f"{NS}:water_barrel",
-                   "functions": [{"function": "minecraft:copy_components", "source": "block_entity",
-                                  "include": [f"{NS}:water", f"{NS}:salty"]}]}],
-                   "conditions": [{"condition": "minecraft:survives_explosion"}]}]})
-    write(f"data/{NS}/recipe/water_barrel.json", {
-        "type": "minecraft:crafting_shaped", "category": "misc",
-        "key": {"P": {"tag": "minecraft:planks"}, "B": {"tag": f"{NS}:small_boards"}},
-        "pattern": ["PBP", "P P", "PBP"], "result": {"id": f"{NS}:water_barrel", "count": 1}})
-    tag("block", "minecraft:mineable/axe", [f"{NS}:water_barrel"])
-    return images
+    """Бочки по породам: ванильная бочка в цвете досок; дубовая — прежняя water_barrel."""
+    previews = []
+    names = []
+    for wood in WOODS:
+        name = "water_barrel" if wood == "oak" else f"{wood}_barrel"
+        names.append(f"{NS}:{name}")
+        color = wood_color(wood)
+        for part in ("top", "side", "bottom"):
+            src = Image.open(BytesIO(client.read(f"assets/minecraft/textures/block/barrel_{part}.png")))
+            img = repaint(src, color)
+            img.save(os.path.join(TEX, "block", f"{name}_{part}.png"))
+            if part == "side":
+                previews.append(img)
+        write(f"assets/{NS}/models/block/{name}.json", {"parent": "minecraft:block/cube_bottom_top", "textures": {
+            "top": f"{NS}:block/{name}_top", "side": f"{NS}:block/{name}_side", "bottom": f"{NS}:block/{name}_bottom"}})
+        write(f"assets/{NS}/blockstates/{name}.json", {"variants": {"": {"model": f"{NS}:block/{name}"}}})
+        write(f"assets/{NS}/models/item/{name}.json", {"parent": f"{NS}:block/{name}"})
+        write(f"data/{NS}/loot_table/blocks/{name}.json", {
+            "type": "minecraft:block", "random_sequence": f"{NS}:blocks/{name}",
+            "pools": [{"rolls": 1.0, "bonus_rolls": 0.0, "entries": [{"type": "minecraft:item", "name": f"{NS}:{name}",
+                       "functions": [{"function": "minecraft:copy_components", "source": "block_entity",
+                                      "include": [f"{NS}:water", f"{NS}:salty", f"{NS}:tannin"]}]}],
+                       "conditions": [{"condition": "minecraft:survives_explosion"}]}]})
+        write(f"data/{NS}/recipe/{'water_barrel' if wood == 'oak' else 'barrels/' + name}.json", {
+            "type": "minecraft:crafting_shaped", "category": "misc",
+            "key": {"P": {"item": f"{NS}:{wood}_planks"}, "B": {"item": f"{NS}:{wood}_small_board"}},
+            "pattern": ["PBP", "P P", "PBP"], "result": {"id": f"{NS}:{name}", "count": 1}})
+    tag("block", "minecraft:mineable/axe", names)
+    for code, k in (("ru_ru", 0), ("en_us", 1)):
+        rel = f"assets/{NS}/lang/{code}.json"
+        data = read(rel, {})
+        for wood, name in zip(WOODS, names):
+            planks = data[f"block.{NS}.{wood}_planks"]
+            data[f"block.{name.replace(':', '.')}"] = ("Бочка из " + planks.split(" ", 1)[1]) if k == 0 \
+                else planks.replace("Planks", "Barrel")
+        write(rel, data)
+    return previews
 
 
 def lang():
@@ -190,15 +202,18 @@ def lang():
 
 def preview(chest_images, barrel_images):
     scale, pad, per_row = 2, 6, 8
-    cell = 64 * scale
-    rows = (len(chest_images) + per_row - 1) // per_row + 1
-    sheet = Image.new("RGBA", (pad + per_row * (cell + pad), pad + rows * (cell + pad)), (60, 60, 60, 255))
+    cell, small = 64 * scale, 32 * scale
+    per_small = (per_row * (cell + pad)) // (small + pad)
+    rows = (len(chest_images) + per_row - 1) // per_row
+    small_rows = (len(barrel_images) + per_small - 1) // per_small
+    sheet = Image.new("RGBA", (pad + per_row * (cell + pad), pad + rows * (cell + pad) + small_rows * (small + pad)),
+                      (60, 60, 60, 255))
     for i, img in enumerate(chest_images):
         sheet.alpha_composite(img.resize((cell, cell), Image.NEAREST),
                               (pad + i % per_row * (cell + pad), pad + i // per_row * (cell + pad)))
     for i, img in enumerate(barrel_images):
-        sheet.alpha_composite(img.resize((cell // 2, cell // 2), Image.NEAREST),
-                              (pad + i * (cell // 2 + pad), pad + (rows - 1) * (cell + pad)))
+        sheet.alpha_composite(img.resize((small, small), Image.NEAREST),
+                              (pad + i % per_small * (small + pad), pad + rows * (cell + pad) + i // per_small * (small + pad)))
     os.makedirs(DOCS, exist_ok=True)
     sheet.save(os.path.join(DOCS, "storage.png"))
 

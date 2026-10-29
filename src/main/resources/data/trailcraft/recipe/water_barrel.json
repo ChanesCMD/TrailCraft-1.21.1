@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "P": {
-      "tag": "minecraft:planks"
+      "item": "trailcraft:oak_planks"
     },
     "B": {
-      "tag": "trailcraft:small_boards"
+      "item": "trailcraft:oak_small_board"
     }
   },
   "pattern": [

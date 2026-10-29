@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "trailcraft:block/chestnut_barrel_top",
+    "side": "trailcraft:block/chestnut_barrel_side",
+    "bottom": "trailcraft:block/chestnut_barrel_bottom"
+  }
+}

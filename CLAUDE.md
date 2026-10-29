@@ -278,7 +278,9 @@
   падает сырая шкура (модификатор лута `leather.json`, как перо и кость), её выскабливают ножом (`item/KnifeItem.java`:
   нож остаётся и теряет прочность) и дубят в бочке с танином — своя кожа (`c:leathers` без ванильной). Курица несёт своё яйцо (`TrailBird.aiStep`, ванильное в луте — тоже своё), `c:eggs`.
   Наши ягоды и яблоко — в рецептах Create (глазированные ягоды, яблоко в мёде).
-- Хранилища — `scripts/gen_storage.py`. Бочка (`block/WaterBarrelBlock.java`, `block/entity/WaterBarrelBlockEntity.java`):
+- Хранилища — `scripts/gen_storage.py`. Бочки по породам (`block/WaterBarrelBlock.java`, `block/entity/WaterBarrelBlockEntity.java`;
+  `<порода>_barrel` — `ModChests.BARRELS`, дубовая — прежняя `water_barrel`; доски и малые доски породы, текстуры —
+  ванильная бочка в цвете досок):
   бак воды на 8000 mB (`FluidHandler` — трубы и помпы Create; пресная или морская, `salty`), ведро — налить или набрать,
   фляга — наполнить (100 mB за глоток), пустой рукой — попить (`WaterEvents.drinkFromBarrel`), Shift — сколько воды; под
   дождём набирается сама; вместо воды можно налить танин (ведром или трубой): в него кладут выскобленные шкуры (до 8),
