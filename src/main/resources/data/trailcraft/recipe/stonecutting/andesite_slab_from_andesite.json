@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "trailcraft:andesite"
+  },
+  "result": {
+    "id": "trailcraft:andesite_slab",
+    "count": 2
+  }
+}

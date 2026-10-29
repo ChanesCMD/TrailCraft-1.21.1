@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "trailcraft:diorite"
+  },
+  "result": {
+    "id": "trailcraft:diorite_slab",
+    "count": 2
+  }
+}

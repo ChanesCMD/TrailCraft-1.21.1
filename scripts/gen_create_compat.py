@@ -63,6 +63,9 @@ DENY = re.compile(r"^minecraft:(" + "|".join([
 ]) + r")$")
 # Рецепты Create, вместо которых свои (create_compat/*)
 REPLACED = [
+    # необработанные гранит, диорит, андезит резкой не получить (только из мира)
+    "create:andesite_from_stone_types_andesite_stonecutting", "create:diorite_from_stone_types_diorite_stonecutting",
+    "create:granite_from_stone_types_granite_stonecutting",
     "create:crafting/materials/andesite_alloy", "create:crafting/materials/andesite_alloy_from_zinc",
     "create:mixing/andesite_alloy", "create:mixing/andesite_alloy_from_zinc",
     "create:crafting/kinetics/mechanical_crafter", "create:crafting/logistics/redstone_contact",
@@ -325,6 +328,7 @@ def recipes():
     shaped("observer", ["CCC", "RRQ", "CCC"], {"C": cobble, "R": redstone, "Q": quartz}, "minecraft:observer")
     iron = item("minecraft:iron_ingot")
     shaped("iron_bars", ["III", "III"], {"I": iron}, "minecraft:iron_bars", 16)
+    shaped("stonecutter", [" I ", "SSS"], {"I": iron, "S": tag("c:stones")}, "minecraft:stonecutter")
     shaped("iron_trapdoor", ["II", "II"], {"I": iron}, "minecraft:iron_trapdoor")
     shaped("compass", [" I ", "IMI", " I "], {"I": iron, "M": item(f"{NS}:raw_magnetite")}, "minecraft:compass")
     shaped("bow", [" SR", "S R", " SR"], {"S": item(f"{NS}:stick_impregnated"), "R": tag("c:strings")}, "minecraft:bow")
@@ -422,12 +426,29 @@ def zinc(create):
         recolor(src, palette).save(os.path.join(out, *rel.split("/")))
 
 
+# Камнерезка (и пила Create, она берёт те же рецепты): ванильные рецепты гранита, диорита, андезита (RecipePruner их
+# убирает) — копии в trailcraft:stonecutting/; наши гранит, диорит, андезит — в свои плиты
+STONECUTTING_ROCKS = ("granite", "diorite", "andesite")
+
+
+def stonecutting(vanilla):
+    for name in vanilla.namelist():
+        m = re.match(r"data/minecraft/recipe/(([a-z_]+)_from_[a-z_]+_stonecutting)\.json$", name)
+        if m and any(rock in m.group(1) for rock in STONECUTTING_ROCKS):
+            write(f"data/{NS}/recipe/stonecutting/{m.group(1)}.json", json.loads(vanilla.read(name)))
+    for rock in STONECUTTING_ROCKS:
+        write(f"data/{NS}/recipe/stonecutting/{rock}_slab_from_{rock}.json", {
+            "type": "minecraft:stonecutting", "ingredient": {"item": f"{NS}:{rock}"},
+            "result": {"id": f"{NS}:{rock}_slab", "count": 2}})
+
+
 if __name__ == "__main__":
     create = zipfile.ZipFile(find_jar("create-1.21.1-*-slim.jar"))
     vanilla = zipfile.ZipFile(find_jar("minecraft_1.21.1_client.jar"))
     neoforge = zipfile.ZipFile(find_jar("neoforge-21.1.*-universal.jar"))
     tags(load_tags([vanilla, neoforge, create], ours=False))
     recipes()
+    stonecutting(vanilla)
     dyes(vanilla)
     substitute(create)
     write(f"data/{NS}/pruned_recipes.json", pruned(create, load_tags([vanilla, neoforge, create])))

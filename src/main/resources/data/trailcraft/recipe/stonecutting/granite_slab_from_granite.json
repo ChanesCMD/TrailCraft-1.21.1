@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "trailcraft:granite"
+  },
+  "result": {
+    "id": "trailcraft:granite_slab",
+    "count": 2
+  }
+}
