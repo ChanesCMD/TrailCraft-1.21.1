@@ -1,0 +1,11 @@
+{
+  "parent": "trailcraft:block/ore/cinnabar/shale_1",
+  "overrides": [
+    {
+      "predicate": {
+        "trailcraft:rock": 0.1
+      },
+      "model": "trailcraft:block/ore/cinnabar/basalt_1"
+    }
+  ]
+}

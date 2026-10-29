@@ -1063,5 +1063,8 @@
   "block.trailcraft.shale_slab": "Shale Slab",
   "item.trailcraft.bark": "Bark",
   "item.trailcraft.resin": "Resin",
-  "item.trailcraft.jute_thread": "Jute Thread"
+  "item.trailcraft.jute_thread": "Jute Thread",
+  "block.trailcraft.cinnabar_ore": "Cinnabar",
+  "item.trailcraft.raw_cinnabar": "Raw Cinnabar",
+  "block.trailcraft.quartz_ore": "Quartz Vein"
 }

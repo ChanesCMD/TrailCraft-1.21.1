@@ -31,7 +31,10 @@ public enum Ore {
     LEPIDOLITE("lepidolite", "lithium", Tool.STONE, "raw_lepidolite", 1, 1, GRANITE, GRAY_GRANITE),
     BAUXITE("bauxite", "aluminum", Tool.ANY, "raw_bauxite", 2, 4, LIMESTONE, BASALT),
     NEPHELINE("nepheline", "aluminum", Tool.STONE, "raw_nepheline", 2, 4, DIORITE, GRAY_GRANITE),
-    APATITE("apatite", "apatite", Tool.STONE, "apatite", 2, 4, GABBRO, MARBLE);
+    APATITE("apatite", "apatite", Tool.STONE, "apatite", 2, 4, GABBRO, MARBLE),
+    CINNABAR("cinnabar", "redstone", Tool.STONE, "raw_cinnabar", 1, 2, SHALE, BASALT),
+    /** С кварцевой жилы падает ванильный кварц (dropId с пространством имён — свой предмет не регистрируется). */
+    QUARTZ("quartz", "quartz", Tool.STONE, "minecraft:quartz", 1, 2, GRANITE, GRAY_GRANITE);
 
     /** Какая кирка добывает руду: любая (кроме кремнёвой), от каменного уровня (медь), от железного уровня. */
     public enum Tool { ANY, STONE, IRON }

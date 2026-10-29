@@ -23,7 +23,8 @@ Create под мир TrailCraft: что из рецептов Create убрат�
    повторитель, компаратор из наших пород и палок; громоотвод из меди; удобрение для деревьев из кости, золы и листвы;
    жёрнов из гравия; наблюдатель; железные прутья и люк; компас из магнетита; лук из обработанных палок и нитей,
    раздатчик из булыжника; костная мука из нашей кости; жезл симметрии с аметистом вместо жемчуга (SUBSTITUTED); еда на костре и в коптильне
-   (FOOD, recipe/food/); красители из цветов и смесей — копии ванильных (recipe/dyes/).
+   (FOOD, recipe/food/); красители из цветов и смесей — копии ванильных (recipe/dyes/); дробление наших кусков и блоков
+   руды в дроблёную руду Create (CRUSHED, recipe/crushing/; у гематита шанс редстоуна), киноварь — в редстоун.
 4. Цинк Create (слиток, кусочек, дроблёная руда, блок) — формы Create в гамме цинка METALS["zinc"] из
    gen_ore_textures.py (как шихта цинка), по яркости. Лежит в assets/create/…:
    ресурсы TrailCraft грузятся после Create (ordering = AFTER в neoforge.mods.toml).
@@ -67,7 +68,15 @@ REPLACED = [
     "create:crafting/kinetics/mechanical_crafter", "create:crafting/logistics/redstone_contact",
     "create:crafting/appliances/tree_fertilizer", "create:crafting/tree_fertilizer",
     "create:crafting/kinetics/millstone",
-]
+] + [f"create:crushing/raw_{m}" for m in ("copper", "iron", "gold", "zinc", "tin", "lead", "nickel", "aluminum")]
+# Дробление наших кусков руды и блоков руды (с шёлковым касанием): руда → дроблёная руда Create (+ побочное с шансом);
+# рецепты Create по тэгам c:raw_materials/* заменены этими, чтобы у куска был один рецепт
+CRUSHED = {
+    "malachite": ("copper", []), "native_copper": ("copper", []), "tetrahedrite": ("copper", []),
+    "hematite": ("iron", [("minecraft:redstone", 0.3)]), "magnetite": ("iron", []), "limonite": ("iron", []),
+    "sphalerite": ("zinc", []), "cassiterite": ("tin", []), "galena": ("lead", []), "native_gold": ("gold", []),
+    "pentlandite": ("nickel", []), "bauxite": ("aluminum", []), "nepheline": ("aluminum", []),
+}
 # Рецепты Create, в которых меняются ингредиенты: id → {что: на что}; копия ложится в create_compat/, оригинал уходит
 SUBSTITUTED = {
     "create:mechanical_crafting/wand_of_symmetry": {"#c:ender_pearls": "minecraft:amethyst_shard"},
@@ -288,6 +297,22 @@ def recipes():
     shaped("dispenser", ["CCC", "CBC", "CRC"], {"C": cobble, "B": item("minecraft:bow"), "R": redstone},
            "minecraft:dispenser")
     shapeless("bone_meal", [tag("c:bones")], "minecraft:bone_meal", 3)
+    for ore, (metal, extra) in CRUSHED.items():
+        side = [{"id": i, "chance": c} for i, c in extra]
+        write(f"data/{NS}/recipe/crushing/raw_{ore}.json", {
+            "type": "create:crushing", "ingredients": [item(f"{NS}:raw_{ore}")], "processing_time": 400,
+            "results": [{"id": f"create:crushed_raw_{metal}"}, {"id": "create:experience_nugget", "chance": 0.75}] + side})
+        write(f"data/{NS}/recipe/crushing/{ore}_ore.json", {
+            "type": "create:crushing", "ingredients": [item(f"{NS}:{ore}_ore")], "processing_time": 250,
+            "results": [{"id": f"create:crushed_raw_{metal}"}, {"id": f"create:crushed_raw_{metal}", "chance": 0.75},
+                        {"id": "create:experience_nugget", "chance": 0.75}] + side})
+    # киноварь — в редстоун: дробилка, жёрнов
+    write(f"data/{NS}/recipe/crushing/raw_cinnabar.json", {
+        "type": "create:crushing", "ingredients": [item(f"{NS}:raw_cinnabar")], "processing_time": 250,
+        "results": [{"id": "minecraft:redstone", "count": 3}, {"id": "minecraft:redstone", "chance": 0.5}]})
+    write(f"data/{NS}/recipe/milling/raw_cinnabar.json", {
+        "type": "create:milling", "ingredients": [item(f"{NS}:raw_cinnabar")], "processing_time": 150,
+        "results": [{"id": "minecraft:redstone", "count": 3}]})
     for raw, cooked in FOOD.items():
         for kind, time in (("campfire_cooking", 600), ("smoking", 100)):
             write(f"data/{NS}/recipe/food/{cooked}_from_{kind}.json", {

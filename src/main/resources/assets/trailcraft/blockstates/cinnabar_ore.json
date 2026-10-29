@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "rock=shale": [
+      {
+        "model": "trailcraft:block/ore/cinnabar/shale_1"
+      },
+      {
+        "model": "trailcraft:block/ore/cinnabar/shale_2"
+      },
+      {
+        "model": "trailcraft:block/ore/cinnabar/shale_3"
+      }
+    ],
+    "rock=basalt": [
+      {
+        "model": "trailcraft:block/ore/cinnabar/basalt_1"
+      },
+      {
+        "model": "trailcraft:block/ore/cinnabar/basalt_2"
+      },
+      {
+        "model": "trailcraft:block/ore/cinnabar/basalt_3"
+      }
+    ]
+  }
+}

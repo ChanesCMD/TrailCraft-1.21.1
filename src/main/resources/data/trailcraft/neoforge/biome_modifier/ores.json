@@ -18,7 +18,9 @@
     "trailcraft:ore_lepidolite",
     "trailcraft:ore_bauxite",
     "trailcraft:ore_nepheline",
-    "trailcraft:ore_apatite"
+    "trailcraft:ore_apatite",
+    "trailcraft:ore_cinnabar",
+    "trailcraft:ore_quartz"
   ],
   "step": "underground_ores"
 }

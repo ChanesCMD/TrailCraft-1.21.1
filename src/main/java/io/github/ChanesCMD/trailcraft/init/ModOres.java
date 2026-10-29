@@ -4,6 +4,7 @@ import io.github.ChanesCMD.trailcraft.block.OreBlock;
 import io.github.ChanesCMD.trailcraft.block.PebbleBlock;
 import io.github.ChanesCMD.trailcraft.item.OreBlockItem;
 import io.github.ChanesCMD.trailcraft.ore.Ore;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -27,7 +28,7 @@ import java.util.Map;
 public final class ModOres {
     public static final Map<Ore, DeferredBlock<OreBlock>> BLOCKS = new EnumMap<>(Ore.class);
     public static final Map<Ore, DeferredItem<OreBlockItem>> BLOCK_ITEMS = new EnumMap<>(Ore.class);
-    /** Что падает с руды: кусок raw_*, у угля — каменный уголь, у апатита — апатит. */
+    /** Что падает с руды: кусок raw_*, у угля — каменный уголь, у апатита — апатит, у кварцевой жилы — ванильный кварц. */
     public static final Map<Ore, DeferredItem<Item>> DROPS = new EnumMap<>(Ore.class);
 
     public static final DeferredItem<Item> CHARCOAL = ModItems.ITEMS.registerSimpleItem("charcoal");
@@ -71,7 +72,8 @@ public final class ModOres {
                     BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_ORE));
             BLOCKS.put(ore, block);
             BLOCK_ITEMS.put(ore, ModItems.ITEMS.registerItem(ore.blockId(), p -> new OreBlockItem(block.get(), p)));
-            DROPS.put(ore, ModItems.ITEMS.registerSimpleItem(ore.dropId));
+            DROPS.put(ore, ore.dropId.contains(":") ? DeferredItem.createItem(ResourceLocation.parse(ore.dropId))
+                    : ModItems.ITEMS.registerSimpleItem(ore.dropId));
         }
         for (Ore ore : NUGGET_ORES) {
             DeferredBlock<Block> block = ModBlocks.BLOCKS.registerBlock(ore.id + "_nugget", PebbleBlock::new,

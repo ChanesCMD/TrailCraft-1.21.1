@@ -51,6 +51,11 @@ ORES = [
      "Нефелин", "Nepheline", "Рудный нефелин", "Raw Nepheline"),
     ("apatite", "apatite", "stone", True, "apatite", 2, 4, ["gabbro", "marble"], 5, 4, -40, 120,
      "Апатитовая руда", "Apatite Ore", "Апатит", "Apatite"),
+    # киноварь — редстоун (кусок + каменный молоток — 2 редстоуна, жёрнов — 3); кварц — ванильный предмет
+    ("cinnabar", "redstone", "stone", False, "raw_cinnabar", 1, 2, ["shale", "basalt"], 5, 4, -64, 60,
+     "Киноварь", "Cinnabar", "Рудная киноварь", "Raw Cinnabar"),
+    ("quartz", "quartz", "stone", False, "minecraft:quartz", 1, 2, ["granite", "gray_granite"], 6, 4, -40, 120,
+     "Кварцевая жила", "Quartz Vein", None, None),
 ]
 
 # Во что плавится то, что падает с руды (справочник; плавка — в кувшине, smelting/Smelting.java)
@@ -191,7 +196,8 @@ def ore_models():
             "overrides": [{"predicate": {f"{NS}:rock": round(i * 0.1, 1)}, "model": f"{NS}:block/ore/{ore}/{rock}_1"}
                           for i, rock in enumerate(rocks) if i > 0],
         })
-        item_model(o[4])
+        if ":" not in o[4]:  # ванильный предмет — своя модель не нужна
+            item_model(o[4])
 
 
 SILK_TOUCH = {"condition": "minecraft:match_tool", "predicate": {"predicates": {"minecraft:enchantments": [
@@ -214,7 +220,7 @@ def loot():
                 # Шёлковое касание: сам блок, порода сохраняется в предмете
                 {"type": "minecraft:item", "name": block, "conditions": [SILK_TOUCH],
                  "functions": [{"function": "minecraft:copy_state", "block": block, "properties": ["rock"]}]},
-                {"type": "minecraft:item", "name": f"{NS}:{drop}", "functions": functions},
+                {"type": "minecraft:item", "name": drop if ":" in drop else f"{NS}:{drop}", "functions": functions},
             ]}]}],
             "random_sequence": f"{NS}:blocks/{ore}_ore",
         })
@@ -286,6 +292,12 @@ def recipes():
         "type": "minecraft:crafting_shapeless", "category": "misc",
         "ingredients": [{"tag": "c:raw_materials/copper"}] * 3 + [{"tag": "c:raw_materials/zinc"}, hammer],
         "result": {"id": f"{NS}:brass_mix", "count": 4},
+    })
+    # Киноварь, раздробленная молотком, — 2 редстоуна (жёрнов и дробилка Create дают больше — gen_create_compat.py)
+    write(f"data/{NS}/recipe/redstone_from_cinnabar.json", {
+        "type": "minecraft:crafting_shapeless", "category": "misc",
+        "ingredients": [{"item": f"{NS}:raw_cinnabar"}, hammer],
+        "result": {"id": "minecraft:redstone", "count": 2},
     })
     # Самородки: 3 штуки и молоток — 1 чистая шихта; чистая шихта смешивается в сплавы без молотка
     for ore, mix, _, _ in NUGGETS:
@@ -405,7 +417,8 @@ def lang():
     entries = dict(LANG)
     for o in ORES:
         entries[f"block.{NS}.{o[0]}_ore"] = (o[12], o[13])
-        entries[f"item.{NS}.{o[4]}"] = (o[14], o[15])
+        if o[14]:
+            entries[f"item.{NS}.{o[4]}"] = (o[14], o[15])
     for i in INGOTS:
         entries[f"item.{NS}.{i[0]}"] = (i[2], i[3])
     for i in OTHER_ITEMS:

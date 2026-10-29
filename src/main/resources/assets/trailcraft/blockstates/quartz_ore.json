@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "rock=granite": [
+      {
+        "model": "trailcraft:block/ore/quartz/granite_1"
+      },
+      {
+        "model": "trailcraft:block/ore/quartz/granite_2"
+      },
+      {
+        "model": "trailcraft:block/ore/quartz/granite_3"
+      }
+    ],
+    "rock=gray_granite": [
+      {
+        "model": "trailcraft:block/ore/quartz/gray_granite_1"
+      },
+      {
+        "model": "trailcraft:block/ore/quartz/gray_granite_2"
+      },
+      {
+        "model": "trailcraft:block/ore/quartz/gray_granite_3"
+      }
+    ]
+  }
+}

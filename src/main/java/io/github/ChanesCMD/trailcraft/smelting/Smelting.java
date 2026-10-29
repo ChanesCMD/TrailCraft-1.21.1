@@ -20,7 +20,7 @@ import java.util.Optional;
 
 /**
  * Плавка в кувшине (как в TerraFirmaCraft). Каждый предмет в кувшине — одна единица металла (один слиток, UNIT mB):
- * кусок руды, шихта или слиток. Шихта и слитки сплавов раскладываются на чистые металлы по своему составу. Потом весь
+ * кусок руды, дроблёная руда Create, шихта или слиток. Шихта и слитки сплавов раскладываются на чистые металлы по своему составу. Потом весь
  * кувшин плавится разом в жидкий металл (Molten): один металл — он сам; доли металлов попали в состав сплава — сплав
  * (так сплав можно собрать прямо в кувшине из кусков руды: 3 меди и 1 олово — 4 единицы бронзы); иначе металлы не
  * сплавляются и печь кувшин не плавит. Жидкий металл разливают по формам (Mold). Железо, никель, литий и алюминий
@@ -93,22 +93,22 @@ public final class Smelting {
 
     static {
         for (String id : List.of("trailcraft:raw_malachite", "trailcraft:raw_native_copper", "trailcraft:raw_tetrahedrite",
-                "trailcraft:copper_mix", "minecraft:copper_ingot")) {
+                "trailcraft:copper_mix", "minecraft:copper_ingot", "create:crushed_raw_copper")) {
             pure(id, Metal.COPPER);
         }
-        for (String id : List.of("trailcraft:raw_cassiterite", "trailcraft:tin_mix", "trailcraft:tin_ingot")) {
+        for (String id : List.of("trailcraft:raw_cassiterite", "trailcraft:tin_mix", "trailcraft:tin_ingot", "create:crushed_raw_tin")) {
             pure(id, Metal.TIN);
         }
-        for (String id : List.of("trailcraft:raw_sphalerite", "trailcraft:zinc_mix", "create:zinc_ingot")) {
+        for (String id : List.of("trailcraft:raw_sphalerite", "trailcraft:zinc_mix", "create:zinc_ingot", "create:crushed_raw_zinc")) {
             pure(id, Metal.ZINC);
         }
         for (String id : List.of("trailcraft:raw_native_bismuth", "trailcraft:bismuth_ingot")) {
             pure(id, Metal.BISMUTH);
         }
-        for (String id : List.of("trailcraft:raw_galena", "trailcraft:lead_ingot")) {
+        for (String id : List.of("trailcraft:raw_galena", "trailcraft:lead_ingot", "create:crushed_raw_lead")) {
             pure(id, Metal.LEAD);
         }
-        for (String id : List.of("trailcraft:raw_native_gold", "minecraft:gold_ingot")) {
+        for (String id : List.of("trailcraft:raw_native_gold", "minecraft:gold_ingot", "create:crushed_raw_gold")) {
             pure(id, Metal.GOLD);
         }
         for (String id : List.of("trailcraft:tin_bronze_mix", "trailcraft:tin_bronze_ingot")) {

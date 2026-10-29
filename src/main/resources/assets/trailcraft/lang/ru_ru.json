@@ -1063,5 +1063,8 @@
   "block.trailcraft.shale_slab": "Сланцевая плита",
   "item.trailcraft.bark": "Кора",
   "item.trailcraft.resin": "Смола",
-  "item.trailcraft.jute_thread": "Джутовая нить"
+  "item.trailcraft.jute_thread": "Джутовая нить",
+  "block.trailcraft.cinnabar_ore": "Киноварь",
+  "item.trailcraft.raw_cinnabar": "Рудная киноварь",
+  "block.trailcraft.quartz_ore": "Кварцевая жила"
 }

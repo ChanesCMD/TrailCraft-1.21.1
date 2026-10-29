@@ -137,6 +137,14 @@ RAMPS = {
     "tetrahedrite": ("copper", ramp("101114", "34373e", "4e525c", "707682", "a8b0be")),
     "sphalerite": ("spotted", ramp("16161a", "2e3136", "40444a", "5c6168", "868c94", "c4cad2")),
     "native_bismuth": ("spotted", ramp("28222c", "344564", "4a6590", "6296d6", "a8c8f0")),
+    "cinnabar": ("iron", ramp("260606", "4e0c0c", "7e1212", "b0201a", "d84432", "f2866a")),
+}
+# Жилы новых руд: оверлеи перекрашены из жил руды-донора в той же породе (пиксели руды — ближе к гамме донора, чем к
+# цветам породы — перекрашиваются по яркости, обводка под породу остаётся): руда → (гамма, {порода: донор})
+VEINS = {
+    "cinnabar": (RAMPS["cinnabar"][1], {"shale": "hematite", "basalt": "pentlandite"}),
+    "quartz": (ramp("6c6872", "96929c", "bab6c0", "d6d2da", "ebe8ee", "fbfafd"),
+               {"granite": "cassiterite", "gray_granite": "cassiterite"}),
 }
 # Вкрапления (буквы в форме); у руд без них буквы берут основную гамму
 ACCENTS = {
@@ -275,6 +283,26 @@ def nuggets():
         save(recolor_by_rank(pebble, base), f"block/{ore}_nugget")
 
 
+def veins():
+    dist = lambda a, b: sum((a[i] - b[i]) ** 2 for i in range(3))
+    for ore, (colors, donors) in VEINS.items():
+        for rock, donor in donors.items():
+            rock_colors = {c[:3] for c in Image.open(os.path.join(ROOT, "block", f"{rock}.png")).convert("RGBA").getdata()}
+            donor_colors = list(RAMPS[donor][1]) + list(ACCENTS.get(donor, []))
+            os.makedirs(os.path.join(ROOT, "block", "ore", ore), exist_ok=True)
+            for n in (1, 2, 3):
+                src = Image.open(os.path.join(ROOT, "block", "ore", donor, f"{rock}_{n}.png")).convert("RGBA")
+                ore_px = [(x, y) for y in range(16) for x in range(16) if src.getpixel((x, y))[3]
+                          and min(dist(src.getpixel((x, y)), c) for c in donor_colors)
+                          < min(dist(src.getpixel((x, y)), c) for c in rock_colors)]
+                ranked = sorted({src.getpixel(p)[:3] for p in ore_px}, key=lum)
+                out = src.copy()
+                for p in ore_px:
+                    rank = ranked.index(src.getpixel(p)[:3]) / max(1, len(ranked) - 1)
+                    out.putpixel(p, pick(colors, rank * 9) + (255,))
+                save(out, f"block/ore/{ore}/{rock}_{n}")
+
+
 def mixes():
     for name, (metal, others, share, seed) in MIXES.items():
         save(dust(METALS[metal], [METALS[o] for o in others], share, seed), f"item/{name}")
@@ -282,6 +310,7 @@ def mixes():
 
 if __name__ == "__main__":
     raws()
+    veins()
     nuggets()
     mixes()
     print("ok")
