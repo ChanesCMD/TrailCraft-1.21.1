@@ -1,0 +1,19 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "type": "neoforge:single",
+      "amount": 1000,
+      "fluid": "minecraft:water"
+    },
+    {
+      "item": "trailcraft:bark"
+    }
+  ],
+  "results": [
+    {
+      "id": "trailcraft:tannin",
+      "amount": 1000
+    }
+  ]
+}

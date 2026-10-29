@@ -5,8 +5,8 @@ docs/textures/materials.png.
 Запуск из корня проекта:  python scripts/gen_materials.py   (нужен Pillow; ванильные текстуры — из jar клиента в кэше
 Gradle, как в gen_create_compat.py)
 
-Кора — полоска коры дуба (textures/block/oak_log.png) с тёмным краем; падает при окорке (StrippableLogBlock). 2 коры
-с водой в смесителе Create — бумага (minecraft:paper: из неё наждачка, схематика). Смола — ванильный сгусток слизи в
+Кора — полоска коры дуба (textures/block/oak_log.png) с тёмным краем; падает при окорке (StrippableLogBlock); из неё
+танин и опилки (scripts/gen_fluids.py). Смола — ванильный сгусток слизи в
 цветах янтаря; падает с хвойных (#trailcraft:resin_logs). Джутовая нить — ванильная нить в цветах джута
 (textures/item/jute.png), в тэге c:strings: 1 джут — 2 нити.
 """
@@ -103,11 +103,6 @@ def main():
     write(f"data/{NS}/recipe/jute_thread.json", {
         "type": "minecraft:crafting_shapeless", "category": "misc",
         "ingredients": [{"item": f"{NS}:jute"}], "result": {"id": f"{NS}:jute_thread", "count": 2}})
-    write(f"data/{NS}/recipe/paper_from_bark.json", {
-        "type": "create:mixing",
-        "ingredients": [{"item": f"{NS}:bark"}, {"item": f"{NS}:bark"},
-                        {"type": "neoforge:single", "amount": 250, "fluid": "minecraft:water"}],
-        "results": [{"id": "minecraft:paper"}]})
     for code, k in (("ru_ru", 0), ("en_us", 1)):
         rel = f"assets/{NS}/lang/{code}.json"
         data = read(rel, {})

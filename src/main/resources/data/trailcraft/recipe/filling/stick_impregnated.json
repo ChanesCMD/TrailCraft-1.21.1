@@ -1,0 +1,18 @@
+{
+  "type": "create:filling",
+  "ingredients": [
+    {
+      "item": "trailcraft:stick_processed"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 100,
+      "fluid": "trailcraft:creosote"
+    }
+  ],
+  "results": [
+    {
+      "id": "trailcraft:stick_impregnated"
+    }
+  ]
+}

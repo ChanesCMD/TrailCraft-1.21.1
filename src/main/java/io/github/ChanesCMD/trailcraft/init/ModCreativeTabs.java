@@ -173,10 +173,15 @@ public class ModCreativeTabs {
                         // Палки
                         output.accept(ModItems.STICK_BRANCH);
                         output.accept(ModItems.STICK_PROCESSED);
+                        output.accept(ModItems.STICK_IMPREGNATED);
                         output.accept(ModItems.LONG_STICK);
                         output.accept(ModItems.CAMPFIRE);
                         output.accept(ModItems.ASH);
                         output.accept(ModItems.BARK);
+                        output.accept(ModItems.SAWDUST);
+                        output.accept(ModItems.PAPER_BLANK);
+                        output.accept(ModItems.CHARCOAL_DUST);
+                        ModFluids.ALL.forEach(liquid -> output.accept(liquid.bucket));
                         output.accept(ModItems.RESIN);
                         output.accept(ModItems.JUTE_THREAD);
 

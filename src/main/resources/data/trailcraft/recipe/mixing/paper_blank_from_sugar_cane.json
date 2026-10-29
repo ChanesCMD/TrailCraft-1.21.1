@@ -1,0 +1,21 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "type": "neoforge:single",
+      "amount": 250,
+      "fluid": "minecraft:water"
+    },
+    {
+      "item": "trailcraft:sugar_cane"
+    },
+    {
+      "item": "trailcraft:sugar_cane"
+    }
+  ],
+  "results": [
+    {
+      "id": "trailcraft:paper_blank"
+    }
+  ]
+}

@@ -4,6 +4,8 @@ import com.mojang.serialization.MapCodec;
 import io.github.ChanesCMD.trailcraft.block.entity.WaterBarrelBlockEntity;
 import io.github.ChanesCMD.trailcraft.init.ModBlockEntities;
 import io.github.ChanesCMD.trailcraft.init.ModComponents;
+import io.github.ChanesCMD.trailcraft.init.ModFluids;
+import io.github.ChanesCMD.trailcraft.init.ModItems;
 import io.github.ChanesCMD.trailcraft.item.FlaskItem;
 import io.github.ChanesCMD.trailcraft.water.Water;
 import io.github.ChanesCMD.trailcraft.water.WaterEvents;
@@ -35,9 +37,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * Бочка — хранилище воды (WaterBarrelBlockEntity): ведро воды — налить 1000 mB (пресная), пустое ведро — набрать,
- * фляга — наполнить (по 100 mB за глоток), пустой рукой — попить. Shift + пустая рука — сколько воды. В тэге
- * c:barrels/wooden (жидкостный бак, хранилище Create).
+ * Бочка — хранилище воды или танина (WaterBarrelBlockEntity): ведро воды или танина — налить 1000 mB, пустое ведро —
+ * набрать, фляга — наполнить (по 100 mB за глоток), пустой рукой — попить. В танин кладут выскобленные шкуры, готовую
+ * кожу забирают пустой рукой. Shift + пустая рука — что в бочке. В тэге c:barrels/wooden (жидкостный бак, хранилище Create).
  */
 public class WaterBarrelBlock extends BaseEntityBlock {
     public static final MapCodec<WaterBarrelBlock> CODEC = simpleCodec(WaterBarrelBlock::new);
@@ -73,8 +75,38 @@ public class WaterBarrelBlock extends BaseEntityBlock {
         if (!(level.getBlockEntity(pos) instanceof WaterBarrelBlockEntity barrel)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
+        if (stack.is(ModFluids.TANNIN.bucket.get())) {
+            if (barrel.water() > 0 || barrel.tannin() + 1000 > WaterBarrelBlockEntity.CAPACITY) {
+                return ItemInteractionResult.FAIL;
+            }
+            if (!level.isClientSide) {
+                barrel.add(ModFluids.TANNIN.source.get(), 1000);
+                player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, new ItemStack(Items.BUCKET)));
+                level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1, 1);
+            }
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+        }
+        if (stack.is(Items.BUCKET) && barrel.tannin() >= 1000) {
+            if (!level.isClientSide) {
+                barrel.take(1000);
+                player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, new ItemStack(ModFluids.TANNIN.bucket.get())));
+                level.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1, 1);
+            }
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+        }
+        if (stack.is(ModItems.SCRAPED_HIDE.get()) && barrel.tannin() > 0) {
+            if (!level.isClientSide) {
+                int added = barrel.addHides(stack.getCount());
+                if (added == 0) {
+                    return ItemInteractionResult.FAIL;
+                }
+                stack.consume(added, player);
+                level.playSound(null, pos, SoundEvents.GENERIC_SPLASH, SoundSource.BLOCKS, 0.6f, 1);
+            }
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+        }
         if (stack.is(Items.WATER_BUCKET)) {
-            if (barrel.water() + 1000 > WaterBarrelBlockEntity.CAPACITY || barrel.water() > 0 && barrel.isSalty()) {
+            if (barrel.tannin() > 0 || barrel.water() + 1000 > WaterBarrelBlockEntity.CAPACITY || barrel.water() > 0 && barrel.isSalty()) {
                 return ItemInteractionResult.FAIL;
             }
             if (!level.isClientSide) {
@@ -118,7 +150,16 @@ public class WaterBarrelBlock extends BaseEntityBlock {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         }
-        if (player.isShiftKeyDown() || barrel.water() < WaterBarrelBlockEntity.SIP_MB) {
+        if (barrel.leather() > 0 && !player.isShiftKeyDown()) {
+            ItemStack leather = barrel.takeLeather();
+            if (!player.getInventory().add(leather)) {
+                player.drop(leather, false);
+            }
+            level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.6f, 1);
+        } else if (barrel.tannin() > 0 || barrel.hides() > 0) {
+            player.displayClientMessage(Component.translatable("block.trailcraft.water_barrel.tannin", barrel.tannin(),
+                    WaterBarrelBlockEntity.CAPACITY, barrel.hides()), true);
+        } else if (player.isShiftKeyDown() || barrel.water() < WaterBarrelBlockEntity.SIP_MB) {
             player.displayClientMessage(Component.translatable("block.trailcraft.water_barrel.amount", barrel.water(),
                     WaterBarrelBlockEntity.CAPACITY, Component.translatable(barrel.isSalty()
                             ? "block.trailcraft.water_barrel.salty" : "block.trailcraft.water_barrel.fresh")), true);
@@ -129,11 +170,24 @@ public class WaterBarrelBlock extends BaseEntityBlock {
     }
 
     @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof WaterBarrelBlockEntity barrel) {
+            barrel.dropContents();
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+
+    @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         int water = stack.getOrDefault(ModComponents.WATER.get(), 0);
-        tooltip.add(Component.translatable("block.trailcraft.water_barrel.amount", water, WaterBarrelBlockEntity.CAPACITY,
-                Component.translatable(stack.getOrDefault(ModComponents.SALTY.get(), false)
-                        ? "block.trailcraft.water_barrel.salty" : "block.trailcraft.water_barrel.fresh")).withStyle(ChatFormatting.GRAY));
+        if (stack.getOrDefault(ModComponents.TANNIN.get(), false)) {
+            tooltip.add(Component.translatable("block.trailcraft.water_barrel.tannin_amount", water, WaterBarrelBlockEntity.CAPACITY)
+                    .withStyle(ChatFormatting.GRAY));
+        } else {
+            tooltip.add(Component.translatable("block.trailcraft.water_barrel.amount", water, WaterBarrelBlockEntity.CAPACITY,
+                    Component.translatable(stack.getOrDefault(ModComponents.SALTY.get(), false)
+                            ? "block.trailcraft.water_barrel.salty" : "block.trailcraft.water_barrel.fresh")).withStyle(ChatFormatting.GRAY));
+        }
         tooltip.add(Component.translatable("block.trailcraft.water_barrel.desc").withStyle(ChatFormatting.GRAY));
     }
 }

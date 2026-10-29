@@ -5,8 +5,8 @@
 в кэше Gradle)
 
 Сырая шкура падает с животных вместо ванильной кожи (модификатор лута leather.json, как перо и кость), выскабливается
-ножом (нож остаётся, теряет прочность — item/KnifeItem) и дубится 2 корами — своя кожа (c:leathers без ванильной;
-в смесителе Create — выскобленная шкура, кора и вода). Курица несёт своё яйцо (TrailBird; ванильное в луте — тоже своё,
+ножом (нож остаётся, теряет прочность — item/KnifeItem) и дубится в бочке с танином — своя кожа (c:leathers без
+ванильной; танин и бочка — scripts/gen_fluids.py, block/entity/WaterBarrelBlockEntity). Курица несёт своё яйцо (TrailBird; ванильное в луте — тоже своё,
 egg.json), c:eggs. Яблоко и яблоня — scripts/gen_fruit_trees.py.
 Текстуры: шкуры и кожа — ванильная кожа в своих цветах, яйцо — рыжеватое.
 """
@@ -99,15 +99,6 @@ def recipes():
         "type": "minecraft:crafting_shapeless", "category": "misc",
         "ingredients": [{"item": f"{NS}:raw_hide"}, {"tag": f"{NS}:knives"}],
         "result": {"id": f"{NS}:scraped_hide", "count": 1}})
-    write(f"data/{NS}/recipe/leather.json", {
-        "type": "minecraft:crafting_shapeless", "category": "misc",
-        "ingredients": [{"item": f"{NS}:scraped_hide"}, {"item": f"{NS}:bark"}, {"item": f"{NS}:bark"}],
-        "result": {"id": f"{NS}:leather", "count": 1}})
-    write(f"data/{NS}/recipe/leather_mixing.json", {
-        "type": "create:mixing",
-        "ingredients": [{"item": f"{NS}:scraped_hide"}, {"item": f"{NS}:bark"},
-                        {"type": "neoforge:single", "amount": 250, "fluid": "minecraft:water"}],
-        "results": [{"id": f"{NS}:leather"}]})
 
 
 def lang():

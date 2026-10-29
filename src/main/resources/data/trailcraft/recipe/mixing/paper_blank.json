@@ -2,20 +2,17 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "item": "trailcraft:bark"
-    },
-    {
-      "item": "trailcraft:bark"
-    },
-    {
       "type": "neoforge:single",
       "amount": 250,
       "fluid": "minecraft:water"
+    },
+    {
+      "item": "trailcraft:sawdust"
     }
   ],
   "results": [
     {
-      "id": "minecraft:paper"
+      "id": "trailcraft:paper_blank"
     }
   ]
 }

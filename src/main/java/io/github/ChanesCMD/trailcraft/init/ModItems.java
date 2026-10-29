@@ -173,6 +173,13 @@ public class ModItems {
     public static final DeferredItem<BranchStickItem> STICK_BRANCH = ITEMS.registerItem("stick_branch",
             props -> new BranchStickItem(ModBlocks.FALLEN_BRANCH.get(), props));
     public static final DeferredItem<Item> STICK_PROCESSED = ITEMS.registerSimpleItem("stick_processed");
+    /** Обработанная палка, пропитанная креозотом (наливатель Create, scripts/gen_fluids.py) — для лука. */
+    public static final DeferredItem<Item> STICK_IMPREGNATED = ITEMS.registerSimpleItem("stick_impregnated");
+    /** Древесный уголь из жёрнова — для креозота. */
+    public static final DeferredItem<Item> CHARCOAL_DUST = ITEMS.registerSimpleItem("charcoal_dust");
+    /** Кора из жёрнова; с водой в смесителе — заготовка бумаги, её прессуют в бумагу. */
+    public static final DeferredItem<Item> SAWDUST = ITEMS.registerSimpleItem("sawdust");
+    public static final DeferredItem<Item> PAPER_BLANK = ITEMS.registerSimpleItem("paper_blank");
     /** Длинная палка: две обработанные палки по диагонали; древко копий. */
     public static final DeferredItem<Item> LONG_STICK = ITEMS.registerSimpleItem("long_stick");
     /** Огниво: складывает костёр из выброшенных тонких брёвен (1–4) и 4 веток и разжигает его (FirestarterItem). */

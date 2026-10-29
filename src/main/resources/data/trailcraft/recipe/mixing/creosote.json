@@ -1,0 +1,59 @@
+{
+  "type": "create:mixing",
+  "heat_requirement": "heated",
+  "ingredients": [
+    {
+      "type": "neoforge:single",
+      "amount": 1000,
+      "fluid": "minecraft:water"
+    },
+    {
+      "item": "trailcraft:resin"
+    },
+    {
+      "item": "trailcraft:resin"
+    },
+    {
+      "item": "trailcraft:resin"
+    },
+    {
+      "item": "trailcraft:resin"
+    },
+    {
+      "item": "trailcraft:charcoal_dust"
+    },
+    {
+      "item": "trailcraft:charcoal_dust"
+    },
+    {
+      "item": "trailcraft:charcoal_dust"
+    },
+    {
+      "item": "trailcraft:charcoal_dust"
+    },
+    {
+      "item": "trailcraft:charcoal_dust"
+    },
+    {
+      "item": "trailcraft:charcoal_dust"
+    },
+    {
+      "item": "trailcraft:charcoal_dust"
+    },
+    {
+      "item": "trailcraft:charcoal_dust"
+    },
+    {
+      "item": "trailcraft:charcoal_dust"
+    },
+    {
+      "item": "trailcraft:charcoal_dust"
+    }
+  ],
+  "results": [
+    {
+      "id": "trailcraft:creosote",
+      "amount": 1000
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "trailcraft:bark"
+    }
+  ],
+  "processing_time": 100,
+  "results": [
+    {
+      "id": "trailcraft:sawdust"
+    }
+  ]
+}

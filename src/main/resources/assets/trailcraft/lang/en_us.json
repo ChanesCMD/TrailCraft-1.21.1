@@ -1134,7 +1134,7 @@
   "block.trailcraft.water_barrel.amount": "Water: %s / %s mB (%s)",
   "block.trailcraft.water_barrel.fresh": "fresh",
   "block.trailcraft.water_barrel.salty": "salty",
-  "block.trailcraft.water_barrel.desc": "Bucket to pour or take, flask to fill, empty hand to drink, Shift to check; fills up in the rain",
+  "block.trailcraft.water_barrel.desc": "Bucket to pour or take, flask to fill, empty hand to drink, Shift to check; fills up in the rain. Scraped hides put into tannin (4000 mB or more) turn into leather in half a day",
   "block.trailcraft.bituminous_coal_block": "Bituminous Coal Block",
   "block.trailcraft.coal_burner": "Coal Burner",
   "block.trailcraft.coal_burner.burn": "Burn time left: %s s",
@@ -1228,5 +1228,17 @@
   "item.trailcraft.steel_cutters_head": "Steel Cutter Jaws",
   "gui.trailcraft.flint_knapping": "Flint Knapping",
   "gui.trailcraft.flint_knapping.hint": "Choose a head",
-  "tooltip.trailcraft.flint": "Right-click a rock to knap a tool head"
+  "tooltip.trailcraft.flint": "Right-click a rock to knap a tool head",
+  "block.trailcraft.water_barrel.tannin": "Tannin: %s / %s mB, hides: %s",
+  "block.trailcraft.water_barrel.tannin_amount": "Tannin: %s / %s mB",
+  "item.trailcraft.charcoal_dust": "Charcoal Dust",
+  "item.trailcraft.sawdust": "Sawdust",
+  "item.trailcraft.paper_blank": "Paper Blank",
+  "item.trailcraft.stick_impregnated": "Impregnated Stick",
+  "fluid_type.trailcraft.creosote": "Creosote",
+  "block.trailcraft.creosote": "Creosote",
+  "item.trailcraft.creosote_bucket": "Creosote Bucket",
+  "fluid_type.trailcraft.tannin": "Tannin",
+  "block.trailcraft.tannin": "Tannin",
+  "item.trailcraft.tannin_bucket": "Tannin Bucket"
 }

@@ -1,0 +1,14 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "trailcraft:charcoal"
+    }
+  ],
+  "processing_time": 150,
+  "results": [
+    {
+      "id": "trailcraft:charcoal_dust"
+    }
+  ]
+}

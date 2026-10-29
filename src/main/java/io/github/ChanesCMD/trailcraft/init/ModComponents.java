@@ -26,6 +26,10 @@ public final class ModComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> SALTY =
             COMPONENTS.registerComponentType("salty", builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
 
+    /** В бочке не вода, а танин (количество — в trailcraft:water, mB). */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> TANNIN =
+            COMPONENTS.registerComponentType("tannin", builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+
     /** Содержимое рюкзака, кошелька или пояса: предметы лежат в самом предмете и уходят вместе с ним. */
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ItemContainerContents>> CONTENTS =
             COMPONENTS.registerComponentType("contents", builder -> builder.persistent(ItemContainerContents.CODEC)

@@ -327,7 +327,7 @@ def recipes():
     shaped("iron_bars", ["III", "III"], {"I": iron}, "minecraft:iron_bars", 16)
     shaped("iron_trapdoor", ["II", "II"], {"I": iron}, "minecraft:iron_trapdoor")
     shaped("compass", [" I ", "IMI", " I "], {"I": iron, "M": item(f"{NS}:raw_magnetite")}, "minecraft:compass")
-    shaped("bow", [" SR", "S R", " SR"], {"S": stick, "R": tag("c:strings")}, "minecraft:bow")
+    shaped("bow", [" SR", "S R", " SR"], {"S": item(f"{NS}:stick_impregnated"), "R": tag("c:strings")}, "minecraft:bow")
     shaped("dispenser", ["CCC", "CBC", "CRC"], {"C": cobble, "B": item("minecraft:bow"), "R": redstone},
            "minecraft:dispenser")
     shapeless("bone_meal", [tag("c:bones")], "minecraft:bone_meal", 3)

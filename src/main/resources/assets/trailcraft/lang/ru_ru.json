@@ -1134,7 +1134,7 @@
   "block.trailcraft.water_barrel.amount": "Вода: %s / %s mB (%s)",
   "block.trailcraft.water_barrel.fresh": "пресная",
   "block.trailcraft.water_barrel.salty": "морская",
-  "block.trailcraft.water_barrel.desc": "Ведро — налить или набрать, фляга — наполнить, пустой рукой — попить, Shift — сколько воды; под дождём набирается сама",
+  "block.trailcraft.water_barrel.desc": "Ведро — налить или набрать, фляга — наполнить, пустой рукой — попить, Shift — сколько воды; под дождём набирается сама. В танин (от 4000 mB) кладут выскобленные шкуры — за полдня дубятся в кожу",
   "block.trailcraft.bituminous_coal_block": "Блок каменного угля",
   "block.trailcraft.coal_burner": "Угольная горелка",
   "block.trailcraft.coal_burner.burn": "Горения осталось: %s с",
@@ -1228,5 +1228,17 @@
   "item.trailcraft.steel_cutters_head": "Стальные губки кусачек",
   "gui.trailcraft.flint_knapping": "Оббивка кремня",
   "gui.trailcraft.flint_knapping.hint": "Выберите головку",
-  "tooltip.trailcraft.flint": "ПКМ по породе — оббить в головку инструмента"
+  "tooltip.trailcraft.flint": "ПКМ по породе — оббить в головку инструмента",
+  "block.trailcraft.water_barrel.tannin": "Танин: %s / %s mB, шкур: %s",
+  "block.trailcraft.water_barrel.tannin_amount": "Танин: %s / %s mB",
+  "item.trailcraft.charcoal_dust": "Древесноугольная пыль",
+  "item.trailcraft.sawdust": "Опилки",
+  "item.trailcraft.paper_blank": "Заготовка бумаги",
+  "item.trailcraft.stick_impregnated": "Пропитанная палка",
+  "fluid_type.trailcraft.creosote": "Креозот",
+  "block.trailcraft.creosote": "Креозот",
+  "item.trailcraft.creosote_bucket": "Ведро креозота",
+  "fluid_type.trailcraft.tannin": "Танин",
+  "block.trailcraft.tannin": "Танин",
+  "item.trailcraft.tannin_bucket": "Ведро танина"
 }

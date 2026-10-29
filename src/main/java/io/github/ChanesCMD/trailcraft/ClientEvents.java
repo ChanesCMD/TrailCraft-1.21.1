@@ -46,6 +46,25 @@ public class ClientEvents {
     @SubscribeEvent
     public static void clientExtensions(net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent e) {
         io.github.ChanesCMD.trailcraft.client.WoodChestItemRenderer.register(e);
+        // креозот и танин — ванильная вода в цвете жидкости
+        for (io.github.ChanesCMD.trailcraft.init.ModFluids.Liquid liquid : io.github.ChanesCMD.trailcraft.init.ModFluids.ALL) {
+            e.registerFluidType(new net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions() {
+                @Override
+                public net.minecraft.resources.ResourceLocation getStillTexture() {
+                    return net.minecraft.resources.ResourceLocation.withDefaultNamespace("block/water_still");
+                }
+
+                @Override
+                public net.minecraft.resources.ResourceLocation getFlowingTexture() {
+                    return net.minecraft.resources.ResourceLocation.withDefaultNamespace("block/water_flow");
+                }
+
+                @Override
+                public int getTintColor() {
+                    return liquid.color;
+                }
+            }, liquid.type.get());
+        }
     }
 
     /** Рюкзак на спине — у обоих видов скина игрока. */
