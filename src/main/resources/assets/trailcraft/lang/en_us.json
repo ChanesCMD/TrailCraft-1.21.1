@@ -1240,5 +1240,6 @@
   "item.trailcraft.creosote_bucket": "Creosote Bucket",
   "fluid_type.trailcraft.tannin": "Tannin",
   "block.trailcraft.tannin": "Tannin",
-  "item.trailcraft.tannin_bucket": "Tannin Bucket"
+  "item.trailcraft.tannin_bucket": "Tannin Bucket",
+  "gui.trailcraft.trash": "Destroy Item"
 }

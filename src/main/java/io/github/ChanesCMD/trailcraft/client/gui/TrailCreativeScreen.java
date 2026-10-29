@@ -230,6 +230,7 @@ public class TrailCreativeScreen extends AbstractContainerScreen<TrailCreativeSc
         super.render(g, mouseX, mouseY, partialTick);
         searchBox.render(g, mouseX, mouseY, partialTick);
         renderTooltip(g, mouseX, mouseY);
+        TrashSlot.renderTooltip(g, font, leftPos, topPos, mouseX, mouseY, menu);
         if (menu.getCarried().isEmpty()) {
             tabs.renderTooltip(g, font, leftPos, topPos, imageWidth, mouseX, mouseY);
         }
@@ -252,6 +253,7 @@ public class TrailCreativeScreen extends AbstractContainerScreen<TrailCreativeSc
         UiDraw.frame(g, sx - 1, sy, SCROLL_W + 2, SCROLL_H + 1, 0xFF373737, 0xFFFFFFFF, 0xFF8B8B8B);
         g.blitSprite(menu.canScroll() ? SCROLLER : SCROLLER_DISABLED, sx, sy + 1 + (int) ((SCROLL_H - 16) * scrollOffs),
                 SCROLL_W, 15);
+        TrashSlot.render(g, x, y, mouseX, mouseY);
     }
 
     @Override
@@ -286,6 +288,9 @@ public class TrailCreativeScreen extends AbstractContainerScreen<TrailCreativeSc
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == 0 && tabs.click(leftPos, topPos, imageWidth, mouseX, mouseY)) {
+            return true;
+        }
+        if (button == 0 && TrashSlot.click(leftPos, topPos, mouseX, mouseY, menu, true)) {
             return true;
         }
         if (button == 0 && insideScrollbar(mouseX, mouseY)) {

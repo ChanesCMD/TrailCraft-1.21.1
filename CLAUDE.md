@@ -300,7 +300,8 @@
   нитью — свеча. В JEI — категория «Пасека».
 - Линейка (`item/RulerItem.java`): ПКМ по двум блокам — расстояние по прямой между центрами (до 32) и сдвиги по осям
   над хотбаром, пунктир частиц; первая отметка — компонент `trailcraft:ruler_start`, Shift+ПКМ сбрасывает.
-- Инвентарь: `inventory/TrailInventoryMenu.java` + `client/gui/TrailInventoryScreen.java`. Дополнительные слоты
+- Инвентарь: `inventory/TrailInventoryMenu.java` + `client/gui/TrailInventoryScreen.java`. Мусорка справа от хотбара (и в креативе) —
+  `client/gui/TrashSlot.java`, не слот меню: клик с предметом на курсоре удаляет его (в выживании — `TrashPayload`). Дополнительные слоты
   игрока — `inventory/PlayerSlots.java` (Data Attachment).
 - Косметика: при включённом переключателе слота предмет из косметического слота виден вместо брони —
   сервер рассылает его `inventory/Cosmetics.java` (`CosmeticPayload`), клиент `client/ClientCosmetics.java` подменяет

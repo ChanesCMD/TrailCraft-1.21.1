@@ -319,6 +319,9 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         menu.warmthVisible = menu.popup == Popup.NONE && (isOver(mouseX, mouseY, ARMOR_X, EQUIP_Y, 18, 72)
                 || menu.warmthVisible && isOver(mouseX, mouseY, WARMTH_BG_X, WARMTH_BG_Y, WARMTH_BG_W, WARMTH_BG_H));
         super.render(g, mouseX, mouseY, partialTick);
+        if (menu.popup == Popup.NONE) {
+            TrashSlot.renderTooltip(g, font, leftPos, topPos, mouseX, mouseY, menu);
+        }
         // Кнопки в углу и окно голосового чата — поверх всего (в координатах экрана)
         g.pose().pushPose();
         g.pose().translate(0, 0, Z_OVERLAY);
@@ -392,6 +395,7 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         }
         UiDraw.arrow(g, x + 337, y + 55);
         UiDraw.slot(g, x + RESULT_X, y + RESULT_Y);
+        TrashSlot.render(g, x, y, mouseX, mouseY);
     }
 
     @Override
@@ -707,6 +711,9 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
             return true;
         }
         if (creativeTabs != null && !overPopup(mouseX, mouseY) && creativeTabs.click(leftPos, topPos, WIDTH, mouseX, mouseY)) {
+            return true;
+        }
+        if (button == 0 && !overPopup(mouseX, mouseY) && TrashSlot.click(leftPos, topPos, mouseX, mouseY, menu, false)) {
             return true;
         }
         // Кнопки окон на кошельке, поясе и рюкзаке лежат поверх всего и работают всегда: открыть, переключить, закрыть

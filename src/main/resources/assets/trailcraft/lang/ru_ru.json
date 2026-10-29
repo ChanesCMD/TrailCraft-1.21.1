@@ -1240,5 +1240,6 @@
   "item.trailcraft.creosote_bucket": "Ведро креозота",
   "fluid_type.trailcraft.tannin": "Танин",
   "block.trailcraft.tannin": "Танин",
-  "item.trailcraft.tannin_bucket": "Ведро танина"
+  "item.trailcraft.tannin_bucket": "Ведро танина",
+  "gui.trailcraft.trash": "Удалить предмет"
 }
