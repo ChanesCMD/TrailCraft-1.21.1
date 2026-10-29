@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "trailcraft:bituminous_coal_block"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:bituminous_coal",
+    "count": 9
+  }
+}

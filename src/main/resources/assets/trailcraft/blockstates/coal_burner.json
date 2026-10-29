@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "blaze=none": {
+      "model": "trailcraft:block/coal_burner"
+    },
+    "blaze=smouldering": {
+      "model": "trailcraft:block/coal_burner_lit"
+    },
+    "blaze=fading": {
+      "model": "trailcraft:block/coal_burner_lit"
+    },
+    "blaze=kindled": {
+      "model": "trailcraft:block/coal_burner_lit"
+    },
+    "blaze=seething": {
+      "model": "trailcraft:block/coal_burner_lit"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "trailcraft:block/coal_burner_top_lit",
+    "side": "trailcraft:block/coal_burner_side_lit",
+    "bottom": "trailcraft:block/coal_burner_bottom"
+  }
+}

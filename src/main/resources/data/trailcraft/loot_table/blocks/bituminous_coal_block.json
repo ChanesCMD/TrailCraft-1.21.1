@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "trailcraft:blocks/bituminous_coal_block",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "trailcraft:bituminous_coal_block"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ]
+    }
+  ]
+}

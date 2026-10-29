@@ -8,6 +8,7 @@ import java.util.Map;
 import net.minecraft.world.level.block.Block;
 import io.github.ChanesCMD.trailcraft.block.PebbleBlock;
 import io.github.ChanesCMD.trailcraft.block.SupportBlock;
+import io.github.ChanesCMD.trailcraft.block.CoalBurnerBlock;
 import io.github.ChanesCMD.trailcraft.block.WaterBarrelBlock;
 import io.github.ChanesCMD.trailcraft.block.plant.SeaweedBlock;
 import io.github.ChanesCMD.trailcraft.block.plant.SugarBeetBlock;
@@ -287,6 +288,14 @@ public class ModBlocks {
     /** Блок соломы (4 соломы): как ванильный тюк сена — ставится по осям, гасит урон от падения. */
     public static final DeferredBlock<Block> STRAW_BLOCK = BLOCKS.registerBlock("straw_block", HayBlock::new,
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW).strength(0.5f).sound(SoundType.GRASS).ignitedByLava());
+
+    /** Блок каменного угля (9 угля): топливо угольной горелки. */
+    public static final DeferredBlock<Block> BITUMINOUS_COAL_BLOCK = BLOCKS.registerSimpleBlock("bituminous_coal_block",
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(5.0f, 6.0f).requiresCorrectToolForDrops().sound(SoundType.STONE));
+    /** Угольная горелка: слабая горелка всполоха — нагрев для чаши Create, пока горит уголь (CoalBurnerBlock). */
+    public static final DeferredBlock<CoalBurnerBlock> COAL_BURNER = BLOCKS.registerBlock("coal_burner", CoalBurnerBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()
+                    .lightLevel(state -> CoalBurnerBlock.isLit(state) ? 10 : 0));
 
     /** Бочка — хранилище воды (WaterBarrelBlock); трубы Create качают из неё и в неё. */
     public static final DeferredBlock<WaterBarrelBlock> WATER_BARREL = BLOCKS.registerBlock("water_barrel", WaterBarrelBlock::new,

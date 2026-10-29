@@ -1,6 +1,7 @@
 package io.github.ChanesCMD.trailcraft.init;
 
 import io.github.ChanesCMD.trailcraft.block.entity.WaterBarrelBlockEntity;
+import io.github.ChanesCMD.trailcraft.block.entity.CoalBurnerBlockEntity;
 import io.github.ChanesCMD.trailcraft.block.entity.WoodChestBlockEntity;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -37,13 +38,19 @@ public final class ModBlockEntities {
             () -> BlockEntityType.Builder.of(WoodChestBlockEntity::new,
                     ModChests.CHESTS.values().stream().map(DeferredBlock::get).toArray(net.minecraft.world.level.block.Block[]::new)).build(null));
 
-    /** Бочка отдаёт свой бак трубам и помпам Create (FluidHandler). */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CoalBurnerBlockEntity>> COAL_BURNER = BLOCK_ENTITIES.register("coal_burner",
+            () -> BlockEntityType.Builder.of(CoalBurnerBlockEntity::new, ModBlocks.COAL_BURNER.get()).build(null));
+
+    /** Бочка отдаёт свой бак трубам и помпам Create (FluidHandler), горелка принимает топливо (ItemHandler). */
     @EventBusSubscriber(modid = TrailCraft.MODID, bus = EventBusSubscriber.Bus.MOD)
     public static final class Capabilities {
         @SubscribeEvent
         public static void onRegister(RegisterCapabilitiesEvent event) {
             event.registerBlockEntity(net.neoforged.neoforge.capabilities.Capabilities.FluidHandler.BLOCK, WATER_BARREL.get(),
                     (barrel, side) -> barrel.tank);
+            // топливо в угольную горелку — воронками и желобами Create
+            event.registerBlockEntity(net.neoforged.neoforge.capabilities.Capabilities.ItemHandler.BLOCK, COAL_BURNER.get(),
+                    (burner, side) -> burner.fuelSlot);
         }
     }
 

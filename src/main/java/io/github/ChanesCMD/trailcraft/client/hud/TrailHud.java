@@ -74,7 +74,8 @@ public class TrailHud {
             int x = 6;
             if (ClientConfig.minimapCorner() == ClientConfig.Corner.TOP_LEFT) {
                 boolean map = ClientGear.hasAtlas() && ClientConfig.minimapEnabled();
-                x += Math.max(map ? Minimap.size() : 0, ClientGear.hasCalendar() || ClientGear.hasAtlas() ? 110 : 0) + 6;
+                x += Math.max(map ? Minimap.size() : 0, ClientGear.hasCalendar() || ClientGear.hasAtlas()
+                        || ClientGear.hasChronometer() || ClientGear.hasGps() ? 110 : 0) + 6;
             }
             VoiceHeads.column(g, x, 20, VoiceClient.heads());
         }
@@ -105,13 +106,15 @@ public class TrailHud {
             lines.add(Component.literal(Coords.of(player.getBlockX(), player.getBlockY(), player.getBlockZ())));
         }
         ClientConfig.DateMode dateMode = ClientConfig.dateMode();
-        if (ClientGear.hasCalendar() && dateMode != ClientConfig.DateMode.OFF) {
+        // дата — с календарём в рюкзаке, время — с хронометром (или GPS) на поясе
+        boolean clock = ClientGear.hasChronometer() || ClientGear.hasGps();
+        if ((ClientGear.hasCalendar() || clock) && dateMode != ClientConfig.DateMode.OFF) {
             Calendar date = Calendar.of(player.level().getDayTime(), ServerConfig.daysPerSeason());
-            if (dateMode.showDate()) {
+            if (dateMode.showDate() && ClientGear.hasCalendar()) {
                 lines.add(Component.translatable("gui.trailcraft.hud.date", date.year(),
                         Component.translatable(date.season().translationKey()), date.dayOfSeason()));
             }
-            if (dateMode.showTime()) {
+            if (dateMode.showTime() && clock) {
                 lines.add(Component.literal(date.time()));
             }
         }

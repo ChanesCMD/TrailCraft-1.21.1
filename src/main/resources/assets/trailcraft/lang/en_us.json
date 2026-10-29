@@ -1115,5 +1115,9 @@
   "block.trailcraft.water_barrel.amount": "Water: %s / %s mB (%s)",
   "block.trailcraft.water_barrel.fresh": "fresh",
   "block.trailcraft.water_barrel.salty": "salty",
-  "block.trailcraft.water_barrel.desc": "Bucket to pour or take, flask to fill, empty hand to drink, Shift to check; fills up in the rain"
+  "block.trailcraft.water_barrel.desc": "Bucket to pour or take, flask to fill, empty hand to drink, Shift to check; fills up in the rain",
+  "block.trailcraft.bituminous_coal_block": "Bituminous Coal Block",
+  "block.trailcraft.coal_burner": "Coal Burner",
+  "block.trailcraft.coal_burner.burn": "Burn time left: %s s",
+  "block.trailcraft.coal_burner.desc": "Heats a Create basin while coal burns (not superheated). Right-click with coal or a coal block to add fuel, empty hand to check"
 }

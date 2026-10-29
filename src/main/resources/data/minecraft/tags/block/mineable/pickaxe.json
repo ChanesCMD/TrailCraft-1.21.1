@@ -87,6 +87,8 @@
     "trailcraft:sandstone_slab",
     "trailcraft:shale_slab",
     "trailcraft:cinnabar_ore",
-    "trailcraft:quartz_ore"
+    "trailcraft:quartz_ore",
+    "trailcraft:bituminous_coal_block",
+    "trailcraft:coal_burner"
   ]
 }

@@ -1115,5 +1115,9 @@
   "block.trailcraft.water_barrel.amount": "Вода: %s / %s mB (%s)",
   "block.trailcraft.water_barrel.fresh": "пресная",
   "block.trailcraft.water_barrel.salty": "морская",
-  "block.trailcraft.water_barrel.desc": "Ведро — налить или набрать, фляга — наполнить, пустой рукой — попить, Shift — сколько воды; под дождём набирается сама"
+  "block.trailcraft.water_barrel.desc": "Ведро — налить или набрать, фляга — наполнить, пустой рукой — попить, Shift — сколько воды; под дождём набирается сама",
+  "block.trailcraft.bituminous_coal_block": "Блок каменного угля",
+  "block.trailcraft.coal_burner": "Угольная горелка",
+  "block.trailcraft.coal_burner.burn": "Горения осталось: %s с",
+  "block.trailcraft.coal_burner.desc": "Греет чашу Create, пока горит уголь (не сильный нагрев). ПКМ углём или блоком угля — подложить, пустой рукой — сколько горения осталось"
 }

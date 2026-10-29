@@ -49,4 +49,6 @@ public class ModTags {
     /** Брёвна, на которых растёт какао (пальма, эбеновое дерево). */
     public static final TagKey<Block> COCOA_LOGS = TagKey.create(Registries.BLOCK,
             ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "cocoa_logs"));
+    /** Блоки угля (топливо угольной горелки — как 9 углей). */
+    public static final TagKey<Item> COAL_BLOCKS = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/coal"));
 }

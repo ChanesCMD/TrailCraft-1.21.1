@@ -91,6 +91,9 @@ SUBSTITUTED = {
     "create:pressing/sugar_cane": {"minecraft:sugar_cane": f"{NS}:sugar_cane"},
     "create:mixing/chocolate": {"minecraft:cocoa_beans": f"{NS}:cocoa_beans"},
     "create:milling/cocoa_beans": {"minecraft:cocoa_beans": f"{NS}:cocoa_beans"},
+    # хронометр вместо ванильных часов (их рецепта нет)
+    "create:crafting/kinetics/cuckoo_clock": {"minecraft:clock": f"{NS}:chronometer"},
+    "create:sequenced_assembly/precision_mechanism": {"minecraft:clock": f"{NS}:chronometer"},
     # наши ягоды и яблоко (scripts/gen_animal_goods.py, gen_farm.py)
     "create:filling/chocolate_glazed_berries": {"minecraft:sweet_berries": f"#{NS}:berries"},
     "create:filling/honeyed_apple": {"minecraft:apple": f"{NS}:apple"},

@@ -106,6 +106,8 @@ public class ModCreativeTabs {
                         output.accept(ModItems.SUGAR_BEET_SEEDS);
                         output.accept(ModItems.SUGAR_BEET);
                         output.accept(ModItems.COCOA_BEANS);
+                        output.accept(ModItems.BITUMINOUS_COAL_BLOCK);
+                        output.accept(ModItems.COAL_BURNER);
                         output.accept(ModItems.WATER_BARREL);
                         ModChests.ITEMS.values().forEach(output::accept);
                         output.accept(ModItems.STRAW_BLOCK);
