@@ -16,7 +16,7 @@ NS = "trailcraft"
 
 WOODS = ["oak", "birch", "acacia", "sakura", "eucalyptus", "chestnut", "thuja", "pine", "fir", "spruce", "white_poplar",
          "ebony", "maple", "cedar", "willow", "lilac", "palm", "ironwood", "aspen", "linden", "pussy_willow", "walnut",
-         "alder"]
+         "alder", "amadzu"]
 
 # Малая доска: брусок по диагонали; буквы — оттенки цвета досок (l — светлее, m — основной, d — темнее, o — контур)
 BOARD_SHAPE = [

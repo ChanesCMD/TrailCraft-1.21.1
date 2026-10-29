@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "trailcraft:block/amadzu_crafting_table_front",
+    "north": "trailcraft:block/amadzu_crafting_table_front",
+    "south": "trailcraft:block/amadzu_crafting_table_side",
+    "east": "trailcraft:block/amadzu_crafting_table_side",
+    "west": "trailcraft:block/amadzu_crafting_table_front",
+    "up": "trailcraft:block/amadzu_crafting_table_top",
+    "down": "trailcraft:block/amadzu_planks"
+  }
+}

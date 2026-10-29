@@ -193,9 +193,17 @@ public class ModItems {
     public static final DeferredItem<Item> LEATHER = ITEMS.registerSimpleItem("leather");
     /** Куриное яйцо: курица несёт его вместо ванильного (TrailBird), c:eggs. */
     public static final DeferredItem<Item> EGG = ITEMS.registerSimpleItem("egg");
-    /** Яблоко: падает с листвы яблони (вариант листвы дуба). */
+    /** Плоды фруктовых деревьев на амадзу (ModWood.FRUIT_TREES): падают с их листвы (scripts/gen_fruit_trees.py). */
     public static final DeferredItem<Item> APPLE = ITEMS.registerItem("apple",
             props -> new Item(props.food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.3f).build())));
+    public static final DeferredItem<Item> PEAR = ITEMS.registerItem("pear",
+            props -> new Item(props.food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.3f).build())));
+    public static final DeferredItem<Item> PLUM = ITEMS.registerItem("plum",
+            props -> new Item(props.food(new FoodProperties.Builder().nutrition(3).saturationModifier(0.3f).build())));
+    public static final DeferredItem<Item> CHERRY = ITEMS.registerItem("cherry",
+            props -> new Item(props.food(new FoodProperties.Builder().nutrition(2).saturationModifier(0.2f).fast().build())));
+    public static final DeferredItem<Item> APRICOT = ITEMS.registerItem("apricot",
+            props -> new Item(props.food(new FoodProperties.Builder().nutrition(3).saturationModifier(0.3f).build())));
 
     // === СВОИ РАСТЕНИЯ (scripts/gen_plants.py) ===
     public static final DeferredItem<BlockItem> SEAWEED = ITEMS.registerSimpleBlockItem("seaweed", ModBlocks.SEAWEED);

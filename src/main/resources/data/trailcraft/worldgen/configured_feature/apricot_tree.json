@@ -1,0 +1,8 @@
+{
+  "type": "trailcraft:trail_tree",
+  "config": {
+    "wood": "apricot",
+    "shape": "orchard",
+    "old_chance": 0.0
+  }
+}

@@ -274,6 +274,10 @@ public class ModCreativeTabs {
                     .icon(() -> ModItems.APPLE.get().getDefaultInstance())
                     .displayItems((parameters, output) -> {
                         output.accept(ModItems.APPLE);
+                        output.accept(ModItems.PEAR);
+                        output.accept(ModItems.PLUM);
+                        output.accept(ModItems.CHERRY);
+                        output.accept(ModItems.APRICOT);
                         output.accept(ModItems.CURRANT);
                         output.accept(ModItems.CLOUDBERRY);
                         output.accept(ModItems.GOOSEBERRY);

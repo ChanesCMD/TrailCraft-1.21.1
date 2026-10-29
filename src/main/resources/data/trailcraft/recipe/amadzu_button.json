@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    {
+      "item": "trailcraft:amadzu_planks"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:amadzu_button",
+    "count": 1
+  }
+}

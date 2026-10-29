@@ -103,11 +103,16 @@ FORESTS = {
 # Больше не генерируются: скрипт удаляет их файлы и убирает их из тэга и переводов
 REMOVED_BIOMES = ["zheltozem_forest", "acacia_grove", "palm_grove"]
 
-# Одинокие деревья посреди равнин (всех трёх почв): имя слоя, {порода: вес}, густота (как у лесов)
+# Одинокие деревья посреди равнин: имя слоя, {порода: вес}, густота (как у лесов)[, на каких равнинах — иначе на всех трёх]
 PLAINS_TREES = [
     ("lone_lilacs", {"young_lilac": 1}, ("rarity", 16)),
     ("lone_pussy_willows", {"pussy_willow": 1}, ("rarity", 16)),
     ("lone_apples", {"apple": 1}, ("rarity", 20)),
+    # остальные фруктовые деревья (на амадзу, gen_wood.py; плоды — gen_fruit_trees.py) — только на своих равнинах
+    ("lone_pears", {"pear": 1}, ("rarity", 30), ["burozem_plains", "chernozem_plains"]),
+    ("lone_plums", {"plum": 1}, ("rarity", 30), ["burozem_plains", "chernozem_plains"]),
+    ("lone_cherries", {"cherry": 1}, ("rarity", 30), ["chernozem_plains"]),
+    ("lone_apricots", {"apricot": 1}, ("rarity", 30), ["zheltozem_plains"]),
 ]
 PLAINS = ["burozem_plains", "chernozem_plains", "zheltozem_plains"]
 
@@ -135,8 +140,13 @@ FOREST_GROUND = {
 # Варианты листвы на чужой древесине (ModWood.addLeafVariant): вид -> порода древесины, листва ru / en, саженец ru / en
 LEAF_VARIANTS = {
     "red_maple": ("maple", "Листва красного клёна", "Red Maple Leaves", "Саженец красного клёна", "Red Maple Sapling"),
-    # яблоня: листва с яблоками на дубе (текстуры и яблоки в луте листвы — scripts/gen_animal_goods.py, запускать после)
-    "apple": ("oak", "Листва яблони", "Apple Leaves", "Саженец яблони", "Apple Sapling"),
+    # фруктовые деревья: листва с плодами на амадзу (текстуры и плоды в луте листвы — scripts/gen_fruit_trees.py,
+    # запускать после)
+    "apple": ("amadzu", "Листва яблони", "Apple Leaves", "Саженец яблони", "Apple Sapling"),
+    "pear": ("amadzu", "Листва груши", "Pear Leaves", "Саженец груши", "Pear Sapling"),
+    "plum": ("amadzu", "Листва сливы", "Plum Leaves", "Саженец сливы", "Plum Sapling"),
+    "cherry": ("amadzu", "Листва вишни", "Cherry Leaves", "Саженец вишни", "Cherry Sapling"),
+    "apricot": ("amadzu", "Листва абрикоса", "Apricot Leaves", "Саженец абрикоса", "Apricot Sapling"),
 }
 
 # === РАСКЛАДКА БИОМОВ (multi_noise) ===
@@ -278,8 +288,9 @@ def tree_variants():
         })
 
 
-def plains_tree_layers():
-    return [f"plains_{name}" for name, _, _ in PLAINS_TREES]
+def plains_tree_layers(plains=None):
+    """Слои одиноких деревьев; с plains — только те, что растут на этой равнине (4-й элемент PLAINS_TREES, если есть)."""
+    return [f"plains_{t[0]}" for t in PLAINS_TREES if plains is None or len(t) < 4 or plains in t[3]]
 
 
 def trees():
@@ -289,7 +300,7 @@ def trees():
             tree_placement(feature, density)
         if "water" in f:
             water_holes(biome, *f["water"])
-    for (name, weights, density), feature in zip(PLAINS_TREES, plains_tree_layers()):
+    for (name, weights, density, *_), feature in zip(PLAINS_TREES, plains_tree_layers()):
         tree_mix(feature, weights)
         tree_placement(feature, density)
     tree_mix("river_trees", RIVER_TREES)
@@ -438,7 +449,7 @@ def biomes():
         rel = f"data/{NS}/worldgen/biome/{plains}.json"
         data = read(rel)
         rest = [ft for ft in data["features"][VEGETAL] if not ft.startswith(f"{NS}:plains_")]
-        data["features"][VEGETAL] = [f"{NS}:{t}" for t in plains_tree_layers()] + rest
+        data["features"][VEGETAL] = [f"{NS}:{t}" for t in plains_tree_layers(plains)] + rest
         write(rel, data)
     for biome, f in FORESTS.items():
         data = read(f"data/{NS}/worldgen/biome/{f['soil']}_plains.json")

@@ -23,7 +23,8 @@
     "trailcraft:stripped_linden_wood",
     "trailcraft:stripped_pussy_willow_wood",
     "trailcraft:stripped_walnut_wood",
-    "trailcraft:stripped_alder_wood"
+    "trailcraft:stripped_alder_wood",
+    "trailcraft:stripped_amadzu_wood"
   ],
   "remove": [
     "minecraft:stripped_acacia_wood",

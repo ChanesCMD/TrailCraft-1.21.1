@@ -379,6 +379,22 @@
     "trailcraft:steppe_hive",
     "trailcraft:southern_hive",
     "trailcraft:marsh_hive",
-    "trailcraft:apiary"
+    "trailcraft:apiary",
+    "trailcraft:thin_amadzu_log",
+    "trailcraft:amadzu_log",
+    "trailcraft:stripped_amadzu_log",
+    "trailcraft:amadzu_wood",
+    "trailcraft:stripped_amadzu_wood",
+    "trailcraft:amadzu_planks",
+    "trailcraft:amadzu_stairs",
+    "trailcraft:amadzu_slab",
+    "trailcraft:amadzu_fence",
+    "trailcraft:amadzu_fence_gate",
+    "trailcraft:amadzu_door",
+    "trailcraft:amadzu_trapdoor",
+    "trailcraft:amadzu_button",
+    "trailcraft:amadzu_pressure_plate",
+    "trailcraft:amadzu_crafting_table",
+    "trailcraft:amadzu_chest"
   ]
 }

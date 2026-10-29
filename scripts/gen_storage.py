@@ -28,7 +28,7 @@ DOCS = os.path.join(HERE, "..", "docs", "textures")
 # породы с досками (варианты листвы — красный клён, яблоня — без своих досок и сундуков), как ModWood.SETS
 WOODS = ["oak", "birch", "acacia", "sakura", "eucalyptus", "chestnut", "thuja", "pine", "fir", "spruce", "white_poplar",
          "ebony", "maple", "cedar", "willow", "lilac", "palm", "ironwood", "aspen", "linden", "pussy_willow", "walnut",
-         "alder"]
+         "alder", "amadzu"]
 PARTS = {"": "normal", "_left": "normal_left", "_right": "normal_right"}
 
 LANG = {

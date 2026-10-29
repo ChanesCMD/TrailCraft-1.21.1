@@ -1,17 +1,14 @@
 """
-Шкура и кожа, куриное яйцо, яблоко и яблоня: текстуры, модификаторы лута, лут листвы яблони, рецепты, переводы и
-превью docs/textures/animal_goods.png.
+Шкура и кожа, куриное яйцо: текстуры, модификаторы лута, рецепты, переводы и превью docs/textures/animal_goods.png.
 
 Запуск из корня проекта:  python scripts/gen_animal_goods.py   (нужен Pillow; ванильные текстуры — из jar клиента
-в кэше Gradle; запускать после gen_forests.py — тот переписывает лут листвы яблони, копируя дуб)
+в кэше Gradle)
 
 Сырая шкура падает с животных вместо ванильной кожи (модификатор лута leather.json, как перо и кость), выскабливается
 ножом (нож остаётся, теряет прочность — item/KnifeItem) и дубится 2 корами — своя кожа (c:leathers без ванильной;
 в смесителе Create — выскобленная шкура, кора и вода). Курица несёт своё яйцо (TrailBird; ванильное в луте — тоже своё,
-egg.json), c:eggs. Яблоня — листва с яблоками на древесине дуба (LEAF_VARIANTS в gen_forests.py): с листвы падает
-яблоко (APPLE_CHANCE), одинокие яблони растут на равнинах (PLAINS_TREES).
-Текстуры: шкуры и кожа — ванильная кожа в своих цветах, яйцо — рыжеватое, яблоко — ванильное чуть краснее, листва
-яблони — наша листва дуба с яблоками, саженец — наш саженец дуба светлее.
+egg.json), c:eggs. Яблоко и яблоня — scripts/gen_fruit_trees.py.
+Текстуры: шкуры и кожа — ванильная кожа в своих цветах, яйцо — рыжеватое.
 """
 import colorsys
 import json
@@ -28,9 +25,6 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.join(HERE, "..", "src", "main", "resources")
 TEX = os.path.join(ROOT, "assets", NS, "textures")
 DOCS = os.path.join(HERE, "..", "docs", "textures")
-APPLE_CHANCE = 0.08
-# Яблоки на листве: левый верхний пиксель 2×2
-APPLES = [(3, 3), (10, 1), (6, 10), (12, 9)]
 RAW_HIDE = [(50, 34, 24), (78, 56, 38), (104, 78, 54), (128, 100, 72), (150, 124, 94), (176, 152, 122)]
 SCRAPED_HIDE = [(96, 70, 56), (138, 104, 86), (176, 140, 118), (204, 172, 148), (226, 200, 176), (242, 224, 204)]
 
@@ -39,7 +33,6 @@ LANG = {
     "item.trailcraft.scraped_hide": ("Выскобленная шкура", "Scraped Hide"),
     "item.trailcraft.leather": ("Кожа", "Leather"),
     "item.trailcraft.egg": ("Яйцо", "Egg"),
-    "item.trailcraft.apple": ("Яблоко", "Apple"),
 }
 
 
@@ -76,15 +69,6 @@ def hsv_map(img, fn):
     return out
 
 
-def apple_leaves():
-    img = Image.open(os.path.join(TEX, "block", "oak_leaves.png")).convert("RGBA")
-    for x, y in APPLES:
-        for dx, dy, c in ((0, 0, (214, 40, 36)), (1, 0, (176, 24, 26)), (0, 1, (176, 24, 26)), (1, 1, (124, 14, 18))):
-            img.putpixel((x + dx, y + dy), c + (255,))
-        img.putpixel((x, y), (240, 110, 96, 255))  # блик
-    return img
-
-
 def textures(client):
     vanilla = lambda name: Image.open(BytesIO(client.read(f"assets/minecraft/textures/item/{name}.png")))
     items = {
@@ -92,17 +76,12 @@ def textures(client):
         "scraped_hide": recolor(vanilla("leather"), SCRAPED_HIDE),
         "leather": hsv_map(vanilla("leather"), lambda h, s, v: (h - 0.015, min(1, s * 1.1), v * 0.9)),
         "egg": hsv_map(vanilla("egg"), lambda h, s, v: (0.08, min(1, s + 0.22), v * 0.93)),
-        "apple": hsv_map(vanilla("apple"), lambda h, s, v: (h - 0.01 if h > 0.8 or h < 0.1 else h, min(1, s * 1.1), v)),
     }
     for name, img in items.items():
         img.save(os.path.join(TEX, "item", f"{name}.png"))
         write(f"assets/{NS}/models/item/{name}.json",
               {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/{name}"}})
-    leaves = apple_leaves()
-    leaves.save(os.path.join(TEX, "block", "apple_leaves.png"))
-    sapling = hsv_map(Image.open(os.path.join(TEX, "block", "oak_sapling.png")), lambda h, s, v: (h, s * 0.9, min(1, v * 1.12)))
-    sapling.save(os.path.join(TEX, "block", "apple_sapling.png"))
-    return list(items.values()) + [leaves, sapling]
+    return list(items.values())
 
 
 def loot():
@@ -113,15 +92,6 @@ def loot():
         if f"{NS}:{name}" not in mods["entries"]:
             mods["entries"].append(f"{NS}:{name}")
     write("data/neoforge/loot_modifiers/global_loot_modifiers.json", mods)
-    # яблоко с листвы яблони (не ножницами)
-    rel = f"data/{NS}/loot_table/blocks/apple_leaves.json"
-    table = read(rel, None)
-    table["pools"] = [p for p in table["pools"] if f"{NS}:apple" not in json.dumps(p)]
-    table["pools"].append({"rolls": 1.0, "bonus_rolls": 0.0, "entries": [{"type": "minecraft:item", "name": f"{NS}:apple"}],
-                           "conditions": [{"condition": "minecraft:inverted", "term": {
-                               "condition": "minecraft:match_tool", "predicate": {"items": "minecraft:shears"}}},
-                                          {"condition": "minecraft:random_chance", "chance": APPLE_CHANCE}]})
-    write(rel, table)
 
 
 def recipes():

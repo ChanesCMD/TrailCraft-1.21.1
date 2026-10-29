@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "trailcraft:block/amadzu_log_top",
+    "side": "trailcraft:block/amadzu_log"
+  }
+}

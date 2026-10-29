@@ -1,0 +1,8 @@
+{
+  "type": "trailcraft:trail_tree",
+  "config": {
+    "wood": "amadzu",
+    "shape": "orchard",
+    "old_chance": 0.5
+  }
+}

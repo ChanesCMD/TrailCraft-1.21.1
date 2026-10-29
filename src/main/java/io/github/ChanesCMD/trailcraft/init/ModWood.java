@@ -39,8 +39,8 @@ import java.util.Optional;
 import java.util.function.Function;
 
 /**
- * 23 вида деревьев: по 16 блоков на вид (бревно, тонкое бревно, древесина, обтёсанные, листва, саженец, доски, ступени, плита, забор, калитка, дверь, люк, кнопка, нажимная плита).
- * Плюс красный клён и яблоня: только своя листва и саженец, древесина — клёна и дуба (addLeafVariant).
+ * 24 вида деревьев: по 16 блоков на вид (бревно, тонкое бревно, древесина, обтёсанные, листва, саженец, доски, ступени, плита, забор, калитка, дверь, люк, кнопка, нажимная плита).
+ * Плюс красный клён и фруктовые деревья: только своя листва и саженец, древесина — клёна и амадзу (addLeafVariant).
  */
 public final class ModWood {
     public static final class WoodSet {
@@ -57,6 +57,9 @@ public final class ModWood {
 
     /** Деревья из четырёх саженцев квадратом 2×2: порода -> configured_feature (реликтовый эвкалипт — ствол 2×2). */
     private static final Map<String, String> MEGA_TREES = Map.of("eucalyptus", "relict_eucalyptus_tree");
+
+    /** Фруктовые деревья на древесине амадзу: листва с плодами (плоды — ModItems), саженец. */
+    public static final List<String> FRUIT_TREES = List.of("apple", "pear", "plum", "cherry", "apricot");
 
     /**
      * Прочность обычных брёвен и древесины: в 2 раза больше прежней (2.0), добываются вдвое дольше.
@@ -80,7 +83,6 @@ public final class ModWood {
         add("ebony", MapColor.COLOR_BLACK, MapColor.COLOR_BLACK);
         add("maple", MapColor.COLOR_ORANGE, MapColor.COLOR_BROWN);
         addLeafVariant("red_maple", "maple");
-        addLeafVariant("apple", "oak");
         add("cedar", MapColor.TERRACOTTA_RED, MapColor.TERRACOTTA_ORANGE);
         add("willow", MapColor.COLOR_YELLOW, MapColor.COLOR_GRAY);
         add("lilac", MapColor.COLOR_PURPLE, MapColor.COLOR_BROWN);
@@ -91,6 +93,11 @@ public final class ModWood {
         add("pussy_willow", MapColor.COLOR_BROWN, MapColor.COLOR_BROWN);
         add("walnut", MapColor.COLOR_BROWN, MapColor.PODZOL);
         add("alder", MapColor.TERRACOTTA_ORANGE, MapColor.COLOR_BROWN);
+        // амадзу (по мотивам цуйхуа из Genshin Impact) — древесина фруктовых деревьев
+        add("amadzu", MapColor.TERRACOTTA_RED, MapColor.TERRACOTTA_BROWN);
+        for (String fruit : FRUIT_TREES) {
+            addLeafVariant(fruit, "amadzu");
+        }
     }
 
     /** Вызывается из конструктора мода, чтобы статический блок выше выполнился до событий регистрации. */

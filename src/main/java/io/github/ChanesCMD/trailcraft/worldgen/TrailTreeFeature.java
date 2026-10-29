@@ -175,6 +175,7 @@ public class TrailTreeFeature extends Feature<TrailTreeConfig> {
                 case "palm" -> palm();
                 case "acacia" -> acacia();
                 case "sakura" -> sakura();
+                case "orchard" -> orchard();
                 default -> round();
             };
         }
@@ -419,6 +420,24 @@ public class TrailTreeFeature extends Feature<TrailTreeConfig> {
             }
             blob(top.above(2), old ? 2.6 : 1.6, 1.6, old ? 2.6 : 1.6);
             if (old) roots(50);
+            return true;
+        }
+
+        /** Фруктовое дерево на амадзу (по мотивам цуйхуа): невысокий ствол, короткие ветви и одна широкая
+         *  приплюснутая крона-шапка. */
+        boolean orchard() {
+            int h = old ? 4 + r.nextInt(2) : 2 + r.nextInt(2);
+            if (!trunkFree(h)) return false;
+            trunk(h, old);
+            BlockPos top = base.above(h - 1);
+            int n = old ? 4 : 2;
+            double a0 = r.nextDouble() * Math.PI * 2;
+            for (int i = 0; i < n; i++) {
+                branch(top, dir(top, a0 + i * Math.PI * 2 / n + r.nextDouble() * 0.5, old ? 2 : 1, 1), false);
+            }
+            double rad = old ? 3.6 : 2.6;
+            blob(top.above(old ? 2 : 1), rad, old ? 2.2 : 1.8, rad);
+            if (old) roots(40);
             return true;
         }
 

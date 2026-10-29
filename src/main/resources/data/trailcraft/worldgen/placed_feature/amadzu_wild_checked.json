@@ -1,0 +1,14 @@
+{
+  "feature": "trailcraft:amadzu_wild_tree",
+  "placement": [
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:would_survive",
+        "state": {
+          "Name": "trailcraft:amadzu_sapling"
+        }
+      }
+    }
+  ]
+}
