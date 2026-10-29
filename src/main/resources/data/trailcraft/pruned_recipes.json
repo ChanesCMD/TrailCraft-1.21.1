@@ -11,6 +11,7 @@
   "create:compacting/andesite_from_flint",
   "create:compacting/diorite_from_flint",
   "create:compacting/granite_from_flint",
+  "create:crafting/appliances/crafting_blueprint",
   "create:crafting/appliances/tree_fertilizer",
   "create:crafting/kinetics/belt_connector",
   "create:crafting/kinetics/cuckoo_clock",

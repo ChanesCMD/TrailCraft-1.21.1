@@ -22,7 +22,7 @@ Create под мир TrailCraft: что из рецептов Create убрат�
    полотна; на костре — стекло из песка (временно) и гладкий камень из любой породы; рычаг, редстоуновый факел,
    повторитель, компаратор из наших пород и палок; громоотвод из меди; удобрение для деревьев из кости, золы и листвы;
    жёрнов из гравия; наблюдатель; железные прутья и люк; компас из магнетита; лук из обработанных палок и нитей,
-   раздатчик из булыжника; костная мука из нашей кости; жезл симметрии с аметистом вместо жемчуга (SUBSTITUTED); еда на костре и в коптильне
+   раздатчик из булыжника; костная мука из нашей кости; чертёж рецепта из верстака, бумаги и угля; жезл симметрии с аметистом вместо жемчуга (SUBSTITUTED); еда на костре и в коптильне
    (FOOD, recipe/food/); красители из цветов и смесей — копии ванильных (recipe/dyes/); дробление наших кусков и блоков
    руды в дроблёную руду Create (CRUSHED, recipe/crushing/; у гематита шанс редстоуна), киноварь — в редстоун.
 4. Цинк Create (слиток, кусочек, дроблёная руда, блок) — формы Create в гамме цинка METALS["zinc"] из
@@ -95,6 +95,8 @@ REPLACED = [
     "create:crafting/kinetics/mechanical_crafter", "create:crafting/logistics/redstone_contact",
     "create:crafting/appliances/tree_fertilizer", "create:crafting/tree_fertilizer",
     "create:crafting/kinetics/millstone",
+    # чертёж рецепта: вместо картины и ванильного верстака — наш верстак, бумага и древесный уголь
+    "create:crafting/appliances/crafting_blueprint",
     # прочный лист Create — лавой из заливки; свой рецепт (без лавы) — gen_reinforced_pipe.py
     "create:sequenced_assembly/sturdy_sheet",
     # блок киновари (c:ores/quicksilver) — свой рецепт, с редстоуном
@@ -365,6 +367,8 @@ def recipes():
            "minecraft:dispenser")
     shapeless("bone_meal", [tag("c:bones")], "minecraft:bone_meal", 3)
     shapeless("book", [item("minecraft:paper")] * 3 + [tag("c:leathers")], "minecraft:book")
+    shapeless("crafting_blueprint", [tag(f"{NS}:workbenches"), item("minecraft:paper"), item("minecraft:paper"),
+                                     item(f"{NS}:charcoal")], "create:crafting_blueprint")
     for ore, (metal, extra) in CRUSHED.items():
         side = [{"id": i, "chance": c} for i, c in extra]
         write(f"data/{NS}/recipe/crushing/raw_{ore}.json", {

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "trailcraft:workbenches"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "trailcraft:charcoal"
+    }
+  ],
+  "result": {
+    "id": "create:crafting_blueprint",
+    "count": 1
+  }
+}
