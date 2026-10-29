@@ -190,6 +190,7 @@ public class ModCreativeTabs {
                         output.accept(ModItems.CLOTH_BLANK);
                         output.accept(ModItems.CLOTH);
                         output.accept(ModSmelting.STRAW);
+                        output.accept(ModSmelting.UNFIRED_REINFORCED_BRICK);
                         output.accept(ModSmelting.REINFORCED_BRICK);
                         output.accept(ModSmelting.SMALL_BLOOMERY_ITEM);
                         output.accept(ModSmelting.CLAY_MOLD);

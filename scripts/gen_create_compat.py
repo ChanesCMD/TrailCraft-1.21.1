@@ -331,6 +331,7 @@ def recipes():
     shaped("dispenser", ["CCC", "CBC", "CRC"], {"C": cobble, "B": item("minecraft:bow"), "R": redstone},
            "minecraft:dispenser")
     shapeless("bone_meal", [tag("c:bones")], "minecraft:bone_meal", 3)
+    shapeless("book", [item("minecraft:paper")] * 3 + [tag("c:leathers")], "minecraft:book")
     for ore, (metal, extra) in CRUSHED.items():
         side = [{"id": i, "chance": c} for i, c in extra]
         write(f"data/{NS}/recipe/crushing/raw_{ore}.json", {

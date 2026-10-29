@@ -1198,5 +1198,6 @@
   "block.trailcraft.pear_fruit": "Груша на ветке",
   "block.trailcraft.plum_fruit": "Слива на ветке",
   "block.trailcraft.cherry_fruit": "Вишня на ветке",
-  "block.trailcraft.apricot_fruit": "Абрикос на ветке"
+  "block.trailcraft.apricot_fruit": "Абрикос на ветке",
+  "item.trailcraft.unfired_reinforced_brick": "Необработанный укреплённый кирпич"
 }

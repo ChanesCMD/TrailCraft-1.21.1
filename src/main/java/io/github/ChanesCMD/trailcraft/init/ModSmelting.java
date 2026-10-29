@@ -59,7 +59,8 @@ public final class ModSmelting {
 
     /** Солома: с травы, срезанной ножом, серпом или косой (StrawEvents). */
     public static final DeferredItem<Item> STRAW = ModItems.ITEMS.registerSimpleItem("straw");
-    /** Укреплённый (саманный) кирпич: любая глина и солома. */
+    /** Необработанный укреплённый кирпич: любая глина и солома; на костре — укреплённый (саманный) кирпич. */
+    public static final DeferredItem<Item> UNFIRED_REINFORCED_BRICK = ModItems.ITEMS.registerSimpleItem("unfired_reinforced_brick");
     public static final DeferredItem<Item> REINFORCED_BRICK = ModItems.ITEMS.registerSimpleItem("reinforced_brick");
     /** Слепок из глины: ПКМ — выбрать, что вылепить (ClayShape). */
     public static final DeferredItem<ClayMoldItem> CLAY_MOLD = ModItems.ITEMS.registerItem("clay_mold",

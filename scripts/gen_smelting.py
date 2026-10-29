@@ -23,6 +23,7 @@ CLAYS = {
     "red": ((176, 86, 58), "Красный кирпич", "Красные кирпичи", "Red"),
 }
 ADOBE = (150, 118, 82)       # укреплённый кирпич: глина с соломой
+RAW_ADOBE = (170, 156, 134)  # необработанный укреплённый кирпич: сырая глина с соломой
 STRAW = (222, 190, 96)
 RAW_CLAY = (160, 150, 140)   # сырой кувшин
 MOLD_CLAY = (138, 128, 118)  # слепок (самые светлые места шаблона красителя — в 1,3 раза светлее)
@@ -47,6 +48,7 @@ STRAW_GRASS = [f"{NS}:grass_small", f"{NS}:grass_medium", f"{NS}:grass_tall", "m
 LANG = {
     "item.trailcraft.straw": ("Солома", "Straw"),
     "item.trailcraft.reinforced_brick": ("Укреплённый кирпич", "Reinforced Brick"),
+    "item.trailcraft.unfired_reinforced_brick": ("Необработанный укреплённый кирпич", "Unfired Reinforced Brick"),
     "item.trailcraft.clay_mold": ("Слепок из глины", "Clay Mold"),
     "item.trailcraft.unfired_jug": ("Сырой кувшин", "Unfired Jug"),
     "item.trailcraft.jug": ("Кувшин", "Jug"),
@@ -303,6 +305,7 @@ def textures():
         png(f"block/bricks_{clay}", brick_wall(color, random.Random(sum(map(ord, clay)))))
         png(f"item/brick_{clay}", brick_item(color, seed=len(clay)))
     png("item/reinforced_brick", brick_item(ADOBE, specks=STRAW, seed=3))
+    png("item/unfired_reinforced_brick", brick_item(RAW_ADOBE, specks=STRAW, seed=3))
     png("item/straw", straw_item())
     png("item/clay_mold", lump(MOLD_CLAY, 1))
     png("item/unfired_jug", jug(RAW_CLAY, 2))
@@ -339,7 +342,7 @@ def assets():
         write(f"assets/{NS}/models/item/bricks_{clay}.json", {"parent": f"{NS}:block/bricks_{clay}"})
         simple_loot(f"bricks_{clay}")
     # модель кувшина (с видом «жидкий металл внутри») пишет gen_casting.py
-    for name in ("straw", "reinforced_brick", "clay_mold", "unfired_jug", "cloth_blank", "cloth"):
+    for name in ("straw", "reinforced_brick", "unfired_reinforced_brick", "clay_mold", "unfired_jug", "cloth_blank", "cloth"):
         item_model(name)
     for lit in ("", "_on"):
         write(f"assets/{NS}/models/block/small_bloomery{lit}.json", {
@@ -377,7 +380,7 @@ ROCKS = ["andesite", "basalt", "chalk", "diorite", "dolomite", "gabbro", "granit
 NUGGET_ORES = ["native_copper", "malachite", "tetrahedrite", "cassiterite", "sphalerite"]
 JUG_ITEMS = (
     [f"{NS}:stick_branch", f"{NS}:stick_processed", f"{NS}:straw"]
-    + [f"{NS}:brick_{c}" for c in CLAYS] + [f"{NS}:reinforced_brick", f"#{NS}:clay_balls"]
+    + [f"{NS}:brick_{c}" for c in CLAYS] + [f"{NS}:reinforced_brick", f"{NS}:unfired_reinforced_brick", f"#{NS}:clay_balls"]
     + [f"{NS}:{r}_pebble" for r in ROCKS] + [f"{NS}:flint"]
     + [f"{NS}:{o}_nugget" for o in NUGGET_ORES]
     + [f"{NS}:bituminous_coal", f"{NS}:charcoal", f"{NS}:ash", f"{NS}:apatite"]
@@ -402,10 +405,17 @@ def data():
             "type": "minecraft:crafting_shaped", "category": "building", "key": {"#": {"item": f"{NS}:brick_{clay}"}},
             "pattern": ["##", "##"], "result": {"id": f"{NS}:bricks_{clay}", "count": 1}})
     # Всё до первой меди — в сетке 2×2 (верстак нужен доскам, а доскам — пила из меди)
-    write(f"data/{NS}/recipe/reinforced_brick.json", {
+    # укреплённый кирпич: глина и солома — необработанный, на костре — обожжённый
+    write(f"data/{NS}/recipe/unfired_reinforced_brick.json", {
         "type": "minecraft:crafting_shapeless", "category": "building",
         "ingredients": [{"tag": f"{NS}:clay_balls"}, {"item": f"{NS}:straw"}],
-        "result": {"id": f"{NS}:reinforced_brick", "count": 1}})
+        "result": {"id": f"{NS}:unfired_reinforced_brick", "count": 1}})
+    old = path("data", NS, "recipe", "reinforced_brick.json")
+    if os.path.exists(old):
+        os.remove(old)
+    write(f"data/{NS}/recipe/campfire/reinforced_brick.json", {
+        "type": "minecraft:campfire_cooking", "category": "misc", "cookingtime": 400, "experience": 0.1,
+        "ingredient": {"item": f"{NS}:unfired_reinforced_brick"}, "result": {"id": f"{NS}:reinforced_brick", "count": 1}})
     write(f"data/{NS}/recipe/small_bloomery.json", {
         "type": "minecraft:crafting_shaped", "category": "misc", "key": {"#": {"item": f"{NS}:reinforced_brick"}},
         "pattern": ["##", "##"], "result": {"id": f"{NS}:small_bloomery", "count": 1}})

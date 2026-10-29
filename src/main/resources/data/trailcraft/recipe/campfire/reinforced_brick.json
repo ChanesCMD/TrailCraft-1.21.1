@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "category": "misc",
+  "cookingtime": 400,
+  "experience": 0.1,
+  "ingredient": {
+    "item": "trailcraft:unfired_reinforced_brick"
+  },
+  "result": {
+    "id": "trailcraft:reinforced_brick",
+    "count": 1
+  }
+}
