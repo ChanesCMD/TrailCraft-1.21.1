@@ -4,6 +4,7 @@
   "package": "io.github.ChanesCMD.trailcraft.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "BoilerDataMixin",
     "FoodDataAccessor",
     "FluidTransportBehaviourMixin",
     "LeavesBlockMixin",

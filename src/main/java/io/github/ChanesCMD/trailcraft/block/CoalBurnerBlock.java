@@ -35,9 +35,12 @@ import java.util.List;
 /**
  * Угольная горелка — слабая горелка всполоха без всполоха (CoalBurnerBlockEntity): свойство Create heat_level, по
  * нему чаша Create сверху видит нагрев. ПКМ топливом — подбросить, пустой рукой — сколько горения осталось.
+ * Котёл Create греет вчетверо слабее горелки всполоха (BOILER_HEAT; дробный нагрев складывает mixin/BoilerDataMixin).
  */
 public class CoalBurnerBlock extends BaseEntityBlock {
     public static final MapCodec<CoalBurnerBlock> CODEC = simpleCodec(CoalBurnerBlock::new);
+    /** Нагрев котла от горящей горелки: горелка всполоха — 1. */
+    public static final float BOILER_HEAT = 0.25f;
 
     public CoalBurnerBlock(Properties properties) {
         super(properties);
@@ -107,5 +110,16 @@ public class CoalBurnerBlock extends BaseEntityBlock {
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         tooltip.add(Component.translatable("block.trailcraft.coal_burner.desc").withStyle(ChatFormatting.GRAY));
+    }
+
+    @net.neoforged.fml.common.EventBusSubscriber(modid = io.github.ChanesCMD.trailcraft.TrailCraft.MODID,
+            bus = net.neoforged.fml.common.EventBusSubscriber.Bus.MOD)
+    public static class ModBus {
+        @net.neoforged.bus.api.SubscribeEvent
+        public static void onCommonSetup(net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event) {
+            event.enqueueWork(() -> com.simibubi.create.api.boiler.BoilerHeater.REGISTRY.register(
+                    io.github.ChanesCMD.trailcraft.init.ModBlocks.COAL_BURNER.get(),
+                    (level, pos, state) -> isLit(state) ? BOILER_HEAT : com.simibubi.create.api.boiler.BoilerHeater.NO_HEAT));
+        }
     }
 }

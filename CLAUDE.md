@@ -403,7 +403,9 @@
   формы Create в гамме цинка (`assets/create/textures/`).
   Часы в рецептах Create (часы с кукушкой, механизм точности) заменены хронометром (`SUBSTITUTED`). Угольная горелка
   (`block/CoalBurnerBlock.java`, `block/entity/CoalBurnerBlockEntity.java`) — слабая горелка всполоха: свойство
-  `blaze` Create, пока горит топливо — «греет» (KINDLED), сильного нагрева нет; топливо — каменный уголь, его блок
+  `blaze` Create, пока горит топливо — «греет» (KINDLED), сильного нагрева нет; котёл Create греет вчетверо слабее
+  горелки всполоха (`CoalBurnerBlock.BOILER_HEAT`; дробный нагрев складывает `mixin/BoilerDataMixin`: 4 горелки — уровень,
+  1–3 — пассивный нагрев); топливо — каменный уголь, его блок
   (`trailcraft:bituminous_coal_block`, `c:storage_blocks/coal`), торф, ПКМ или воронкой; обычная горелка всполоха
   Create остаётся. JSON и текстуры — `scripts/gen_burner.py`.
   Лава в трубах Create: обычная медная труба (и стеклянная, и в корпусе), по которой течёт лава, дымит и через 20 с
