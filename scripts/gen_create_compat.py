@@ -46,6 +46,16 @@ ROOT = os.path.join(HERE, "..", "src", "main", "resources")
 GRADLE = os.path.join(os.path.expanduser("~"), ".gradle", "caches")
 ROCKS = ["andesite", "basalt", "chalk", "diorite", "dolomite", "gabbro", "granite", "gray_granite", "limestone",
          "marble", "sandstone", "shale"]
+# Порода — блок другого мода (известняк — Create): id блока и текстура; булыжник, гравий, плита, камешек — свои
+FOREIGN_ROCKS = {"limestone": ("create:limestone", "create:block/palettes/stone_types/limestone")}
+
+
+def rock_block(rock):
+    return FOREIGN_ROCKS[rock][0] if rock in FOREIGN_ROCKS else f"{NS}:{rock}"
+
+
+def rock_texture(rock):
+    return FOREIGN_ROCKS[rock][1] if rock in FOREIGN_ROCKS else f"{NS}:block/{rock}"
 VANILLA_WOODS = ["oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "bamboo", "crimson",
                  "warped"]
 
@@ -165,7 +175,7 @@ def tags(external):
                       if os.path.exists(path(f"assets/{NS}/models/item/{v.split(':')[1].replace('_log', '_wood')}.json"))]
     replaced = {
         "c:rods/wooden": [f"{NS}:stick_processed"],
-        "c:stones": [f"{NS}:{r}" for r in ROCKS],
+        "c:stones": [rock_block(r) for r in ROCKS],
         "c:cobblestones": [f"{NS}:{r}_cobblestone" for r in ROCKS],
         "c:sands/colorless": [f"{NS}:sand_white", f"{NS}:sand_yellow", f"{NS}:sand_gray"],
         "c:sands/red": [f"{NS}:sand_red"],
@@ -189,7 +199,7 @@ def tags(external):
         data = read(rel, {"values": []})
         write(rel, {"replace": True, "values": data["values"]})
     # предметы пород и гравия одним тэгом (рычаг, повторитель, гладкий камень, жёрнов)
-    write(f"data/{NS}/tags/item/rocks.json", {"replace": False, "values": [f"{NS}:{r}" for r in ROCKS]})
+    write(f"data/{NS}/tags/item/rocks.json", {"replace": False, "values": [rock_block(r) for r in ROCKS]})
     write(f"data/{NS}/tags/item/berries.json", {"replace": False, "values": [
         f"{NS}:{b}" for b in ("currant", "cloudberry", "gooseberry", "blackberry")]})
     write(f"data/{NS}/tags/item/gravels.json", {"replace": False, "values": [f"{NS}:{r}_gravel" for r in ROCKS]})

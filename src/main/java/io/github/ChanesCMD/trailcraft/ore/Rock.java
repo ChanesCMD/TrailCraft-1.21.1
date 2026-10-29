@@ -1,10 +1,17 @@
 package io.github.ChanesCMD.trailcraft.ore;
 
+import io.github.ChanesCMD.trailcraft.TrailCraft;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.block.Block;
 
 import java.util.Locale;
 
-/** Породы, в которых лежат руды. Имя совпадает с id блока породы (trailcraft:limestone и т. д.). */
+/**
+ * Породы, в которых лежат руды. Имя совпадает с id блока породы (trailcraft:gabbro и т. д.), кроме известняка — это
+ * известняк Create (create:limestone); булыжник, гравий, плита и камешек известняка — свои (trailcraft:limestone_*).
+ */
 public enum Rock implements StringRepresentable {
     ANDESITE, BASALT, CHALK, DIORITE, DOLOMITE, GABBRO, GRANITE, GRAY_GRANITE, LIMESTONE, MARBLE, SANDSTONE, SHALE;
 
@@ -13,5 +20,26 @@ public enum Rock implements StringRepresentable {
     @Override
     public String getSerializedName() {
         return id;
+    }
+
+    /** Id блока самой породы. */
+    public ResourceLocation blockId() {
+        return this == LIMESTONE ? ResourceLocation.fromNamespaceAndPath("create", id)
+                : ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, id);
+    }
+
+    public Block block() {
+        return BuiltInRegistries.BLOCK.get(blockId());
+    }
+
+    /** Порода по её блоку (null — не порода). */
+    public static Rock of(Block block) {
+        ResourceLocation id = BuiltInRegistries.BLOCK.getKey(block);
+        for (Rock rock : values()) {
+            if (rock.blockId().equals(id)) {
+                return rock;
+            }
+        }
+        return null;
     }
 }

@@ -158,7 +158,8 @@
   поворот на 180° (как камень) — блокстейты пишет `scripts/gen_rotations.py`. Текстуры диорита (трещины не доходят до
   краёв) и андезита (ванильный, смешанный с нашим на 25 %) — `scripts/gen_stone_textures.py` из исходников в
   `scripts/templates/`.
-- Руды: список — `ore/Ore.java` (породы — `ore/Rock.java`), блок `block/OreBlock.java` один на руду, порода — свойство
+- Руды: список — `ore/Ore.java` (породы — `ore/Rock.java`; известняк — блок Create `create:limestone`, `Rock.blockId()`,
+  в скриптах — `FOREIGN_ROCKS` в `gen_create_compat.py`; его булыжник, гравий, плита и камешек — свои), блок `block/OreBlock.java` один на руду, порода — свойство
   `rock`; предмет `item/OreBlockItem.java` хранит породу в компоненте `block_state` (шёлковое касание — `copy_state` в
   луте), иконка в инвентаре выбирается по свойству `trailcraft:rock` (`client/ClientOres.java`). Регистрация руд, кусков
   `raw_*`, слитков, шихты и древесного угля — `init/ModOres.java`. Все JSON (модели из двух слоёв

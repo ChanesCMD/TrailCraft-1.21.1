@@ -159,15 +159,8 @@ public class NuggetDepositFeature extends Feature<NuggetDepositFeature.Config> {
 
     /** Порода руды: заменённый блок, если это одна из её пород, иначе первая. */
     private static Rock rockFor(Ore ore, BlockState replaced) {
-        ResourceLocation id = BuiltInRegistries.BLOCK.getKey(replaced.getBlock());
-        if (TrailCraft.MODID.equals(id.getNamespace())) {
-            for (Rock rock : ore.rocks) {
-                if (rock.getSerializedName().equals(id.getPath())) {
-                    return rock;
-                }
-            }
-        }
-        return ore.rocks.get(0);
+        Rock rock = Rock.of(replaced.getBlock());
+        return rock != null && ore.rocks.contains(rock) ? rock : ore.rocks.get(0);
     }
 
     private static Ore ore(String id) {

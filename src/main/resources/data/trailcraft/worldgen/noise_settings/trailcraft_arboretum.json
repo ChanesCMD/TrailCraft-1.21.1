@@ -346,7 +346,7 @@
                     "then_run": {
                       "type": "minecraft:block",
                       "result_state": {
-                        "Name": "trailcraft:limestone"
+                        "Name": "create:limestone"
                       }
                     }
                   },
@@ -8062,7 +8062,7 @@
                   "then_run": {
                     "type": "minecraft:block",
                     "result_state": {
-                      "Name": "trailcraft:limestone"
+                      "Name": "create:limestone"
                     }
                   }
                 },
@@ -8218,7 +8218,7 @@
                 "then_run": {
                   "type": "minecraft:block",
                   "result_state": {
-                    "Name": "trailcraft:limestone"
+                    "Name": "create:limestone"
                   }
                 }
               },

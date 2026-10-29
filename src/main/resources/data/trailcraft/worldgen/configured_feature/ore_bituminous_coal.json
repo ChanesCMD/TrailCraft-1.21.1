@@ -19,7 +19,7 @@
       {
         "target": {
           "predicate_type": "minecraft:block_match",
-          "block": "trailcraft:limestone"
+          "block": "create:limestone"
         },
         "state": {
           "Name": "trailcraft:bituminous_coal_ore",

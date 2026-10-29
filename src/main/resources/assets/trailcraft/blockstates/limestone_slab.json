@@ -7,7 +7,7 @@
       "model": "trailcraft:block/limestone_slab_top"
     },
     "type=double": {
-      "model": "trailcraft:block/limestone"
+      "model": "trailcraft:block/limestone_slab_double"
     }
   }
 }

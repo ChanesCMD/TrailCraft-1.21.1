@@ -7,7 +7,7 @@
       {
         "target": {
           "predicate_type": "minecraft:block_match",
-          "block": "trailcraft:limestone"
+          "block": "create:limestone"
         },
         "state": {
           "Name": "trailcraft:bauxite_ore",

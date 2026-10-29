@@ -31,7 +31,6 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.GABBRO);
                         output.accept(ModBlocks.GRANITE);
                         output.accept(ModBlocks.GRAY_GRANITE);
-                        output.accept(ModBlocks.LIMESTONE);
                         output.accept(ModBlocks.MARBLE);
                         output.accept(ModBlocks.SANDSTONE);
                         output.accept(ModBlocks.SHALE);

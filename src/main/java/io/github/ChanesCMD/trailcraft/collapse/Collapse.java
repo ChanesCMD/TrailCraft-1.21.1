@@ -1,5 +1,6 @@
 package io.github.ChanesCMD.trailcraft.collapse;
 
+import io.github.ChanesCMD.trailcraft.ore.Rock;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.block.OreBlock;
 import io.github.ChanesCMD.trailcraft.block.SupportBlock;
@@ -248,6 +249,10 @@ public final class Collapse {
         }
         return (gravel ? GRAVEL : COBBLESTONE).computeIfAbsent(state.getBlock(), block -> {
             ResourceLocation id = BuiltInRegistries.BLOCK.getKey(block);
+            Rock rock = Rock.of(block);
+            if (rock != null) {
+                id = ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, rock.getSerializedName());
+            }
             Block rubble = BuiltInRegistries.BLOCK.get(id.withSuffix(gravel ? "_gravel" : "_cobblestone"));
             return rubble == Blocks.AIR ? block.defaultBlockState() : rubble.defaultBlockState();
         });

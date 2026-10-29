@@ -29,7 +29,7 @@ public class OreBlockItem extends BlockItem {
 
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        Component rockName = Component.translatable("block.trailcraft." + rock(stack).getSerializedName());
+        Component rockName = rock(stack).block().getName();
         tooltip.add(Component.translatable("tooltip.trailcraft.ore.rock", rockName).withStyle(ChatFormatting.GRAY));
     }
 }

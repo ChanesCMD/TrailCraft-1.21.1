@@ -1,7 +1,7 @@
 {
   "parent": "trailcraft:block/ore_layered",
   "textures": {
-    "rock": "trailcraft:block/limestone",
+    "rock": "create:block/palettes/stone_types/limestone",
     "ore": "trailcraft:block/ore/galena/limestone_2"
   }
 }

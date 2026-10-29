@@ -8,12 +8,17 @@ docs/textures/cobblestone.png.
 
 Текстура — ванильный булыжник (scripts/templates/cobblestone.png), перекрашенный в цвета породы: пиксели булыжника
 по яркости сопоставляются с пикселями текстуры породы (textures/block/<порода>.png) той же доли яркости — рисунок
-камней ванильный, цвета и разброс — как у породы.
+камней ванильный, цвета и разброс — как у породы. Известняк — блок и текстура Create (create:limestone), его булыжник
+и плита — свои.
 """
 import json
 import os
+import zipfile
+from io import BytesIO
 
 from PIL import Image
+
+from gen_create_compat import FOREIGN_ROCKS as FOREIGN, find_jar, rock_block, rock_texture
 
 NS = "trailcraft"
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -23,6 +28,12 @@ DOCS = os.path.join(HERE, "..", "docs", "textures")
 ROCKS = ["andesite", "basalt", "chalk", "diorite", "dolomite", "gabbro", "granite", "gray_granite", "limestone",
          "marble", "sandstone", "shale"]
 CONTRAST = 0.35
+def rock_image(rock):
+    if rock in FOREIGN:
+        ns, rel = FOREIGN[rock][1].split(":")
+        with zipfile.ZipFile(find_jar("create-1.21.1-*-slim.jar")) as jar:
+            return Image.open(BytesIO(jar.read(f"assets/{ns}/textures/{rel}.png"))).convert("RGBA")
+    return Image.open(os.path.join(TEX, f"{rock}.png")).convert("RGBA")
 
 
 def path(rel):
@@ -51,7 +62,7 @@ def lum(c):
 
 def texture(rock):
     base = Image.open(os.path.join(HERE, "templates", "cobblestone.png")).convert("RGBA")
-    colors = sorted(Image.open(os.path.join(TEX, f"{rock}.png")).convert("RGBA").get_flattened_data(), key=lum)
+    colors = sorted(rock_image(rock).get_flattened_data(), key=lum)
     pixels = list(base.get_flattened_data())
     order = sorted(range(len(pixels)), key=lambda i: lum(pixels[i]))
     # узкий разброс у светлых пород (мел, доломит) стирает камни — добавить тени ванильного рисунка
@@ -71,12 +82,15 @@ def slab(rock, ru, en, pickaxe):
     """Плита породы: модели нижней и верхней половины на текстурах породы (у базальта торцы — basalt_top), двойная — сам
     блок породы; лут — 2 плиты с двойной."""
     name = f"{rock}_slab"
-    side = f"{NS}:block/{rock}"
+    side = rock_texture(rock)
     end = f"{NS}:block/{rock}_top" if os.path.exists(os.path.join(TEX, f"{rock}_top.png")) else side
     textures = {"bottom": end, "top": end, "side": side}
     write(f"assets/{NS}/models/block/{name}.json", {"parent": "minecraft:block/slab", "textures": textures})
     write(f"assets/{NS}/models/block/{name}_top.json", {"parent": "minecraft:block/slab_top", "textures": textures})
-    double = f"{NS}:block/{rock}"
+    double = f"{NS}:block/{rock}" if rock not in FOREIGN else f"{NS}:block/{rock}_slab_double"
+    if rock in FOREIGN:
+        write(f"assets/{NS}/models/block/{rock}_slab_double.json", {"parent": "minecraft:block/cube_all",
+                                                                    "textures": {"all": side}})
     write(f"assets/{NS}/blockstates/{name}.json", {"variants": {
         "type=bottom": {"model": f"{NS}:block/{name}"}, "type=top": {"model": f"{NS}:block/{name}_top"},
         "type=double": {"model": double}}})
@@ -91,7 +105,7 @@ def slab(rock, ru, en, pickaxe):
         "random_sequence": f"{NS}:blocks/{name}"})
     write(f"data/{NS}/recipe/{name}.json", {
         "type": "minecraft:crafting_shaped", "category": "building",
-        "key": {"R": {"item": f"{NS}:{rock}"}}, "pattern": ["RRR"],
+        "key": {"R": {"item": rock_block(rock)}}, "pattern": ["RRR"],
         "result": {"id": f"{NS}:{name}", "count": 6}})
     if f"{NS}:{name}" not in pickaxe["values"]:
         pickaxe["values"].append(f"{NS}:{name}")
@@ -117,7 +131,7 @@ def main():
     images = []
     for rock in ROCKS:
         name = f"{rock}_cobblestone"
-        images.append((texture(rock), Image.open(os.path.join(TEX, f"{rock}.png")).convert("RGBA")))
+        images.append((texture(rock), rock_image(rock)))
         write(f"assets/{NS}/models/block/{name}.json",
               {"parent": "minecraft:block/cube_all", "textures": {"all": f"{NS}:block/{name}"}})
         write(f"assets/{NS}/blockstates/{name}.json", {"variants": {"": {"model": f"{NS}:block/{name}"}}})

@@ -205,9 +205,8 @@ public class TrailJeiPlugin implements IModPlugin {
 
     private static List<TrailJeiRecipe> handwork() {
         List<TrailJeiRecipe> recipes = new ArrayList<>();
-        List<ItemStack> rocks = List.of("andesite", "basalt", "chalk", "diorite", "dolomite", "gabbro", "granite",
-                "gray_granite", "limestone", "marble", "sandstone", "shale").stream()
-                .map(r -> stack(TrailCraft.MODID + ":" + r)).filter(s -> !s.isEmpty()).toList();
+        List<ItemStack> rocks = java.util.Arrays.stream(io.github.ChanesCMD.trailcraft.ore.Rock.values())
+                .map(r -> stack(r.blockId().toString())).filter(s -> !s.isEmpty()).toList();
         ItemStack branch = new ItemStack(ModItems.STICK_BRANCH.get());
         ItemStack stick = new ItemStack(ModItems.STICK_PROCESSED.get());
         recipes.add(new TrailJeiRecipe(List.of(List.of(branch), rocks), stick,

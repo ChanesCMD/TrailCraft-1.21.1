@@ -61,8 +61,7 @@ public class GeologicalHammerItem extends Item {
 
     private static Component report(Level level, BlockPos pos, BlockState clicked) {
         if (clicked.getBlock() instanceof OreBlock ore) {
-            Block rock = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID,
-                    ore.rock(clicked).getSerializedName()));
+            Block rock = ore.rock(clicked).block();
             return Component.translatable("item.trailcraft.geological_hammer.this", ore.getName(), rock.getName());
         }
         Map<Block, Integer> counts = new HashMap<>();

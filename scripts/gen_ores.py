@@ -9,6 +9,8 @@
 import json
 import os
 
+from gen_create_compat import rock_block, rock_texture
+
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "main", "resources")
 NS = "trailcraft"
 VARIANTS = 3  # текстур на пару «руда — порода»
@@ -185,7 +187,7 @@ def ore_models():
                 model = f"{NS}:block/ore/{ore}/{rock}_{n}"
                 write(f"assets/{NS}/models/block/ore/{ore}/{rock}_{n}.json", {
                     "parent": f"{NS}:block/ore_layered",
-                    "textures": {"rock": f"{NS}:block/{rock}", "ore": f"{NS}:block/ore/{ore}/{rock}_{n}"},
+                    "textures": {"rock": rock_texture(rock), "ore": f"{NS}:block/ore/{ore}/{rock}_{n}"},
                 })
                 models.append({"model": model})
             variants[f"rock={rock}"] = models
@@ -341,7 +343,7 @@ def worldgen():
         write(f"data/{NS}/worldgen/configured_feature/ore_{ore}.json", {
             "type": "minecraft:ore",
             "config": {"size": size, "discard_chance_on_air_exposure": 0.0, "targets": [
-                {"target": {"predicate_type": "minecraft:block_match", "block": f"{NS}:{rock}"},
+                {"target": {"predicate_type": "minecraft:block_match", "block": rock_block(rock)},
                  "state": {"Name": f"{NS}:{ore}_ore", "Properties": {"rock": rock}}} for rock in rocks]},
         })
         write(f"data/{NS}/worldgen/placed_feature/ore_{ore}.json", {

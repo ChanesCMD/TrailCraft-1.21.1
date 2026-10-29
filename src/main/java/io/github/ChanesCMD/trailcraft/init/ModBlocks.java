@@ -69,8 +69,10 @@ public class ModBlocks {
     public static final DeferredBlock<Block> GRAY_GRANITE = BLOCKS.registerSimpleBlock("gray_granite",
             BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(3.5f, 14.0f).requiresCorrectToolForDrops().sound(SoundType.STONE));
 
-    public static final DeferredBlock<Block> LIMESTONE = BLOCKS.registerSimpleBlock("limestone",
-            BlockBehaviour.Properties.of().mapColor(MapColor.SAND).strength(2.0f, 8.0f).requiresCorrectToolForDrops().sound(SoundType.STONE));
+    /** Свойства булыжника и плиты известняка (сам известняк — create:limestone, ore/Rock). */
+    private static BlockBehaviour.Properties limestoneProps() {
+        return BlockBehaviour.Properties.of().mapColor(MapColor.SAND).strength(2.0f, 8.0f).requiresCorrectToolForDrops().sound(SoundType.STONE);
+    }
 
     public static final DeferredBlock<Block> MARBLE = BLOCKS.registerSimpleBlock("marble",
             BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).strength(2.5f, 10.0f).requiresCorrectToolForDrops().sound(SoundType.STONE));
@@ -221,7 +223,7 @@ public class ModBlocks {
         for (Rock rock : Rock.values()) {
             DeferredBlock<Block> stone = DeferredBlock.createBlock(ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, rock.getSerializedName()));
             COBBLESTONES.put(rock, BLOCKS.register(rock.getSerializedName() + "_cobblestone",
-                    () -> new Block(BlockBehaviour.Properties.ofFullCopy(stone.get()))));
+                    () -> new Block(rock == Rock.LIMESTONE ? limestoneProps() : BlockBehaviour.Properties.ofFullCopy(stone.get()))));
         }
     }
 
@@ -231,7 +233,7 @@ public class ModBlocks {
         for (Rock rock : Rock.values()) {
             DeferredBlock<Block> stone = DeferredBlock.createBlock(ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, rock.getSerializedName()));
             SLABS.put(rock, BLOCKS.register(rock.getSerializedName() + "_slab",
-                    () -> new SlabBlock(BlockBehaviour.Properties.ofFullCopy(stone.get()))));
+                    () -> new SlabBlock(rock == Rock.LIMESTONE ? limestoneProps() : BlockBehaviour.Properties.ofFullCopy(stone.get()))));
         }
     }
 
