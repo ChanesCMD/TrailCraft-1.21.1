@@ -1,7 +1,21 @@
 {
   "variants": {
-    "": {
-      "model": "trailcraft:block/shale_gravel"
-    }
+    "": [
+      {
+        "model": "trailcraft:block/shale_gravel"
+      },
+      {
+        "model": "trailcraft:block/shale_gravel",
+        "y": 90
+      },
+      {
+        "model": "trailcraft:block/shale_gravel",
+        "y": 180
+      },
+      {
+        "model": "trailcraft:block/shale_gravel",
+        "y": 270
+      }
+    ]
   }
 }

@@ -1,7 +1,7 @@
 """
 Плиты пород (`<порода>_slab`, ModBlocks.SLABS: 3 породы в ряд — 6 плит; шпалы ж/д пути Create — тэг #create:sleepers)
 и булыжник пород (`<порода>_cobblestone`, ModBlocks.COBBLESTONES): нижние две трети обвала падают им, верхняя треть —
-гравием (collapse/Collapse). Текстуры, модели, блокстейты, модели предметов, лут, тэг кирки, переводы и превью
+гравием (collapse/Collapse); из 4 камешков породы — булыжник, из 2 камешков и 2 кремней по диагоналям — гравий. Текстуры, модели, блокстейты, модели предметов, лут, тэг кирки, переводы и превью
 docs/textures/cobblestone.png.
 
 Запуск из корня проекта:  python scripts/gen_cobblestone.py   (нужен Pillow)
@@ -148,6 +148,15 @@ def main():
         en[f"block.{NS}.{name}"] = en[f"block.{NS}.{rock}_gravel"].replace("Gravel", "Cobblestone")
     for rock in ROCKS:
         slab(rock, ru, en, pickaxe)
+        # из камешков: 4 — булыжник, 2 камешка и 2 кремня по диагоналям — гравий
+        pebble = {"item": f"{NS}:{rock}_pebble"}
+        write(f"data/{NS}/recipe/pebbles/{rock}_cobblestone.json", {
+            "type": "minecraft:crafting_shaped", "category": "building", "key": {"P": pebble},
+            "pattern": ["PP", "PP"], "result": {"id": f"{NS}:{rock}_cobblestone", "count": 1}})
+        write(f"data/{NS}/recipe/pebbles/{rock}_gravel.json", {
+            "type": "minecraft:crafting_shaped", "category": "building",
+            "key": {"P": pebble, "F": {"item": f"{NS}:flint"}},
+            "pattern": ["PF", "FP"], "result": {"id": f"{NS}:{rock}_gravel", "count": 1}})
     slabs = [f"{NS}:{rock}_slab" for rock in ROCKS]
     for kind in ("block", "item"):
         tag(kind, "minecraft:slabs", slabs)

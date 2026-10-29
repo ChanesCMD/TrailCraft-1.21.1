@@ -1,5 +1,21 @@
 {
   "variants": {
-    "": { "model": "trailcraft:block/sand_white" }
+    "": [
+      {
+        "model": "trailcraft:block/sand_white"
+      },
+      {
+        "model": "trailcraft:block/sand_white",
+        "y": 90
+      },
+      {
+        "model": "trailcraft:block/sand_white",
+        "y": 180
+      },
+      {
+        "model": "trailcraft:block/sand_white",
+        "y": 270
+      }
+    ]
   }
 }

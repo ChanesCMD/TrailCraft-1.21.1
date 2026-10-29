@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "P": {
+      "item": "trailcraft:limestone_pebble"
+    },
+    "F": {
+      "item": "trailcraft:flint"
+    }
+  },
+  "pattern": [
+    "PF",
+    "FP"
+  ],
+  "result": {
+    "id": "trailcraft:limestone_gravel",
+    "count": 1
+  }
+}

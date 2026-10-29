@@ -1,6 +1,6 @@
 """
 Случайный поворот текстур, как у ванильных блоков: дёрн — как трава (поворот вокруг вертикали), почвы — как земля
-(поворот вокруг вертикали), породы — как камень (модель и её зеркальная копия, повёрнутые на 0° и 180°).
+(поворот вокруг вертикали), песок и гравий — тоже поворот вокруг вертикали, породы — как камень (модель и её зеркальная копия, повёрнутые на 0° и 180°).
 Пишет блокстейты (и зеркальные модели пород <порода>_mirrored).
 
 Запуск из корня проекта:  python scripts/gen_rotations.py
@@ -11,6 +11,9 @@ import os
 NS = "trailcraft"
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "main", "resources", "assets", NS)
 SOILS = ["zheltozem", "burozem", "chernozem", "loam", "clay_white", "clay_blue", "clay_red", "clay_gray", "peat"]
+SANDS = ["sand_gray", "sand_red", "sand_white", "sand_yellow"]
+GRAVELS = [f"{r}_gravel" for r in ["andesite", "basalt", "chalk", "diorite", "dolomite", "gabbro", "granite",
+                                     "gray_granite", "limestone", "marble", "sandstone", "shale"]]
 ROCKS = ["andesite", "basalt", "chalk", "diorite", "dolomite", "gabbro", "granite", "gray_granite", "marble",
          "sandstone", "shale"]
 
@@ -32,6 +35,8 @@ def main():
     for soil in SOILS:
         write(f"blockstates/{soil}.json", turned(f"{NS}:block/{soil}"))
         write(f"blockstates/{soil}_grass.json", turned(f"{NS}:block/{soil}_grass"))
+    for block in SANDS + GRAVELS:
+        write(f"blockstates/{block}.json", turned(f"{NS}:block/{block}"))
     for rock in ROCKS:
         write(f"models/block/{rock}_mirrored.json",
               {"parent": "minecraft:block/cube_mirrored_all", "textures": {"all": f"{NS}:block/{rock}"}})

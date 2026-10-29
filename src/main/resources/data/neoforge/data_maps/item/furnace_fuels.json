@@ -5,6 +5,12 @@
     },
     "trailcraft:charcoal": {
       "burn_time": 1600
+    },
+    "trailcraft:bituminous_coal_block": {
+      "burn_time": 16000
+    },
+    "trailcraft:peat": {
+      "burn_time": 800
     }
   }
 }

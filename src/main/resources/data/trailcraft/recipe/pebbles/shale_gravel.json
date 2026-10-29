@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "P": {
+      "item": "trailcraft:shale_pebble"
+    },
+    "F": {
+      "item": "trailcraft:flint"
+    }
+  },
+  "pattern": [
+    "PF",
+    "FP"
+  ],
+  "result": {
+    "id": "trailcraft:shale_gravel",
+    "count": 1
+  }
+}

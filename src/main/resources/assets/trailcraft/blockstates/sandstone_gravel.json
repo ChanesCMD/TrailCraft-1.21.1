@@ -1,7 +1,21 @@
 {
   "variants": {
-    "": {
-      "model": "trailcraft:block/sandstone_gravel"
-    }
+    "": [
+      {
+        "model": "trailcraft:block/sandstone_gravel"
+      },
+      {
+        "model": "trailcraft:block/sandstone_gravel",
+        "y": 90
+      },
+      {
+        "model": "trailcraft:block/sandstone_gravel",
+        "y": 180
+      },
+      {
+        "model": "trailcraft:block/sandstone_gravel",
+        "y": 270
+      }
+    ]
   }
 }

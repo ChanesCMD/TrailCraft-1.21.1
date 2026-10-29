@@ -332,8 +332,10 @@ def recipes():
     furnace = path("data", NS, "recipe", "bootstrap_furnace.json")
     if os.path.exists(furnace):
         os.remove(furnace)
+    # время горения — и для горелки всполоха Create (она берёт топливо по нему): торф — вдвое меньше угля, блок — 9 углей
     write("data/neoforge/data_maps/item/furnace_fuels.json", {"values": {
-        f"{NS}:bituminous_coal": {"burn_time": 1600}, f"{NS}:charcoal": {"burn_time": 1600}}})
+        f"{NS}:bituminous_coal": {"burn_time": 1600}, f"{NS}:charcoal": {"burn_time": 1600},
+        f"{NS}:bituminous_coal_block": {"burn_time": 16000}, f"{NS}:peat": {"burn_time": 800}}})
 
 
 def worldgen():
