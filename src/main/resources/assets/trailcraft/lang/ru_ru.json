@@ -1279,5 +1279,7 @@
   "block.trailcraft.reinforced_spout": "Укреплённый носик",
   "block.trailcraft.reinforced_item_drain": "Укреплённый слив",
   "block.trailcraft.reinforced_portable_fluid_interface": "Укреплённый переносной интерфейс жидкостей",
-  "block.trailcraft.reinforced_fluid_tank": "Укреплённый жидкостный бак"
+  "block.trailcraft.reinforced_fluid_tank": "Укреплённый жидкостный бак",
+  "block.trailcraft.reinforced_glass_fluid_pipe": "Укреплённая стеклянная труба",
+  "block.trailcraft.reinforced_encased_fluid_pipe": "Укреплённая труба в корпусе"
 }

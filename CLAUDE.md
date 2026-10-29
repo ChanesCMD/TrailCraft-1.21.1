@@ -439,10 +439,14 @@
   и прочный лист (бак — 2). Модели — копии моделей Create с медью в тёмной гамме прочного листа, рецепты, переводы —
   `scripts/gen_reinforced_parts.py` (части, которые рисует рендер Create, — шестерня помпы, катушка шкива и т. п. —
   остаются медными). Паровой двигатель и свисток на укреплённом баке перекрашиваются так же
-  (`client/model/ReinforcedAttachmentModel`, подмена спрайтов в квадах, обёртка — `ClientEvents.wrapPipeModels`). Укреплённая труба (`pipe/ReinforcedPipeBlock.java`, наследник трубы Create с её блок-сущностью —
-  `BlockEntityTypeAddBlocksEvent` в `ModBlockEntities.CreatePipes`; ключом в стеклянную не превращается, в корпус не
-  одевается; модель оборачивает `PipeAttachmentModel` в `ClientEvents.wrapPipeModels`) — 2 прочных листа и медный
-  слиток, 4 шт. Прочный лист — без лавы: жёрнов мелет обсидиан в обсидиановый порошок Create (`milling/obsidian`;
+  (`client/model/ReinforcedAttachmentModel`, подмена спрайтов в квадах, обёртка — `ClientEvents.wrapPipeModels`). Укреплённая труба (`pipe/ReinforcedPipeBlock.java`) во всём как труба Create, кроме лавы, рецепта и цвета: ключом —
+  в стеклянную с окошком (`ReinforcedGlassPipeBlock`) и обратно, медным корпусом — в трубу в корпусе
+  (`ReinforcedEncasedPipeBlock`, `EncasingRegistry` в `pipe/ReinforcedPipes`); Create берёт трубы для превращений из
+  `AllBlocks` — `mixin/FluidPipeBlockMixin`, `AxisPipeBlockMixin`, `EncasedPipeBlockMixin` подменяют их укреплёнными
+  (`ReinforcedPipes.swap`); блок-сущности — Create (`ModBlockEntities.CreatePipes`). Ободки, стыки, сливы и корпус
+  Create дорисовывает своими моделями (`PipeAttachmentModel`) — у укреплённых труб, помпы, умной трубы и вентиля их
+  спрайты подменяет `client/model/ReinforcedSprites` (`ClientEvents.wrapPipeModels`). Модели и текстуры —
+  `gen_reinforced_parts.py` (`PIPES`). Рецепт — 2 прочных листа и медный слиток, 4 шт. Прочный лист — без лавы: жёрнов мелет обсидиан в обсидиановый порошок Create (`milling/obsidian`;
   обсидиан добывается только буром Create), дробильные колёса — дроблёное рудное железо в порошок гематита
   (`ModItems.HEMATITE_POWDER`); смеситель: железный лист + обсидиановый порошок + порошок гематита — незаконченный
   прочный лист Create (`create:unprocessed_obsidian_sheet`); последовательная сборка из него: пресс, железный лист

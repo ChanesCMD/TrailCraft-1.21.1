@@ -1,6 +1,7 @@
 """
 Укреплённые жидкостные детали Create (init/ModReinforced): помпа, умная труба, вентиль, ручка вентиля, шкив шланга,
-носик, слив, интерфейс жидкостей, бак. Лава их не прожигает (pipe/LavaPipes).
+носик, слив, интерфейс жидкостей, бак, и укреплённые трубы — обычная, с окошком, в корпусе (PIPES). Лава их не прожигает
+(pipe/LavaPipes).
 
 Пишет: блокстейты и модели — копии блокстейтов и моделей Create (с родителями из Create), где медные текстуры заменены
 своими (textures/block/reinforced/...: медь перекрашена по яркости в тёмную гамму прочного листа, латунь, стекло и
@@ -39,6 +40,17 @@ PARTS = {
                                             "Reinforced Portable Fluid Interface", 1),
     "reinforced_fluid_tank": ("fluid_tank", "Укреплённый жидкостный бак", "Reinforced Fluid Tank", 2),
 }
+# Укреплённые трубы (pipe/ReinforcedPipeBlock и её виды): наш id -> труба Create, ru, en, есть ли свой предмет. Рецепт и
+# лут обычной — scripts/gen_reinforced_pipe.py; стеклянная и в корпусе роняют её
+PIPES = {
+    "reinforced_fluid_pipe": ("fluid_pipe", "Укреплённая труба", "Reinforced Fluid Pipe", True),
+    "reinforced_glass_fluid_pipe": ("glass_fluid_pipe", "Укреплённая стеклянная труба", "Reinforced Glass Fluid Pipe", False),
+    "reinforced_encased_fluid_pipe": ("encased_fluid_pipe", "Укреплённая труба в корпусе", "Reinforced Encased Fluid Pipe",
+                                      False),
+}
+# Части труб, которые Create дорисовывает сам (ободки, стыки, сливы, корпус — PipeAttachmentModel): им нужны только наши
+# текстуры, спрайты подменяет client/model/ReinforcedSprites
+PIPE_PARTIALS = ("assets/create/models/block/fluid_pipe/", "assets/create/models/block/encased_fluid_pipe/")
 # Ручку вентиля рисует рендер Create — её модели не перекрашиваются
 AS_IS = {"reinforced_valve_handle"}
 COPPER_RECIPE = {"reinforced_valve_handle": "create:copper_valve_handle"}  # ручка из медной: чёрная — та же медная
@@ -122,6 +134,8 @@ def model(ref):
     if "parent" in data:
         data["parent"] = model(data["parent"] if ":" in data["parent"] else data["parent"])
     for k, v in data.get("textures", {}).items():
+        if v in ("block/copper_block", "minecraft:block/copper_block"):
+            v = "create:block/pipes"  # частицы медного блока у труб — частицы нашей трубы
         if not v.startswith("#"):
             data["textures"][k] = texture(v)
     if "elements" in data:
@@ -166,6 +180,26 @@ def attachments():
         remap_models(read_json(f"assets/create/blockstates/{block}.json"), lambda ref: walk(ref, brass) or ref)
 
 
+def pipes():
+    for ours, (theirs, _ru, _en, has_item) in PIPES.items():
+        write(f"assets/{NS}/blockstates/{ours}.json", remap_models(read_json(f"assets/create/blockstates/{theirs}.json"), model))
+        if has_item:
+            item = read_json(f"assets/create/models/item/{theirs}.json")
+            item["parent"] = model(item["parent"])
+            write(f"assets/{NS}/models/item/{ours}.json", item)
+        else:
+            write(f"data/{NS}/loot_table/blocks/{ours}.json", {
+                "type": "minecraft:block", "random_sequence": f"{NS}:blocks/{ours}",
+                "pools": [{"rolls": 1.0, "bonus_rolls": 0.0,
+                           "entries": [{"type": "minecraft:item", "name": f"{NS}:reinforced_fluid_pipe"}],
+                           "conditions": [{"condition": "minecraft:survives_explosion"}]}]})
+    for name in sorted(jar.namelist()):
+        if name.startswith(PIPE_PARTIALS) and name.endswith(".json"):
+            for v in json.loads(jar.read(name)).get("textures", {}).values():
+                if not v.startswith("#"):
+                    texture(v)
+
+
 def data():
     for ours, (theirs, _ru, _en, sheets) in PARTS.items():
         write(f"data/{NS}/loot_table/blocks/{ours}.json", {
@@ -180,7 +214,7 @@ def data():
     rel = "data/minecraft/tags/block/mineable/pickaxe.json"
     with open(path(rel), encoding="utf-8") as f:
         tag = json.load(f)
-    for ours in PARTS:
+    for ours in list(PARTS) + list(PIPES):
         if f"{NS}:{ours}" not in tag["values"]:
             tag["values"].append(f"{NS}:{ours}")
     write(rel, tag)
@@ -192,6 +226,8 @@ def lang():
         with open(path(rel), encoding="utf-8") as f:
             d = json.load(f)
         for ours, (_theirs, ru, en, _sheets) in PARTS.items():
+            d[f"block.{NS}.{ours}"] = (ru, en)[k]
+        for ours, (_theirs, ru, en, _item) in PIPES.items():
             d[f"block.{NS}.{ours}"] = (ru, en)[k]
         write(rel, d)
 
@@ -211,6 +247,7 @@ def preview():
 
 if __name__ == "__main__":
     assets()
+    pipes()
     attachments()
     data()
     lang()

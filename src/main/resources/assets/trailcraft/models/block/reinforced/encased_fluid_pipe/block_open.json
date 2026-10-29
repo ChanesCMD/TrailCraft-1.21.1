@@ -1,0 +1,33 @@
+{
+  "credit": "Made with Blockbench",
+  "textures": {
+    "0": "trailcraft:block/reinforced/encased_pipe",
+    "particle": "trailcraft:block/reinforced/encased_pipe"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#0"
+        }
+      }
+    }
+  ],
+  "render_type": "minecraft:cutout_mipped"
+}

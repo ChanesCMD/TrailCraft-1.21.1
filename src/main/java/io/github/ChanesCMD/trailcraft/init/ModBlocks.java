@@ -304,6 +304,15 @@ public class ModBlocks {
     public static final DeferredBlock<ReinforcedPipeBlock> REINFORCED_FLUID_PIPE = BLOCKS.registerBlock("reinforced_fluid_pipe",
             ReinforcedPipeBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2.0f, 6.0f)
                     .sound(SoundType.NETHERITE_BLOCK).forceSolidOn().noOcclusion());
+    /** Она же с окошком (ключом из укреплённой трубы) и в медном корпусе — как у трубы Create (pipe/ReinforcedPipes). */
+    public static final DeferredBlock<io.github.ChanesCMD.trailcraft.pipe.ReinforcedGlassPipeBlock> REINFORCED_GLASS_FLUID_PIPE =
+            BLOCKS.registerBlock("reinforced_glass_fluid_pipe", io.github.ChanesCMD.trailcraft.pipe.ReinforcedGlassPipeBlock::new,
+                    BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2.0f, 6.0f)
+                            .sound(SoundType.NETHERITE_BLOCK).forceSolidOn().noOcclusion());
+    public static final DeferredBlock<io.github.ChanesCMD.trailcraft.pipe.ReinforcedEncasedPipeBlock> REINFORCED_ENCASED_FLUID_PIPE =
+            BLOCKS.registerBlock("reinforced_encased_fluid_pipe", io.github.ChanesCMD.trailcraft.pipe.ReinforcedEncasedPipeBlock::new,
+                    BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2.0f, 6.0f)
+                            .sound(SoundType.NETHERITE_BLOCK).noOcclusion());
 
     /** Бочка — хранилище воды (WaterBarrelBlock); трубы Create качают из неё и в неё. */
     public static final DeferredBlock<WaterBarrelBlock> WATER_BARREL = BLOCKS.registerBlock("water_barrel", WaterBarrelBlock::new,

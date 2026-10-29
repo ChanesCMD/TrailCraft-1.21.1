@@ -1279,5 +1279,7 @@
   "block.trailcraft.reinforced_spout": "Reinforced Spout",
   "block.trailcraft.reinforced_item_drain": "Reinforced Item Drain",
   "block.trailcraft.reinforced_portable_fluid_interface": "Reinforced Portable Fluid Interface",
-  "block.trailcraft.reinforced_fluid_tank": "Reinforced Fluid Tank"
+  "block.trailcraft.reinforced_fluid_tank": "Reinforced Fluid Tank",
+  "block.trailcraft.reinforced_glass_fluid_pipe": "Reinforced Glass Fluid Pipe",
+  "block.trailcraft.reinforced_encased_fluid_pipe": "Reinforced Encased Fluid Pipe"
 }

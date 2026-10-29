@@ -30,14 +30,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Паровой двигатель и свисток Create на укреплённом баке (init/ModReinforced) — в тёмной гамме прочного листа: медные
- * текстуры модели (create:block/X) подменяются нашими trailcraft:block/reinforced/X (их пишет
- * scripts/gen_reinforced_parts.py). Части, которые рисует рендер Create (поршень, шатун), остаются медными.
+ * Паровой двигатель и свисток Create на укреплённом баке (init/ModReinforced) — в тёмной гамме прочного листа
+ * (ReinforcedSprites). Части, которые рисует рендер Create (поршень, шатун), остаются медными.
  */
 public class ReinforcedAttachmentModel extends BakedModelWrapper<BakedModel> {
     private static final ModelProperty<Boolean> ON_REINFORCED = new ModelProperty<>();
-    /** Спрайт Create → наш (или сам же, если нашего нет). */
-    private static final Map<TextureAtlasSprite, TextureAtlasSprite> SPRITES = new HashMap<>();
 
     public ReinforcedAttachmentModel(BakedModel original) {
         super(original);
@@ -63,41 +60,7 @@ public class ReinforcedAttachmentModel extends BakedModelWrapper<BakedModel> {
         if (!Boolean.TRUE.equals(data.get(ON_REINFORCED))) {
             return quads;
         }
-        List<BakedQuad> out = new ArrayList<>(quads.size());
-        for (BakedQuad quad : quads) {
-            TextureAtlasSprite from = quad.getSprite();
-            TextureAtlasSprite to = reinforced(from);
-            out.add(to == from ? quad : retexture(quad, from, to));
-        }
-        return out;
+        return ReinforcedSprites.swap(quads);
     }
 
-    private static TextureAtlasSprite reinforced(TextureAtlasSprite sprite) {
-        return SPRITES.computeIfAbsent(sprite, s -> {
-            ResourceLocation name = s.contents().name();
-            if (!"create".equals(name.getNamespace()) || !name.getPath().startsWith("block/")) {
-                return s;
-            }
-            ResourceLocation ours = ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID,
-                    "block/reinforced/" + name.getPath().substring("block/".length()));
-            TextureAtlasSprite found = Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(ours);
-            return found.contents().name().equals(MissingTextureAtlasSprite.getLocation()) ? s : found;
-        });
-    }
-
-    private static BakedQuad retexture(BakedQuad quad, TextureAtlasSprite from, TextureAtlasSprite to) {
-        int[] v = quad.getVertices().clone();
-        for (int i = 0; i < 4; i++) {
-            int at = i * IQuadTransformer.STRIDE + IQuadTransformer.UV0;
-            float u = Float.intBitsToFloat(v[at]), w = Float.intBitsToFloat(v[at + 1]);
-            v[at] = Float.floatToRawIntBits(to.getU(from.getUOffset(u)));
-            v[at + 1] = Float.floatToRawIntBits(to.getV(from.getVOffset(w)));
-        }
-        return new BakedQuad(v, quad.getTintIndex(), quad.getDirection(), to, quad.isShade(), quad.hasAmbientOcclusion());
-    }
-
-    /** Атлас перестроен (смена ресурспака) — спрайты другие. */
-    public static void clearCache() {
-        SPRITES.clear();
-    }
 }

@@ -80,8 +80,8 @@ public final class LavaPipes {
 
     /** Прогорает ли от лавы эта труба (или помпа, умная труба, вентиль). */
     public static boolean burns(Block block) {
-        return block instanceof FluidPipeBlock && !(block instanceof ReinforcedPipeBlock)
-                || block instanceof GlassFluidPipeBlock || block instanceof EncasedPipeBlock
+        return (block instanceof FluidPipeBlock || block instanceof GlassFluidPipeBlock || block instanceof EncasedPipeBlock)
+                && !ReinforcedPipes.isReinforcedPipe(block)
                 || (block instanceof PumpBlock || block instanceof SmartFluidPipeBlock || block instanceof FluidValveBlock)
                 && !ModReinforced.isReinforced(block);
     }

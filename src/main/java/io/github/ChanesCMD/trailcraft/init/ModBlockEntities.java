@@ -68,6 +68,8 @@ public final class ModBlockEntities {
         @SubscribeEvent
         public static void onAddBlocks(net.neoforged.neoforge.event.BlockEntityTypeAddBlocksEvent event) {
             event.modify(com.simibubi.create.AllBlockEntityTypes.FLUID_PIPE.get(), ModBlocks.REINFORCED_FLUID_PIPE.get());
+            event.modify(com.simibubi.create.AllBlockEntityTypes.GLASS_FLUID_PIPE.get(), ModBlocks.REINFORCED_GLASS_FLUID_PIPE.get());
+            event.modify(com.simibubi.create.AllBlockEntityTypes.ENCASED_FLUID_PIPE.get(), ModBlocks.REINFORCED_ENCASED_FLUID_PIPE.get());
         }
     }
 

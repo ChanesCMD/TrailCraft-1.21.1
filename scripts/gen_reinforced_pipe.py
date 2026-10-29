@@ -6,9 +6,8 @@
 Рецепт прочного листа Create (заливка лавой) убран в gen_create_compat.py (REPLACED) —
 после изменения этого списка перезапустить и его.
 
-Обычная медная труба Create с лавой прогорает (pipe/LavaPipes), укреплённая — нет. Модели — копии моделей трубы Create
-(blockstates/fluid_pipe.json, models/block/fluid_pipe/*) со своими текстурами: трубы Create в цветах прочного листа;
-ободки и стыки рисует PipeAttachmentModel Create (ClientEvents.wrapPipeModels), они медные.
+Обычная медная труба Create с лавой прогорает (pipe/LavaPipes), укреплённая — нет. Её модели (и стеклянной, и в
+корпусе) пишет scripts/gen_reinforced_parts.py (PIPES).
 Рецепты: 2 прочных листа и медный слиток в ряд (и столбиком) — 4 трубы, как у трубы Create. Прочный лист: жёрнов
 мелет обсидиан в обсидиановый порошок Create, дробильные колёса — дроблёное рудное железо в порошок гематита; в
 смесителе железный лист, обсидиановый порошок и порошок гематита — незаконченный прочный лист Create, потом
@@ -33,8 +32,6 @@ PIPE = "reinforced_fluid_pipe"
 INCOMPLETE = "incomplete_sturdy_sheet"
 UNPROCESSED = "create:unprocessed_obsidian_sheet"
 POWDER = "hematite_powder"
-# части трубы, которые рисует PipeAttachmentModel Create (AllPartialModels), — в блокстейте их нет
-PARTIALS = ("rim/", "rim_connector/", "drain/", "connection/", "casing", "window")
 
 LANG = {
     f"block.{NS}.{PIPE}": ("Укреплённая труба", "Reinforced Fluid Pipe"),
@@ -79,41 +76,9 @@ def palette(img):
     return sorted({c[:3] for c in img.convert("RGBA").get_flattened_data() if c[3]}, key=sum)
 
 
-def retexture(text):
-    """Модель Create → наша: свои пути моделей и текстуры."""
-    for old, new in (("create:block/fluid_pipe/", f"{NS}:block/{PIPE}/"),
-                     ("create:block/pipes_connected", f"{NS}:block/{PIPE}_connected"),
-                     ("create:block/pipes", f"{NS}:block/{PIPE}"),
-                     ("\"block/copper_block\"", f"\"{NS}:block/{PIPE}\"")):
-        text = text.replace(old, new)
-    return text
-
-
-def models(create):
-    prefix = "assets/create/models/block/fluid_pipe/"
-    for name in create.namelist():
-        if not name.startswith(prefix) or not name.endswith(".json"):
-            continue
-        rel = name[len(prefix):]
-        if rel.startswith(PARTIALS):
-            continue
-        data = json.loads(retexture(create.read(name).decode("utf-8")))
-        if "parent" not in data or data["parent"] in ("block/block", "minecraft:block/block"):
-            data["render_type"] = "minecraft:cutout_mipped"
-        write(f"assets/{NS}/models/block/{PIPE}/{rel}", data)
-    state = json.loads(retexture(create.read("assets/create/blockstates/fluid_pipe.json").decode("utf-8")))
-    write(f"assets/{NS}/blockstates/{PIPE}.json", state)
-    write(f"assets/{NS}/models/item/{PIPE}.json", {"parent": f"{NS}:block/{PIPE}/item"})
-
-
 def textures(create):
     load = lambda rel: Image.open(BytesIO(create.read(f"assets/create/textures/{rel}.png"))).convert("RGBA")
-    sturdy = palette(load("item/sturdy_sheet"))
     out = []
-    for src, dst in (("pipes", PIPE), ("pipes_connected", f"{PIPE}_connected")):
-        img = recolor(load(f"block/{src}"), sturdy)
-        img.save(os.path.join(TEX, "block", f"{dst}.png"))
-        out.append(img)
     # заготовка: железный лист Create, пятнами — тёмный обсидиановый слой
     sheet = load("item/iron_sheet")
     spotted = recolor(sheet, palette(load("item/powdered_obsidian")))
@@ -183,7 +148,6 @@ def preview(images):
 
 if __name__ == "__main__":
     create = zipfile.ZipFile(find_jar("create-1.21.1-*-slim.jar"))
-    models(create)
     images = textures(create)
     data()
     preview(images)

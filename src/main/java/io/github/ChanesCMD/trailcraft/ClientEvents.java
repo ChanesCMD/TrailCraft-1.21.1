@@ -91,12 +91,21 @@ public class ClientEvents {
     /** Укреплённая труба рисуется, как труба Create: ободки, стыки и сливы добавляет PipeAttachmentModel. */
     @SubscribeEvent
     public static void wrapPipeModels(net.neoforged.neoforge.client.event.ModelEvent.ModifyBakingResult e) {
-        for (var state : ModBlocks.REINFORCED_FLUID_PIPE.get().getStateDefinition().getPossibleStates()) {
-            e.getModels().computeIfPresent(net.minecraft.client.renderer.block.BlockModelShaper.stateToModelLocation(state),
-                    (location, model) -> com.simibubi.create.content.fluids.PipeAttachmentModel.withAO(model));
+        // укреплённые трубы (и помпа, умная труба, вентиль): ободки, стыки, сливы и корпус Create дорисовывает
+        // своими моделями (PipeAttachmentModel, как у его труб) — в нашей гамме
+        io.github.ChanesCMD.trailcraft.client.model.ReinforcedSprites.clearCache();
+        for (net.minecraft.world.level.block.Block pipe : java.util.List.<net.minecraft.world.level.block.Block>of(
+                ModBlocks.REINFORCED_FLUID_PIPE.get(), ModBlocks.REINFORCED_GLASS_FLUID_PIPE.get(),
+                ModBlocks.REINFORCED_ENCASED_FLUID_PIPE.get(), io.github.ChanesCMD.trailcraft.init.ModReinforced.PUMP.get(),
+                io.github.ChanesCMD.trailcraft.init.ModReinforced.SMART_PIPE.get(),
+                io.github.ChanesCMD.trailcraft.init.ModReinforced.VALVE.get())) {
+            for (var state : pipe.getStateDefinition().getPossibleStates()) {
+                e.getModels().computeIfPresent(net.minecraft.client.renderer.block.BlockModelShaper.stateToModelLocation(state),
+                        (location, model) -> new io.github.ChanesCMD.trailcraft.client.model.ReinforcedSprites.Model(
+                                com.simibubi.create.content.fluids.PipeAttachmentModel.withAO(model)));
+            }
         }
         // паровой двигатель и свисток на укреплённом баке — в его гамме (client/model/ReinforcedAttachmentModel)
-        io.github.ChanesCMD.trailcraft.client.model.ReinforcedAttachmentModel.clearCache();
         for (net.minecraft.world.level.block.Block block : java.util.List.<net.minecraft.world.level.block.Block>of(
                 com.simibubi.create.AllBlocks.STEAM_ENGINE.get(), com.simibubi.create.AllBlocks.STEAM_WHISTLE.get())) {
             for (var state : block.getStateDefinition().getPossibleStates()) {

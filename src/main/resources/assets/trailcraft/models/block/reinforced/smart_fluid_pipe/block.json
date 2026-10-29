@@ -6,7 +6,7 @@
     "3": "trailcraft:block/reinforced/smart_pipe_2",
     "4": "trailcraft:block/reinforced/pipes",
     "5": "trailcraft:block/reinforced/smart_pipe_3",
-    "particle": "block/copper_block"
+    "particle": "trailcraft:block/reinforced/pipes"
   },
   "elements": [
     {

@@ -99,6 +99,8 @@
     "trailcraft:reinforced_spout",
     "trailcraft:reinforced_item_drain",
     "trailcraft:reinforced_portable_fluid_interface",
-    "trailcraft:reinforced_fluid_tank"
+    "trailcraft:reinforced_fluid_tank",
+    "trailcraft:reinforced_glass_fluid_pipe",
+    "trailcraft:reinforced_encased_fluid_pipe"
   ]
 }
