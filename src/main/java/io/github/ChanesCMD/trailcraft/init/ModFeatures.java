@@ -1,6 +1,7 @@
 package io.github.ChanesCMD.trailcraft.init;
 
 import io.github.ChanesCMD.trailcraft.TrailCraft;
+import io.github.ChanesCMD.trailcraft.worldgen.CocoaPodFeature;
 import io.github.ChanesCMD.trailcraft.worldgen.FallenBranchFeature;
 import io.github.ChanesCMD.trailcraft.worldgen.LoosePebbleFeature;
 import io.github.ChanesCMD.trailcraft.worldgen.NuggetDepositFeature;
@@ -29,6 +30,10 @@ public final class ModFeatures {
     /** Озерцо на равнине: 1–5 блоков воды вровень с землёй. */
     public static final DeferredHolder<Feature<?>, Feature<NoneFeatureConfiguration>> POND =
             FEATURES.register("pond", PondFeature::new);
+
+    /** Стручки какао на стволах пальм и эбеновых деревьев. */
+    public static final DeferredHolder<Feature<?>, Feature<NoneFeatureConfiguration>> COCOA_PODS =
+            FEATURES.register("cocoa_pods", CocoaPodFeature::new);
 
     public static final DeferredHolder<Feature<?>, Feature<TrailTreeConfig>> TRAIL_TREE =
             FEATURES.register("trail_tree", TrailTreeFeature::new);

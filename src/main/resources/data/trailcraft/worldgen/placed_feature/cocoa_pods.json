@@ -1,0 +1,8 @@
+{
+  "feature": "trailcraft:cocoa_pods",
+  "placement": [
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

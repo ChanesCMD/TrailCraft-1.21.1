@@ -1,6 +1,9 @@
 package io.github.ChanesCMD.trailcraft.init;
 
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.DiggerItem;
 import net.minecraft.world.item.DoubleHighBlockItem;
 import net.minecraft.world.item.Item;
@@ -180,6 +183,26 @@ public class ModItems {
 
     // === ПЕНЬ ДЛЯ РУБКИ ===
     public static final DeferredItem<BlockItem> CHOPPING_STUMP = ITEMS.registerSimpleBlockItem("chopping_stump", ModBlocks.CHOPPING_STUMP);
+
+    // === СВОИ РАСТЕНИЯ (scripts/gen_plants.py) ===
+    public static final DeferredItem<BlockItem> SEAWEED = ITEMS.registerSimpleBlockItem("seaweed", ModBlocks.SEAWEED);
+    /** Сушёная водоросль (костёр): съедобна, как ванильная сушёная ламинария; ремни, воронки, туннели Create. */
+    public static final DeferredItem<Item> DRIED_SEAWEED = ITEMS.registerItem("dried_seaweed",
+            props -> new Item(props.food(new FoodProperties.Builder().nutrition(1).saturationModifier(0.3f).fast().build())));
+    public static final DeferredItem<BlockItem> DRIED_SEAWEED_BLOCK = ITEMS.registerSimpleBlockItem("dried_seaweed_block", ModBlocks.DRIED_SEAWEED_BLOCK);
+    public static final DeferredItem<BlockItem> CACTUS = ITEMS.registerSimpleBlockItem("cactus", ModBlocks.CACTUS);
+    /** Зелёный краситель — кактус на костре; с мукой и водой в смесителе Create — слизь. */
+    public static final DeferredItem<DyeItem> GREEN_DYE = ITEMS.registerItem("green_dye", props -> new DyeItem(DyeColor.GREEN, props));
+    public static final DeferredItem<Item> WHEAT = ITEMS.registerSimpleItem("wheat");
+    public static final DeferredItem<ItemNameBlockItem> WHEAT_SEEDS = ITEMS.registerItem("wheat_seeds",
+            props -> new ItemNameBlockItem(ModBlocks.WHEAT.get(), props));
+    public static final DeferredItem<BlockItem> SUGAR_CANE = ITEMS.registerSimpleBlockItem("sugar_cane", ModBlocks.SUGAR_CANE);
+    public static final DeferredItem<Item> SUGAR_BEET = ITEMS.registerItem("sugar_beet",
+            props -> new Item(props.food(new FoodProperties.Builder().nutrition(1).saturationModifier(0.6f).build())));
+    public static final DeferredItem<ItemNameBlockItem> SUGAR_BEET_SEEDS = ITEMS.registerItem("sugar_beet_seeds",
+            props -> new ItemNameBlockItem(ModBlocks.SUGAR_BEET.get(), props));
+    public static final DeferredItem<ItemNameBlockItem> COCOA_BEANS = ITEMS.registerItem("cocoa_beans",
+            props -> new ItemNameBlockItem(ModBlocks.COCOA.get(), props));
 
     // === БЛОК СОЛОМЫ И КРОВАТЬ ИЗ СОЛОМЫ ===
     public static final DeferredItem<BlockItem> STRAW_BLOCK = ITEMS.registerSimpleBlockItem("straw_block", ModBlocks.STRAW_BLOCK);

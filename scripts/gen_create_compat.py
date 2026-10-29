@@ -78,9 +78,23 @@ CRUSHED = {
     "pentlandite": ("nickel", []), "bauxite": ("aluminum", []), "nepheline": ("aluminum", []),
 }
 # Рецепты Create, в которых меняются ингредиенты: id → {что: на что}; копия ложится в create_compat/, оригинал уходит
+KELP = {"minecraft:dried_kelp": f"{NS}:dried_seaweed"}
 SUBSTITUTED = {
     "create:mechanical_crafting/wand_of_symmetry": {"#c:ender_pearls": "minecraft:amethyst_shard"},
+    # свои растения (scripts/gen_plants.py)
+    **{f"create:crafting/{r}": KELP for r in ("kinetics/belt_connector", "kinetics/spout", "logistics/andesite_funnel",
+                                              "logistics/andesite_tunnel", "logistics/brass_funnel", "logistics/brass_tunnel")},
+    "create:crafting/kinetics/elevator_pulley": {"minecraft:dried_kelp_block": f"{NS}:dried_seaweed_block"},
+    "create:crafting/kinetics/hose_pulley": {"minecraft:dried_kelp_block": f"{NS}:dried_seaweed_block"},
+    "create:milling/wheat": {"minecraft:wheat": f"{NS}:wheat", "minecraft:wheat_seeds": f"{NS}:wheat_seeds"},
+    "create:milling/sugar_cane": {"minecraft:sugar_cane": f"{NS}:sugar_cane"},
+    "create:pressing/sugar_cane": {"minecraft:sugar_cane": f"{NS}:sugar_cane"},
+    "create:mixing/chocolate": {"minecraft:cocoa_beans": f"{NS}:cocoa_beans"},
+    "create:milling/cocoa_beans": {"minecraft:cocoa_beans": f"{NS}:cocoa_beans"},
 }
+# Ванильные красители: что заменить своим, какие не копировать (свёкла у нас сахарная, белая)
+DYE_SWAPS = {"minecraft:cocoa_beans": f"{NS}:cocoa_beans"}
+DYE_SKIP = {"red_dye_from_beetroot"}
 # Ванильная еда на костре и в коптильне: свои рецепты (ванильные RecipePruner убирает)
 FOOD = {"potato": "baked_potato", "beef": "cooked_beef", "chicken": "cooked_chicken", "mutton": "cooked_mutton",
         "porkchop": "cooked_porkchop", "rabbit": "cooked_rabbit", "cod": "cooked_cod", "salmon": "cooked_salmon"}
@@ -324,9 +338,12 @@ def dyes(vanilla):
     """Красители из цветов и смеси красителей — копии ванильных рецептов верстака (ванильные RecipePruner убирает)."""
     for name in vanilla.namelist():
         m = re.match(r"data/minecraft/recipe/(\w+_dye(_from_\w+)?)\.json$", name)
-        if not m or name.endswith("armor_dye.json"):
+        if not m or name.endswith("armor_dye.json") or m.group(1) in DYE_SKIP:
             continue
-        data = json.loads(vanilla.read(name))
+        text = vanilla.read(name).decode("utf-8")
+        for old, new in DYE_SWAPS.items():
+            text = text.replace(f'"{old}"', f'"{new}"')
+        data = json.loads(text)
         if data["type"] not in ("minecraft:crafting_shaped", "minecraft:crafting_shapeless"):
             continue
         used = re.findall(r'"(minecraft:[a-z_]+)"', json.dumps({k: v for k, v in data.items() if k != "result"}))
@@ -340,11 +357,12 @@ def substitute(create):
     for rid, swaps in SUBSTITUTED.items():
         text = create.read(f"data/create/recipe/{rid.split(':')[1]}.json").decode("utf-8")
         for old, new in swaps.items():
-            key = "tag" if old.startswith("#") else "item"
-            new_key = "tag" if new.startswith("#") else "item"
-            text = re.sub(r'"%s"\s*:\s*"%s"' % (key, re.escape(old.lstrip("#"))),
-                          '"%s": "%s"' % (new_key, new.lstrip("#")), text)
-        write(f"data/{NS}/recipe/create_compat/{rid.split('/')[-1]}.json", json.loads(text))
+            if old.startswith("#"):  # тэг → предмет или тэг
+                new_key = "tag" if new.startswith("#") else "item"
+                text = re.sub(r'"tag"\s*:\s*"%s"' % re.escape(old[1:]), '"%s": "%s"' % (new_key, new.lstrip("#")), text)
+            else:  # предмет — везде, и в ингредиентах, и в результатах
+                text = text.replace(f'"{old}"', f'"{new}"')
+        write(f"data/{NS}/recipe/create_compat/{rid.split(':')[1].replace('/', '_')}.json", json.loads(text))
 
 
 # ---------------------------------------------------------------- 4. цинк

@@ -1066,5 +1066,19 @@
   "item.trailcraft.jute_thread": "Jute Thread",
   "block.trailcraft.cinnabar_ore": "Cinnabar",
   "item.trailcraft.raw_cinnabar": "Raw Cinnabar",
-  "block.trailcraft.quartz_ore": "Quartz Vein"
+  "block.trailcraft.quartz_ore": "Quartz Vein",
+  "block.trailcraft.seaweed": "Seaweed",
+  "item.trailcraft.dried_seaweed": "Dried Seaweed",
+  "block.trailcraft.dried_seaweed_block": "Dried Seaweed Block",
+  "block.trailcraft.cactus": "Cactus",
+  "item.trailcraft.green_dye": "Green Dye",
+  "block.trailcraft.wheat": "Wheat Crops",
+  "item.trailcraft.wheat": "Wheat",
+  "item.trailcraft.wheat_seeds": "Wheat Seeds",
+  "block.trailcraft.sugar_cane": "Sugar Cane",
+  "block.trailcraft.sugar_beets": "Sugar Beets",
+  "item.trailcraft.sugar_beet": "Sugar Beet",
+  "item.trailcraft.sugar_beet_seeds": "Sugar Beet Seeds",
+  "block.trailcraft.cocoa": "Cocoa",
+  "item.trailcraft.cocoa_beans": "Cocoa Beans"
 }

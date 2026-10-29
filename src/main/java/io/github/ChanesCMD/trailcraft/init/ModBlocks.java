@@ -8,6 +8,12 @@ import java.util.Map;
 import net.minecraft.world.level.block.Block;
 import io.github.ChanesCMD.trailcraft.block.PebbleBlock;
 import io.github.ChanesCMD.trailcraft.block.SupportBlock;
+import io.github.ChanesCMD.trailcraft.block.plant.SeaweedBlock;
+import io.github.ChanesCMD.trailcraft.block.plant.SugarBeetBlock;
+import io.github.ChanesCMD.trailcraft.block.plant.TrailCactusBlock;
+import io.github.ChanesCMD.trailcraft.block.plant.TrailCocoaBlock;
+import io.github.ChanesCMD.trailcraft.block.plant.TrailCropBlock;
+import io.github.ChanesCMD.trailcraft.block.plant.TrailSugarCaneBlock;
 import io.github.ChanesCMD.trailcraft.block.StrawBedBlock;
 import io.github.ChanesCMD.trailcraft.block.BackpackBlock;
 import io.github.ChanesCMD.trailcraft.block.TurfBlock;
@@ -286,6 +292,31 @@ public class ModBlocks {
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW).strength(0.4f).sound(SoundType.GRASS).noOcclusion()
                     .ignitedByLava().pushReaction(PushReaction.DESTROY));
 
+    // === СВОИ РАСТЕНИЯ (block/plant/, scripts/gen_plants.py) ===
+    /** Водоросль на дне рек и моря; сушёная — для ремней и воронок Create. */
+    public static final DeferredBlock<SeaweedBlock> SEAWEED = BLOCKS.registerBlock("seaweed", SeaweedBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.WATER).replaceable().noCollission().instabreak()
+                    .sound(SoundType.WET_GRASS).pushReaction(PushReaction.DESTROY));
+    public static final DeferredBlock<Block> DRIED_SEAWEED_BLOCK = BLOCKS.registerSimpleBlock("dried_seaweed_block",
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).strength(0.5f, 2.5f).sound(SoundType.GRASS));
+    /** Кактус пустынь. */
+    public static final DeferredBlock<TrailCactusBlock> CACTUS = BLOCKS.registerBlock("cactus", TrailCactusBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).randomTicks().strength(0.4f).sound(SoundType.WOOL)
+                    .pushReaction(PushReaction.DESTROY));
+    /** Сахарный тростник у воды. */
+    public static final DeferredBlock<TrailSugarCaneBlock> SUGAR_CANE = BLOCKS.registerBlock("sugar_cane", TrailSugarCaneBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollission().randomTicks().instabreak()
+                    .sound(SoundType.GRASS).pushReaction(PushReaction.DESTROY));
+    /** Посевы пшеницы и сахарной свёклы. Своих предметов нет: ставятся и выпадают как семена. */
+    public static final DeferredBlock<TrailCropBlock> WHEAT = BLOCKS.registerBlock("wheat",
+            props -> new TrailCropBlock(ModItems.WHEAT_SEEDS, props), cropProps());
+    public static final DeferredBlock<SugarBeetBlock> SUGAR_BEET = BLOCKS.registerBlock("sugar_beets",
+            props -> new SugarBeetBlock(ModItems.SUGAR_BEET_SEEDS, props), cropProps());
+    /** Стручки какао на пальме и эбеновом дереве. Ставятся и выпадают как какао-бобы. */
+    public static final DeferredBlock<TrailCocoaBlock> COCOA = BLOCKS.registerBlock("cocoa", TrailCocoaBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).randomTicks().strength(0.2f, 3.0f).sound(SoundType.WOOD)
+                    .noOcclusion().pushReaction(PushReaction.DESTROY));
+
     // === ОПОРЫ (collapse/Collapse): стойка и перекладина, ставятся одним предметом (SupportItem) ===
     /** Деревянная опора держит породу и почву 9×5×9 вокруг себя в раме, 3×5×3 — одна. */
     public static final DeferredBlock<SupportBlock> WOODEN_SUPPORT = registerSupport("wooden_support", false, 4, 1, 2, woodSupportProps());
@@ -368,6 +399,11 @@ public class ModBlocks {
                 BlockBehaviour.Properties.of().mapColor(color).randomTicks().strength(0.6f).sound(SoundType.GRAVEL)
                         .isViewBlocking((state, level, pos) -> true).isSuffocating((state, level, pos) -> true)
                         .pushReaction(PushReaction.DESTROY));
+    }
+
+    private static BlockBehaviour.Properties cropProps() {
+        return BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollission().randomTicks().instabreak()
+                .sound(SoundType.CROP).pushReaction(PushReaction.DESTROY);
     }
 
     private static DeferredBlock<SupportBlock> registerSupport(String name, boolean beam, int horizontal, int loneHorizontal,

@@ -27,7 +27,7 @@
             },
             {
               "type": "minecraft:item",
-              "name": "minecraft:wheat_seeds",
+              "name": "trailcraft:wheat_seeds",
               "conditions": [
                 {
                   "condition": "minecraft:inverted",
@@ -41,6 +41,25 @@
                 {
                   "condition": "minecraft:random_chance",
                   "chance": 0.125
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "trailcraft:sugar_beet_seeds",
+              "conditions": [
+                {
+                  "condition": "minecraft:inverted",
+                  "term": {
+                    "condition": "minecraft:match_tool",
+                    "predicate": {
+                      "items": "minecraft:shears"
+                    }
+                  }
+                },
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.0417
                 }
               ]
             }

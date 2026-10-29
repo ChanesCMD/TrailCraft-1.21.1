@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:sand_white",
+    "trailcraft:sand_yellow",
+    "trailcraft:sand_gray",
+    "trailcraft:sand_red",
+    "#minecraft:dirt",
+    "#minecraft:sand"
+  ]
+}

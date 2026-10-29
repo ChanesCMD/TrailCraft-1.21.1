@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
-    "trailcraft:jute_seeds"
+    "trailcraft:jute_seeds",
+    "trailcraft:wheat_seeds",
+    "trailcraft:sugar_beet_seeds"
   ]
 }

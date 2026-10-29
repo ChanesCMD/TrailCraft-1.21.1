@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/crop",
+  "textures": {
+    "crop": "trailcraft:block/wheat_stage0"
+  }
+}

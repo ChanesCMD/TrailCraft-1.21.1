@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "trailcraft:sugar_beet"
+    }
+  ],
+  "result": {
+    "id": "minecraft:sugar",
+    "count": 1
+  }
+}

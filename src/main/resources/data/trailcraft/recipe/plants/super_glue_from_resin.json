@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "c:plates/iron"
+    },
+    {
+      "tag": "c:nuggets/iron"
+    },
+    {
+      "item": "trailcraft:resin"
+    }
+  ],
+  "result": {
+    "id": "create:super_glue",
+    "count": 1
+  }
+}

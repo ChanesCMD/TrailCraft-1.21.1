@@ -1066,5 +1066,19 @@
   "item.trailcraft.jute_thread": "Джутовая нить",
   "block.trailcraft.cinnabar_ore": "Киноварь",
   "item.trailcraft.raw_cinnabar": "Рудная киноварь",
-  "block.trailcraft.quartz_ore": "Кварцевая жила"
+  "block.trailcraft.quartz_ore": "Кварцевая жила",
+  "block.trailcraft.seaweed": "Водоросль",
+  "item.trailcraft.dried_seaweed": "Сушёная водоросль",
+  "block.trailcraft.dried_seaweed_block": "Блок сушёных водорослей",
+  "block.trailcraft.cactus": "Кактус",
+  "item.trailcraft.green_dye": "Зелёный краситель",
+  "block.trailcraft.wheat": "Посевы пшеницы",
+  "item.trailcraft.wheat": "Пшеница",
+  "item.trailcraft.wheat_seeds": "Семена пшеницы",
+  "block.trailcraft.sugar_cane": "Сахарный тростник",
+  "block.trailcraft.sugar_beets": "Посевы сахарной свёклы",
+  "item.trailcraft.sugar_beet": "Сахарная свёкла",
+  "item.trailcraft.sugar_beet_seeds": "Семена сахарной свёклы",
+  "block.trailcraft.cocoa": "Какао",
+  "item.trailcraft.cocoa_beans": "Какао-бобы"
 }

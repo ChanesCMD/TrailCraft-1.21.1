@@ -40,4 +40,13 @@ public class ModTags {
     /** Хвойные брёвна: при окорке с них, кроме коры, падает смола (StrippableLogBlock). */
     public static final TagKey<Block> RESIN_LOGS = TagKey.create(Registries.BLOCK,
             ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "resin_logs"));
+    /** На чём растёт наш кактус (наш песок). */
+    public static final TagKey<Block> CACTUS_SOILS = TagKey.create(Registries.BLOCK,
+            ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "cactus_soils"));
+    /** На чём растёт наш сахарный тростник (почвы и песок у воды). */
+    public static final TagKey<Block> CANE_SOILS = TagKey.create(Registries.BLOCK,
+            ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "cane_soils"));
+    /** Брёвна, на которых растёт какао (пальма, эбеновое дерево). */
+    public static final TagKey<Block> COCOA_LOGS = TagKey.create(Registries.BLOCK,
+            ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "cocoa_logs"));
 }

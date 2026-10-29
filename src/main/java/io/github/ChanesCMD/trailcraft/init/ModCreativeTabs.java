@@ -90,6 +90,17 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.SHALE_PEBBLE);
                         output.accept(ModItems.FLINT);
                         output.accept(ModItems.CHOPPING_STUMP);
+                        output.accept(ModItems.SEAWEED);
+                        output.accept(ModItems.DRIED_SEAWEED);
+                        output.accept(ModItems.DRIED_SEAWEED_BLOCK);
+                        output.accept(ModItems.CACTUS);
+                        output.accept(ModItems.GREEN_DYE);
+                        output.accept(ModItems.WHEAT_SEEDS);
+                        output.accept(ModItems.WHEAT);
+                        output.accept(ModItems.SUGAR_CANE);
+                        output.accept(ModItems.SUGAR_BEET_SEEDS);
+                        output.accept(ModItems.SUGAR_BEET);
+                        output.accept(ModItems.COCOA_BEANS);
                         output.accept(ModItems.STRAW_BLOCK);
                         output.accept(ModItems.STRAW_BED);
                         output.accept(ModItems.WOODEN_SUPPORT);

@@ -1,0 +1,11 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "trailcraft:ebony_forest",
+    "trailcraft:palm_shore"
+  ],
+  "features": [
+    "trailcraft:cocoa_pods"
+  ],
+  "step": "vegetal_decoration"
+}

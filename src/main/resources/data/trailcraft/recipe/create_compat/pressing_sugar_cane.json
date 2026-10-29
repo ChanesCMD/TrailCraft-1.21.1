@@ -1,0 +1,13 @@
+{
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "item": "trailcraft:sugar_cane"
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:paper"
+    }
+  ]
+}
