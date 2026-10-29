@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "H": {
+      "item": "trailcraft:steel_cutters_head"
+    },
+    "S": {
+      "item": "trailcraft:stick_processed"
+    }
+  },
+  "pattern": [
+    "H",
+    "S"
+  ],
+  "result": {
+    "id": "trailcraft:steel_cutters",
+    "count": 1
+  }
+}

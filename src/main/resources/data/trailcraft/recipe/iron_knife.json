@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "H": {
+      "item": "trailcraft:iron_knife_head"
+    },
+    "S": {
+      "item": "trailcraft:stick_processed"
+    }
+  },
+  "pattern": [
+    "H",
+    "S"
+  ],
+  "result": {
+    "id": "trailcraft:iron_knife",
+    "count": 1
+  }
+}

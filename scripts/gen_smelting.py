@@ -435,11 +435,7 @@ def data():
         "type": "minecraft:crafting_shapeless", "category": "equipment",
         "ingredients": [{"item": f"{NS}:rope"}] + [{"item": f"{NS}:cloth"}] * 3,
         "result": backpack_result("duffel_backpack")})
-    # Кремнёвый нож — срезать траву на солому: кремень над обработанной палкой
-    write(f"data/{NS}/recipe/flint_knife.json", {
-        "type": "minecraft:crafting_shaped", "category": "equipment",
-        "key": {"F": {"item": f"{NS}:flint"}, "P": {"item": f"{NS}:stick_processed"}}, "pattern": ["F", "P"],
-        "result": {"id": f"{NS}:flint_knife", "count": 1}})
+    # кремнёвый нож (срезать траву на солому) — из кремнёвой головки, рецепт пишет gen_casting.py
     for name in CAMPFIRE_METALS:
         p = path("data", NS, "recipe", "campfire", f"{name}.json")
         if os.path.exists(p):

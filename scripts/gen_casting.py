@@ -36,11 +36,26 @@ MOLDS = [
     ("scythe", "косы", "Scythe", ("лезвие косы", "n", "Scythe Blade")),
     ("cutters", "кусачек", "Cutters", ("губки кусачек", "p", "Cutter Jaws")),
 ]
-# Материалы, которые отливаются (ModSmelting.CAST_MATERIALS): прилагательное по родам, en
+# Материалы с головками инструментов (ModSmelting.HEAD_MATERIALS): прилагательное по родам, en. Медь и бронза
+# отливаются в формы, у железа и стали головки пока без рецептов; кремнёвые — оббиваются кремнём о породу
+# (smelting/FlintItem), только для FLINT_TOOLS
 MATERIALS = {
     "copper": ({"f": "Медная", "m": "Медный", "n": "Медное", "p": "Медные"}, "Copper"),
     "bronze": ({"f": "Бронзовая", "m": "Бронзовый", "n": "Бронзовое", "p": "Бронзовые"}, "Bronze"),
+    "iron": ({"f": "Железная", "m": "Железный", "n": "Железное", "p": "Железные"}, "Iron"),
+    "steel": ({"f": "Стальная", "m": "Стальной", "n": "Стальное", "p": "Стальные"}, "Steel"),
+    "flint": ({"f": "Кремнёвая", "m": "Кремнёвый", "n": "Кремнёвое", "p": "Кремнёвые"}, "Flint"),
 }
+FLINT_TOOLS = ["pickaxe", "axe", "shovel", "hoe", "knife", "spear"]
+# Кремнёвая «лопата» — мотыга
+FLINT_NOUNS = {"shovel": ("головка мотыги", "f", "Mattock Head")}
+# Отливаются в формы (Mold.result) — только эти
+CAST = ("copper", "bronze")
+
+
+def tools(material):
+    """Инструменты материала, у которых есть головка."""
+    return [(tool, h) for tool, _ru, _en, h in MOLDS if h and (material != "flint" or tool in FLINT_TOOLS)]
 # Инструмент из головки: копьё и коса — на длинной палке по диагонали, остальные — головка над обработанной палкой
 LONG_HANDLE = {"spear", "scythe"}
 # Металлы (Smelting.Metal): ru (название), ru (жидкий), en
@@ -65,6 +80,10 @@ LANG = {
                                       "Put into the mold slot of a jug with molten metal"),
     "item.trailcraft.feather": ("Перо", "Feather"),
     "item.trailcraft.bone": ("Кость", "Bone"),
+    "gui.trailcraft.flint_knapping": ("Оббивка кремня", "Flint Knapping"),
+    "gui.trailcraft.flint_knapping.hint": ("Выберите головку", "Choose a head"),
+    "tooltip.trailcraft.flint": ("ПКМ по породе — оббить в головку инструмента",
+                                 "Right-click a rock to knap a tool head"),
 }
 
 # Цвета черенка (обработанная палка) — их нет у головки
@@ -143,9 +162,13 @@ def head(material, tool):
     """Головка: текстура инструмента без черенка, посередине."""
     img = load(f"{material}_{tool}")
     # без черенка и без серых пикселей (обмотка и торец у копья)
+    gray = material in ("iron", "steel")  # серые сами — серое у них не обмотка
+    spread = lambda c: max(c[:3]) - min(c[:3])
     pixels = [(x, y) for y in range(16) for x in range(16)
               if img.getpixel((x, y))[3] and img.getpixel((x, y))[:3] not in HANDLE
-              and max(img.getpixel((x, y))[:3]) - min(img.getpixel((x, y))[:3]) > 8]
+              # у кремня черенок — ветка (бурая, с листьями), а сам кремень серый
+              and (spread(img.getpixel((x, y))) <= 24 if material == "flint"
+                   else gray or spread(img.getpixel((x, y))) > 8)]
     return centered(img, largest_part(pixels))
 
 
@@ -229,9 +252,8 @@ def molten_jug():
 def textures():
     out = {}
     for material in MATERIALS:
-        for tool, _ru, _en, h in MOLDS:
-            if h:
-                out[f"{material}_{tool}_head"] = head(material, tool)
+        for tool, _h in tools(material):
+            out[f"{material}_{tool}_head"] = head(material, tool)
     for tool, shape in mold_shapes().items():
         out[f"unfired_{tool}_mold"] = mold(shape, RAW_CLAY)
         out[f"{tool}_mold"] = mold(shape, FIRED)
@@ -250,7 +272,7 @@ def preview(out):
 
     rows = [[out[f"unfired_{t}_mold"], out[f"{t}_mold"], filled(t, "copper"), filled(t, "tin_bronze")]
             for t, *_ in MOLDS]
-    rows += [[out[f"{m}_{t}_head"] for t, _r, _e, h in MOLDS if h] for m in MATERIALS]
+    rows += [[out[f"{m}_{t}_head"] for t, _h in tools(m)] for m in MATERIALS]
     rows.append([filled("ingot", metal) for metal in METAL_COLORS])
     rows.append([out["jug_molten"], load("jug")])
     scale, pad = 6, 6
@@ -284,9 +306,8 @@ def assets():
         item_model(f"{tool}_mold", overrides=[
             {"predicate": {f"{NS}:filled": 1}, "model": f"{NS}:item/{tool}_mold_filled"}])
     for material in MATERIALS:
-        for tool, _ru, _en, h in MOLDS:
-            if h:
-                item_model(f"{material}_{tool}_head")
+        for tool, _h in tools(material):
+            item_model(f"{material}_{tool}_head")
     item_model("jug_molten")
     item_model("jug", overrides=[{"predicate": {f"{NS}:molten": 1}, "model": f"{NS}:item/jug_molten"}])
     # свои перо и кость пока выглядят как ванильные
@@ -299,25 +320,26 @@ def data():
         write(f"data/{NS}/recipe/campfire/{tool}_mold.json", {
             "type": "minecraft:campfire_cooking", "category": "misc", "cookingtime": 600, "experience": 0.3,
             "ingredient": {"item": f"{NS}:unfired_{tool}_mold"}, "result": {"id": f"{NS}:{tool}_mold", "count": 1}})
-    # инструменты меди и бронзы — только из отлитых головок (прежние рецепты из слитков заменяются)
+    # инструменты — только из головок (прежние рецепты из слитков и кремня заменяются); кремнёвые — и на ветке
     for material in MATERIALS:
-        for tool, _ru, _en, h in MOLDS:
-            if not h:
-                continue
+        for tool, _h in tools(material):
             head_item = {"item": f"{NS}:{material}_{tool}_head"}
+            stick = ([{"item": f"{NS}:stick_branch"}, {"item": f"{NS}:stick_processed"}] if material == "flint"
+                     else {"item": f"{NS}:stick_processed"})
             if tool in LONG_HANDLE:
                 pattern, key = [" H", "L "], {"H": head_item, "L": {"item": f"{NS}:long_stick"}}
             else:
-                pattern, key = ["H", "S"], {"H": head_item, "S": {"item": f"{NS}:stick_processed"}}
+                pattern, key = ["H", "S"], {"H": head_item, "S": stick}
             write(f"data/{NS}/recipe/{material}_{tool}.json", {
                 "type": "minecraft:crafting_shaped", "category": "equipment", "key": key, "pattern": pattern,
                 "result": {"id": f"{NS}:{material}_{tool}", "count": 1}})
     # свои перо и кость — в общих тэгах, ванильные стрелы и костная мука делаются и из них
     write("data/c/tags/item/feathers.json", {"replace": False, "values": [f"{NS}:feather"]})
     write("data/c/tags/item/bones.json", {"replace": False, "values": [f"{NS}:bone"]})
-    write("data/minecraft/recipe/arrow.json", {
+    # 4 стрелы: наш кремень, обработанная палка, перо (ванильный рецепт убирает RecipePruner)
+    write(f"data/{NS}/recipe/arrow.json", {
         "type": "minecraft:crafting_shaped", "category": "equipment",
-        "key": {"#": {"item": "minecraft:stick"}, "X": {"item": "minecraft:flint"}, "Y": {"tag": "c:feathers"}},
+        "key": {"#": {"item": f"{NS}:stick_processed"}, "X": {"item": f"{NS}:flint"}, "Y": {"tag": "c:feathers"}},
         "pattern": ["X", "#", "Y"], "result": {"id": "minecraft:arrow", "count": 4}})
     write("data/minecraft/recipe/bone_meal.json", {
         "type": "minecraft:crafting_shapeless", "category": "misc", "group": "bonemeal",
@@ -326,8 +348,11 @@ def data():
     for name, item in (("feather", "feather"), ("bone", "bone")):
         write(f"data/{NS}/loot_modifiers/{name}.json", {
             "type": f"{NS}:replace_item", "conditions": [], "from": f"minecraft:{item}", "to": f"{NS}:{item}"})
-    write("data/neoforge/loot_modifiers/global_loot_modifiers.json", {
-        "replace": False, "entries": [f"{NS}:feather", f"{NS}:bone"]})
+    mods = read("data/neoforge/loot_modifiers/global_loot_modifiers.json")  # там и модификаторы других скриптов
+    for entry in (f"{NS}:feather", f"{NS}:bone"):
+        if entry not in mods["entries"]:
+            mods["entries"].append(entry)
+    write("data/neoforge/loot_modifiers/global_loot_modifiers.json", mods)
 
 
 def lang():
@@ -338,8 +363,10 @@ def lang():
             data[f"item.{NS}.unfired_{tool}_mold"] = (f"Сырая форма {ru}", f"Unfired {en} Mold")[k]
             data[f"item.{NS}.{tool}_mold"] = (f"Форма {ru}", f"{en} Mold")[k]
             if h:
-                noun, gender, en_head = h
                 for material, (adj, en_material) in MATERIALS.items():
+                    if (tool, h) not in tools(material):
+                        continue
+                    noun, gender, en_head = FLINT_NOUNS.get(tool, h) if material == "flint" else h
                     data[f"item.{NS}.{material}_{tool}_head"] = (f"{adj[gender]} {noun}", f"{en_material} {en_head}")[k]
         for metal, (ru, ru_molten, en) in METALS.items():
             data[f"metal.{NS}.{metal}"] = (ru, en.lower())[k]

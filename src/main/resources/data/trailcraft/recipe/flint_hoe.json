@@ -2,16 +2,21 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "M": {
-      "item": "trailcraft:flint"
+    "H": {
+      "item": "trailcraft:flint_hoe_head"
     },
-    "S": {
-      "item": "trailcraft:stick_processed"
-    }
+    "S": [
+      {
+        "item": "trailcraft:stick_branch"
+      },
+      {
+        "item": "trailcraft:stick_processed"
+      }
+    ]
   },
   "pattern": [
-    "MM",
-    " S"
+    "H",
+    "S"
   ],
   "result": {
     "id": "trailcraft:flint_hoe",

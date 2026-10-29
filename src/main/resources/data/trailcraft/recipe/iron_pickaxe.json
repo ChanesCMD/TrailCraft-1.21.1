@@ -2,17 +2,16 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "I": {
-      "item": "minecraft:iron_ingot"
+    "H": {
+      "item": "trailcraft:iron_pickaxe_head"
     },
     "S": {
       "item": "trailcraft:stick_processed"
     }
   },
   "pattern": [
-    "III",
-    " S ",
-    " S "
+    "H",
+    "S"
   ],
   "result": {
     "id": "trailcraft:iron_pickaxe",

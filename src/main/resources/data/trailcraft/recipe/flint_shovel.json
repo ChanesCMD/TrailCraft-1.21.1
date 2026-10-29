@@ -2,15 +2,20 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "F": {
-      "item": "trailcraft:flint"
+    "H": {
+      "item": "trailcraft:flint_shovel_head"
     },
-    "S": {
-      "item": "trailcraft:stick_branch"
-    }
+    "S": [
+      {
+        "item": "trailcraft:stick_branch"
+      },
+      {
+        "item": "trailcraft:stick_processed"
+      }
+    ]
   },
   "pattern": [
-    "F",
+    "H",
     "S"
   ],
   "result": {

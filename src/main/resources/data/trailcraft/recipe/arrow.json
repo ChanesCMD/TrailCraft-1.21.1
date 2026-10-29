@@ -3,10 +3,10 @@
   "category": "equipment",
   "key": {
     "#": {
-      "item": "minecraft:stick"
+      "item": "trailcraft:stick_processed"
     },
     "X": {
-      "item": "minecraft:flint"
+      "item": "trailcraft:flint"
     },
     "Y": {
       "tag": "c:feathers"

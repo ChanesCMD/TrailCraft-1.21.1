@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "H": {
+      "item": "trailcraft:iron_scythe_head"
+    },
+    "L": {
+      "item": "trailcraft:long_stick"
+    }
+  },
+  "pattern": [
+    " H",
+    "L "
+  ],
+  "result": {
+    "id": "trailcraft:iron_scythe",
+    "count": 1
+  }
+}

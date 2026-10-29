@@ -2,16 +2,21 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "F": {
-      "item": "trailcraft:flint"
+    "H": {
+      "item": "trailcraft:flint_knife_head"
     },
-    "P": {
-      "item": "trailcraft:stick_processed"
-    }
+    "S": [
+      {
+        "item": "trailcraft:stick_branch"
+      },
+      {
+        "item": "trailcraft:stick_processed"
+      }
+    ]
   },
   "pattern": [
-    "F",
-    "P"
+    "H",
+    "S"
   ],
   "result": {
     "id": "trailcraft:flint_knife",

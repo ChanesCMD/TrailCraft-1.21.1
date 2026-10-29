@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "combat",
+  "category": "equipment",
   "key": {
-    "R": {
-      "item": "minecraft:iron_ingot"
+    "H": {
+      "item": "trailcraft:iron_spear_head"
     },
     "L": {
       "item": "trailcraft:long_stick"
     }
   },
   "pattern": [
-    " R",
+    " H",
     "L "
   ],
   "result": {

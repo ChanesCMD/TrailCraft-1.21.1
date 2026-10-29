@@ -1,5 +1,6 @@
 package io.github.ChanesCMD.trailcraft.init;
 
+import io.github.ChanesCMD.trailcraft.smelting.FlintItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.DyeColor;
@@ -306,9 +307,9 @@ public class ModItems {
             props -> new PocketItem(props.stacksTo(16), BackpackItem.LARGE_POCKET_SLOTS));
 
     // === КРЕМЕНЬ ===
-    /** Новый кремень: ставится на землю как камушек (блок flint_pebble) и выпадает из него. */
-    public static final DeferredItem<BlockItem> FLINT = ITEMS.registerItem("flint",
-            props -> new BlockItem(ModBlocks.FLINT_PEBBLE.get(), props));
+    /** Новый кремень: ставится на землю как камушек (блок flint_pebble) и выпадает из него; ПКМ по породе — оббивка. */
+    public static final DeferredItem<FlintItem> FLINT = ITEMS.registerItem("flint",
+            props -> new FlintItem(ModBlocks.FLINT_PEBBLE.get(), props));
 
     // === ПЕРО И КОСТЬ (свои вместо ванильных: с животных и из всего лута — loot/ReplaceItemModifier) ===
     public static final DeferredItem<Item> FEATHER = ITEMS.registerSimpleItem("feather");

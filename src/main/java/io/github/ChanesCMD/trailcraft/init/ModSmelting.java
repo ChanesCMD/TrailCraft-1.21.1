@@ -75,7 +75,11 @@ public final class ModSmelting {
     public static final Map<Mold, DeferredItem<MoldItem>> MOLDS = new EnumMap<>(Mold.class);
     /** Материалы инструментов, которые отливаются в формах (Metal.toolMaterial). */
     public static final List<String> CAST_MATERIALS = List.of("copper", "bronze");
-    /** Головки инструментов из форм: ключ — «материал_инструмент» (copper_pickaxe), предмет — copper_pickaxe_head. */
+    /** Железо и сталь пока не плавятся: их головки без рецептов. */
+    public static final List<String> FORGED_MATERIALS = List.of("iron", "steel");
+    /** Кремнёвые головки — оббиваются кремнём о породу (smelting/FlintItem), а не отливаются. */
+    public static final List<Mold> FLINT_TOOLS = List.of(Mold.PICKAXE, Mold.AXE, Mold.SHOVEL, Mold.HOE, Mold.KNIFE, Mold.SPEAR);
+    /** Головки инструментов: ключ — «материал_инструмент» (copper_pickaxe), предмет — copper_pickaxe_head. */
     public static final Map<String, DeferredItem<Item>> HEADS = new LinkedHashMap<>();
 
     static {
@@ -84,11 +88,19 @@ public final class ModSmelting {
             MOLDS.put(mold, ModItems.ITEMS.registerItem(mold.id + "_mold", p -> new MoldItem(mold, p.stacksTo(1))));
         }
         for (String material : CAST_MATERIALS) {
-            for (Mold mold : Mold.values()) {
-                if (mold != Mold.INGOT) {
-                    String key = material + "_" + mold.id;
-                    HEADS.put(key, ModItems.ITEMS.registerSimpleItem(key + "_head"));
-                }
+            registerHeads(material, List.of(Mold.values()));
+        }
+        for (String material : FORGED_MATERIALS) {
+            registerHeads(material, List.of(Mold.values()));
+        }
+        registerHeads("flint", FLINT_TOOLS);
+    }
+
+    private static void registerHeads(String material, List<Mold> molds) {
+        for (Mold mold : molds) {
+            if (mold != Mold.INGOT) {
+                String key = material + "_" + mold.id;
+                HEADS.put(key, ModItems.ITEMS.registerSimpleItem(key + "_head"));
             }
         }
     }
