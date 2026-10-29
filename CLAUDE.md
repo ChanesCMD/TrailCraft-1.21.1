@@ -256,6 +256,14 @@
   выскобленная шкура, кора и вода). Курица несёт своё яйцо (`TrailBird.aiStep`, ванильное в луте — тоже своё), `c:eggs`.
   Яблоня — вариант листвы на дубе (`ModWood.addLeafVariant("apple", "oak")`, `LEAF_VARIANTS`), с листвы — яблоко (8 %),
   одинокие яблони на равнинах (`PLAINS_TREES`). Наши ягоды и яблоко — в рецептах Create (глазированные ягоды, яблоко в мёде).
+- Хранилища — `scripts/gen_storage.py`. Бочка (`block/WaterBarrelBlock.java`, `block/entity/WaterBarrelBlockEntity.java`):
+  бак воды на 8000 mB (`FluidHandler` — трубы и помпы Create; пресная или морская, `salty`), ведро — налить или набрать,
+  фляга — наполнить (100 mB за глоток), пустой рукой — попить (`WaterEvents.drinkFromBarrel`), Shift — сколько воды; под
+  дождём набирается сама; сломанная помнит воду (компоненты `trailcraft:water` в mB, `trailcraft:salty`);
+  `c:barrels/wooden` (жидкостный бак, хранилище Create). Сундуки по породам (`init/ModChests.java`, `block/WoodChestBlock.java`,
+  один тип блок-сущности `wood_chest`): ванильный сундук, текстура `entity/chest/<порода>[_left|_right]` —
+  `client/WoodChestRenderer.java`, предмет — `client/WoodChestItemRenderer.java`; текстуры — ванильный сундук в цвете
+  досок породы (оттенок досок, яркость сдвигом — фактура остаётся); 8 досок породы — сундук.
 - Линейка (`item/RulerItem.java`): ПКМ по двум блокам — расстояние по прямой между центрами (до 32) и сдвиги по осям
   над хотбаром, пунктир частиц; первая отметка — компонент `trailcraft:ruler_start`, Shift+ПКМ сбрасывает.
 - Инвентарь: `inventory/TrailInventoryMenu.java` + `client/gui/TrailInventoryScreen.java`. Дополнительные слоты

@@ -100,6 +100,24 @@ public class WaterEvents {
         BeltHandler.of(player).fillFlask(salty);
     }
 
+    /**
+     * Глоток из бочки с водой (block/WaterBarrelBlock): как из воды в мире, но без фляги. false — пить нельзя (полный запас,
+     * перерыв между глотками).
+     */
+    public static boolean drinkFromBarrel(ServerPlayer player, boolean salty) {
+        Water.Tracker tracker = player.getData(ModAttachments.WATER_TRACKER);
+        if (player.isSpectator() || tracker.drinkCooldown > 0 || get(player) >= Water.MAX) {
+            return false;
+        }
+        tracker.drinkCooldown = Water.DRINK_COOLDOWN;
+        set(player, get(player) + Water.DRINK_AMOUNT);
+        playDrinkSound(player);
+        if (salty) {
+            saltThirst(player);
+        }
+        return true;
+    }
+
     private static void saltThirst(ServerPlayer player) {
         player.addEffect(new MobEffectInstance(ModEffects.SALT_THIRST, Water.SALT_DURATION));
     }

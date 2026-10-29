@@ -1,0 +1,9 @@
+{
+  "replace": true,
+  "values": [
+    "trailcraft:water_barrel"
+  ],
+  "remove": [
+    "minecraft:barrel"
+  ]
+}

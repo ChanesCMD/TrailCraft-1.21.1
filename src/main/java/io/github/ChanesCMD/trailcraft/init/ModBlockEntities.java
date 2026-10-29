@@ -1,5 +1,12 @@
 package io.github.ChanesCMD.trailcraft.init;
 
+import io.github.ChanesCMD.trailcraft.block.entity.WaterBarrelBlockEntity;
+import io.github.ChanesCMD.trailcraft.block.entity.WoodChestBlockEntity;
+import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.block.entity.BackpackBlockEntity;
 import io.github.ChanesCMD.trailcraft.block.entity.GraveBlockEntity;
@@ -21,6 +28,24 @@ public final class ModBlockEntities {
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TrailCampfireBlockEntity>> CAMPFIRE = BLOCK_ENTITIES.register("campfire",
             () -> BlockEntityType.Builder.of(TrailCampfireBlockEntity::new, ModBlocks.CAMPFIRE.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WaterBarrelBlockEntity>> WATER_BARREL = BLOCK_ENTITIES.register("water_barrel",
+            () -> BlockEntityType.Builder.of(WaterBarrelBlockEntity::new, ModBlocks.WATER_BARREL.get()).build(null));
+
+    /** Сундуки по породам (ModChests): один тип на все. */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WoodChestBlockEntity>> WOOD_CHEST = BLOCK_ENTITIES.register("wood_chest",
+            () -> BlockEntityType.Builder.of(WoodChestBlockEntity::new,
+                    ModChests.CHESTS.values().stream().map(DeferredBlock::get).toArray(net.minecraft.world.level.block.Block[]::new)).build(null));
+
+    /** Бочка отдаёт свой бак трубам и помпам Create (FluidHandler). */
+    @EventBusSubscriber(modid = TrailCraft.MODID, bus = EventBusSubscriber.Bus.MOD)
+    public static final class Capabilities {
+        @SubscribeEvent
+        public static void onRegister(RegisterCapabilitiesEvent event) {
+            event.registerBlockEntity(net.neoforged.neoforge.capabilities.Capabilities.FluidHandler.BLOCK, WATER_BARREL.get(),
+                    (barrel, side) -> barrel.tank);
+        }
+    }
 
     private ModBlockEntities() {}
 }

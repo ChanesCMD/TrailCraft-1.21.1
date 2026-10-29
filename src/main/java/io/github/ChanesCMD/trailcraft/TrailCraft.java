@@ -6,6 +6,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import com.mojang.logging.LogUtils;
 import org.slf4j.Logger;
+import io.github.ChanesCMD.trailcraft.init.ModChests;
 import io.github.ChanesCMD.trailcraft.init.ModAttachments;
 import io.github.ChanesCMD.trailcraft.init.ModBlockEntities;
 import io.github.ChanesCMD.trailcraft.init.ModEffects;
@@ -33,6 +34,8 @@ public class TrailCraft {
     public TrailCraft(IEventBus modEventBus, ModContainer modContainer) {
         // Деревья регистрируются в статическом блоке ModWood
         ModWood.init();
+        // Сундуки по породам — после деревьев (init/ModChests)
+        ModChests.init();
         // Инструменты регистрируются в статическом блоке ModTools
         ModTools.init();
         // Руды, слитки и шихта регистрируются в статическом блоке ModOres

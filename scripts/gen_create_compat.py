@@ -154,6 +154,7 @@ def tags(external):
         "create:sleepers": [f"{NS}:{r}_slab" for r in ROCKS],
         "c:leathers": [f"{NS}:leather"],
         "c:eggs": [f"{NS}:egg"],
+        "c:barrels/wooden": [f"{NS}:water_barrel"],
     }
     for tag_id, values in replaced.items():
         ns, name = tag_id.split(":")

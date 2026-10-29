@@ -218,6 +218,7 @@ public class ModItems {
             props -> new ItemNameBlockItem(ModBlocks.COCOA.get(), props));
 
     // === БЛОК СОЛОМЫ И КРОВАТЬ ИЗ СОЛОМЫ ===
+    public static final DeferredItem<BlockItem> WATER_BARREL = ITEMS.registerSimpleBlockItem("water_barrel", ModBlocks.WATER_BARREL);
     public static final DeferredItem<BlockItem> STRAW_BLOCK = ITEMS.registerSimpleBlockItem("straw_block", ModBlocks.STRAW_BLOCK);
     public static final DeferredItem<BlockItem> STRAW_BED = ITEMS.registerSimpleBlockItem("straw_bed", ModBlocks.STRAW_BED);
 

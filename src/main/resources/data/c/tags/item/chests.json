@@ -1,0 +1,28 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:oak_chest",
+    "trailcraft:birch_chest",
+    "trailcraft:acacia_chest",
+    "trailcraft:sakura_chest",
+    "trailcraft:eucalyptus_chest",
+    "trailcraft:chestnut_chest",
+    "trailcraft:thuja_chest",
+    "trailcraft:pine_chest",
+    "trailcraft:fir_chest",
+    "trailcraft:spruce_chest",
+    "trailcraft:white_poplar_chest",
+    "trailcraft:ebony_chest",
+    "trailcraft:maple_chest",
+    "trailcraft:cedar_chest",
+    "trailcraft:willow_chest",
+    "trailcraft:lilac_chest",
+    "trailcraft:palm_chest",
+    "trailcraft:ironwood_chest",
+    "trailcraft:aspen_chest",
+    "trailcraft:linden_chest",
+    "trailcraft:pussy_willow_chest",
+    "trailcraft:walnut_chest",
+    "trailcraft:alder_chest"
+  ]
+}

@@ -36,9 +36,16 @@ public class ClientEvents {
         e.registerEntityRenderer(ModEntities.THROWN_SPEAR.get(), ThrownSpearRenderer::new);
         e.registerEntityRenderer(ModEntities.CAPERCAILLIE.get(), CapercaillieRenderer::new);
         e.registerBlockEntityRenderer(ModBlockEntities.CAMPFIRE.get(), TrailCampfireRenderer::new);
+        e.registerBlockEntityRenderer(ModBlockEntities.WOOD_CHEST.get(), io.github.ChanesCMD.trailcraft.client.WoodChestRenderer::new);
         for (Species species : Species.values()) {
             e.registerEntityRenderer(ModAnimals.type(species), context -> new TrailAnimalRenderer<>(context, species));
         }
+    }
+
+    /** Сундуки своих пород в руке и в инвентаре рисуются моделью сундука (client/WoodChestItemRenderer). */
+    @SubscribeEvent
+    public static void clientExtensions(net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent e) {
+        io.github.ChanesCMD.trailcraft.client.WoodChestItemRenderer.register(e);
     }
 
     /** Рюкзак на спине — у обоих видов скина игрока. */
