@@ -1,0 +1,19 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "tag": "c:plates/iron"
+    },
+    {
+      "tag": "c:dusts/obsidian"
+    },
+    {
+      "item": "trailcraft:hematite_powder"
+    }
+  ],
+  "results": [
+    {
+      "id": "create:unprocessed_obsidian_sheet"
+    }
+  ]
+}

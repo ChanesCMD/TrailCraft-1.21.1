@@ -68,7 +68,7 @@ REPLACED = [
     "create:crafting/kinetics/mechanical_crafter", "create:crafting/logistics/redstone_contact",
     "create:crafting/appliances/tree_fertilizer", "create:crafting/tree_fertilizer",
     "create:crafting/kinetics/millstone",
-    # прочный лист — из лавы и обсидиана, которых в мире нет; свой рецепт — gen_reinforced_pipe.py
+    # прочный лист Create — лавой из заливки; свой рецепт (без лавы) — gen_reinforced_pipe.py
     "create:sequenced_assembly/sturdy_sheet",
     # блок киновари (c:ores/quicksilver) — свой рецепт, с редстоуном
     "create:crushing/quicksilver_ore",

@@ -224,6 +224,8 @@ public class ModItems {
     /** Заготовка прочного листа — промежуточный предмет последовательной сборки Create. */
     public static final DeferredItem<com.simibubi.create.content.processing.sequenced.SequencedAssemblyItem> INCOMPLETE_STURDY_SHEET =
             ITEMS.registerItem("incomplete_sturdy_sheet", com.simibubi.create.content.processing.sequenced.SequencedAssemblyItem::new);
+    /** Порошок гематита (дробильные колёса из дроблёного рудного железа) — для прочного листа. */
+    public static final DeferredItem<Item> HEMATITE_POWDER = ITEMS.registerSimpleItem("hematite_powder");
     public static final DeferredItem<BlockItem> WATER_BARREL = ITEMS.registerSimpleBlockItem("water_barrel", ModBlocks.WATER_BARREL);
     public static final DeferredItem<BlockItem> STRAW_BLOCK = ITEMS.registerSimpleBlockItem("straw_block", ModBlocks.STRAW_BLOCK);
     public static final DeferredItem<BlockItem> STRAW_BED = ITEMS.registerSimpleBlockItem("straw_bed", ModBlocks.STRAW_BED);

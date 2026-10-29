@@ -221,7 +221,7 @@ public class ModCreativeTabs {
                         }
                     }).build());
 
-    /** Руды (каждая во всех своих породах), то, что с них падает, уголь, шихта и слитки. */
+    /** Руды (каждая во всех своих породах), то, что с них падает, уголь, шихта, порошок гематита и слитки. */
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TRAILCRAFT_ORES_TAB =
             CREATIVE_MODE_TABS.register("trailcraft_ores_tab", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.trailcraft_ores"))
@@ -239,6 +239,7 @@ public class ModCreativeTabs {
                         output.accept(ModOres.CHARCOAL);
                         ModOres.NUGGET_ORES.forEach(ore -> output.accept(ModOres.NUGGETS.get(ore)));
                         ModOres.MIXES.forEach(output::accept);
+                        output.accept(ModItems.HEMATITE_POWDER);
                         // слитки меди, железа и золота — ванильные, цинка и латуни — Create
                         output.accept(Items.COPPER_INGOT);
                         output.accept(Items.IRON_INGOT);

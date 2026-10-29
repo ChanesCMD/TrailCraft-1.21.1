@@ -1,17 +1,18 @@
 """
 Укреплённая труба (pipe/ReinforcedPipeBlock.java) и прочный лист без лавы — текстуры, модели, блокстейт, лут, рецепты,
-тэги, переводы и превью docs/textures/reinforced_pipe.png.
+тэги, переводы и превью docs/textures/reinforced_pipe.png. Здесь же обсидиановый порошок (жёрнов) и порошок гематита.
 
 Запуск из корня проекта:  python scripts/gen_reinforced_pipe.py   (нужен Pillow; jar Create — из кэша Gradle)
-Рецепт прочного листа Create (лава и обсидиан, которых в мире нет) убран в gen_create_compat.py (REPLACED) —
+Рецепт прочного листа Create (заливка лавой) убран в gen_create_compat.py (REPLACED) —
 после изменения этого списка перезапустить и его.
 
 Обычная медная труба Create с лавой прогорает (pipe/LavaPipes), укреплённая — нет. Модели — копии моделей трубы Create
 (blockstates/fluid_pipe.json, models/block/fluid_pipe/*) со своими текстурами: трубы Create в цветах прочного листа;
 ободки и стыки рисует PipeAttachmentModel Create (ClientEvents.wrapPipeModels), они медные.
-Рецепты: 2 прочных листа и медный слиток в ряд (и столбиком) — 4 трубы, как у трубы Create. Прочный лист —
-последовательная сборка из железного листа: положить рудный боксит (огнеупор), прессовать, положить железный лист,
-прессовать; заготовка — incomplete_sturdy_sheet.
+Рецепты: 2 прочных листа и медный слиток в ряд (и столбиком) — 4 трубы, как у трубы Create. Прочный лист: жёрнов
+мелет обсидиан в обсидиановый порошок Create, дробильные колёса — дроблёное рудное железо в порошок гематита; в
+смесителе железный лист, обсидиановый порошок и порошок гематита — незаконченный прочный лист Create, потом
+последовательная сборка: прессовать, положить железный лист, прессовать; заготовка — incomplete_sturdy_sheet.
 """
 import json
 import os
@@ -21,6 +22,7 @@ from io import BytesIO
 from PIL import Image
 
 from gen_create_compat import find_jar, recolor
+from gen_ore_textures import RAMPS, dust, ramp
 
 NS = "trailcraft"
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -29,6 +31,8 @@ TEX = os.path.join(ROOT, "assets", NS, "textures")
 DOCS = os.path.join(HERE, "..", "docs", "textures")
 PIPE = "reinforced_fluid_pipe"
 INCOMPLETE = "incomplete_sturdy_sheet"
+UNPROCESSED = "create:unprocessed_obsidian_sheet"
+POWDER = "hematite_powder"
 # части трубы, которые рисует PipeAttachmentModel Create (AllPartialModels), — в блокстейте их нет
 PARTIALS = ("rim/", "rim_connector/", "drain/", "connection/", "casing", "window")
 
@@ -37,6 +41,7 @@ LANG = {
     f"block.{NS}.{PIPE}.desc": ("Держит лаву: обычная медная труба с лавой прогорает за 20 с",
                                 "Holds lava: a regular copper pipe burns through in 20 s"),
     f"item.{NS}.{INCOMPLETE}": ("Заготовка прочного листа", "Incomplete Sturdy Sheet"),
+    f"item.{NS}.{POWDER}": ("Порошок гематита", "Hematite Powder"),
 }
 
 
@@ -109,19 +114,23 @@ def textures(create):
         img = recolor(load(f"block/{src}"), sturdy)
         img.save(os.path.join(TEX, "block", f"{dst}.png"))
         out.append(img)
-    # заготовка: железный лист Create, по краю и пятнами — рыжий боксит
+    # заготовка: железный лист Create, пятнами — тёмный обсидиановый слой
     sheet = load("item/iron_sheet")
-    bauxite = palette(Image.open(os.path.join(TEX, "item", "raw_bauxite.png")))
-    spotted = recolor(sheet, bauxite)
+    spotted = recolor(sheet, palette(load("item/powdered_obsidian")))
     img = sheet.copy()
     for y in range(16):
         for x in range(16):
-            if sheet.getpixel((x, y))[3] and (x * 5 + y * 3) % 7 < 3:
+            if sheet.getpixel((x, y))[3] and (x * 5 + y * 3) % 7 < 4:
                 img.putpixel((x, y), spotted.getpixel((x, y)))
     img.save(os.path.join(TEX, "item", f"{INCOMPLETE}.png"))
-    write(f"assets/{NS}/models/item/{INCOMPLETE}.json",
-          {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/{INCOMPLETE}"}})
     out.append(img)
+    # порошок гематита — кучка пыли в цветах рудного гематита с красными крупинками
+    powder = dust(RAMPS["hematite"][1], [ramp("3a1210", "5a1c16", "8c2824", "aa3c30", "c85a46", "e0846c")], 0.3, 9)
+    powder.save(os.path.join(TEX, "item", f"{POWDER}.png"))
+    out.append(powder)
+    for name in (INCOMPLETE, POWDER):
+        write(f"assets/{NS}/models/item/{name}.json",
+              {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/{name}"}})
     return out
 
 
@@ -135,14 +144,26 @@ def data():
         write(f"data/{NS}/recipe/{name}.json", {
             "type": "minecraft:crafting_shaped", "category": "misc", "key": key, "pattern": pattern,
             "result": {"id": f"{NS}:{PIPE}", "count": 4}})
+    # обсидиан — в порошок жёрновом (и колёсами: своего рецепта дробления у обсидиана нет)
+    write(f"data/{NS}/recipe/milling/obsidian.json", {
+        "type": "create:milling", "ingredients": [{"item": "minecraft:obsidian"}], "processing_time": 500,
+        "results": [{"id": "create:powdered_obsidian"}]})
+    write(f"data/{NS}/recipe/crushing/{POWDER}.json", {
+        "type": "create:crushing", "ingredients": [{"item": "create:crushed_raw_iron"}], "processing_time": 250,
+        "results": [{"id": f"{NS}:{POWDER}"}]})
+    write(f"data/{NS}/recipe/{UNPROCESSED.split(':')[1]}.json", {
+        "type": "create:mixing",
+        "ingredients": [{"tag": "c:plates/iron"}, {"tag": "c:dusts/obsidian"}, {"item": f"{NS}:{POWDER}"}],
+        "results": [{"id": UNPROCESSED}]})
     step = lambda kind, extra: {"type": f"create:{kind}", "ingredients": [{"item": f"{NS}:{INCOMPLETE}"}] + extra,
                                 "results": [{"id": f"{NS}:{INCOMPLETE}"}]}
     write(f"data/{NS}/recipe/sturdy_sheet.json", {
-        "type": "create:sequenced_assembly", "ingredient": {"tag": "c:plates/iron"}, "loops": 1,
+        "type": "create:sequenced_assembly", "ingredient": {"item": UNPROCESSED}, "loops": 1,
         "results": [{"id": "create:sturdy_sheet"}], "transitional_item": {"id": f"{NS}:{INCOMPLETE}"},
-        "sequence": [step("deploying", [{"item": f"{NS}:raw_bauxite"}]), step("pressing", []),
-                     step("deploying", [{"tag": "c:plates/iron"}]), step("pressing", [])]})
+        "sequence": [step("pressing", []), step("deploying", [{"tag": "c:plates/iron"}]), step("pressing", [])]})
     tag("block", "minecraft:mineable/pickaxe", [f"{NS}:{PIPE}"])
+    tag("item", "c:dusts", [f"{NS}:{POWDER}"])
+    tag("item", "c:dusts/hematite", [f"{NS}:{POWDER}"])
     for code, k in (("ru_ru", 0), ("en_us", 1)):
         rel = f"assets/{NS}/lang/{code}.json"
         lang = read(rel, {})

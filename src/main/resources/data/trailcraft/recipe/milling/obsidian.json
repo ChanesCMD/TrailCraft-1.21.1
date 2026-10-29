@@ -1,0 +1,14 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "minecraft:obsidian"
+    }
+  ],
+  "processing_time": 500,
+  "results": [
+    {
+      "id": "create:powdered_obsidian"
+    }
+  ]
+}

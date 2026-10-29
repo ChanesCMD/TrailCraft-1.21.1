@@ -1,7 +1,7 @@
 {
   "type": "create:sequenced_assembly",
   "ingredient": {
-    "tag": "c:plates/iron"
+    "item": "create:unprocessed_obsidian_sheet"
   },
   "loops": 1,
   "results": [
@@ -13,22 +13,6 @@
     "id": "trailcraft:incomplete_sturdy_sheet"
   },
   "sequence": [
-    {
-      "type": "create:deploying",
-      "ingredients": [
-        {
-          "item": "trailcraft:incomplete_sturdy_sheet"
-        },
-        {
-          "item": "trailcraft:raw_bauxite"
-        }
-      ],
-      "results": [
-        {
-          "id": "trailcraft:incomplete_sturdy_sheet"
-        }
-      ]
-    },
     {
       "type": "create:pressing",
       "ingredients": [

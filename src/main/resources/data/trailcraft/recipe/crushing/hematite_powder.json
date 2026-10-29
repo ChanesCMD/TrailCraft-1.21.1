@@ -1,0 +1,14 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "create:crushed_raw_iron"
+    }
+  ],
+  "processing_time": 250,
+  "results": [
+    {
+      "id": "trailcraft:hematite_powder"
+    }
+  ]
+}

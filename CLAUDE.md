@@ -386,8 +386,11 @@
   держат. Укреплённая труба (`pipe/ReinforcedPipeBlock.java`, наследник трубы Create с её блок-сущностью —
   `BlockEntityTypeAddBlocksEvent` в `ModBlockEntities.CreatePipes`; ключом в стеклянную не превращается, в корпус не
   одевается; модель оборачивает `PipeAttachmentModel` в `ClientEvents.wrapPipeModels`) — 2 прочных листа и медный
-  слиток, 4 шт. Прочный лист — без лавы: последовательная сборка из железного листа (рудный боксит, пресс, железный
-  лист, пресс), заготовка `incomplete_sturdy_sheet`. JSON, модели (копии трубы Create) и текстуры —
+  слиток, 4 шт. Прочный лист — без лавы: жёрнов мелет обсидиан в обсидиановый порошок Create (`milling/obsidian`;
+  обсидиан добывается только буром Create), дробильные колёса — дроблёное рудное железо в порошок гематита
+  (`ModItems.HEMATITE_POWDER`); смеситель: железный лист + обсидиановый порошок + порошок гематита — незаконченный
+  прочный лист Create (`create:unprocessed_obsidian_sheet`); последовательная сборка из него: пресс, железный лист
+  активатором, пресс; заготовка `incomplete_sturdy_sheet`. JSON, модели (копии трубы Create) и текстуры —
   `scripts/gen_reinforced_pipe.py`.
 - Материалы из природы — `scripts/gen_materials.py`: с окорки бревна топором падает кора (`StrippableLogBlock`), с хвойных
   (`#trailcraft:resin_logs`) ещё смола (25 %); 2 коры с водой в смесителе Create — бумага (`paper_from_bark`); джутовая
