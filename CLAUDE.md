@@ -362,6 +362,14 @@
   `blaze` Create, пока горит топливо — «греет» (KINDLED), сильного нагрева нет; топливо — каменный уголь, его блок
   (`trailcraft:bituminous_coal_block`, `c:storage_blocks/coal`), торф, ПКМ или воронкой; обычная горелка всполоха
   Create остаётся. JSON и текстуры — `scripts/gen_burner.py`.
+  Лава в трубах Create: обычная медная труба (и стеклянная, и в корпусе), по которой течёт лава, дымит и через 20 с
+  прогорает без дропа (`pipe/LavaPipes.java`, вызов — `mixin/FluidTransportBehaviourMixin`); помпы, вентили, умные трубы
+  держат. Укреплённая труба (`pipe/ReinforcedPipeBlock.java`, наследник трубы Create с её блок-сущностью —
+  `BlockEntityTypeAddBlocksEvent` в `ModBlockEntities.CreatePipes`; ключом в стеклянную не превращается, в корпус не
+  одевается; модель оборачивает `PipeAttachmentModel` в `ClientEvents.wrapPipeModels`) — 2 прочных листа и медный
+  слиток, 4 шт. Прочный лист — без лавы: последовательная сборка из железного листа (рудный боксит, пресс, железный
+  лист, пресс), заготовка `incomplete_sturdy_sheet`. JSON, модели (копии трубы Create) и текстуры —
+  `scripts/gen_reinforced_pipe.py`.
 - Материалы из природы — `scripts/gen_materials.py`: с окорки бревна топором падает кора (`StrippableLogBlock`), с хвойных
   (`#trailcraft:resin_logs`) ещё смола (25 %); 2 коры с водой в смесителе Create — бумага (`paper_from_bark`); джутовая
   нить (`c:strings`) — 1 джут на 2 нити.

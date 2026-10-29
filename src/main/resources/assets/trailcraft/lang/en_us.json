@@ -1119,5 +1119,8 @@
   "block.trailcraft.bituminous_coal_block": "Bituminous Coal Block",
   "block.trailcraft.coal_burner": "Coal Burner",
   "block.trailcraft.coal_burner.burn": "Burn time left: %s s",
-  "block.trailcraft.coal_burner.desc": "Heats a Create basin while coal burns (not superheated). Right-click with coal or a coal block to add fuel, empty hand to check"
+  "block.trailcraft.coal_burner.desc": "Heats a Create basin while coal burns (not superheated). Right-click with coal or a coal block to add fuel, empty hand to check",
+  "block.trailcraft.reinforced_fluid_pipe": "Reinforced Fluid Pipe",
+  "block.trailcraft.reinforced_fluid_pipe.desc": "Holds lava: a regular copper pipe burns through in 20 s",
+  "item.trailcraft.incomplete_sturdy_sheet": "Incomplete Sturdy Sheet"
 }

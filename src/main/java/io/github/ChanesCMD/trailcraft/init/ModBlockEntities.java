@@ -54,5 +54,14 @@ public final class ModBlockEntities {
         }
     }
 
+    /** Укреплённая труба — с блок-сущностью трубы Create (FluidPipeBlockEntity), её тип должен знать наш блок. */
+    @EventBusSubscriber(modid = TrailCraft.MODID, bus = EventBusSubscriber.Bus.MOD)
+    public static final class CreatePipes {
+        @SubscribeEvent
+        public static void onAddBlocks(net.neoforged.neoforge.event.BlockEntityTypeAddBlocksEvent event) {
+            event.modify(com.simibubi.create.AllBlockEntityTypes.FLUID_PIPE.get(), ModBlocks.REINFORCED_FLUID_PIPE.get());
+        }
+    }
+
     private ModBlockEntities() {}
 }

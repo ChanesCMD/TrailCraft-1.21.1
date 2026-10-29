@@ -220,6 +220,10 @@ public class ModItems {
     // === БЛОК СОЛОМЫ И КРОВАТЬ ИЗ СОЛОМЫ ===
     public static final DeferredItem<BlockItem> BITUMINOUS_COAL_BLOCK = ITEMS.registerSimpleBlockItem("bituminous_coal_block", ModBlocks.BITUMINOUS_COAL_BLOCK);
     public static final DeferredItem<BlockItem> COAL_BURNER = ITEMS.registerSimpleBlockItem("coal_burner", ModBlocks.COAL_BURNER);
+    public static final DeferredItem<BlockItem> REINFORCED_FLUID_PIPE = ITEMS.registerSimpleBlockItem("reinforced_fluid_pipe", ModBlocks.REINFORCED_FLUID_PIPE);
+    /** Заготовка прочного листа — промежуточный предмет последовательной сборки Create. */
+    public static final DeferredItem<com.simibubi.create.content.processing.sequenced.SequencedAssemblyItem> INCOMPLETE_STURDY_SHEET =
+            ITEMS.registerItem("incomplete_sturdy_sheet", com.simibubi.create.content.processing.sequenced.SequencedAssemblyItem::new);
     public static final DeferredItem<BlockItem> WATER_BARREL = ITEMS.registerSimpleBlockItem("water_barrel", ModBlocks.WATER_BARREL);
     public static final DeferredItem<BlockItem> STRAW_BLOCK = ITEMS.registerSimpleBlockItem("straw_block", ModBlocks.STRAW_BLOCK);
     public static final DeferredItem<BlockItem> STRAW_BED = ITEMS.registerSimpleBlockItem("straw_bed", ModBlocks.STRAW_BED);

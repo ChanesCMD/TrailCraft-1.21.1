@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": {
+      "item": "create:sturdy_sheet"
+    },
+    "C": {
+      "tag": "c:ingots/copper"
+    }
+  },
+  "pattern": [
+    "SCS"
+  ],
+  "result": {
+    "id": "trailcraft:reinforced_fluid_pipe",
+    "count": 4
+  }
+}

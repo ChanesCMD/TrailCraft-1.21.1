@@ -66,6 +66,15 @@ public class ClientEvents {
         }
     }
 
+    /** Укреплённая труба рисуется, как труба Create: ободки, стыки и сливы добавляет PipeAttachmentModel. */
+    @SubscribeEvent
+    public static void wrapPipeModels(net.neoforged.neoforge.client.event.ModelEvent.ModifyBakingResult e) {
+        for (var state : ModBlocks.REINFORCED_FLUID_PIPE.get().getStateDefinition().getPossibleStates()) {
+            e.getModels().computeIfPresent(net.minecraft.client.renderer.block.BlockModelShaper.stateToModelLocation(state),
+                    (location, model) -> com.simibubi.create.content.fluids.PipeAttachmentModel.withAO(model));
+        }
+    }
+
     @SubscribeEvent
     public static void blockColors(RegisterColorHandlersEvent.Block e) {
         e.register((state, level, pos, tint) ->

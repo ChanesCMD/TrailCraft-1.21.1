@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.Block;
 import io.github.ChanesCMD.trailcraft.block.PebbleBlock;
 import io.github.ChanesCMD.trailcraft.block.SupportBlock;
 import io.github.ChanesCMD.trailcraft.block.CoalBurnerBlock;
+import io.github.ChanesCMD.trailcraft.pipe.ReinforcedPipeBlock;
 import io.github.ChanesCMD.trailcraft.block.WaterBarrelBlock;
 import io.github.ChanesCMD.trailcraft.block.plant.SeaweedBlock;
 import io.github.ChanesCMD.trailcraft.block.plant.SugarBeetBlock;
@@ -296,6 +297,11 @@ public class ModBlocks {
     public static final DeferredBlock<CoalBurnerBlock> COAL_BURNER = BLOCKS.registerBlock("coal_burner", CoalBurnerBlock::new,
             BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()
                     .lightLevel(state -> CoalBurnerBlock.isLit(state) ? 10 : 0));
+
+    /** Укреплённая труба: труба Create из прочных листов, лава её не прожигает (pipe/LavaPipes). */
+    public static final DeferredBlock<ReinforcedPipeBlock> REINFORCED_FLUID_PIPE = BLOCKS.registerBlock("reinforced_fluid_pipe",
+            ReinforcedPipeBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2.0f, 6.0f)
+                    .sound(SoundType.NETHERITE_BLOCK).forceSolidOn().noOcclusion());
 
     /** Бочка — хранилище воды (WaterBarrelBlock); трубы Create качают из неё и в неё. */
     public static final DeferredBlock<WaterBarrelBlock> WATER_BARREL = BLOCKS.registerBlock("water_barrel", WaterBarrelBlock::new,

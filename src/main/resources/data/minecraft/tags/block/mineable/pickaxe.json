@@ -89,6 +89,7 @@
     "trailcraft:cinnabar_ore",
     "trailcraft:quartz_ore",
     "trailcraft:bituminous_coal_block",
-    "trailcraft:coal_burner"
+    "trailcraft:coal_burner",
+    "trailcraft:reinforced_fluid_pipe"
   ]
 }

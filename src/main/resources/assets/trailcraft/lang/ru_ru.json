@@ -1119,5 +1119,8 @@
   "block.trailcraft.bituminous_coal_block": "Блок каменного угля",
   "block.trailcraft.coal_burner": "Угольная горелка",
   "block.trailcraft.coal_burner.burn": "Горения осталось: %s с",
-  "block.trailcraft.coal_burner.desc": "Греет чашу Create, пока горит уголь (не сильный нагрев). ПКМ углём или блоком угля — подложить, пустой рукой — сколько горения осталось"
+  "block.trailcraft.coal_burner.desc": "Греет чашу Create, пока горит уголь (не сильный нагрев). ПКМ углём или блоком угля — подложить, пустой рукой — сколько горения осталось",
+  "block.trailcraft.reinforced_fluid_pipe": "Укреплённая труба",
+  "block.trailcraft.reinforced_fluid_pipe.desc": "Держит лаву: обычная медная труба с лавой прогорает за 20 с",
+  "item.trailcraft.incomplete_sturdy_sheet": "Заготовка прочного листа"
 }

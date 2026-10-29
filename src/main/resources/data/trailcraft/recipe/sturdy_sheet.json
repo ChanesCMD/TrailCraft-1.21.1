@@ -1,0 +1,75 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "tag": "c:plates/iron"
+  },
+  "loops": 1,
+  "results": [
+    {
+      "id": "create:sturdy_sheet"
+    }
+  ],
+  "transitional_item": {
+    "id": "trailcraft:incomplete_sturdy_sheet"
+  },
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "trailcraft:incomplete_sturdy_sheet"
+        },
+        {
+          "item": "trailcraft:raw_bauxite"
+        }
+      ],
+      "results": [
+        {
+          "id": "trailcraft:incomplete_sturdy_sheet"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "trailcraft:incomplete_sturdy_sheet"
+        }
+      ],
+      "results": [
+        {
+          "id": "trailcraft:incomplete_sturdy_sheet"
+        }
+      ]
+    },
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "trailcraft:incomplete_sturdy_sheet"
+        },
+        {
+          "tag": "c:plates/iron"
+        }
+      ],
+      "results": [
+        {
+          "id": "trailcraft:incomplete_sturdy_sheet"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "trailcraft:incomplete_sturdy_sheet"
+        }
+      ],
+      "results": [
+        {
+          "id": "trailcraft:incomplete_sturdy_sheet"
+        }
+      ]
+    }
+  ]
+}

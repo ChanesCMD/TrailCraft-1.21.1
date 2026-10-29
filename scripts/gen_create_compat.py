@@ -68,6 +68,8 @@ REPLACED = [
     "create:crafting/kinetics/mechanical_crafter", "create:crafting/logistics/redstone_contact",
     "create:crafting/appliances/tree_fertilizer", "create:crafting/tree_fertilizer",
     "create:crafting/kinetics/millstone",
+    # прочный лист — из лавы и обсидиана, которых в мире нет; свой рецепт — gen_reinforced_pipe.py
+    "create:sequenced_assembly/sturdy_sheet",
 ] + [f"create:crushing/raw_{m}" for m in ("copper", "iron", "gold", "zinc", "tin", "lead", "nickel", "aluminum")]
 # Дробление наших кусков руды и блоков руды (с шёлковым касанием): руда → дроблёная руда Create (+ побочное с шансом);
 # рецепты Create по тэгам c:raw_materials/* заменены этими, чтобы у куска был один рецепт
