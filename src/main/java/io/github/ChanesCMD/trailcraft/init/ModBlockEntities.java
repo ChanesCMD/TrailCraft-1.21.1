@@ -50,6 +50,9 @@ public final class ModBlockEntities {
         public static void onRegister(RegisterCapabilitiesEvent event) {
             event.registerBlockEntity(net.neoforged.neoforge.capabilities.Capabilities.FluidHandler.BLOCK, WATER_BARREL.get(),
                     (barrel, side) -> barrel.tank);
+            // шкуры в бочку и кожу из неё — воронками и желобами Create
+            event.registerBlockEntity(net.neoforged.neoforge.capabilities.Capabilities.ItemHandler.BLOCK, WATER_BARREL.get(),
+                    (barrel, side) -> barrel.automation);
             // топливо в угольную горелку — воронками и желобами Create
             event.registerBlockEntity(net.neoforged.neoforge.capabilities.Capabilities.ItemHandler.BLOCK, COAL_BURNER.get(),
                     (burner, side) -> burner.fuelSlot);

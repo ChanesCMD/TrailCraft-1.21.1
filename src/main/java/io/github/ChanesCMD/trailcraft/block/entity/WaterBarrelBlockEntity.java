@@ -9,7 +9,16 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import io.github.ChanesCMD.trailcraft.inventory.BarrelMenu;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -25,17 +34,93 @@ import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
  * ({@link #RAIN_MB} за {@link #RAIN_INTERVAL} тиков). В танин кладут выскобленные шкуры (до {@link #MAX_HIDES}): пока в
  * бочке не меньше {@link #TANNIN_NEEDED} mB танина, они дубятся {@link #SOAK_TICKS} тиков и становятся кожей, каждая
  * тратит {@link #HIDE_MB} mB (как дубление в бочке TerraFirmaCraft). Сломанная бочка помнит жидкость (компоненты
- * trailcraft:water — mB, trailcraft:salty, trailcraft:tannin), шкуры и кожа из неё выпадают.
+ * trailcraft:water — mB, trailcraft:salty, trailcraft:tannin), шкуры и кожа из неё выпадают. Окно — BarrelMenu: бак, слот
+ * шкур, слот кожи; воронки и желоба Create кладут шкуры и забирают кожу (automation).
  */
-public class WaterBarrelBlockEntity extends BlockEntity {
+public class WaterBarrelBlockEntity extends BlockEntity implements MenuProvider {
     public static final int CAPACITY = 8000;
     /** Глоток или одно деление фляги — 100 mB. */
     public static final int SIP_MB = 100;
     public static final int RAIN_MB = 25, RAIN_INTERVAL = 40;
     public static final int MAX_HIDES = 8, TANNIN_NEEDED = 4000, HIDE_MB = 500, SOAK_TICKS = 12000;
 
+    public static final int HIDES = 0, LEATHER = 1;
+    /** Что в баке для окна: 0 — пусто, 1 — пресная вода, 2 — морская, 3 — танин. */
+    public static final int EMPTY = 0, FRESH = 1, SALTY = 2, TANNIN = 3;
+
     private boolean salty;
-    private int hides, leather, soak;
+    private int soak;
+    /** Шкуры (только выскобленные, до MAX_HIDES) и готовая кожа. */
+    public final ItemStackHandler items = new ItemStackHandler(2) {
+        @Override
+        public boolean isItemValid(int slot, ItemStack stack) {
+            return slot == HIDES && stack.is(ModItems.SCRAPED_HIDE.get());
+        }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            return slot == HIDES ? MAX_HIDES : 64;
+        }
+
+        @Override
+        protected void onContentsChanged(int slot) {
+            if (slot == HIDES && getStackInSlot(HIDES).isEmpty()) {
+                soak = 0;
+            }
+            changed();
+        }
+    };
+    /** Для воронок: шкуры только кладутся, кожа только забирается. */
+    public final IItemHandler automation = new IItemHandler() {
+        @Override
+        public int getSlots() {
+            return 2;
+        }
+
+        @Override
+        public ItemStack getStackInSlot(int slot) {
+            return items.getStackInSlot(slot);
+        }
+
+        @Override
+        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+            return slot == HIDES ? items.insertItem(slot, stack, simulate) : stack;
+        }
+
+        @Override
+        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+            return slot == LEATHER ? items.extractItem(slot, amount, simulate) : ItemStack.EMPTY;
+        }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            return items.getSlotLimit(slot);
+        }
+
+        @Override
+        public boolean isItemValid(int slot, ItemStack stack) {
+            return slot == HIDES && items.isItemValid(slot, stack);
+        }
+    };
+    private final ContainerData data = new ContainerData() {
+        @Override
+        public int get(int index) {
+            return switch (index) {
+                case 0 -> tank.getFluidAmount();
+                case 1 -> fluidKind();
+                case 2 -> soak;
+                default -> 0;
+            };
+        }
+
+        @Override
+        public void set(int index, int value) {}
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
+    };
     public final FluidTank tank = new FluidTank(CAPACITY, stack -> stack.is(Fluids.WATER) || stack.is(ModFluids.TANNIN.source.get())) {
         @Override
         protected void onContentsChanged() {
@@ -72,11 +157,18 @@ public class WaterBarrelBlockEntity extends BlockEntity {
     }
 
     public int hides() {
-        return hides;
+        return items.getStackInSlot(HIDES).getCount();
     }
 
     public int leather() {
-        return leather;
+        return items.getStackInSlot(LEATHER).getCount();
+    }
+
+    public int fluidKind() {
+        if (tannin() > 0) {
+            return TANNIN;
+        }
+        return water() > 0 ? (salty ? SALTY : FRESH) : EMPTY;
     }
 
     /** Налить воду этого вида; сколько вошло. */
@@ -103,30 +195,23 @@ public class WaterBarrelBlockEntity extends BlockEntity {
 
     /** Положить выскобленные шкуры в танин; сколько легло. */
     public int addHides(int count) {
-        int added = Math.min(count, MAX_HIDES - hides);
-        if (added > 0) {
-            hides += added;
-            changed();
-        }
-        return added;
+        ItemStack rest = items.insertItem(HIDES, new ItemStack(ModItems.SCRAPED_HIDE.get(), count), false);
+        return count - rest.getCount();
     }
 
     /** Забрать готовую кожу. */
     public ItemStack takeLeather() {
-        ItemStack out = new ItemStack(ModItems.LEATHER.get(), leather);
-        leather = 0;
-        changed();
-        return out;
+        return items.extractItem(LEATHER, 64, false);
     }
 
     /** Шкуры и кожа выпадают из сломанной бочки. */
     public void dropContents() {
         if (level != null) {
-            Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(),
-                    new ItemStack(ModItems.SCRAPED_HIDE.get(), hides));
-            Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(),
-                    new ItemStack(ModItems.LEATHER.get(), leather));
-            hides = leather = 0;
+            for (int i = 0; i < items.getSlots(); i++) {
+                Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(),
+                        items.getStackInSlot(i).copy());
+                items.setStackInSlot(i, ItemStack.EMPTY);
+            }
         }
     }
 
@@ -134,12 +219,13 @@ public class WaterBarrelBlockEntity extends BlockEntity {
         if (level.getGameTime() % RAIN_INTERVAL == 0 && level.isRainingAt(pos.above()) && barrel.tannin() == 0) {
             barrel.add(RAIN_MB, false);
         }
-        if (barrel.hides > 0 && barrel.tannin() >= TANNIN_NEEDED && ++barrel.soak >= SOAK_TICKS) {
-            barrel.take(barrel.hides * HIDE_MB);
-            barrel.leather += barrel.hides;
-            barrel.hides = 0;
+        int hides = barrel.hides();
+        // кожа ложится в свой слот, пока там есть место
+        if (hides > 0 && barrel.tannin() >= TANNIN_NEEDED && barrel.leather() + hides <= 64 && ++barrel.soak >= SOAK_TICKS) {
+            barrel.take(hides * HIDE_MB);
+            barrel.items.setStackInSlot(HIDES, ItemStack.EMPTY);
+            barrel.items.setStackInSlot(LEATHER, new ItemStack(ModItems.LEATHER.get(), barrel.leather() + hides));
             barrel.soak = 0;
-            barrel.changed();
         } else if (barrel.soak % 200 == 0 && barrel.soak > 0) {
             barrel.setChanged();
         }
@@ -150,8 +236,7 @@ public class WaterBarrelBlockEntity extends BlockEntity {
         super.saveAdditional(tag, registries);
         tank.writeToNBT(registries, tag);
         tag.putBoolean("Salty", salty);
-        tag.putInt("Hides", hides);
-        tag.putInt("Leather", leather);
+        tag.put("Items", items.serializeNBT(registries));
         tag.putInt("Soak", soak);
     }
 
@@ -160,9 +245,18 @@ public class WaterBarrelBlockEntity extends BlockEntity {
         super.loadAdditional(tag, registries);
         tank.readFromNBT(registries, tag);
         salty = tag.getBoolean("Salty");
-        hides = tag.getInt("Hides");
-        leather = tag.getInt("Leather");
+        items.deserializeNBT(registries, tag.getCompound("Items"));
         soak = tag.getInt("Soak");
+    }
+
+    @Override
+    public Component getDisplayName() {
+        return getBlockState().getBlock().getName();
+    }
+
+    @Override
+    public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
+        return new BarrelMenu(id, inventory, items, data);
     }
 
     @Override

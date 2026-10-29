@@ -300,7 +300,8 @@
   фляга — наполнить (100 mB за глоток), пустой рукой — попить (`WaterEvents.drinkFromBarrel`), Shift — сколько воды; под
   дождём набирается сама; вместо воды можно налить танин (ведром или трубой): в него кладут выскобленные шкуры (до 8),
   при 4000 mB танина и больше за полдня (12000 тиков) они становятся кожей, каждая тратит 500 mB, кожу забирают пустой
-  рукой; сломанная помнит жидкость (компоненты `trailcraft:water` в mB, `trailcraft:salty`, `trailcraft:tannin`);
+  рукой; Shift + пустая рука — окно бочки (`inventory/BarrelMenu.java`, `client/gui/BarrelScreen.java`: бак, слот шкур,
+  стрелка дубления, слот кожи; воронки кладут шкуры и забирают кожу — `automation`); дубление — в JEI («Ручная работа»); сломанная помнит жидкость (компоненты `trailcraft:water` в mB, `trailcraft:salty`, `trailcraft:tannin`);
   `c:barrels/wooden` (жидкостный бак, хранилище Create). Сундуки по породам (`init/ModChests.java`, `block/WoodChestBlock.java`,
   один тип блок-сущности `wood_chest`): ванильный сундук, текстура `entity/chest/<порода>[_left|_right]` —
   `client/WoodChestRenderer.java`, предмет — `client/WoodChestItemRenderer.java`; текстуры — ванильный сундук в цвете

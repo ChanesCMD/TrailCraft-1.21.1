@@ -36,12 +36,19 @@ LANG = {
     "block.trailcraft.water_barrel.fresh": ("пресная", "fresh"),
     "block.trailcraft.water_barrel.salty": ("морская", "salty"),
     "block.trailcraft.water_barrel.desc": ("Ведро — налить или набрать, фляга — наполнить, пустой рукой — попить, Shift — "
-                                           "сколько воды; под дождём набирается сама. В танин (от 4000 mB) кладут "
+                                           "окно бочки; под дождём набирается сама. В танин (от 4000 mB) кладут "
                                            "выскобленные шкуры — за полдня дубятся в кожу",
-                                           "Bucket to pour or take, flask to fill, empty hand to drink, Shift to check; "
+                                           "Bucket to pour or take, flask to fill, empty hand to drink, Shift to open; "
                                            "fills up in the rain. Scraped hides put into tannin (4000 mB or more) "
                                            "turn into leather in half a day"),
     "block.trailcraft.water_barrel.tannin": ("Танин: %s / %s mB, шкур: %s", "Tannin: %s / %s mB, hides: %s"),
+    "gui.trailcraft.barrel.empty": ("Пусто", "Empty"),
+    "gui.trailcraft.barrel.amount": ("%s / %s mB", "%s / %s mB"),
+    "gui.trailcraft.barrel.need_tannin": ("Нужно %s mB танина", "Needs %s mB of tannin"),
+    "jei.trailcraft.tanning": ("Бочка с танином (от %s mB): до %s выскобленных шкур за полдня дубятся в кожу, "
+                               "каждая тратит %s mB",
+                               "Barrel with tannin (%s mB or more): up to %s scraped hides tan into leather in half "
+                               "a day, %s mB each"),
     "block.trailcraft.water_barrel.tannin_amount": ("Танин: %s / %s mB", "Tannin: %s / %s mB"),
 }
 

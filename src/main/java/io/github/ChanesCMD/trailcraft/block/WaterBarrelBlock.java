@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * Бочка — хранилище воды или танина (WaterBarrelBlockEntity): ведро воды или танина — налить 1000 mB, пустое ведро —
  * набрать, фляга — наполнить (по 100 mB за глоток), пустой рукой — попить. В танин кладут выскобленные шкуры, готовую
- * кожу забирают пустой рукой. Shift + пустая рука — что в бочке. В тэге c:barrels/wooden (жидкостный бак, хранилище Create).
+ * кожу забирают пустой рукой. Shift + пустая рука — окно бочки (BarrelMenu). В тэге c:barrels/wooden (жидкостный бак, хранилище Create).
  */
 public class WaterBarrelBlock extends BaseEntityBlock {
     public static final MapCodec<WaterBarrelBlock> CODEC = simpleCodec(WaterBarrelBlock::new);
@@ -150,7 +150,9 @@ public class WaterBarrelBlock extends BaseEntityBlock {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         }
-        if (barrel.leather() > 0 && !player.isShiftKeyDown()) {
+        if (player.isShiftKeyDown()) {
+            player.openMenu(barrel);
+        } else if (barrel.leather() > 0) {
             ItemStack leather = barrel.takeLeather();
             if (!player.getInventory().add(leather)) {
                 player.drop(leather, false);

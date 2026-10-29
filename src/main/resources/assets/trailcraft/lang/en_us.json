@@ -1132,7 +1132,7 @@
   "block.trailcraft.water_barrel.amount": "Water: %s / %s mB (%s)",
   "block.trailcraft.water_barrel.fresh": "fresh",
   "block.trailcraft.water_barrel.salty": "salty",
-  "block.trailcraft.water_barrel.desc": "Bucket to pour or take, flask to fill, empty hand to drink, Shift to check; fills up in the rain. Scraped hides put into tannin (4000 mB or more) turn into leather in half a day",
+  "block.trailcraft.water_barrel.desc": "Bucket to pour or take, flask to fill, empty hand to drink, Shift to open; fills up in the rain. Scraped hides put into tannin (4000 mB or more) turn into leather in half a day",
   "block.trailcraft.bituminous_coal_block": "Bituminous Coal Block",
   "block.trailcraft.coal_burner": "Coal Burner",
   "block.trailcraft.coal_burner.burn": "Burn time left: %s s",
@@ -1266,5 +1266,9 @@
   "biome.trailcraft.dripstone_caves": "Dripstone Caves",
   "block.minecraft.granite": "Ancient Granite",
   "block.minecraft.diorite": "Ancient Diorite",
-  "block.minecraft.andesite": "Ancient Andesite"
+  "block.minecraft.andesite": "Ancient Andesite",
+  "gui.trailcraft.barrel.empty": "Empty",
+  "gui.trailcraft.barrel.amount": "%s / %s mB",
+  "gui.trailcraft.barrel.need_tannin": "Needs %s mB of tannin",
+  "jei.trailcraft.tanning": "Barrel with tannin (%s mB or more): up to %s scraped hides tan into leather in half a day, %s mB each"
 }

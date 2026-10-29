@@ -233,6 +233,16 @@ public class TrailJeiPlugin implements IModPlugin {
         recipes.add(new TrailJeiRecipe(List.of(thinLogs, List.of(branch.copyWithCount(4)),
                 List.of(new ItemStack(ModItems.FIRESTARTER.get()))), new ItemStack(ModItems.CAMPFIRE.get()),
                 Component.translatable("jei.trailcraft.campfire", FirestarterItem.LOGS, TrailCampfireBlock.MAX_LOGS)));
+        // дубление: выскобленная шкура в бочке с танином (block/entity/WaterBarrelBlockEntity)
+        List<ItemStack> barrels = new ArrayList<>(List.of(new ItemStack(ModItems.WATER_BARREL.get())));
+        io.github.ChanesCMD.trailcraft.init.ModChests.BARREL_ITEMS.values().forEach(b -> barrels.add(new ItemStack(b.get())));
+        recipes.add(new TrailJeiRecipe(List.of(List.of(new ItemStack(ModItems.SCRAPED_HIDE.get())), barrels,
+                List.of(new ItemStack(io.github.ChanesCMD.trailcraft.init.ModFluids.TANNIN.bucket.get(),
+                        io.github.ChanesCMD.trailcraft.block.entity.WaterBarrelBlockEntity.TANNIN_NEEDED / 1000))),
+                new ItemStack(ModItems.LEATHER.get()), Component.translatable("jei.trailcraft.tanning",
+                io.github.ChanesCMD.trailcraft.block.entity.WaterBarrelBlockEntity.TANNIN_NEEDED,
+                io.github.ChanesCMD.trailcraft.block.entity.WaterBarrelBlockEntity.MAX_HIDES,
+                io.github.ChanesCMD.trailcraft.block.entity.WaterBarrelBlockEntity.HIDE_MB)));
         return recipes;
     }
 

@@ -1,6 +1,7 @@
 package io.github.ChanesCMD.trailcraft.init;
 
 import io.github.ChanesCMD.trailcraft.TrailCraft;
+import io.github.ChanesCMD.trailcraft.inventory.BarrelMenu;
 import io.github.ChanesCMD.trailcraft.inventory.TrailInventoryMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.flag.FeatureFlags;
@@ -14,6 +15,10 @@ public final class ModMenus {
     /** Инвентарь игрока (заменяет ванильный по клавише E, кроме креатива). */
     public static final DeferredHolder<MenuType<?>, MenuType<TrailInventoryMenu>> INVENTORY =
             MENUS.register("inventory", () -> new MenuType<>(TrailInventoryMenu::new, FeatureFlags.DEFAULT_FLAGS));
+
+    /** Окно бочки: бак, шкуры в танине, кожа (BarrelMenu). */
+    public static final DeferredHolder<MenuType<?>, MenuType<BarrelMenu>> BARREL =
+            MENUS.register("barrel", () -> new MenuType<>(BarrelMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
     private ModMenus() {}
 }

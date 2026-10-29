@@ -1132,7 +1132,7 @@
   "block.trailcraft.water_barrel.amount": "Вода: %s / %s mB (%s)",
   "block.trailcraft.water_barrel.fresh": "пресная",
   "block.trailcraft.water_barrel.salty": "морская",
-  "block.trailcraft.water_barrel.desc": "Ведро — налить или набрать, фляга — наполнить, пустой рукой — попить, Shift — сколько воды; под дождём набирается сама. В танин (от 4000 mB) кладут выскобленные шкуры — за полдня дубятся в кожу",
+  "block.trailcraft.water_barrel.desc": "Ведро — налить или набрать, фляга — наполнить, пустой рукой — попить, Shift — окно бочки; под дождём набирается сама. В танин (от 4000 mB) кладут выскобленные шкуры — за полдня дубятся в кожу",
   "block.trailcraft.bituminous_coal_block": "Блок каменного угля",
   "block.trailcraft.coal_burner": "Угольная горелка",
   "block.trailcraft.coal_burner.burn": "Горения осталось: %s с",
@@ -1266,5 +1266,9 @@
   "biome.trailcraft.dripstone_caves": "Пещеры натёчного камня",
   "block.minecraft.granite": "Древний гранит",
   "block.minecraft.diorite": "Древний диорит",
-  "block.minecraft.andesite": "Древний андезит"
+  "block.minecraft.andesite": "Древний андезит",
+  "gui.trailcraft.barrel.empty": "Пусто",
+  "gui.trailcraft.barrel.amount": "%s / %s mB",
+  "gui.trailcraft.barrel.need_tannin": "Нужно %s mB танина",
+  "jei.trailcraft.tanning": "Бочка с танином (от %s mB): до %s выскобленных шкур за полдня дубятся в кожу, каждая тратит %s mB"
 }
