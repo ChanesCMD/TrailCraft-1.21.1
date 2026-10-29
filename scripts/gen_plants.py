@@ -189,6 +189,10 @@ def models(client):
                                               .replace("minecraft:block/", f"{NS}:block/"))
                                  .replace("dried_kelp", "dried_seaweed_block") if not v.startswith("#") else v
                                  for k, v in model.get("textures", {}).items()}
+            # прозрачные пиксели (края кактуса, промежутки у посевов) — вырезать: ванильным блокам это задаёт сама
+            # игра, нашим копиям — модель; иначе они чёрные
+            if "dried_kelp" not in name:
+                model["render_type"] = "minecraft:cutout"
             write(f"assets/{NS}/models/block/{swap_name(name)}.json", model)
     # тростник без окраски по биому (цвет — в самой текстуре)
     write(f"assets/{NS}/models/block/sugar_cane.json", {"parent": "minecraft:block/cross", "render_type": "minecraft:cutout",

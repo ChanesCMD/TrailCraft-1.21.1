@@ -208,6 +208,8 @@ public final class WeatherParticles {
             event.registerSpriteSet(ModParticles.RAIN_SPLASH.get(), RainSplashParticle.Provider::new);
             event.registerSpriteSet(ModParticles.RAIN_RIPPLE.get(), RainRippleParticle.Provider::new);
             event.registerSpriteSet(ModParticles.DUST_MOTE.get(), DustMoteParticle.Provider::new);
+            event.registerSpriteSet(ModParticles.SAKURA_PETAL.get(), io.github.ChanesCMD.trailcraft.client.LeafParticles.Provider::new);
+            event.registerSpriteSet(ModParticles.WILLOW_LEAF.get(), io.github.ChanesCMD.trailcraft.client.LeafParticles.Provider::new);
         }
     }
 
