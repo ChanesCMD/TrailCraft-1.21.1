@@ -392,6 +392,34 @@ MOUNTAINS = {
 }
 
 
+# Подземные биомы (как ванильные пещеры: глубина 0,2–0,9, далеко от моря); строятся из буроземной равнины (тот же
+# порядок фич), растительности нет. Натёчный камень и сталактиты ставят ванильные фичи; их сталактиты растут из наших
+# пород — они в тэге #minecraft:dripstone_replaceable_blocks.
+LOCAL_MODIFICATIONS, UNDERGROUND_DECORATION = 2, 7
+UNDERGROUND = {
+    "dripstone_caves": dict(continentalness=(0.8, 1.0), temperature=0.8, downfall=0.4,
+                            features={LOCAL_MODIFICATIONS: ["minecraft:large_dripstone"],
+                                      UNDERGROUND_DECORATION: ["minecraft:dripstone_cluster", "minecraft:pointed_dripstone"]},
+                            music="minecraft:music.overworld.dripstone_caves",
+                            ru="Пещеры натёчного камня", en="Dripstone Caves"),
+}
+
+
+def underground():
+    for biome, u in UNDERGROUND.items():
+        data = read(f"data/{NS}/worldgen/biome/burozem_plains.json")
+        data["temperature"] = u["temperature"]
+        data["downfall"] = u["downfall"]
+        data["features"][VEGETAL] = []
+        for step, features in u["features"].items():
+            data["features"][step] = features
+        data["effects"].pop("grass_color", None)
+        data["effects"]["music"] = {"max_delay": 24000, "min_delay": 12000, "replace_current_music": False,
+                                    "sound": u["music"]}
+        write(f"data/{NS}/worldgen/biome/{biome}.json", data)
+    tag("block", "minecraft:dripstone_replaceable_blocks", ["#minecraft:base_stone_overworld", f"#{NS}:rocks"])
+
+
 def mountains():
     """Горные биомы (MOUNTAINS): строятся из буроземной равнины (тот же порядок фич, что во всех биомах), снежные
     получают правило поверхности «снег слоем на всю глубину поверхности»."""
@@ -463,10 +491,10 @@ def biomes():
         write(f"data/{NS}/worldgen/biome/{biome}.json", data)
 
 
-def entry(biome, t, h, c, e, w):
+def entry(biome, t, h, c, e, w, depth=0.0):
     return {"biome": f"{NS}:{biome}", "parameters": {
         "temperature": list(t), "humidity": list(h), "continentalness": list(c), "erosion": list(e),
-        "depth": 0.0, "weirdness": list(w), "offset": 0.0}}
+        "depth": list(depth) if isinstance(depth, tuple) else depth, "weirdness": list(w), "offset": 0.0}}
 
 
 def carve(box, hole):
@@ -560,6 +588,9 @@ def layout_entries():
         for biome, (t, h, c, e, (lo, hi)) in boxes:
             w = (-hi, -lo) if side == 0 else (lo, hi)
             out.append(entry(biome[side] if isinstance(biome, tuple) else biome, t, h, c, e, w))
+    # как у ванильных: глубже подземных биомов (глубина 1) — снова биом поверхности
+    out += [dict(e, parameters=dict(e["parameters"], depth=1.0)) for e in out]
+    out += [entry(b, ALL, ALL, u["continentalness"], ALL, ALL, (0.2, 0.9)) for b, u in UNDERGROUND.items()]
     return out
 
 
@@ -724,7 +755,7 @@ def lang():
         data = read(rel)
         for biome in REMOVED_BIOMES:
             data.pop(f"biome.{NS}.{biome}", None)
-        for biome, f in list(FORESTS.items()) + list(MOUNTAINS.items()):
+        for biome, f in list(FORESTS.items()) + list(MOUNTAINS.items()) + list(UNDERGROUND.items()):
             data[f"biome.{NS}.{biome}"] = f[k]
         write(rel, data)
 
@@ -736,12 +767,13 @@ if __name__ == "__main__":
     trees()
     biomes()
     mountains()
+    underground()
     water_colors()
     layout()
     sakura_hill()
     caves()
     surface()
-    tag("worldgen/biome", f"{NS}:trailworldgen_biomes", [f"{NS}:{b}" for b in list(FORESTS) + list(MOUNTAINS)],
+    tag("worldgen/biome", f"{NS}:trailworldgen_biomes", [f"{NS}:{b}" for b in list(FORESTS) + list(MOUNTAINS) + list(UNDERGROUND)],
         [f"{NS}:{b}" for b in REMOVED_BIOMES])
     lang()
     # животные во всех биомах (новые биомы — копии равнин со старым списком)
