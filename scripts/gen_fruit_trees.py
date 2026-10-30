@@ -1,14 +1,15 @@
 """
 Фруктовые деревья на древесине амадзу (LEAF_VARIANTS в gen_forests.py, ModWood.FRUIT_TREES): плоды-предметы (ModItems —
-еда), плоды на дереве (блок <плод>_fruit, block/FruitBlock: блокстейт, модели стадий, текстура, лут), листва, саженцы,
+еда), плоды на дереве (блок <плод>_fruit, block/FruitBlock: блокстейт, модели стадий, текстура, лут), лут листвы, саженцы,
 переводы и превью docs/textures/fruit_trees.png.
 
 Запуск из корня проекта:  python scripts/gen_fruit_trees.py   (нужен Pillow; ванильное яблоко — из jar клиента в кэше
-Gradle). Запускать после gen_wood.py и gen_forests.py: тот копирует лут листвы с амадзу.
+Gradle). Запускать после gen_wood.py и gen_forests.py: тот копирует лут листвы с амадзу. Текстуру листвы — ту же,
+что у амадзу, — пишет gen_leaves.py.
 
 Деревья растут без плодов; природная листва завязывает под собой плод (block/FruitLeavesBlock), он растёт от цветка
 до спелого (4 стадии, модели — кубики на черенке: SHAPES), спелый собирается ПКМ. Одинокие фруктовые деревья растут
-на равнинах (PLAINS_TREES в gen_forests.py). Текстуры: листва — листва амадзу чуть другого оттенка (LEAF_TINT), саженец —
+на равнинах (PLAINS_TREES в gen_forests.py). Текстуры: саженец —
 саженец амадзу с цветками, плод на дереве — развёртка 16×16 (спелая, полуспелая и зелёная кожица, цветок, черенок),
 яблоко-предмет — ванильное чуть краснее, остальные плоды рисуются здесь же (круги, тень от света сверху слева).
 """
@@ -37,18 +38,18 @@ def hx(c):
 
 # плод: ru, en, гамма плода от тёмной к светлой (контур, тень, цвет, свет, блик), форма на дереве (SHAPES),
 # сколько плодов со спелого (как count у FruitBlock в ModWood), цвет цветков (на саженце и на дереве),
-# оттенок листвы (сдвиг тона, насыщенность ×, яркость ×), имя плода на дереве ru, en
+# имя плода на дереве ru, en
 FRUITS = {
     "apple": ("Яблоко", "Apple", [hx(c) for c in ("6e0c10", "a8161a", "d22a24", "e8584a", "f6a090")], "round", 1,
-              hx("f4dce0"), (0, 1, 1), "Яблоко на ветке", "Apple on Branch"),
+              hx("f4dce0"), "Яблоко на ветке", "Apple on Branch"),
     "pear": ("Груша", "Pear", [hx(c) for c in ("5a5414", "8c8424", "bcb43a", "dcd668", "f2eeaa")], "pear", 1,
-             hx("f6f4ec"), (0.01, 0.95, 1.04), "Груша на ветке", "Pear on Branch"),
+             hx("f6f4ec"), "Груша на ветке", "Pear on Branch"),
     "plum": ("Слива", "Plum", [hx(c) for c in ("2a1036", "4a2060", "6c3486", "9256aa", "c49cd6")], "round", 1,
-             hx("f6f4ec"), (-0.01, 1, 0.94), "Слива на ветке", "Plum on Branch"),
+             hx("f6f4ec"), "Слива на ветке", "Plum on Branch"),
     "cherry": ("Вишня", "Cherry", [hx(c) for c in ("4a0610", "7c0c1a", "a81424", "d2343c", "f08a8a")], "cherry", 2,
-               hx("f8d4dc"), (-0.005, 1.05, 0.97), "Вишня на ветке", "Cherries on Branch"),
+               hx("f8d4dc"), "Вишня на ветке", "Cherries on Branch"),
     "apricot": ("Абрикос", "Apricot", [hx(c) for c in ("8a3c10", "c0601c", "e88c34", "f6b25a", "fde0a0")], "round", 1,
-                hx("f8dcd4"), (0.015, 0.95, 1.03), "Абрикос на ветке", "Apricot on Branch"),
+                hx("f8dcd4"), "Абрикос на ветке", "Apricot on Branch"),
 }
 STEM, STEM_DARK = hx("6a4628"), hx("3e2818")
 LEAF_GREEN, LEAF_DARK = hx("4e8a30"), hx("2e5a1c")
@@ -164,13 +165,7 @@ def apricot(colors):
 DRAW = {"pear": pear, "plum": plum, "cherry": cherry, "apricot": apricot}
 
 
-# ---------------------------------------------------------------- листва и саженцы
-
-def fruit_leaves(leaves, tint):
-    """Листва амадзу чуть другого оттенка — чтобы деревья различались и без плодов."""
-    dh, ks, kv = tint
-    return hsv_map(leaves, lambda h, s, v: (h + dh, s * ks, min(1, v * kv)))
-
+# ---------------------------------------------------------------- саженцы
 
 def fruit_sapling(sapling, flower, n):
     """Саженец амадзу чуть светлее, на кончиках листьев — цветки (по n-й паре зелёных пикселей сверху)."""
@@ -292,7 +287,7 @@ def lang():
         data = read(rel, {})
         for fruit, spec in FRUITS.items():
             data[f"item.{NS}.{fruit}"] = spec[k]
-            data[f"block.{NS}.{fruit}_fruit"] = spec[7 + k]
+            data[f"block.{NS}.{fruit}_fruit"] = spec[6 + k]
         write(rel, data)
 
 
@@ -311,10 +306,9 @@ def preview(rows):
 if __name__ == "__main__":
     client = zipfile.ZipFile(find_jar("minecraft_1.21.1_client.jar"))
     vanilla_apple = Image.open(BytesIO(client.read("assets/minecraft/textures/item/apple.png")))
-    leaves = Image.open(os.path.join(TEX, "block", f"{BASE}_leaves.png")).convert("RGBA")
     sapling = Image.open(os.path.join(TEX, "block", f"{BASE}_sapling.png")).convert("RGBA")
     items, leaf_images, saplings, fruit_images = [], [], [], []
-    for n, (fruit, (ru, en, colors, shape, count, flower, tint, *_)) in enumerate(FRUITS.items()):
+    for n, (fruit, (ru, en, colors, shape, count, flower, *_)) in enumerate(FRUITS.items()):
         if fruit == "apple":
             item = hsv_map(vanilla_apple, lambda h, s, v: (h - 0.01 if h > 0.8 or h < 0.1 else h, min(1, s * 1.1), v))
         else:
@@ -322,8 +316,7 @@ if __name__ == "__main__":
         item.save(os.path.join(TEX, "item", f"{fruit}.png"))
         write(f"assets/{NS}/models/item/{fruit}.json",
               {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/{fruit}"}})
-        leaf = fruit_leaves(leaves, tint)
-        leaf.save(os.path.join(TEX, "block", f"{fruit}_leaves.png"))
+        leaf = Image.open(os.path.join(TEX, "block", f"{fruit}_leaves.png")).convert("RGBA")   # из gen_leaves.py
         tex = fruit_texture(colors, flower)
         tex.save(os.path.join(TEX, "block", f"{fruit}_fruit.png"))
         fruit_block(fruit, shape, count)

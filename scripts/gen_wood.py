@@ -2,7 +2,7 @@
 Новая порода древесины по образцу другой (WOODS: порода -> донор, палитра): копии всех JSON донора с заменой имени
 (блокстейты, модели, лут, рецепты, тэг <порода>_logs, деревья <порода>_tree / _wild_tree и их placed_feature), её id в тех
 же тэгах, где донор, переводы и текстуры — текстуры дуба, перекрашенные градиентом по яркости в палитру породы (кора,
-древесина, листва). Превью — docs/textures/<порода>.png.
+древесина, саженец — в цвете листвы). Превью — docs/textures/<порода>.png. Текстуру листвы пишет gen_leaves.py.
 
 Сейчас одна порода — амадзу (по мотивам древесины цуйхуа из Genshin Impact): тёмная бордовая древесина, невысокое
 дерево с широкой кроной-шапкой (форма orchard в worldgen/TrailTreeFeature); на ней растут фруктовые деревья
@@ -27,7 +27,7 @@ TEX = os.path.join(ROOT, "assets", NS, "textures")
 DOCS = os.path.join(HERE, "..", "docs", "textures")
 
 # порода -> (донор JSON, имя по-русски в родительном падеже, по-английски, форма дерева,
-#            кора от тёмной к светлой, древесина от тёмной к светлой, листва от тёмной к светлой)
+#            кора от тёмной к светлой, древесина от тёмной к светлой, листва саженца от тёмной к светлой)
 WOODS = {
     "amadzu": ("alder", "амадзу", "Amadzu", "orchard",
                [(42, 24, 26), (76, 46, 46), (118, 80, 74)],
@@ -173,7 +173,6 @@ def textures(wood, bark, timber, leaves):
         f"block/{wood}_door_bottom": gradient(load("block/oak_door_bottom"), timber, keep_gray=True),
         f"item/{wood}_door": gradient(load("item/oak_door"), timber, keep_gray=True),
         f"block/{wood}_trapdoor": gradient(load("block/oak_trapdoor"), timber, keep_gray=True),
-        f"block/{wood}_leaves": gradient(load("block/oak_leaves"), leaves),
         f"block/{wood}_sapling": gradient(sapling, leaves, mask=green),
     }
 
