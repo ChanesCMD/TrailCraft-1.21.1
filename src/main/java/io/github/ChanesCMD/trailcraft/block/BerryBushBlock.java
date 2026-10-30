@@ -72,7 +72,7 @@ public class BerryBushBlock extends BushBlock implements BonemealableBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(AGE);
+        builder.add(AGE, SnowCover.SNOW);
     }
 
     @Override
@@ -82,11 +82,14 @@ public class BerryBushBlock extends BushBlock implements BonemealableBlock {
 
     @Override
     public boolean isRandomlyTicking(BlockState state) {
-        return state.getValue(AGE) < MAX_AGE;
+        return state.getValue(AGE) < MAX_AGE || SnowCover.has(state);
     }
 
     @Override
     protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (SnowCover.melt(state, level, pos, random)) {
+            return;
+        }
         int age = state.getValue(AGE);
         if (age < MAX_AGE && level.getRawBrightness(pos.above(), 0) >= 9
                 && CommonHooks.canCropGrow(level, pos, state, random.nextInt(Farm.BUSH_GROWTH_CHANCE) == 0)) {

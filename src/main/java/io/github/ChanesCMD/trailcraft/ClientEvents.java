@@ -132,7 +132,7 @@ public class ClientEvents {
                         io.github.ChanesCMD.trailcraft.client.SeasonColors.grass(
                                 USE_BIOME_TINT && level != null && pos != null
                                         ? BiomeColors.getAverageGrassColor(level, pos)
-                                        : GRASS_COLOR, level, pos),
+                                        : GRASS_COLOR, level, pos, state),
                 // дёрн
                 ModBlocks.BUROZEM_GRASS.get(),
                 ModBlocks.CHERNOZEM_GRASS.get(),

@@ -383,13 +383,13 @@ public class ModBlocks {
     }
 
     public static final DeferredBlock<Block> GRASS_SMALL = BLOCKS.registerBlock("grass_small",
-            props -> new GrassPlantBlock(props, 6), plantProps());
+            props -> new GrassPlantBlock(props, 6, true), plantProps());
 
     public static final DeferredBlock<Block> GRASS_MEDIUM = BLOCKS.registerBlock("grass_medium",
-            props -> new GrassPlantBlock(props, 10), plantProps());
+            props -> new GrassPlantBlock(props, 10, true), plantProps());
 
     public static final DeferredBlock<Block> GRASS_TALL = BLOCKS.registerBlock("grass_tall",
-            props -> new GrassPlantBlock(props, 14), plantProps());
+            props -> new GrassPlantBlock(props, 14, true), plantProps());
 
     // === ДИКИЕ РАСТЕНИЯ ===
     /** Ягодные кусты: ПКМ по кусту с ягодами — ягоды, сломанный куст даёт ветки. Морошка низкая. */
@@ -409,7 +409,7 @@ public class ModBlocks {
             props -> new GrassPlantBlock(props, 12), wildPlantProps());
 
     /** Дикий джут: в два блока высотой, с нижней половины падают джут и семена джута. */
-    public static final DeferredBlock<Block> WILD_JUTE = BLOCKS.registerBlock("wild_jute", DoublePlantBlock::new, wildPlantProps());
+    public static final DeferredBlock<Block> WILD_JUTE = BLOCKS.registerBlock("wild_jute", io.github.ChanesCMD.trailcraft.block.WildJuteBlock::new, wildPlantProps());
     /** Посаженный джут (из семян, на грядке). Своего предмета нет: ставится и выпадает как семена (jute_seeds). */
     public static final DeferredBlock<Block> JUTE_CROP = BLOCKS.registerBlock("jute_crop", JuteCropBlock::new,
             BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollission().instabreak().sound(SoundType.CROP)

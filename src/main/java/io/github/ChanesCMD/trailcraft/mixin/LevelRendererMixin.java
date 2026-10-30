@@ -1,9 +1,13 @@
 package io.github.ChanesCMD.trailcraft.mixin;
 
+import io.github.ChanesCMD.trailcraft.client.TreeSnow;
 import io.github.ChanesCMD.trailcraft.client.weather.WeatherParticles;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /**
  * Погода частицами (client/weather/WeatherParticles): ванильные полосы дождя и снега не рисуются, а в tickRain
  * не спавнятся ванильные брызги и дымок (их заменяют свои). Звук дождя из tickRain остаётся.
+ * Снег появился на дереве или пропал (blockChanged) — client/TreeSnow сбрасывает кеш и перестраивает крону.
  */
 @Mixin(LevelRenderer.class)
 public abstract class LevelRendererMixin {
@@ -30,5 +35,10 @@ public abstract class LevelRendererMixin {
         if (!WeatherParticles.enabled()) {
             level.addParticle(particle, x, y, z, xd, yd, zd);
         }
+    }
+
+    @Inject(method = "blockChanged", at = @At("HEAD"))
+    private void trailcraft$treeSnow(BlockGetter level, BlockPos pos, BlockState oldState, BlockState newState, int flags, CallbackInfo ci) {
+        TreeSnow.onBlockChanged(pos, oldState, newState);
     }
 }

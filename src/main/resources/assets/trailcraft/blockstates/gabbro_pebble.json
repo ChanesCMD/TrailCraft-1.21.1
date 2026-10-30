@@ -1,66 +1,132 @@
 {
-  "variants": {
-    "": [
-      {
-        "model": "trailcraft:block/gabbro_pebble_a"
+  "multipart": [
+    {
+      "apply": [
+        {
+          "model": "trailcraft:block/gabbro_pebble_a"
+        },
+        {
+          "model": "trailcraft:block/gabbro_pebble_a",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/gabbro_pebble_a",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/gabbro_pebble_a",
+          "y": 270
+        },
+        {
+          "model": "trailcraft:block/gabbro_pebble_b"
+        },
+        {
+          "model": "trailcraft:block/gabbro_pebble_b",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/gabbro_pebble_b",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/gabbro_pebble_b",
+          "y": 270
+        },
+        {
+          "model": "trailcraft:block/gabbro_pebble_c"
+        },
+        {
+          "model": "trailcraft:block/gabbro_pebble_c",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/gabbro_pebble_c",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/gabbro_pebble_c",
+          "y": 270
+        },
+        {
+          "model": "trailcraft:block/gabbro_pebble_d"
+        },
+        {
+          "model": "trailcraft:block/gabbro_pebble_d",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/gabbro_pebble_d",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/gabbro_pebble_d",
+          "y": 270
+        }
+      ]
+    },
+    {
+      "when": {
+        "snow": "1"
       },
-      {
-        "model": "trailcraft:block/gabbro_pebble_a",
-        "y": 90
-      },
-      {
-        "model": "trailcraft:block/gabbro_pebble_a",
-        "y": 180
-      },
-      {
-        "model": "trailcraft:block/gabbro_pebble_a",
-        "y": 270
-      },
-      {
-        "model": "trailcraft:block/gabbro_pebble_b"
-      },
-      {
-        "model": "trailcraft:block/gabbro_pebble_b",
-        "y": 90
-      },
-      {
-        "model": "trailcraft:block/gabbro_pebble_b",
-        "y": 180
-      },
-      {
-        "model": "trailcraft:block/gabbro_pebble_b",
-        "y": 270
-      },
-      {
-        "model": "trailcraft:block/gabbro_pebble_c"
-      },
-      {
-        "model": "trailcraft:block/gabbro_pebble_c",
-        "y": 90
-      },
-      {
-        "model": "trailcraft:block/gabbro_pebble_c",
-        "y": 180
-      },
-      {
-        "model": "trailcraft:block/gabbro_pebble_c",
-        "y": 270
-      },
-      {
-        "model": "trailcraft:block/gabbro_pebble_d"
-      },
-      {
-        "model": "trailcraft:block/gabbro_pebble_d",
-        "y": 90
-      },
-      {
-        "model": "trailcraft:block/gabbro_pebble_d",
-        "y": 180
-      },
-      {
-        "model": "trailcraft:block/gabbro_pebble_d",
-        "y": 270
+      "apply": {
+        "model": "trailcraft:block/snow_cover_1"
       }
-    ]
-  }
+    },
+    {
+      "when": {
+        "snow": "2"
+      },
+      "apply": {
+        "model": "minecraft:block/snow_height4"
+      }
+    },
+    {
+      "when": {
+        "snow": "3"
+      },
+      "apply": {
+        "model": "minecraft:block/snow_height6"
+      }
+    },
+    {
+      "when": {
+        "snow": "4"
+      },
+      "apply": {
+        "model": "minecraft:block/snow_height8"
+      }
+    },
+    {
+      "when": {
+        "snow": "5"
+      },
+      "apply": {
+        "model": "minecraft:block/snow_height10"
+      }
+    },
+    {
+      "when": {
+        "snow": "6"
+      },
+      "apply": {
+        "model": "minecraft:block/snow_height12"
+      }
+    },
+    {
+      "when": {
+        "snow": "7"
+      },
+      "apply": {
+        "model": "minecraft:block/snow_height14"
+      }
+    },
+    {
+      "when": {
+        "snow": "8"
+      },
+      "apply": {
+        "model": "minecraft:block/snow_block"
+      }
+    }
+  ]
 }

@@ -1,5 +1,73 @@
 {
-  "variants": {
-    "": { "model": "trailcraft:block/grass_small" }
-  }
+  "multipart": [
+    {
+      "apply": {
+        "model": "trailcraft:block/grass_small"
+      }
+    },
+    {
+      "when": {
+        "snow": "1"
+      },
+      "apply": {
+        "model": "minecraft:block/snow_height2"
+      }
+    },
+    {
+      "when": {
+        "snow": "2"
+      },
+      "apply": {
+        "model": "minecraft:block/snow_height4"
+      }
+    },
+    {
+      "when": {
+        "snow": "3"
+      },
+      "apply": {
+        "model": "minecraft:block/snow_height6"
+      }
+    },
+    {
+      "when": {
+        "snow": "4"
+      },
+      "apply": {
+        "model": "minecraft:block/snow_height8"
+      }
+    },
+    {
+      "when": {
+        "snow": "5"
+      },
+      "apply": {
+        "model": "minecraft:block/snow_height10"
+      }
+    },
+    {
+      "when": {
+        "snow": "6"
+      },
+      "apply": {
+        "model": "minecraft:block/snow_height12"
+      }
+    },
+    {
+      "when": {
+        "snow": "7"
+      },
+      "apply": {
+        "model": "minecraft:block/snow_height14"
+      }
+    },
+    {
+      "when": {
+        "snow": "8"
+      },
+      "apply": {
+        "model": "minecraft:block/snow_block"
+      }
+    }
+  ]
 }

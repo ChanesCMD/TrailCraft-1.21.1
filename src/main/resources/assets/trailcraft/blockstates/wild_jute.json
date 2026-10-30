@@ -1,10 +1,106 @@
 {
-  "variants": {
-    "half=lower": {
-      "model": "trailcraft:block/wild_jute_bottom"
+  "multipart": [
+    {
+      "when": {
+        "half": "upper"
+      },
+      "apply": {
+        "model": "trailcraft:block/wild_jute_top"
+      }
     },
-    "half=upper": {
-      "model": "trailcraft:block/wild_jute_top"
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "snow": "0"
+          }
+        ]
+      },
+      "apply": {
+        "model": "trailcraft:block/wild_jute_bottom"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "snow": "1|2|3|4|5|6|7|8"
+          }
+        ]
+      },
+      "apply": {
+        "model": "trailcraft:block/wild_jute_bottom_snow"
+      }
+    },
+    {
+      "when": {
+        "snow": "1"
+      },
+      "apply": {
+        "model": "minecraft:block/snow_height2"
+      }
+    },
+    {
+      "when": {
+        "snow": "2"
+      },
+      "apply": {
+        "model": "minecraft:block/snow_height4"
+      }
+    },
+    {
+      "when": {
+        "snow": "3"
+      },
+      "apply": {
+        "model": "minecraft:block/snow_height6"
+      }
+    },
+    {
+      "when": {
+        "snow": "4"
+      },
+      "apply": {
+        "model": "minecraft:block/snow_height8"
+      }
+    },
+    {
+      "when": {
+        "snow": "5"
+      },
+      "apply": {
+        "model": "minecraft:block/snow_height10"
+      }
+    },
+    {
+      "when": {
+        "snow": "6"
+      },
+      "apply": {
+        "model": "minecraft:block/snow_height12"
+      }
+    },
+    {
+      "when": {
+        "snow": "7"
+      },
+      "apply": {
+        "model": "minecraft:block/snow_height14"
+      }
+    },
+    {
+      "when": {
+        "snow": "8"
+      },
+      "apply": {
+        "model": "minecraft:block/snow_block"
+      }
     }
-  }
+  ]
 }

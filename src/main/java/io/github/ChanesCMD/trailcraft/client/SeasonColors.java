@@ -1,6 +1,7 @@
 package io.github.ChanesCMD.trailcraft.client;
 
 import io.github.ChanesCMD.trailcraft.TrailCraft;
+import io.github.ChanesCMD.trailcraft.block.SnowCover;
 import io.github.ChanesCMD.trailcraft.calendar.Calendar;
 import io.github.ChanesCMD.trailcraft.season.Seasons;
 import net.minecraft.client.Minecraft;
@@ -42,6 +43,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * и трава чуть желтеют. Переход в последние дни сезона (Seasons.stageProgress, раз в день): трава смешивает цвета двух
  * сезонов, листва меняется блок за блоком — у каждой клетки 3×3 столбца свой порог {@link #shift}, кроны желтеют и
  * белеют пятнами. Сменился сезон или день перехода — чанки перестраиваются.
+ * Зимой (вне тёплых биомов) листва белая, только если на дереве лежит снег (client/TreeSnow: один слой снега на кроне —
+ * белое всё дерево, сразу, без постепенного перехода); без снега дерево остаётся осенним (папка autumn).
  */
 @EventBusSubscriber(modid = TrailCraft.MODID, value = Dist.CLIENT)
 public final class SeasonColors {
@@ -54,6 +57,8 @@ public final class SeasonColors {
     private static final ModelProperty<Boolean> WARM = new ModelProperty<>();
     /** Порог перехода листвы этого места (0..1) — кладётся в ModelData вместе с WARM. */
     private static final ModelProperty<Float> SHIFT = new ModelProperty<>();
+    /** Лежит ли снег на этом дереве (TreeSnow); считается только зимой. */
+    private static final ModelProperty<Boolean> SNOWY = new ModelProperty<>();
     /** Листва меняется пятнами такого размера (в блоках по X и Z). */
     private static final int LEAF_PATCH = 3;
 
@@ -61,6 +66,8 @@ public final class SeasonColors {
     private record Look(Calendar.Season season, Calendar.Season next, float progress) {}
 
     private static volatile Look shown = new Look(Calendar.Season.SUMMER, Calendar.Season.AUTUMN, 0f);
+    /** Число загруженных чанков в прошлый тик: изменилось — кеш снега на деревьях мог устареть (TreeSnow). */
+    private static int loadedChunks = -1;
     /** Папка сезонных текстур (autumn, winter, warm_winter) → спрайт листвы → сезонный. */
     private static final Map<String, Map<TextureAtlasSprite, TextureAtlasSprite>> SPRITES = new ConcurrentHashMap<>();
 
@@ -76,17 +83,39 @@ public final class SeasonColors {
         Look look = new Look(Seasons.current(), Seasons.next(), Seasons.stageProgress());
         if (!look.equals(shown)) {
             shown = look;
+            TreeSnow.clear();
             mc.levelRenderer.allChanged();
         }
+        int chunks = mc.level.getChunkSource().getLoadedChunksCount();
+        if (chunks != loadedChunks) {
+            loadedChunks = chunks;
+            TreeSnow.clear();
+        }
+    }
+
+    /** Может ли сейчас лежать снег (не лето): тогда листве нужно знать, лежит ли на дереве снег. */
+    public static boolean snowPossible() {
+        return shown.season() != Calendar.Season.SUMMER;
     }
 
     /** Цвет травы с поправкой на сезон; pos == null — предмет или без мира. */
     public static int grass(int rgb, @Nullable BlockAndTintGetter level, @Nullable BlockPos pos) {
+        return grass(rgb, level, pos, null);
+    }
+
+    /** То же; state — блок, который красим: снежная трава (GrassPlantBlock со снегом) белеет, а дёрн под ней — тоже. */
+    public static int grass(int rgb, @Nullable BlockAndTintGetter level, @Nullable BlockPos pos, @Nullable BlockState state) {
         Look look = shown;
         boolean warm = isWarm(pos);
-        boolean snowed = level != null && pos != null && level.getBlockState(pos.above()).is(Blocks.SNOW);
+        boolean snowed = state != null && SnowCover.has(state)
+                || level != null && pos != null && isSnowCover(level.getBlockState(pos.above()));
         int from = grass(rgb, look.season(), warm, snowed);
         return look.progress() == 0f ? from : mix(from, grass(rgb, look.next(), warm, snowed), look.progress());
+    }
+
+    /** Снег над блоком: слой снега или снег в клетке с травой. */
+    private static boolean isSnowCover(BlockState above) {
+        return above.is(Blocks.SNOW) || SnowCover.has(above);
     }
 
     private static int grass(int rgb, Calendar.Season season, boolean warm, boolean snowed) {
@@ -110,12 +139,13 @@ public final class SeasonColors {
         return (h & 0xFFFF) / 65536f;
     }
 
-    /** Папка сезонных текстур листвы, или null — летняя. */
+    /** Папка сезонных текстур листвы, или null — летняя. Белая крона (winter) — только со снегом, её выбирает getQuads. */
     private static @Nullable String leafFolder(Calendar.Season season, boolean warm) {
         return switch (season) {
             case SPRING, SUMMER -> null;
             case AUTUMN -> warm ? null : "autumn";
-            case WINTER -> warm ? "warm_winter" : "winter";
+            // TODO: уточнить, какой должна быть крона зимой без снега (сейчас осенняя, как до первого снега)
+            case WINTER -> warm ? "warm_winter" : "autumn";
         };
     }
 
@@ -186,7 +216,10 @@ public final class SeasonColors {
         @Override
         public @NotNull ModelData getModelData(@NotNull BlockAndTintGetter level, @NotNull BlockPos pos, @NotNull BlockState state,
                                                @NotNull ModelData data) {
-            return super.getModelData(level, pos, state, data).derive().with(WARM, isWarm(pos)).with(SHIFT, shift(pos)).build();
+            boolean warm = isWarm(pos);
+            boolean snowy = !warm && snowPossible() && TreeSnow.isSnowy(pos);
+            return super.getModelData(level, pos, state, data).derive()
+                    .with(WARM, warm).with(SHIFT, shift(pos)).with(SNOWY, snowy).build();
         }
 
         @Override
@@ -199,7 +232,9 @@ public final class SeasonColors {
             Look look = shown;
             Float shift = data.get(SHIFT);
             boolean changed = shift != null && shift < look.progress();
-            String folder = leafFolder(changed ? look.next() : look.season(), Boolean.TRUE.equals(data.get(WARM)));
+            // снег на дереве белит всю крону сразу, постепенный переход по пятнам (changed) её не касается
+            String folder = Boolean.TRUE.equals(data.get(SNOWY)) ? "winter"
+                    : leafFolder(changed ? look.next() : look.season(), Boolean.TRUE.equals(data.get(WARM)));
             return folder == null ? quads : swap(quads, folder);
         }
     }

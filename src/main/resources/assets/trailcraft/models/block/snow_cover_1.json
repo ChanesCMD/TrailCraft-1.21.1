@@ -1,0 +1,40 @@
+{
+  "textures": {
+    "snow": "minecraft:block/snow",
+    "particle": "minecraft:block/snow"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        1,
+        16
+      ],
+      "faces": {
+        "down": {
+          "texture": "#snow"
+        },
+        "up": {
+          "texture": "#snow"
+        },
+        "north": {
+          "texture": "#snow"
+        },
+        "south": {
+          "texture": "#snow"
+        },
+        "west": {
+          "texture": "#snow"
+        },
+        "east": {
+          "texture": "#snow"
+        }
+      }
+    }
+  ]
+}

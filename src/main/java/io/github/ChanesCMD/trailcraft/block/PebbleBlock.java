@@ -32,6 +32,7 @@ import java.util.List;
  * Небольшой камень 3x5x2 пикселя. Внешний вид (положение внутри клетки и поворот) выбирается
  * случайно по координатам блока из вариантов в blockstate. Стоит на любой твёрдой верхней грани, можно ставить под воду.
  * Так же устроены кремень и упавшая ветка. ПКМ по лежащему — подобрать (в руку или рюкзак, если места нет — под ноги).
+ * Зимой его заносит снегом (SnowCover): снег ложится слоем в клетку, камень торчит верхушкой.
  */
 public class PebbleBlock extends BushBlock implements SimpleWaterloggedBlock {
     public static final MapCodec<PebbleBlock> CODEC = simpleCodec(PebbleBlock::new);
@@ -50,8 +51,18 @@ public class PebbleBlock extends BushBlock implements SimpleWaterloggedBlock {
     }
 
     @Override
+    protected boolean isRandomlyTicking(BlockState state) {
+        return SnowCover.has(state);
+    }
+
+    @Override
+    protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, net.minecraft.util.RandomSource random) {
+        SnowCover.melt(state, level, pos, random);
+    }
+
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(WATERLOGGED);
+        builder.add(WATERLOGGED, SnowCover.SNOW);
     }
 
     @Override
