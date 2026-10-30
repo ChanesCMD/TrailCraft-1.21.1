@@ -1,6 +1,7 @@
 package io.github.ChanesCMD.trailcraft.init;
 
 import io.github.ChanesCMD.trailcraft.init.ModTiers.Material;
+import io.github.ChanesCMD.trailcraft.item.BroomItem;
 import io.github.ChanesCMD.trailcraft.item.KnifeItem;
 import io.github.ChanesCMD.trailcraft.item.SawItem;
 import io.github.ChanesCMD.trailcraft.item.SpearItem;
@@ -103,8 +104,8 @@ public final class ModTools {
         reg("zinc_watering_can", p -> new WateringCanItem(Farm.ZINC_CAN_WATER, p.stacksTo(1)));
         // линейка меряет расстояние между двумя блоками (item/RulerItem)
         reg("wooden_ruler", p -> new RulerItem(p.stacksTo(1)));
-        // TODO: уточнить, что делает метла
-        single("broom");
+        // метла сметает снег, на сметённом месте новый не ложится (item/BroomItem, season/SweptSnow)
+        reg("broom", p -> new BroomItem(p.stacksTo(1)));
     }
 
     /** Вызывается из конструктора мода, чтобы статический блок выше выполнился до событий регистрации. */
@@ -116,10 +117,6 @@ public final class ModTools {
 
     private static void tool(Material m, String suffix, float damage, float speed) {
         reg(m.id + suffix, p -> new TieredToolItem(m.tier, p.attributes(DiggerItem.createAttributes(m.tier, damage, speed))));
-    }
-
-    private static void single(String name) {
-        ITEMS.add(ModItems.ITEMS.registerSimpleItem(name, new Item.Properties().stacksTo(1)));
     }
 
     private ModTools() {}

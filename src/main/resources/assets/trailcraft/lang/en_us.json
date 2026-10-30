@@ -952,6 +952,7 @@
   "message.trailcraft.ruler.reset": "Ruler mark cleared",
   "message.trailcraft.ruler.too_far": "Too far: the ruler measures up to %s blocks",
   "message.trailcraft.ruler.distance": "Distance: %s blocks (axes %s, %s, %s)",
+  "tooltip.trailcraft.broom": "Right-click snow to sweep it away; no new snow settles where it was swept",
   "tooltip.trailcraft.ruler": "Right-click two blocks to measure the distance (up to %s); Shift+right-click to clear",
   "item.minecraft.chicken": "Raw White Meat",
   "item.minecraft.cooked_chicken": "Cooked White Meat",

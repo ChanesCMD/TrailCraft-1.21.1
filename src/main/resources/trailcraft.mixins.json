@@ -13,6 +13,7 @@
     "FluidTransportBehaviourMixin",
     "IceBlockMixin",
     "LeavesBlockMixin",
+    "ServerLevelMixin",
     "SmartBlockEntityMixin",
     "SnowLayerBlockMixin",
     "TreeFertilizerItemMixin"

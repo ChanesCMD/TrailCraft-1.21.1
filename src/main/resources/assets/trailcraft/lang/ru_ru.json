@@ -952,6 +952,7 @@
   "message.trailcraft.ruler.reset": "Отметка линейки сброшена",
   "message.trailcraft.ruler.too_far": "Слишком далеко: линейка меряет до %s блоков",
   "message.trailcraft.ruler.distance": "Расстояние: %s бл. (по осям %s, %s, %s)",
+  "tooltip.trailcraft.broom": "ПКМ по снегу — смести; на сметённом месте новый снег не ляжет",
   "tooltip.trailcraft.ruler": "ПКМ по двум блокам — расстояние между ними (до %s); Shift+ПКМ — сбросить",
   "item.minecraft.chicken": "Сырое белое мясо",
   "item.minecraft.cooked_chicken": "Жареное белое мясо",

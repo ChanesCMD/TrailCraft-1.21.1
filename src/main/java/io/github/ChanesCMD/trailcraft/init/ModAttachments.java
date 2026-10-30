@@ -62,6 +62,11 @@ public final class ModAttachments {
             () -> AttachmentType.<Set<Long>>builder(() -> new HashSet<>())
                     .serialize(Codec.LONG.listOf().xmap(list -> (Set<Long>) new HashSet<>(list), set -> List.copyOf(set))).build());
 
+    /** Столбцы чанка, где метлой смели снег (BlockPos.asLong с y = 0): новый снег там не ложится (season/SweptSnow). */
+    public static final Supplier<AttachmentType<Set<Long>>> SWEPT_SNOW = ATTACHMENT_TYPES.register("swept_snow",
+            () -> AttachmentType.<Set<Long>>builder(() -> new HashSet<>())
+                    .serialize(Codec.LONG.listOf().xmap(list -> (Set<Long>) new HashSet<>(list), set -> List.copyOf(set))).build());
+
     /** Последнее, что отправлено клиенту в GearPayload (не сохраняется: после входа отправится заново). */
     public static final Supplier<AttachmentType<Integer>> GEAR_SENT = ATTACHMENT_TYPES.register("gear_sent",
             () -> AttachmentType.builder(() -> -1).build());
