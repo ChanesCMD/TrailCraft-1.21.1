@@ -35,9 +35,14 @@ def make_overlay(path, seed):
             r, g, b, a = base.getpixel((x % 16, y % 16))
             if not a:
                 continue
-            d = math.hypot((x - (SIZE - 1) / 2) / (SIZE / 2), (y - (SIZE - 1) / 2) / (SIZE / 2))
-            threshold = 0.55 + 0.40 * (noise.getpixel((x, y)) / 255)
-            if d > threshold or rng.random() < 0.04:
+            # Внутри — сплошная листва; рваной остаётся только кромка в 3–4 пикселя.
+            # Углы тоже сохраняются: маска не радиальная, иначе они вырезаются полностью.
+            edge = min(x, y, SIZE - 1 - x, SIZE - 1 - y)
+            if edge >= 3:
+                keep = True
+            else:
+                keep = rng.random() < 0.45 + 0.55 * (noise.getpixel((x, y)) / 255)
+            if not keep or rng.random() < 0.03:
                 continue
             out.putpixel((x, y), (round(r * DARK), round(g * DARK), round(b * DARK), a))
     return out
