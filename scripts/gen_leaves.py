@@ -524,8 +524,10 @@ def generate(species):
     ov_kind = kind
     if ov_kind is None:
         ov_kind = {"fronds": "lance", "blossom": "oval", "lilac": "heart"}.get(special, "oval")
-    pack(tex, rng, ov_kind, "small", lambda: {None: 0, **extra_roles}, (-2,), contact=4, overlap=True,
-         limit=rng.randint(9, 14), tries=200, fixed=fixed and ov_kind == kind)
+    overlay = add(make_ramp(REF[species], st["contrast"] * 1.35, lift=-0.9))
+    overlay_pals = {None: overlay, "S": (overlay, 0), "C": (overlay, 0)}
+    pack(tex, rng, ov_kind, "medium", lambda: overlay_pals, (0,), contact=4, overlap=True,
+         limit=rng.randint(12, 18), tries=200, fixed=fixed and ov_kind == kind)
     return render(tex, ramps, st["dark_gaps"], rng)
 
 
