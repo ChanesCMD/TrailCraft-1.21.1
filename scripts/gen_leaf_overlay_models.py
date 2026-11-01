@@ -30,16 +30,16 @@ def face(cull=None):
 
 def plane(x0, z0, x1, z1, faces):
     return {
-        "from": [x0, 0, z0],
-        "to": [x1, 16, z1],
+        "from": [x0, -6, z0],
+        "to": [x1, 22, z1],
         "rotation": {"origin": [8, 8, 8], "axis": "y", "angle": 45, "rescale": True},
         "shade": False,
         "faces": faces,
     }
 
 
-# Куб — как у обычной листвы, плюс два креста. Плоскости шире блока (от -1 до 17), после поворота
-# на 45° они торчат за края примерно на пиксель.
+# Куб — как у обычной листвы, плюс два креста. Плоскости шире и выше блока (от -6 до 22 по X/Z и по Y),
+# после поворота на 45° они заметно торчат за края.
 parent = {
     "parent": "minecraft:block/block",
     "render_type": "minecraft:cutout_mipped",
@@ -57,8 +57,8 @@ parent = {
                 "east": face("east"),
             },
         },
-        plane(-1, 8, 17, 8, {"north": face(), "south": face()}),
-        plane(8, -1, 8, 17, {"west": face(), "east": face()}),
+        plane(-6, 8, 22, 8, {"north": face(), "south": face()}),
+        plane(8, -6, 8, 22, {"west": face(), "east": face()}),
     ],
 }
 write(f"{PARENT}.json", parent)
