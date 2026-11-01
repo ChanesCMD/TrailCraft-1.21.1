@@ -2,6 +2,7 @@ package io.github.ChanesCMD.trailcraft.init;
 
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.animal.Capercaillie;
+import io.github.ChanesCMD.trailcraft.cushion.CushionEntity;
 import io.github.ChanesCMD.trailcraft.spear.ThrownSpear;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
@@ -21,6 +22,12 @@ public final class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<Capercaillie>> CAPERCAILLIE = ENTITY_TYPES.register("capercaillie",
             () -> EntityType.Builder.<Capercaillie>of(Capercaillie::new, MobCategory.CREATURE).sized(0.6f, 0.95f).eyeHeight(0.8f)
                     .clientTrackingRange(10).build("capercaillie"));
+
+    /** Подушка для сидения (cushion/CushionEntity): сидящий игрок опускается на неё, поэтому точка посадки чуть выше верха. */
+    public static final DeferredHolder<EntityType<?>, EntityType<CushionEntity>> CUSHION = ENTITY_TYPES.register("cushion",
+            () -> EntityType.Builder.<CushionEntity>of(CushionEntity::new, MobCategory.MISC)
+                    .sized(CushionEntity.WIDTH, CushionEntity.HEIGHT).passengerAttachments(0.25f)
+                    .clientTrackingRange(8).updateInterval(20).build("cushion"));
 
     private ModEntities() {}
 }

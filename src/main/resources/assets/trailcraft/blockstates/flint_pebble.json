@@ -1,6 +1,9 @@
 {
   "multipart": [
     {
+      "when": {
+        "snow": "0"
+      },
       "apply": [
         {
           "model": "trailcraft:block/flint_pebble_a"
@@ -68,8 +71,209 @@
       "when": {
         "snow": "1"
       },
+      "apply": [
+        {
+          "model": "trailcraft:block/flint_pebble_a_s1"
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_a_s1",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_a_s1",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_a_s1",
+          "y": 270
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_b_s1"
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_b_s1",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_b_s1",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_b_s1",
+          "y": 270
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_c_s1"
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_c_s1",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_c_s1",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_c_s1",
+          "y": 270
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_d_s1"
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_d_s1",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_d_s1",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_d_s1",
+          "y": 270
+        }
+      ]
+    },
+    {
+      "when": {
+        "snow": "2"
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/flint_pebble_a_s2"
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_a_s2",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_a_s2",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_a_s2",
+          "y": 270
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_b_s2"
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_b_s2",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_b_s2",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_b_s2",
+          "y": 270
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_c_s2"
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_c_s2",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_c_s2",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_c_s2",
+          "y": 270
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_d_s2"
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_d_s2",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_d_s2",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_d_s2",
+          "y": 270
+        }
+      ]
+    },
+    {
+      "when": {
+        "snow": "3"
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/flint_pebble_a_s3"
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_a_s3",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_a_s3",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_a_s3",
+          "y": 270
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_b_s3"
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_b_s3",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_b_s3",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_b_s3",
+          "y": 270
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_c_s3"
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_c_s3",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_c_s3",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_c_s3",
+          "y": 270
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_d_s3"
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_d_s3",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_d_s3",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/flint_pebble_d_s3",
+          "y": 270
+        }
+      ]
+    },
+    {
+      "when": {
+        "snow": "1"
+      },
       "apply": {
-        "model": "trailcraft:block/snow_cover_1"
+        "model": "minecraft:block/snow_height2"
       }
     },
     {

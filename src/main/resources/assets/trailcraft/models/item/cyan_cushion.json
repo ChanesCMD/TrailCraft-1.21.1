@@ -1,0 +1,7 @@
+{
+  "parent": "trailcraft:item/cushion_base",
+  "textures": {
+    "top": "trailcraft:item/cushion/cyan_top",
+    "side": "trailcraft:item/cushion/cyan_side"
+  }
+}

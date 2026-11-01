@@ -296,6 +296,12 @@ public class ModBlocks {
     public static final DeferredBlock<Block> BITUMINOUS_COAL_BLOCK = BLOCKS.registerSimpleBlock("bituminous_coal_block",
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(5.0f, 6.0f).requiresCorrectToolForDrops().sound(SoundType.STONE));
     /** Угольная горелка: слабая горелка всполоха — нагрев для чаши Create, пока горит уголь (CoalBurnerBlock). */
+    /** Поленница (block/LogPileBlock): без предмета — создаётся Shift + ПКМ бревном по земле. */
+    public static final DeferredBlock<io.github.ChanesCMD.trailcraft.block.LogPileBlock> LOG_PILE = BLOCKS.registerBlock("log_pile",
+            io.github.ChanesCMD.trailcraft.block.LogPileBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(1.5f).sound(SoundType.WOOD).noOcclusion()
+                    .ignitedByLava().noLootTable());
+
     public static final DeferredBlock<CoalBurnerBlock> COAL_BURNER = BLOCKS.registerBlock("coal_burner", CoalBurnerBlock::new,
             BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()
                     .lightLevel(state -> CoalBurnerBlock.isLit(state) ? 10 : 0));

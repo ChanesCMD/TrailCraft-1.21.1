@@ -39,7 +39,9 @@ import java.util.List;
 /**
  * Бочка — хранилище воды или танина (WaterBarrelBlockEntity): ведро воды или танина — налить 1000 mB, пустое ведро —
  * набрать, фляга — наполнить (по 100 mB за глоток), пустой рукой — попить. В танин кладут выскобленные шкуры, готовую
- * кожу забирают пустой рукой. Shift + пустая рука — окно бочки (BarrelMenu). В тэге c:barrels/wooden (жидкостный бак, хранилище Create).
+ * кожу забирают пустой рукой. Shift + пустая рука — окно бочки (BarrelMenu), в нём же кнопка запечатывания: в запечатанной
+ * бочке идёт дубление, а слоты и воронки заперты до распечатывания; само окно открывается и у запечатанной бочки.
+ * В тэге c:barrels/wooden (жидкостный бак, хранилище Create).
  */
 public class WaterBarrelBlock extends BaseEntityBlock {
     public static final MapCodec<WaterBarrelBlock> CODEC = simpleCodec(WaterBarrelBlock::new);
@@ -74,6 +76,14 @@ public class WaterBarrelBlock extends BaseEntityBlock {
                                               InteractionHand hand, BlockHitResult hit) {
         if (!(level.getBlockEntity(pos) instanceof WaterBarrelBlockEntity barrel)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        }
+        if (barrel.isSealed()) {
+            // Запечатанную бочку всё равно можно открыть и посмотреть, что в ней (как в TFC);
+            // предметы при этом не используются, пока бочку не распечатают.
+            if (!level.isClientSide) {
+                player.openMenu(barrel);
+            }
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
         if (stack.is(ModFluids.TANNIN.bucket.get())) {
             if (barrel.water() > 0 || barrel.tannin() + 1000 > WaterBarrelBlockEntity.CAPACITY) {
@@ -146,6 +156,13 @@ public class WaterBarrelBlock extends BaseEntityBlock {
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (!(level.getBlockEntity(pos) instanceof WaterBarrelBlockEntity barrel)) {
             return InteractionResult.PASS;
+        }
+        if (barrel.isSealed()) {
+            // В запечатанную бочку не пьют и не кладут шкуры, но окно открывается всегда — там её можно распечатать.
+            if (!level.isClientSide) {
+                player.openMenu(barrel);
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;

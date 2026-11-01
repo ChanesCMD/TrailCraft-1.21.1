@@ -201,8 +201,6 @@ public class ModItems {
     /** Куриное яйцо: курица несёт его вместо ванильного (TrailBird), c:eggs. */
     public static final DeferredItem<Item> EGG = ITEMS.registerSimpleItem("egg");
     /** Плоды фруктовых деревьев на амадзу (ModWood.FRUIT_TREES): падают с их листвы (scripts/gen_fruit_trees.py). */
-    public static final DeferredItem<Item> APPLE = ITEMS.registerItem("apple",
-            props -> new Item(props.food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.3f).build())));
     public static final DeferredItem<Item> PEAR = ITEMS.registerItem("pear",
             props -> new Item(props.food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.3f).build())));
     public static final DeferredItem<Item> PLUM = ITEMS.registerItem("plum",
@@ -220,7 +218,6 @@ public class ModItems {
     public static final DeferredItem<BlockItem> DRIED_SEAWEED_BLOCK = ITEMS.registerSimpleBlockItem("dried_seaweed_block", ModBlocks.DRIED_SEAWEED_BLOCK);
     public static final DeferredItem<BlockItem> CACTUS = ITEMS.registerSimpleBlockItem("cactus", ModBlocks.CACTUS);
     /** Зелёный краситель — кактус на костре; с мукой и водой в смесителе Create — слизь. */
-    public static final DeferredItem<DyeItem> GREEN_DYE = ITEMS.registerItem("green_dye", props -> new DyeItem(DyeColor.GREEN, props));
     public static final DeferredItem<Item> WHEAT = ITEMS.registerSimpleItem("wheat");
     public static final DeferredItem<ItemNameBlockItem> WHEAT_SEEDS = ITEMS.registerItem("wheat_seeds",
             props -> new ItemNameBlockItem(ModBlocks.WHEAT.get(), props));
@@ -328,8 +325,6 @@ public class ModItems {
             props -> new FlintItem(ModBlocks.FLINT_PEBBLE.get(), props));
 
     // === ПЕРО И КОСТЬ (свои вместо ванильных: с животных и из всего лута — loot/ReplaceItemModifier) ===
-    public static final DeferredItem<Item> FEATHER = ITEMS.registerSimpleItem("feather");
-    public static final DeferredItem<Item> BONE = ITEMS.registerSimpleItem("bone");
 
     // === МУСОР (пока без функционала) ===
     public static final DeferredItem<Item> METAL_SCRAP = ITEMS.registerSimpleItem("metal_scrap");
@@ -353,5 +348,18 @@ public class ModItems {
             SPAWN_EGGS.put(species, ITEMS.registerItem(species.id + "_spawn_egg", props ->
                     new DeferredSpawnEggItem(ModAnimals.TYPES.get(species), species.eggColor, species.eggSpots, props)));
         }
+    }
+
+    /** Подушки для сидения (cushion/CushionItem), по одной на цвет шерсти. */
+    public static final java.util.Map<net.minecraft.world.item.DyeColor, DeferredItem<io.github.ChanesCMD.trailcraft.cushion.CushionItem>> CUSHIONS = registerCushions();
+
+    private static java.util.Map<net.minecraft.world.item.DyeColor, DeferredItem<io.github.ChanesCMD.trailcraft.cushion.CushionItem>> registerCushions() {
+        java.util.Map<net.minecraft.world.item.DyeColor, DeferredItem<io.github.ChanesCMD.trailcraft.cushion.CushionItem>> map =
+                new java.util.EnumMap<>(net.minecraft.world.item.DyeColor.class);
+        for (net.minecraft.world.item.DyeColor color : net.minecraft.world.item.DyeColor.values()) {
+            map.put(color, ITEMS.register(color.getName() + "_cushion",
+                    () -> new io.github.ChanesCMD.trailcraft.cushion.CushionItem(new Item.Properties(), color)));
+        }
+        return map;
     }
 }

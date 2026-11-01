@@ -37,18 +37,26 @@ LANG = {
     "block.trailcraft.water_barrel.salty": ("морская", "salty"),
     "block.trailcraft.water_barrel.desc": ("Ведро — налить или набрать, фляга — наполнить, пустой рукой — попить, Shift — "
                                            "окно бочки; под дождём набирается сама. В танин (от 4000 mB) кладут "
-                                           "выскобленные шкуры — за полдня дубятся в кожу",
+                                           "выскобленные шкуры, в окне бочку запечатывают — за полдня шкуры дубятся в кожу",
                                            "Bucket to pour or take, flask to fill, empty hand to drink, Shift to open; "
-                                           "fills up in the rain. Scraped hides put into tannin (4000 mB or more) "
-                                           "turn into leather in half a day"),
+                                           "fills up in the rain. Scraped hides put into tannin (4000 mB or more) tan "
+                                           "into leather in half a day once the barrel is sealed in its window"),
     "block.trailcraft.water_barrel.tannin": ("Танин: %s / %s mB, шкур: %s", "Tannin: %s / %s mB, hides: %s"),
     "gui.trailcraft.barrel.empty": ("Пусто", "Empty"),
     "gui.trailcraft.barrel.amount": ("%s / %s mB", "%s / %s mB"),
     "gui.trailcraft.barrel.need_tannin": ("Нужно %s mB танина", "Needs %s mB of tannin"),
-    "jei.trailcraft.tanning": ("Бочка с танином (от %s mB): до %s выскобленных шкур за полдня дубятся в кожу, "
-                               "каждая тратит %s mB",
+    "gui.trailcraft.barrel.seal": ("Запечатать бочку", "Seal the barrel"),
+    "gui.trailcraft.barrel.unseal": ("Распечатать бочку", "Unseal the barrel"),
+    "gui.trailcraft.barrel.sealed": ("Запечатано", "Sealed"),
+    "gui.trailcraft.barrel.unsealed": ("Открыто — дубление стоит", "Open — tanning paused"),
+    "gui.trailcraft.barrel.tanning": ("Дубление: %s%%", "Tanning: %s%%"),
+    "gui.trailcraft.barrel.no_space": ("Нет места для кожи", "No room for leather"),
+    "gui.trailcraft.barrel.hides": ("Шкуры", "Hides"),
+    "gui.trailcraft.barrel.leather": ("Кожа", "Leather"),
+    "jei.trailcraft.tanning": ("Бочка с танином (от %s mB): до %s выскобленных шкур в запечатанной бочке за полдня "
+                               "дубятся в кожу, каждая тратит %s mB",
                                "Barrel with tannin (%s mB or more): up to %s scraped hides tan into leather in half "
-                               "a day, %s mB each"),
+                               "a day once sealed, %s mB each"),
     "block.trailcraft.water_barrel.tannin_amount": ("Танин: %s / %s mB", "Tannin: %s / %s mB"),
 }
 

@@ -4,7 +4,6 @@ import io.github.ChanesCMD.trailcraft.init.ModComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
-import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,19 +14,17 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3f;
 
 import java.util.List;
 
 /**
  * Линейка: ПКМ по блоку — отметить начало, ПКМ по второму блоку — расстояние между ними по прямой (между центрами
- * блоков, до MAX_DISTANCE) над хотбаром и пунктир частиц между ними; Shift+ПКМ — сбросить отметку.
+ * блоков, до MAX_DISTANCE) над хотбаром; Shift+ПКМ — сбросить отметку. Пока отмечено начало, от него до блока, на который
+ * смотришь, тянется пунктир частиц и показывается расстояние, а измеренная линия остаётся ещё 10 секунд (RulerEvents).
  * Координат не показывает — только расстояние и сдвиги по осям.
  */
 public class RulerItem extends Item {
     public static final int MAX_DISTANCE = 32;
-    private static final DustParticleOptions DOT = new DustParticleOptions(new Vector3f(0.95f, 0.8f, 0.2f), 0.6f);
 
     public RulerItem(Properties properties) {
         super(properties);
@@ -63,13 +60,8 @@ public class RulerItem extends Item {
         stack.remove(ModComponents.RULER_START.get());
         player.displayClientMessage(Component.translatable("message.trailcraft.ruler.distance",
                 String.format("%.1f", distance), Math.abs(dx), Math.abs(dy), Math.abs(dz)), true);
-        // пунктир между центрами блоков — виден только тому, кто мерил
-        Vec3 a = Vec3.atCenterOf(from), b = Vec3.atCenterOf(pos);
-        int dots = Math.max(2, (int) Math.ceil(distance * 3));
-        for (int i = 0; i <= dots; i++) {
-            Vec3 p = a.lerp(b, (double) i / dots);
-            level.sendParticles(player, DOT, true, p.x, p.y, p.z, 1, 0, 0, 0, 0);
-        }
+        // измеренная линия остаётся на экране ещё несколько секунд (RulerEvents)
+        RulerEvents.remember(player, from, pos);
         level.playSound(null, pos, SoundEvents.WOOD_HIT, SoundSource.PLAYERS, 0.5f, 1.2f);
         return InteractionResult.SUCCESS;
     }

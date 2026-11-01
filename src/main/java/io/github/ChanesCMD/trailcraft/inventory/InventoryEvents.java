@@ -271,13 +271,13 @@ public class InventoryEvents {
     }
 
     /**
-     * Отправляет клиенту, есть ли в рюкзаке атлас и календарь и какие приборы на поясе, когда это меняется; календарь и
-     * хронометр считаются и в хотбаре.
+     * Отправляет клиенту, есть ли в рюкзаке атлас и календарь и какие приборы на поясе, когда это меняется; атлас,
+     * календарь и хронометр считаются и в хотбаре.
      */
     private static void syncGear(ServerPlayer player, BackpackHandler backpack) {
         BeltHandler belt = BeltHandler.of(player);
         ItemStack flask = belt.flask();
-        int flags = (backpack.has(BackpackItem.ATLAS) ? GearPayload.ATLAS : 0)
+        int flags = (backpack.has(BackpackItem.ATLAS) || inHotbar(player, ModItems.ATLAS.get()) ? GearPayload.ATLAS : 0)
                 | (backpack.has(BackpackItem.CALENDAR) || inHotbar(player, ModItems.CALENDAR.get()) ? GearPayload.CALENDAR : 0)
                 | (!flask.isEmpty() && FlaskItem.water(flask) < Water.FLASK_SIPS ? GearPayload.FLASK : 0)
                 | (belt.hasInstrument(BeltHandler.ALTIMETER) ? GearPayload.ALTIMETER : 0)
@@ -291,7 +291,7 @@ public class InventoryEvents {
         }
     }
 
-    /** Календарь и хронометр работают и из хотбара. */
+    /** Атлас, календарь и хронометр работают и из хотбара. */
     private static boolean inHotbar(ServerPlayer player, net.minecraft.world.item.Item item) {
         for (int i = 0; i < Inventory.getSelectionSize(); i++) {
             if (player.getInventory().getItem(i).is(item)) {

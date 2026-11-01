@@ -46,7 +46,23 @@ public final class SnowCover {
         int limit = Math.min(8, level.getGameRules().getInt(GameRules.RULE_SNOW_ACCUMULATION_HEIGHT));
         int layers = state.getValue(SNOW);
         if (layers < limit) {
-            level.setBlockAndUpdate(pos, state.setValue(SNOW, layers + 1));
+            set(level, pos, state, layers + 1);
+        }
+    }
+
+    /**
+     * Задаёт число слоёв снега. У двойного растения снег пишется в обе половины: нижняя рисует слой снега, а обе
+     * половины — побелевшую модель; считается и тает снег по нижней половине.
+     */
+    public static void set(ServerLevel level, BlockPos pos, BlockState state, int layers) {
+        level.setBlockAndUpdate(pos, state.setValue(SNOW, layers));
+        if (state.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF)
+                && state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.LOWER) {
+            BlockPos up = pos.above();
+            BlockState upper = level.getBlockState(up);
+            if (upper.is(state.getBlock()) && upper.hasProperty(SNOW)) {
+                level.setBlockAndUpdate(up, upper.setValue(SNOW, layers));
+            }
         }
     }
 
@@ -55,7 +71,7 @@ public final class SnowCover {
         int layers = has(state) ? state.getValue(SNOW) : 0;
         if (layers > 0 && (level.getBrightness(LightLayer.BLOCK, pos) > 11
                 || random.nextFloat() < Seasons.meltChance(level) && Seasons.melts(level, pos))) {
-            level.setBlockAndUpdate(pos, state.setValue(SNOW, layers - 1));
+            set(level, pos, state, layers - 1);
             return true;
         }
         return false;

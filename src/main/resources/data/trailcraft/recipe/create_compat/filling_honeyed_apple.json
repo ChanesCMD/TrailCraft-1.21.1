@@ -2,7 +2,7 @@
   "type": "create:filling",
   "ingredients": [
     {
-      "item": "trailcraft:apple"
+      "item": "minecraft:apple"
     },
     {
       "type": "neoforge:tag",

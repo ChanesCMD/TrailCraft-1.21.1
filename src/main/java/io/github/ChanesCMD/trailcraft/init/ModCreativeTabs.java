@@ -22,6 +22,7 @@ public class ModCreativeTabs {
                     .title(Component.translatable("itemGroup.trailcraft"))
                     .icon(() -> ModBlocks.ANDESITE.get().asItem().getDefaultInstance())
                     .displayItems((parameters, output) -> {
+                        ModItems.CUSHIONS.values().forEach(output::accept);
                         // Камни (12)
                         output.accept(ModBlocks.ANDESITE);
                         output.accept(ModBlocks.CHALK);
@@ -98,7 +99,6 @@ public class ModCreativeTabs {
                         output.accept(ModItems.SEAWEED);
                         output.accept(ModItems.DRIED_SEAWEED_BLOCK);
                         output.accept(ModItems.CACTUS);
-                        output.accept(ModItems.GREEN_DYE);
                         output.accept(ModItems.WHEAT_SEEDS);
                         output.accept(ModItems.WHEAT);
                         output.accept(ModItems.SUGAR_CANE);
@@ -209,8 +209,6 @@ public class ModCreativeTabs {
                         ModSmelting.UNFIRED_MOLDS.values().forEach(output::accept);
                         ModSmelting.MOLDS.values().forEach(output::accept);
                         ModSmelting.HEADS.values().forEach(output::accept);
-                        output.accept(ModItems.FEATHER);
-                        output.accept(ModItems.BONE);
 
                         // Мусор
                         output.accept(ModItems.METAL_SCRAP);
@@ -281,9 +279,9 @@ public class ModCreativeTabs {
             CREATIVE_MODE_TABS.register("trailcraft_plant_food_tab", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.trailcraft_plant_food"))
                     .withTabsBefore(TOOLS_TAB.getId())
-                    .icon(() -> ModItems.APPLE.get().getDefaultInstance())
+                    .icon(() -> new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.APPLE))
                     .displayItems((parameters, output) -> {
-                        output.accept(ModItems.APPLE);
+                        output.accept(net.minecraft.world.item.Items.APPLE);
                         output.accept(ModItems.PEAR);
                         output.accept(ModItems.PLUM);
                         output.accept(ModItems.CHERRY);

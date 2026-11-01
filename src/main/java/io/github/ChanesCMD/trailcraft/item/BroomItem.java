@@ -54,8 +54,13 @@ public class BroomItem extends Item {
         }
         if (level instanceof ServerLevel server) {
             BlockState snow = server.getBlockState(pos);
+            if (snow.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF)
+                    && snow.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER) {
+                pos = pos.below();  // снег считается по нижней половине двойного растения
+                snow = server.getBlockState(pos);
+            }
             if (SnowCover.has(snow)) {
-                server.setBlockAndUpdate(pos, snow.setValue(SnowCover.SNOW, 0));  // блок остаётся, снег с него сметён
+                SnowCover.set(server, pos, snow, 0);  // блок остаётся, снег с него сметён
                 snow = Blocks.SNOW.defaultBlockState();
             } else {
                 server.removeBlock(pos, false);

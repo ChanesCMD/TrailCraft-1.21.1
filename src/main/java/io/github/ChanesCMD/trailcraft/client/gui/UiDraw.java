@@ -75,5 +75,16 @@ public final class UiDraw {
         }
     }
 
+    /** Пиксельный замок 8×10: у открытого дужка сдвинута вправо, у закрытого — по центру. */
+    public static void padlock(GuiGraphics g, int x, int y, boolean open, int color) {
+        int shift = open ? 2 : 0;
+        g.fill(x + 2 + shift, y, x + 6 + shift, y + 1, color);
+        g.fill(x + 1 + shift, y + 1, x + 2 + shift, y + 4, color);
+        g.fill(x + 6 + shift, y + 1, x + 7 + shift, y + 4, color);
+        g.fill(x, y + 4, x + 8, y + 10, color);
+        g.fill(x + 3, y + 6, x + 5, y + 8, 0xFF555555);
+        g.fill(x + 3, y + 8, x + 4, y + 9, 0xFF555555);
+    }
+
     private UiDraw() {}
 }

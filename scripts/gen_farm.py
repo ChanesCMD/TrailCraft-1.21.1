@@ -17,7 +17,7 @@ NS = "trailcraft"
 HOES = [
     # кремнёвая, медная, бронзовая, железная, стальная — из головки тяпки (рецепт пишет gen_casting.py)
     ("flint", None, None, "Кремнёвая тяпка", "Flint Garden Hoe"),
-    ("bone", "trailcraft:bone", ["MM", " S"], "Костяная тяпка", "Bone Garden Hoe"),
+    ("bone", "minecraft:bone", ["MM", " S"], "Костяная тяпка", "Bone Garden Hoe"),
     ("copper", None, None, "Медная тяпка", "Copper Garden Hoe"),
     ("bronze", None, None, "Бронзовая тяпка", "Bronze Garden Hoe"),
     ("iron", None, None, "Железная тяпка", "Iron Garden Hoe"),

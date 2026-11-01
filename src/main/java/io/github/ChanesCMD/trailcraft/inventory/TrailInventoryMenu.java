@@ -2,6 +2,7 @@ package io.github.ChanesCMD.trailcraft.inventory;
 
 import com.mojang.datafixers.util.Pair;
 import io.github.ChanesCMD.trailcraft.init.ModAttachments;
+import io.github.ChanesCMD.trailcraft.init.ModItems;
 import io.github.ChanesCMD.trailcraft.init.ModMenus;
 import io.github.ChanesCMD.trailcraft.item.BackpackItem;
 import io.github.ChanesCMD.trailcraft.item.CoinItem;
@@ -205,8 +206,17 @@ public class TrailInventoryMenu extends AbstractContainerMenu {
         return backpack.has(BackpackItem.WORKBENCH);
     }
 
+    /** Календарь в рюкзаке или в хотбаре. */
     public boolean hasCalendar() {
-        return backpack.has(BackpackItem.CALENDAR);
+        if (backpack.has(BackpackItem.CALENDAR)) {
+            return true;
+        }
+        for (int i = 0; i < Inventory.getSelectionSize(); i++) {
+            if (player.getInventory().getItem(i).is(ModItems.CALENDAR.get())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean isCosmeticShown(int armorIndex) {

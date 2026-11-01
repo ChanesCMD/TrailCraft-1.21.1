@@ -10,6 +10,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import io.github.ChanesCMD.trailcraft.client.BackpackLayer;
 import io.github.ChanesCMD.trailcraft.client.ThrownSpearRenderer;
+import io.github.ChanesCMD.trailcraft.client.CushionRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.resources.PlayerSkin;
 import io.github.ChanesCMD.trailcraft.client.TrailCampfireRenderer;
@@ -18,6 +19,7 @@ import io.github.ChanesCMD.trailcraft.client.animal.CapercaillieModel;
 import io.github.ChanesCMD.trailcraft.client.animal.CapercaillieRenderer;
 import io.github.ChanesCMD.trailcraft.client.animal.TrailAnimalModel;
 import io.github.ChanesCMD.trailcraft.client.animal.TrailAnimalRenderer;
+import io.github.ChanesCMD.trailcraft.client.animal.VanillaLook;
 import io.github.ChanesCMD.trailcraft.animal.Species;
 import io.github.ChanesCMD.trailcraft.init.ModAnimals;
 import io.github.ChanesCMD.trailcraft.init.ModEntities;
@@ -35,13 +37,19 @@ public class ClientEvents {
     public static void entityRenderers(EntityRenderersEvent.RegisterRenderers e) {
         e.registerEntityRenderer(ModEntities.THROWN_SPEAR.get(), ThrownSpearRenderer::new);
         e.registerEntityRenderer(ModEntities.CAPERCAILLIE.get(), CapercaillieRenderer::new);
+        e.registerEntityRenderer(ModEntities.CUSHION.get(), CushionRenderer::new);
         e.registerBlockEntityRenderer(ModBlockEntities.CAMPFIRE.get(), TrailCampfireRenderer::new);
+        e.registerBlockEntityRenderer(ModBlockEntities.LOG_PILE.get(), io.github.ChanesCMD.trailcraft.client.LogPileRenderer::new);
         e.registerBlockEntityRenderer(ModBlockEntities.WOOD_CHEST.get(), io.github.ChanesCMD.trailcraft.client.WoodChestRenderer::new);
         // укреплённый бак — свой тип блок-сущности, рисуется рендером бака Create (жидкость внутри)
         e.registerBlockEntityRenderer(io.github.ChanesCMD.trailcraft.init.ModReinforced.TANK_ENTITY.get(),
                 com.simibubi.create.content.fluids.tank.FluidTankRenderer::new);
         for (Species species : Species.values()) {
-            e.registerEntityRenderer(ModAnimals.type(species), context -> new TrailAnimalRenderer<>(context, species));
+            if (VanillaLook.has(species)) {
+                VanillaLook.register(e, species);  // корова, свинья и др. — ванильные модели
+            } else {
+                e.registerEntityRenderer(ModAnimals.type(species), context -> new TrailAnimalRenderer<>(context, species));
+            }
         }
     }
 
@@ -84,7 +92,9 @@ public class ClientEvents {
     public static void entityLayers(EntityRenderersEvent.RegisterLayerDefinitions e) {
         e.registerLayerDefinition(CapercaillieModel.LAYER, CapercaillieModel::createBodyLayer);
         for (Species species : Species.values()) {
-            e.registerLayerDefinition(TrailAnimalRenderer.layer(species), () -> TrailAnimalModel.createLayer(TrailAnimalModel.load(species.id)));
+            if (!VanillaLook.has(species)) {
+                e.registerLayerDefinition(TrailAnimalRenderer.layer(species), () -> TrailAnimalModel.createLayer(TrailAnimalModel.load(species.id)));
+            }
         }
     }
 

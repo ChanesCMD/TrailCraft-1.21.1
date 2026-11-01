@@ -472,12 +472,12 @@ FOOD = {
 }
 # Лут: (предмет, мин, макс[, жарится — горящее животное роняет жареное]); у овцы — ванильный лут по цвету шерсти
 LOOT = {
-    "chicken": [("trailcraft:feather", 0, 2), ("minecraft:chicken", 1, 1, True)],
-    "goose": [("trailcraft:feather", 1, 3), ("minecraft:chicken", 1, 2, True)],
-    "duck": [("trailcraft:feather", 0, 2), ("minecraft:chicken", 1, 1, True)],
-    "turkey": [("trailcraft:feather", 1, 3), ("minecraft:chicken", 2, 3, True)],
-    "crow": [("trailcraft:feather", 0, 2)],
-    "raven": [("trailcraft:feather", 0, 2)],
+    "chicken": [("minecraft:feather", 0, 2), ("minecraft:chicken", 1, 1, True)],
+    "goose": [("minecraft:feather", 1, 3), ("minecraft:chicken", 1, 2, True)],
+    "duck": [("minecraft:feather", 0, 2), ("minecraft:chicken", 1, 1, True)],
+    "turkey": [("minecraft:feather", 1, 3), ("minecraft:chicken", 2, 3, True)],
+    "crow": [("minecraft:feather", 0, 2)],
+    "raven": [("minecraft:feather", 0, 2)],
     "pig": [("minecraft:porkchop", 1, 3, True)],
     "cow": [("minecraft:beef", 1, 3, True), ("minecraft:leather", 0, 2)],
     "goat": [("minecraft:mutton", 1, 2, True), ("minecraft:leather", 0, 1)],
@@ -494,7 +494,6 @@ SPAWNS = {
     "zheltozem_plains": [("hare", 4, 1, 2), ("fennec", 2, 1, 2), ("chicken", 3, 2, 4), ("turkey", 3, 2, 3), ("crow", 3, 1, 2),
                          ("goat", 3, 2, 3)],
     "arboretum": [("hare", 4, 1, 2), ("crow", 3, 1, 2), ("hedgehog", 3, 1, 1)],
-    "winter_test": [("arctic_fox", 4, 1, 2), ("hare", 4, 1, 2)],
     "burozem_taiga": [("wolf", 6, 2, 4), ("fox", 5, 1, 2), ("hare", 5, 1, 2), ("raven", 4, 1, 2), ("capercaillie", 8, 2, 4)],
     "pine_forest": [("wolf", 4, 2, 4), ("fox", 4, 1, 2), ("hare", 4, 1, 2), ("raven", 4, 1, 2), ("capercaillie", 8, 2, 4)],
     "birch_forest": [("fox", 4, 1, 2), ("hare", 5, 1, 2), ("hedgehog", 4, 1, 1), ("crow", 3, 1, 2), ("capercaillie", 4, 2, 3)],

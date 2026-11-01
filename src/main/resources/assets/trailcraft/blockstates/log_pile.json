@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "trailcraft:block/log_pile"
+    },
+    "axis=z": {
+      "model": "trailcraft:block/log_pile"
+    }
+  }
+}

@@ -8,8 +8,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 
-/** Дикий джут (два блока): как обычное двойное растение, но нижнюю половину зимой заносит снегом (SnowCover). */
+/** Дикий джут (два блока): как обычное двойное растение, но нижнюю половину зимой заносит снегом, а белеют обе половины (SnowCover). */
 public class WildJuteBlock extends DoublePlantBlock {
     public static final MapCodec<WildJuteBlock> CODEC = simpleCodec(WildJuteBlock::new);
 
@@ -31,7 +32,7 @@ public class WildJuteBlock extends DoublePlantBlock {
 
     @Override
     protected boolean isRandomlyTicking(BlockState state) {
-        return SnowCover.has(state);
+        return SnowCover.has(state) && state.getValue(HALF) == DoubleBlockHalf.LOWER;
     }
 
     @Override

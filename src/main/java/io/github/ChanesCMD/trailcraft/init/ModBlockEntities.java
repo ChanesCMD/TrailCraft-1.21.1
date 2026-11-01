@@ -3,6 +3,7 @@ package io.github.ChanesCMD.trailcraft.init;
 import io.github.ChanesCMD.trailcraft.block.entity.WaterBarrelBlockEntity;
 import io.github.ChanesCMD.trailcraft.block.entity.CoalBurnerBlockEntity;
 import io.github.ChanesCMD.trailcraft.block.entity.WoodChestBlockEntity;
+import io.github.ChanesCMD.trailcraft.block.entity.LogPileBlockEntity;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -39,6 +40,10 @@ public final class ModBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WoodChestBlockEntity>> WOOD_CHEST = BLOCK_ENTITIES.register("wood_chest",
             () -> BlockEntityType.Builder.of(WoodChestBlockEntity::new,
                     ModChests.CHESTS.values().stream().map(DeferredBlock::get).toArray(net.minecraft.world.level.block.Block[]::new)).build(null));
+
+    /** Поленница: 4 слота брёвен (LogPileBlockEntity). */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<LogPileBlockEntity>> LOG_PILE = BLOCK_ENTITIES.register("log_pile",
+            () -> BlockEntityType.Builder.of(LogPileBlockEntity::new, ModBlocks.LOG_PILE.get()).build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CoalBurnerBlockEntity>> COAL_BURNER = BLOCK_ENTITIES.register("coal_burner",
             () -> BlockEntityType.Builder.of(CoalBurnerBlockEntity::new, ModBlocks.COAL_BURNER.get()).build(null));

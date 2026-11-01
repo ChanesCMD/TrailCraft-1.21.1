@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.event.EventHooks;
 
-/** Волк: ванильный (стая, приручение костью — своей, trailcraft:bone), свой тип и модель; дикий охотится на овец, коз, зайцев и лис TrailCraft. */
+/** Волк: ванильный (стая, приручение обычной костью), свой тип и модель; дикий охотится на овец, коз, зайцев и лис TrailCraft. */
 public class TrailWolf extends Wolf {
     public TrailWolf(EntityType<? extends Wolf> type, Level level) {
         super(type, level);
@@ -36,7 +36,7 @@ public class TrailWolf extends Wolf {
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!stack.is(ModItems.BONE.get()) || isTame() || isAngry()) {
+        if (!stack.is(net.minecraft.world.item.Items.BONE) || isTame() || isAngry()) {
             return super.mobInteract(player, hand);
         }
         if (level().isClientSide) {

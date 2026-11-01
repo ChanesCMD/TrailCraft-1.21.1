@@ -6,33 +6,49 @@ import io.github.ChanesCMD.trailcraft.smelting.WriteBackSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * Окно бочки (WaterBarrelBlockEntity): слева бак (сколько и чего), слот выскобленных шкур, стрелка дубления, слот кожи;
- * снизу хотбар. Данные: количество жидкости, вид (WaterBarrelBlockEntity.EMPTY…TANNIN), тики дубления.
+ * Окно бочки в духе TFC: слева высокий бак (сколько и чего), справа слот выскобленных шкур и слот кожи,
+ * между ними — вертикальный прогресс дубления, рядом кнопка запечатывания. Пока бочка запечатана, слоты
+ * заперты, а дубление идёт; открытая бочка хранит прогресс. Снизу хотбар.
+ * Данные: количество жидкости, вид (WaterBarrelBlockEntity.EMPTY…TANNIN), тики дубления, запечатана ли.
  */
 public class BarrelMenu extends AbstractContainerMenu {
-    public static final int WIDTH = 176, HEIGHT = 112, HOTBAR_Y = 86;
-    public static final int TANK_X = 20, TANK_Y = 17, TANK_W = 16, TANK_H = 52;
-    public static final int HIDES_X = 62, LEATHER_X = 116, SLOT_Y = 35;
+    public static final int WIDTH = 176, HEIGHT = 128, HOTBAR_Y = 102;
+    public static final int TANK_X = 8, TANK_Y = 18, TANK_W = 18, TANK_H = 52;
+    public static final int HIDES_X = 62, HIDES_Y = 20, LEATHER_X = 62, LEATHER_Y = 54;
+    public static final int SEAL_X = 123, SEAL_Y = 35, SEAL_SIZE = 20;
+    private static final int CONTAINER_SLOTS = 2;
+
     private final ContainerData data;
+    @Nullable
+    private final WaterBarrelBlockEntity barrel;
 
     /** Клиент: слоты пустые, их заполнит синхронизация. */
     public BarrelMenu(int id, Inventory inventory) {
-        this(id, inventory, new ItemStackHandler(2), new SimpleContainerData(3));
+        this(id, inventory, new ItemStackHandler(2), new SimpleContainerData(4), null);
     }
 
-    public BarrelMenu(int id, Inventory inventory, IItemHandler items, ContainerData data) {
+    /** Сервер: окно живёт на самой бочке, поэтому кнопка запечатывания меняет её состояние. */
+    public BarrelMenu(int id, Inventory inventory, WaterBarrelBlockEntity barrel) {
+        this(id, inventory, barrel.items, barrel.data, barrel);
+    }
+
+    private BarrelMenu(int id, Inventory inventory, IItemHandler items, ContainerData data,
+                       @Nullable WaterBarrelBlockEntity barrel) {
         super(ModMenus.BARREL.get(), id);
         this.data = data;
-        addSlot(new WriteBackSlot(items, WaterBarrelBlockEntity.HIDES, HIDES_X, SLOT_Y, false));
-        addSlot(new WriteBackSlot(items, WaterBarrelBlockEntity.LEATHER, LEATHER_X, SLOT_Y, true));
+        this.barrel = barrel;
+        addSlot(new WriteBackSlot(items, WaterBarrelBlockEntity.HIDES, HIDES_X, HIDES_Y, false));
+        addSlot(new WriteBackSlot(items, WaterBarrelBlockEntity.LEATHER, LEATHER_X, LEATHER_Y, true));
         for (int i = 0; i < 9; i++) {
             addSlot(new Slot(inventory, i, 8 + i * 18, HOTBAR_Y));
         }
@@ -52,19 +68,55 @@ public class BarrelMenu extends AbstractContainerMenu {
         return (float) data.get(2) / WaterBarrelBlockEntity.SOAK_TICKS;
     }
 
+    public boolean sealed() {
+        return data.get(3) != 0;
+    }
+
     public boolean hasHides() {
         return slots.get(WaterBarrelBlockEntity.HIDES).hasItem();
     }
 
+    public int hides() {
+        return slots.get(WaterBarrelBlockEntity.HIDES).getItem().getCount();
+    }
+
+    public int leather() {
+        return slots.get(WaterBarrelBlockEntity.LEATHER).getItem().getCount();
+    }
+
+    /** Кнопка в окне: 0 — запечатать/распечатать. */
+    @Override
+    public boolean clickMenuButton(Player player, int id) {
+        if (id == 0 && barrel != null) {
+            barrel.toggleSealed();
+            return true;
+        }
+        return false;
+    }
+
+    /** В запечатанной бочке слоты шкур и кожи не трогаются — как в TFC. */
+    @Override
+    public void clicked(int slotId, int button, ClickType clickType, Player player) {
+        if (sealed() && slotId >= 0 && slotId < CONTAINER_SLOTS) {
+            return;
+        }
+        super.clicked(slotId, button, clickType, player);
+    }
+
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
+        if (sealed()) {
+            return ItemStack.EMPTY;
+        }
         Slot slot = slots.get(index);
         if (!slot.hasItem()) {
             return ItemStack.EMPTY;
         }
         ItemStack stack = slot.getItem();
         ItemStack copy = stack.copy();
-        boolean moved = index < 2 ? moveItemStackTo(stack, 2, 11, false) : moveItemStackTo(stack, 0, 1, false);
+        boolean moved = index < CONTAINER_SLOTS
+                ? moveItemStackTo(stack, CONTAINER_SLOTS, slots.size(), false)
+                : moveItemStackTo(stack, WaterBarrelBlockEntity.HIDES, WaterBarrelBlockEntity.HIDES + 1, false);
         if (!moved) {
             return ItemStack.EMPTY;
         }
@@ -75,6 +127,7 @@ public class BarrelMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return true;
+        return barrel == null || player.distanceToSqr(barrel.getBlockPos().getX() + 0.5,
+                barrel.getBlockPos().getY() + 0.5, barrel.getBlockPos().getZ() + 0.5) <= 64.0;
     }
 }

@@ -8,7 +8,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "trailcraft:feather",
+          "name": "minecraft:feather",
           "functions": [
             {
               "function": "minecraft:set_count",

@@ -23,6 +23,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -35,7 +37,8 @@ import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
  * бочке не меньше {@link #TANNIN_NEEDED} mB танина, они дубятся {@link #SOAK_TICKS} тиков и становятся кожей, каждая
  * тратит {@link #HIDE_MB} mB (как дубление в бочке TerraFirmaCraft). Сломанная бочка помнит жидкость (компоненты
  * trailcraft:water — mB, trailcraft:salty, trailcraft:tannin), шкуры и кожа из неё выпадают. Окно — BarrelMenu: бак, слот
- * шкур, слот кожи; воронки и желоба Create кладут шкуры и забирают кожу (automation).
+ * шкур, слот кожи, кнопка запечатывания (как в TFC); воронки и желоба Create кладут шкуры и забирают кожу (automation).
+ * Дубление идёт только в запечатанной бочке: пока она открыта, шкуры можно класть и забирать, а прогресс стоит.
  */
 public class WaterBarrelBlockEntity extends BlockEntity implements MenuProvider {
     public static final int CAPACITY = 8000;
@@ -49,6 +52,7 @@ public class WaterBarrelBlockEntity extends BlockEntity implements MenuProvider 
     public static final int EMPTY = 0, FRESH = 1, SALTY = 2, TANNIN = 3;
 
     private boolean salty;
+    private boolean sealed;
     private int soak;
     /** Шкуры (только выскобленные, до MAX_HIDES) и готовая кожа. */
     public final ItemStackHandler items = new ItemStackHandler(2) {
@@ -84,11 +88,17 @@ public class WaterBarrelBlockEntity extends BlockEntity implements MenuProvider 
 
         @Override
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+            if (sealed) {
+                return stack;
+            }
             return slot == HIDES ? items.insertItem(slot, stack, simulate) : stack;
         }
 
         @Override
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
+            if (sealed) {
+                return ItemStack.EMPTY;
+            }
             return slot == LEATHER ? items.extractItem(slot, amount, simulate) : ItemStack.EMPTY;
         }
 
@@ -102,13 +112,14 @@ public class WaterBarrelBlockEntity extends BlockEntity implements MenuProvider 
             return slot == HIDES && items.isItemValid(slot, stack);
         }
     };
-    private final ContainerData data = new ContainerData() {
+    public final ContainerData data = new ContainerData() {
         @Override
         public int get(int index) {
             return switch (index) {
                 case 0 -> tank.getFluidAmount();
                 case 1 -> fluidKind();
                 case 2 -> soak;
+                case 3 -> sealed ? 1 : 0;
                 default -> 0;
             };
         }
@@ -118,7 +129,7 @@ public class WaterBarrelBlockEntity extends BlockEntity implements MenuProvider 
 
         @Override
         public int getCount() {
-            return 3;
+            return 4;
         }
     };
     public final FluidTank tank = new FluidTank(CAPACITY, stack -> stack.is(Fluids.WATER) || stack.is(ModFluids.TANNIN.source.get())) {
@@ -154,6 +165,21 @@ public class WaterBarrelBlockEntity extends BlockEntity implements MenuProvider 
 
     public boolean isSalty() {
         return salty;
+    }
+
+    /** Запечатана ли бочка: в запечатанной идёт дубление, слоты и воронки заперты. */
+    public boolean isSealed() {
+        return sealed;
+    }
+
+    /** Открыть или запечатать бочку (кнопка в окне); звук — как у ванильной бочки. */
+    public void toggleSealed() {
+        sealed = !sealed;
+        changed();
+        if (level != null && !level.isClientSide) {
+            level.playSound(null, worldPosition, sealed ? SoundEvents.BARREL_CLOSE : SoundEvents.BARREL_OPEN,
+                    SoundSource.BLOCKS, 1.0f, 1.0f);
+        }
     }
 
     public int hides() {
@@ -216,8 +242,13 @@ public class WaterBarrelBlockEntity extends BlockEntity implements MenuProvider 
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, WaterBarrelBlockEntity barrel) {
-        if (level.getGameTime() % RAIN_INTERVAL == 0 && level.isRainingAt(pos.above()) && barrel.tannin() == 0) {
+        // Дождь набирается только в открытую бочку; запечатанная закрыта.
+        if (!barrel.sealed && level.getGameTime() % RAIN_INTERVAL == 0 && level.isRainingAt(pos.above()) && barrel.tannin() == 0) {
             barrel.add(RAIN_MB, false);
+        }
+        // Дубление, как в TFC, идёт только в запечатанной бочке; открытая хранит прогресс.
+        if (!barrel.sealed) {
+            return;
         }
         int hides = barrel.hides();
         // кожа ложится в свой слот, пока там есть место
@@ -236,6 +267,7 @@ public class WaterBarrelBlockEntity extends BlockEntity implements MenuProvider 
         super.saveAdditional(tag, registries);
         tank.writeToNBT(registries, tag);
         tag.putBoolean("Salty", salty);
+        tag.putBoolean("Sealed", sealed);
         tag.put("Items", items.serializeNBT(registries));
         tag.putInt("Soak", soak);
     }
@@ -245,6 +277,7 @@ public class WaterBarrelBlockEntity extends BlockEntity implements MenuProvider 
         super.loadAdditional(tag, registries);
         tank.readFromNBT(registries, tag);
         salty = tag.getBoolean("Salty");
+        sealed = tag.getBoolean("Sealed");
         items.deserializeNBT(registries, tag.getCompound("Items"));
         soak = tag.getInt("Soak");
     }
@@ -256,7 +289,7 @@ public class WaterBarrelBlockEntity extends BlockEntity implements MenuProvider 
 
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
-        return new BarrelMenu(id, inventory, items, data);
+        return new BarrelMenu(id, inventory, this);
     }
 
     @Override
