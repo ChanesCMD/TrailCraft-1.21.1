@@ -1,7 +1,7 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "trailcraft:block/leaves_with_cross",
+  "render_type": "minecraft:cutout_mipped",
   "textures": {
     "all": "trailcraft:block/spruce_leaves"
-  },
-  "render_type": "minecraft:cutout_mipped"
+  }
 }
