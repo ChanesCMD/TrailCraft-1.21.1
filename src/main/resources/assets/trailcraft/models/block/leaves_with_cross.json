@@ -81,13 +81,13 @@
     },
     {
       "from": [
-        -6,
-        -6,
+        -5,
+        -5,
         8
       ],
       "to": [
-        22,
-        22,
+        21,
+        21,
         8
       ],
       "rotation": {
@@ -106,32 +106,32 @@
           "uv": [
             0,
             0,
-            16,
-            16
+            13,
+            13
           ],
-          "texture": "#all"
+          "texture": "#overlay"
         },
         "south": {
           "uv": [
             0,
             0,
-            16,
-            16
+            13,
+            13
           ],
-          "texture": "#all"
+          "texture": "#overlay"
         }
       }
     },
     {
       "from": [
         8,
-        -6,
-        -6
+        -5,
+        -5
       ],
       "to": [
         8,
-        22,
-        22
+        21,
+        21
       ],
       "rotation": {
         "origin": [
@@ -149,19 +149,19 @@
           "uv": [
             0,
             0,
-            16,
-            16
+            13,
+            13
           ],
-          "texture": "#all"
+          "texture": "#overlay"
         },
         "east": {
           "uv": [
             0,
             0,
-            16,
-            16
+            13,
+            13
           ],
-          "texture": "#all"
+          "texture": "#overlay"
         }
       }
     }

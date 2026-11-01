@@ -2,6 +2,7 @@
   "parent": "trailcraft:block/leaves_with_cross",
   "render_type": "minecraft:cutout_mipped",
   "textures": {
-    "all": "trailcraft:block/thuja_leaves"
+    "all": "trailcraft:block/thuja_leaves",
+    "overlay": "trailcraft:block/thuja_leaves_overlay"
   }
 }

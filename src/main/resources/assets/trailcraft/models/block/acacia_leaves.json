@@ -2,6 +2,7 @@
   "parent": "trailcraft:block/leaves_with_cross",
   "render_type": "minecraft:cutout_mipped",
   "textures": {
-    "all": "trailcraft:block/acacia_leaves"
+    "all": "trailcraft:block/acacia_leaves",
+    "overlay": "trailcraft:block/acacia_leaves_overlay"
   }
 }
