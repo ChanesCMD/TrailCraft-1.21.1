@@ -175,6 +175,15 @@ def cross(name, texture=None):
     block_model(name, "minecraft:block/cross", {"cross": f"{NS}:block/{texture or name}"}, cutout=True)
 
 
+def tinted_cross(name, overlay=True):
+    """Крест с биомным тинтом; overlay — цветы/ягоды/колосья, которые не тинтуются."""
+    textures = {"tinted": f"{NS}:block/{name}"}
+    if overlay:
+        textures["overlay"] = f"{NS}:block/{name}_overlay"
+    block_model(name, f"{NS}:block/cross_tinted_overlay" if overlay else f"{NS}:block/cross_tinted",
+                textures, cutout=True)
+
+
 def crop(name, texture=None):
     block_model(name, "minecraft:block/crop", {"crop": f"{NS}:block/{texture or name}"}, cutout=True)
 
@@ -203,20 +212,20 @@ def models():
 
     for berry, *_ in BERRIES:
         for i in range(4):
-            cross(f"{berry}_bush_stage{i}")
+            tinted_cross(f"{berry}_bush_stage{i}")
         blockstate(f"{berry}_bush", {f"age={i}": f"{berry}_bush_stage{i}" for i in range(4)})
         item_model(f"{berry}_bush", f"{NS}:block/{berry}_bush_stage3")
         item_model(berry)
 
     for plant in ("wild_carrot", "wild_potato"):
-        cross(plant)
+        tinted_cross(plant)
         blockstate(plant, {"": plant})
         item_model(plant, f"{NS}:block/{plant}")
 
     for plant, *_ in PLANTS:
         if plant == "cattail":
-            cross("cattail_bottom")
-            cross("cattail_top")
+            tinted_cross("cattail_bottom", overlay=False)
+            tinted_cross("cattail_top")
             blockstate("cattail", {
                 "half=lower,waterlogged=false": "cattail_bottom",
                 "half=lower,waterlogged=true": "cattail_bottom",
@@ -225,12 +234,12 @@ def models():
             })
             item_model("cattail", f"{NS}:block/cattail_top")
         else:
-            cross(plant)
+            tinted_cross(plant)
             blockstate(plant, {"": plant})
             item_model(plant, f"{NS}:block/{plant}")
 
-    cross("wild_jute_bottom")
-    cross("wild_jute_top")
+    tinted_cross("wild_jute_bottom")
+    tinted_cross("wild_jute_top")
     blockstate("wild_jute", {"half=lower": "wild_jute_bottom", "half=upper": "wild_jute_top"})
     item_model("wild_jute", f"{NS}:block/wild_jute_top")
 

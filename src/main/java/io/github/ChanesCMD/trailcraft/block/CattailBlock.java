@@ -50,10 +50,13 @@ public class CattailBlock extends DoublePlantBlock implements SimpleWaterloggedB
             return false;
         }
         if (state.getValue(HALF) == DoubleBlockHalf.LOWER) {
-            // Нижняя половина — в воде, над ней уже воздух (глубина ровно один блок).
+            // Нижняя половина — в воде, над ней воздух (глубина ровно один блок).
+            // Верхняя половина уже может стоять: при обновлении соседей это не повод ломать нижнюю.
+            BlockState above = level.getBlockState(pos.above());
+            boolean aboveOk = above.isAir() || (above.is(this) && above.getValue(HALF) == DoubleBlockHalf.UPPER);
             if (!level.getFluidState(pos).is(FluidTags.WATER)
                     || !level.getFluidState(pos.above()).isEmpty()
-                    || !level.getBlockState(pos.above()).canBeReplaced()) {
+                    || !aboveOk) {
                 return false;
             }
         }

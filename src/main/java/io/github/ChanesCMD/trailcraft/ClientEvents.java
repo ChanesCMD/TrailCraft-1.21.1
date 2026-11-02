@@ -156,7 +156,22 @@ public class ClientEvents {
                 // трава-растения
                 ModBlocks.GRASS_SMALL.get(),
                 ModBlocks.GRASS_MEDIUM.get(),
-                ModBlocks.GRASS_TALL.get());
+                ModBlocks.GRASS_TALL.get(),
+                // дикие травы, водосбор, рогоз и кусты — листва/стебли тинтуются цветом травы биома,
+                // цветы и ягоды лежат в overlay без тинта
+                ModBlocks.MILLET.get(),
+                ModBlocks.NETTLE.get(),
+                ModBlocks.PLANTAIN.get(),
+                ModBlocks.WORMWOOD.get(),
+                ModBlocks.COLUMBINE.get(),
+                ModBlocks.CATTAIL.get(),
+                ModBlocks.WILD_CARROT.get(),
+                ModBlocks.WILD_POTATO.get(),
+                ModBlocks.WILD_JUTE.get(),
+                ModBlocks.CURRANT_BUSH.get(),
+                ModBlocks.CLOUDBERRY_BUSH.get(),
+                ModBlocks.GOOSEBERRY_BUSH.get(),
+                ModBlocks.BLACKBERRY_BUSH.get());
     }
 
     @SubscribeEvent
@@ -173,6 +188,19 @@ public class ClientEvents {
                 ModItems.CLAY_RED_GRASS.get(),
                 ModItems.GRASS_SMALL.get(),
                 ModItems.GRASS_MEDIUM.get(),
-                ModItems.GRASS_TALL.get());
+                ModItems.GRASS_TALL.get(),
+                ModItems.MILLET.get(),
+                ModItems.NETTLE.get(),
+                ModItems.PLANTAIN.get(),
+                ModItems.WORMWOOD.get(),
+                ModItems.COLUMBINE.get(),
+                ModItems.CATTAIL.get(),
+                ModItems.WILD_CARROT.get(),
+                ModItems.WILD_POTATO.get(),
+                ModItems.WILD_JUTE.get(),
+                ModItems.CURRANT_BUSH.get(),
+                ModItems.CLOUDBERRY_BUSH.get(),
+                ModItems.GOOSEBERRY_BUSH.get(),
+                ModItems.BLACKBERRY_BUSH.get());
     }
 }

@@ -42,9 +42,9 @@ def make_overlay(path, seed):
             if edge >= 4:
                 keep = True
             elif corner:
-                keep = rng.random() < 0.85
+                keep = rng.random() < 0.12
             else:
-                keep = rng.random() < 0.18 + 0.25 * (noise.getpixel((x, y)) / 255)
+                keep = rng.random() < 0.35 + 0.25 * (noise.getpixel((x, y)) / 255)
             if not keep or rng.random() < 0.03:
                 continue
             out.putpixel((x, y), (round(r * DARK), round(g * DARK), round(b * DARK), a))

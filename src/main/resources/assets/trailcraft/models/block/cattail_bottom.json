@@ -1,7 +1,7 @@
 {
-  "parent": "minecraft:block/cross",
+  "parent": "trailcraft:block/cross_tinted",
   "render_type": "minecraft:cutout",
   "textures": {
-    "cross": "trailcraft:block/cattail_bottom"
+    "tinted": "trailcraft:block/cattail_bottom"
   }
 }
