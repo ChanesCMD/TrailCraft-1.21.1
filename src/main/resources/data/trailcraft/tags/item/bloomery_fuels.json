@@ -1,7 +1,9 @@
 {
   "replace": false,
   "values": [
+    "trailcraft:bituminous_coal",
     "trailcraft:bituminous_coal_block",
+    "trailcraft:charcoal",
     "trailcraft:peat"
   ]
 }
