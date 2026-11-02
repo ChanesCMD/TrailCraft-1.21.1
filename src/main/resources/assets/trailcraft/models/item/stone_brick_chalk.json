@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "trailcraft:item/stone_brick"
+    "layer0": "trailcraft:item/stone_brick_chalk"
   }
 }

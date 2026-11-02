@@ -2,7 +2,8 @@
 import json
 import os
 
-from PIL import Image, ImageChops
+from PIL import Image
+from gen_create_compat import rock_image
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "main", "resources")
 NS = "trailcraft"
@@ -34,26 +35,46 @@ def write(path, data):
         f.write("\n")
 
 
-def copy_item_texture():
-    src = os.path.join(ASSETS, "textures", "item", "brick_red.png")
-    dst = os.path.join(ASSETS, "textures", "item", "stone_brick.png")
-    Image.open(src).save(dst)
+def lum(c):
+    return 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]
 
 
-def block_texture(rock, color):
-    src = Image.open(os.path.join(ASSETS, "textures", "block", "bricks_red.png")).convert("RGBA")
-    tint = Image.new("RGBA", src.size, color + (255,))
-    tinted = ImageChops.multiply(src, tint)
-    out = Image.blend(src, tinted, 0.62)
-    out.save(os.path.join(ASSETS, "textures", "block", f"reinforced_bricks_{rock}.png"))
+def recolor(src, rock):
+    """Кирпичный рисунок в цвет породы: яркость пикселя ведёт по палитре камня."""
+    base = Image.open(src).convert("RGBA")
+    colors = sorted(rock_image(rock).get_flattened_data(), key=lum)
+    pixels = list(base.get_flattened_data())
+    levels = [lum(p) for p in pixels]
+    lo, hi = min(levels), max(levels)
+    out = []
+    for p, level in zip(pixels, levels):
+        if not p[3]:
+            out.append((0, 0, 0, 0))
+            continue
+        rank = 0 if hi == lo else round((level - lo) / (hi - lo) * (len(colors) - 1))
+        c = colors[max(0, min(len(colors) - 1, rank))]
+        out.append((c[0], c[1], c[2], 255))
+    img = Image.new("RGBA", base.size)
+    img.putdata(out)
+    return img
+
+
+def item_texture(rock):
+    img = recolor(os.path.join(ASSETS, "textures", "item", "brick_red.png"), rock)
+    img.save(os.path.join(ASSETS, "textures", "item", f"stone_brick_{rock}.png"))
+
+
+def block_texture(rock):
+    img = recolor(os.path.join(ASSETS, "textures", "block", "bricks_red.png"), rock)
+    img.save(os.path.join(ASSETS, "textures", "block", f"reinforced_bricks_{rock}.png"))
 
 
 def main():
-    copy_item_texture()
     for rock, (ru, en, color) in ROCKS.items():
-        block_texture(rock, color)
+        item_texture(rock)
+        block_texture(rock)
         write(f"assets/{NS}/models/item/stone_brick_{rock}.json",
-              {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/stone_brick"}})
+              {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/stone_brick_{rock}"}})
         write(f"assets/{NS}/models/block/reinforced_bricks_{rock}.json",
               {"parent": "minecraft:block/cube_all", "textures": {"all": f"{NS}:block/reinforced_bricks_{rock}"}})
         write(f"assets/{NS}/models/item/reinforced_bricks_{rock}.json",
