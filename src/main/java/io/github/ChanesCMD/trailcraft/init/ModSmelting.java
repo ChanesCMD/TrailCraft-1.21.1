@@ -3,6 +3,9 @@ package io.github.ChanesCMD.trailcraft.init;
 import io.github.ChanesCMD.trailcraft.smelting.BloomeryBlock;
 import io.github.ChanesCMD.trailcraft.smelting.BloomeryBlockEntity;
 import io.github.ChanesCMD.trailcraft.smelting.BloomeryMenu;
+import io.github.ChanesCMD.trailcraft.smelting.LargeBloomeryBlock;
+import io.github.ChanesCMD.trailcraft.smelting.LargeBloomeryBlockEntity;
+import io.github.ChanesCMD.trailcraft.smelting.LargeBloomeryMenu;
 import io.github.ChanesCMD.trailcraft.smelting.ClayMoldItem;
 import io.github.ChanesCMD.trailcraft.smelting.JugItem;
 import io.github.ChanesCMD.trailcraft.smelting.JugMenu;
@@ -136,6 +139,21 @@ public final class ModSmelting {
 
     public static final DeferredHolder<MenuType<?>, MenuType<BloomeryMenu>> BLOOMERY_MENU =
             ModMenus.MENUS.register("small_bloomery", () -> new MenuType<>(BloomeryMenu::new, FeatureFlags.DEFAULT_FLAGS));
+
+    /** Люк большого сыродутного горна: им же открывается окно. */
+    public static final DeferredBlock<LargeBloomeryBlock> LARGE_BLOOMERY = ModBlocks.BLOCKS.registerBlock("large_bloomery",
+            LargeBloomeryBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.5f, 8.0f)
+                    .sound(SoundType.METAL).noOcclusion()
+                    .lightLevel(state -> state.getValue(LargeBloomeryBlock.LIT) ? 13 : 0));
+    public static final DeferredItem<BlockItem> LARGE_BLOOMERY_ITEM =
+            ModItems.ITEMS.registerSimpleBlockItem("large_bloomery", LARGE_BLOOMERY);
+    public static final DeferredItem<Item> BLOOM = ModItems.ITEMS.registerSimpleItem("bloom");
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<LargeBloomeryBlockEntity>> LARGE_BLOOMERY_ENTITY =
+            ModBlockEntities.BLOCK_ENTITIES.register("large_bloomery",
+                    () -> BlockEntityType.Builder.of(LargeBloomeryBlockEntity::new, LARGE_BLOOMERY.get()).build(null));
+    public static final DeferredHolder<MenuType<?>, MenuType<LargeBloomeryMenu>> LARGE_BLOOMERY_MENU =
+            ModMenus.MENUS.register("large_bloomery", () -> new MenuType<>(LargeBloomeryMenu::new, FeatureFlags.DEFAULT_FLAGS));
     public static final DeferredHolder<MenuType<?>, MenuType<JugMenu>> JUG_MENU =
             ModMenus.MENUS.register("jug", () -> new MenuType<>(JugMenu::new, FeatureFlags.DEFAULT_FLAGS));
 

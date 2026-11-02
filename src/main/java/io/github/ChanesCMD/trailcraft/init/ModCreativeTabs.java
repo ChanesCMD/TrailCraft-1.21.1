@@ -210,6 +210,8 @@ public class ModCreativeTabs {
                         output.accept(ModSmelting.UNFIRED_REINFORCED_BRICK);
                         output.accept(ModSmelting.REINFORCED_BRICK);
                         output.accept(ModSmelting.SMALL_BLOOMERY_ITEM);
+                        output.accept(ModSmelting.LARGE_BLOOMERY_ITEM);
+                        output.accept(ModSmelting.BLOOM);
                         output.accept(ModSmelting.CLAY_MOLD);
                         output.accept(ModSmelting.UNFIRED_JUG);
                         output.accept(ModSmelting.JUG);

@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "facing=north,lit=false": "large_bloomery",
+    "facing=north,lit=true": "large_bloomery",
+    "facing=east,lit=false": "large_bloomery",
+    "facing=east,lit=true": "large_bloomery",
+    "facing=south,lit=false": "large_bloomery",
+    "facing=south,lit=true": "large_bloomery",
+    "facing=west,lit=false": "large_bloomery",
+    "facing=west,lit=true": "large_bloomery"
+  }
+}

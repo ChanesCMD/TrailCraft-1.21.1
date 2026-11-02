@@ -3,6 +3,7 @@ package io.github.ChanesCMD.trailcraft.client;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.client.gui.TrailInventoryScreen;
 import io.github.ChanesCMD.trailcraft.client.gui.BloomeryScreen;
+import io.github.ChanesCMD.trailcraft.client.gui.LargeBloomeryScreen;
 import io.github.ChanesCMD.trailcraft.client.gui.JugScreen;
 import io.github.ChanesCMD.trailcraft.init.ModMenus;
 import io.github.ChanesCMD.trailcraft.init.ModSmelting;
@@ -53,6 +54,7 @@ public class ClientInventoryEvents {
             event.register(ModMenus.INVENTORY.get(), TrailInventoryScreen::new);
             event.register(ModSmelting.JUG_MENU.get(), JugScreen::new);
             event.register(ModSmelting.BLOOMERY_MENU.get(), BloomeryScreen::new);
+            event.register(ModSmelting.LARGE_BLOOMERY_MENU.get(), LargeBloomeryScreen::new);
             event.register(ModMenus.BARREL.get(), io.github.ChanesCMD.trailcraft.client.gui.BarrelScreen::new);
             event.register(io.github.ChanesCMD.trailcraft.init.ModBees.APIARY_MENU.get(), io.github.ChanesCMD.trailcraft.client.gui.ApiaryScreen::new);
         }

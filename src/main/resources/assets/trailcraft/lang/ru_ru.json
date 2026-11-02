@@ -1356,5 +1356,9 @@
   "item.trailcraft.iron_chisel": "Железное зубило",
   "item.trailcraft.steel_chisel": "Стальное зубило",
   "item.trailcraft.feather": "Перо",
-  "item.trailcraft.bone": "Кость"
+  "item.trailcraft.bone": "Кость",
+  "block.trailcraft.large_bloomery": "Люк большого сыродутного горна",
+  "item.trailcraft.bloom": "Крица",
+  "message.trailcraft.large_bloomery.invalid": "Нужна труба 3×3×3 из укреплённых кирпичей вокруг люка",
+  "jei.trailcraft.large_bloomery": "Большой горн: 8 руды + 8 топлива → крица"
 }

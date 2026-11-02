@@ -1356,5 +1356,9 @@
   "item.trailcraft.iron_chisel": "Iron Chisel",
   "item.trailcraft.steel_chisel": "Steel Chisel",
   "item.trailcraft.feather": "Feather",
-  "item.trailcraft.bone": "Bone"
+  "item.trailcraft.bone": "Bone",
+  "block.trailcraft.large_bloomery": "Large Bloomery Hatch",
+  "item.trailcraft.bloom": "Bloom",
+  "message.trailcraft.large_bloomery.invalid": "Build a 3×3×3 tube of reinforced bricks around the hatch",
+  "jei.trailcraft.large_bloomery": "Large bloomery: 8 ore + 8 fuel → bloom"
 }

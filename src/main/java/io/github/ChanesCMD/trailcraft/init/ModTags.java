@@ -34,6 +34,13 @@ public class ModTags {
     public static final TagKey<Item> BLOOMERY_FUELS = TagKey.create(Registries.ITEM,
             ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "bloomery_fuels"));
 
+    /** Железная руда для большого горна (сырые куски железа). */
+    public static final TagKey<Item> IRON_ORES = TagKey.create(Registries.ITEM,
+            ResourceLocation.fromNamespaceAndPath("c", "raw_materials/iron"));
+    /** Укреплённые кирпичи, из которых собирают большой горн. */
+    public static final TagKey<Block> BLOOMERY_BRICKS = TagKey.create(Registries.BLOCK,
+            ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "bloomery_bricks"));
+
     /** Обваливаются, если под ними пусто и рядом нет крепи (collapse/Collapse): породы и руды. */
     public static final TagKey<Block> CAN_COLLAPSE = TagKey.create(Registries.BLOCK,
             ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "can_collapse"));

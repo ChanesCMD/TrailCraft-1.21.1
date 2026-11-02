@@ -92,6 +92,7 @@ public class TrailJeiPlugin implements IModPlugin {
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(new ItemStack(ModSmelting.SMALL_BLOOMERY_ITEM.get()), BLOOMERY);
+        registration.addRecipeCatalyst(new ItemStack(ModSmelting.LARGE_BLOOMERY_ITEM.get()), BLOOMERY);
         registration.addRecipeCatalyst(new ItemStack(ModSmelting.JUG.get()), BLOOMERY);
         registration.addRecipeCatalyst(new ItemStack(ModBees.APIARY_ITEM.get()), APIARY);
         // свой костёр жарит то же, что ванильный
@@ -200,6 +201,17 @@ public class TrailJeiPlugin implements IModPlugin {
         }
         recipes.add(new TrailJeiRecipe(List.of(List.of(stack(TrailCraft.MODID + ":brass_mix"))),
                 new ItemStack(Metal.BRASS.ingot()), mix));
+        // большой горн: 8 кусков железной руды и 8 топлива -> крица
+        List<ItemStack> iron = List.of(
+                stack(TrailCraft.MODID + ":raw_hematite").copyWithCount(8),
+                stack(TrailCraft.MODID + ":raw_magnetite").copyWithCount(8),
+                stack(TrailCraft.MODID + ":raw_limonite").copyWithCount(8));
+        List<ItemStack> fuel = tag(ModTags.BLOOMERY_FUELS);
+        for (int i = 0; i < fuel.size(); i++) {
+            fuel.set(i, fuel.get(i).copyWithCount(8));
+        }
+        recipes.add(new TrailJeiRecipe(List.of(iron, fuel), new ItemStack(ModSmelting.BLOOM.get(), 1),
+                Component.translatable("jei.trailcraft.large_bloomery")));
         return recipes;
     }
 
