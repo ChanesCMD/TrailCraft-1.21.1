@@ -92,6 +92,7 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.SANDSTONE_PEBBLE);
                         output.accept(ModBlocks.SHALE_PEBBLE);
                         output.accept(ModItems.FLINT);
+        output.accept(ModItems.FLINT_SHEARS);
                         output.accept(ModItems.CHOPPING_STUMP);
                         output.accept(ModItems.RAW_HIDE);
                         output.accept(ModItems.SCRAPED_HIDE);

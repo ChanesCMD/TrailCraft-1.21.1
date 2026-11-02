@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "trailcraft:flint"
+    },
+    {
+      "item": "trailcraft:flint"
+    },
+    {
+      "item": "trailcraft:stick_processed"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:flint_shears",
+    "count": 1
+  }
+}

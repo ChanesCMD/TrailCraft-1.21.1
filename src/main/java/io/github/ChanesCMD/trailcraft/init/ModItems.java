@@ -9,6 +9,7 @@ import net.minecraft.world.item.DiggerItem;
 import net.minecraft.world.item.DoubleHighBlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemNameBlockItem;
+import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.item.Tiers;
 import io.github.ChanesCMD.trailcraft.item.SupportItem;
 import io.github.ChanesCMD.trailcraft.item.SteigerHammerItem;
@@ -299,6 +300,9 @@ public class ModItems {
     public static final DeferredItem<FlaskItem> WATERSKIN = ITEMS.registerItem("waterskin", props -> new FlaskItem(props.stacksTo(1), 3));
     /** Цинковый лист: как железный лист Create, но из цинка. */
     public static final DeferredItem<Item> ZINC_SHEET = ITEMS.registerSimpleItem("zinc_sheet");
+    /** Кремнёвые ножницы: стригут овец и листву, как ванильные, но из кремня. */
+    public static final DeferredItem<ShearsItem> FLINT_SHEARS = ITEMS.registerItem("flint_shears",
+            props -> new ShearsItem(props.durability(96)));
     /** Кошелёк на 8 видов монет: носится в слоте кошелька. */
     public static final DeferredItem<WalletItem> WALLET = ITEMS.registerItem("wallet", props -> new WalletItem(props.stacksTo(1)));
     /** Приборы на поясе (см. BeltHandler, client/Coords): высотомер показывает высоту полосой, секстант уточняет X */

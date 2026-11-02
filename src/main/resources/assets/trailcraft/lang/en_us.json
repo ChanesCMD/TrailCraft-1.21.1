@@ -1363,5 +1363,6 @@
   "jei.trailcraft.large_bloomery": "Large bloomery: 8 ore + 8 fuel → bloom",
   "block.trailcraft.stone_anvil": "Stone Anvil",
   "item.trailcraft.zinc_sheet": "Zinc Sheet",
-  "item.trailcraft.waterskin": "Waterskin"
+  "item.trailcraft.waterskin": "Waterskin",
+  "item.trailcraft.flint_shears": "Flint Shears"
 }

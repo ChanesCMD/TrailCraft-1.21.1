@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "tag": "c:leathers"
+    },
+    {
+      "tag": "c:leathers"
+    },
+    {
+      "item": "trailcraft:jute_thread"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:wallet",
+    "count": 1
+  }
+}

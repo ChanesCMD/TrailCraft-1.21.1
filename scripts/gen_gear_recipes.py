@@ -82,8 +82,25 @@ def main():
     write(f"data/{NS}/recipe/flask.json", {
         "type": "minecraft:crafting_shaped", "category": "equipment",
         "pattern": [" T ", "Z Z", " Z "],
-        "key": {"T": thread, "Z": zinc_sheet},
+        "key": {"T": {"item": f"{NS}:rope"}, "Z": zinc_sheet},
         "result": {"id": f"{NS}:flask", "count": 1},
+    })
+    write(f"data/{NS}/recipe/medium_pocket.json", {
+        "type": "minecraft:crafting_shaped", "category": "equipment",
+        "pattern": ["LL", "L "],
+        "key": {"L": leather_tag},
+        "result": {"id": f"{NS}:medium_pocket", "count": 1},
+    })
+    write(f"data/{NS}/recipe/leather_backpack.json", {
+        "type": "minecraft:crafting_shaped", "category": "equipment",
+        "pattern": ["LLL", "L L", "LLL"],
+        "key": {"L": leather_tag},
+        "result": {"id": f"{NS}:leather_backpack", "count": 1},
+    })
+    write(f"data/{NS}/recipe/wallet.json", {
+        "type": "minecraft:crafting_shapeless", "category": "equipment",
+        "ingredients": [leather_tag, leather_tag, thread],
+        "result": {"id": f"{NS}:wallet", "count": 1},
     })
     write(f"data/{NS}/recipe/waterskin.json", {
         "type": "minecraft:crafting_shapeless", "category": "equipment",
