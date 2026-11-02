@@ -214,7 +214,7 @@ public class TrailJeiPlugin implements IModPlugin {
                 stack(TrailCraft.MODID + ":raw_hematite").copyWithCount(8),
                 stack(TrailCraft.MODID + ":raw_magnetite").copyWithCount(8),
                 stack(TrailCraft.MODID + ":raw_limonite").copyWithCount(8));
-        List<ItemStack> fuel = tag(ModTags.BLOOMERY_FUELS);
+        List<ItemStack> fuel = tag(ModTags.LARGE_BLOOMERY_FUELS);
         for (int i = 0; i < fuel.size(); i++) {
             fuel.set(i, fuel.get(i).copyWithCount(8));
         }

@@ -48,7 +48,7 @@ def main():
     texture()
     write(f"assets/{NS}/models/block/stone_anvil.json", {
         "parent": "minecraft:block/block",
-        "textures": {"particle": "#all"},
+        "textures": {"particle": "#all", "all": f"{NS}:block/stone_anvil"},
         "elements": [{
             "from": [0, 0, 0], "to": [16, 14, 16],
             "faces": {"down": face("down"), "up": face("up"), "north": face("north"), "south": face("south"),
@@ -65,12 +65,6 @@ def main():
            "random_sequence": f"{NS}:blocks/stone_anvil"})
     write(f"data/{NS}/tags/item/stone_bricks.json",
           {"replace": False, "values": [f"{NS}:stone_brick_{r}" for r in ROCKS]})
-    write(f"data/{NS}/recipe/stone_anvil.json", {
-        "type": "minecraft:crafting_shaped", "category": "building",
-        "pattern": ["BB", "BB"],
-        "key": {"B": {"tag": f"{NS}:stone_bricks"}},
-        "result": {"id": f"{NS}:stone_anvil", "count": 1},
-    })
     tag_path = "data/minecraft/tags/block/mineable/pickaxe.json"
     tag_file = os.path.join(ROOT, *tag_path.split("/"))
     with open(tag_file, encoding="utf-8") as f:

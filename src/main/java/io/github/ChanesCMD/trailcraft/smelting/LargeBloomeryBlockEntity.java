@@ -31,7 +31,7 @@ public class LargeBloomeryBlockEntity extends BlockEntity implements MenuProvide
         public boolean isItemValid(int slot, ItemStack stack) {
             return switch (slot) {
                 case ORE -> stack.is(ModTags.IRON_ORES);
-                case FUEL -> stack.is(ModTags.BLOOMERY_FUELS);
+                case FUEL -> stack.is(ModTags.LARGE_BLOOMERY_FUELS);
                 default -> false;
             };
         }

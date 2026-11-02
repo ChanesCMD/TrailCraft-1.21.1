@@ -57,7 +57,7 @@ def main():
     variants = {}
     for facing in ("north", "east", "south", "west"):
         for lit in ("false", "true"):
-            variants[f"facing={facing},lit={lit}"] = f"{NS}:block/large_bloomery"
+            variants[f"facing={facing},lit={lit}"] = {"model": f"{NS}:block/large_bloomery"}
     write(f"assets/{NS}/blockstates/large_bloomery.json", {"variants": variants})
     write(f"assets/{NS}/models/item/bloom.json",
           {"parent": "minecraft:item/generated", "textures": {"layer0": "minecraft:item/raw_iron"}})

@@ -393,8 +393,9 @@ def data():
     tag("item", f"{NS}:clay_balls", clay_balls)
     write(f"data/{NS}/tags/item/jug_items.json", {"replace": False, "values": JUG_ITEMS})
     tag("item", f"{NS}:straw_tools", STRAW_TOOLS)
-    # топливо малой сыродутной печи (BloomeryBlockEntity): уголь и торф (торф горит вдвое меньше)
-    tag("item", f"{NS}:bloomery_fuels", ["#minecraft:coals", f"{NS}:peat"])
+    # топливо малой сыродутной печи: угольный блок и торф (торф горит вдвое меньше); большого — только угольный блок
+    tag("item", f"{NS}:bloomery_fuels", [f"{NS}:bituminous_coal_block", f"{NS}:peat"])
+    tag("item", f"{NS}:large_bloomery_fuels", [f"{NS}:bituminous_coal_block"])
     tag("block", f"{NS}:straw_grass", STRAW_GRASS)
     tag("block", "minecraft:mineable/pickaxe", [f"{NS}:bricks_{c}" for c in CLAYS] + [f"{NS}:small_bloomery"])
     for clay in CLAYS:

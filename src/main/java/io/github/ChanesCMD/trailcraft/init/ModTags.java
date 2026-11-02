@@ -33,6 +33,9 @@ public class ModTags {
     /** Топливо малой сыродутной печи: древесный и каменный уголь (#minecraft:coals) и торф. */
     public static final TagKey<Item> BLOOMERY_FUELS = TagKey.create(Registries.ITEM,
             ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "bloomery_fuels"));
+    /** Топливо большого горна: только угольный блок, без угля и торфа. */
+    public static final TagKey<Item> LARGE_BLOOMERY_FUELS = TagKey.create(Registries.ITEM,
+            ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "large_bloomery_fuels"));
 
     /** Железная руда для большого горна (сырые куски железа). */
     public static final TagKey<Item> IRON_ORES = TagKey.create(Registries.ITEM,
