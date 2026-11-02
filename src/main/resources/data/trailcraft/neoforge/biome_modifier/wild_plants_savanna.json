@@ -5,7 +5,10 @@
   ],
   "features": [
     "trailcraft:wild_carrot_patch",
-    "trailcraft:wild_jute_patch"
+    "trailcraft:wild_jute_patch",
+    "trailcraft:millet_patch",
+    "trailcraft:plantain_patch",
+    "trailcraft:wormwood_patch"
   ],
   "step": "vegetal_decoration"
 }

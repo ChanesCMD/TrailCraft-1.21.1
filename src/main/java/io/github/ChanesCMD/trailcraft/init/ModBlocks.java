@@ -36,6 +36,8 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.PushReaction;
 import io.github.ChanesCMD.trailcraft.block.GrassPlantBlock;
+import io.github.ChanesCMD.trailcraft.block.CattailBlock;
+import io.github.ChanesCMD.trailcraft.block.ColumbineBlock;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -413,6 +415,23 @@ public class ModBlocks {
             props -> new GrassPlantBlock(props, 14), wildPlantProps());
     public static final DeferredBlock<Block> WILD_POTATO = BLOCKS.registerBlock("wild_potato",
             props -> new GrassPlantBlock(props, 12), wildPlantProps());
+
+    /** Сорняки: просо, крапива, подорожник, полынь. */
+    public static final DeferredBlock<Block> MILLET = BLOCKS.registerBlock("millet",
+            props -> new GrassPlantBlock(props, 12), wildPlantProps());
+    public static final DeferredBlock<Block> NETTLE = BLOCKS.registerBlock("nettle",
+            props -> new GrassPlantBlock(props, 12), wildPlantProps());
+    public static final DeferredBlock<Block> PLANTAIN = BLOCKS.registerBlock("plantain",
+            props -> new GrassPlantBlock(props, 8), wildPlantProps());
+    public static final DeferredBlock<Block> WORMWOOD = BLOCKS.registerBlock("wormwood",
+            props -> new GrassPlantBlock(props, 14), wildPlantProps());
+
+    /** Водосбор — только на глине. */
+    public static final DeferredBlock<Block> COLUMBINE = BLOCKS.registerBlock("columbine",
+            props -> new ColumbineBlock(props, 10), wildPlantProps());
+
+    /** Рогоз — два блока из пресной воды. */
+    public static final DeferredBlock<Block> CATTAIL = BLOCKS.registerBlock("cattail", CattailBlock::new, wildPlantProps());
 
     /** Дикий джут: в два блока высотой, с нижней половины падают джут и семена джута. */
     public static final DeferredBlock<Block> WILD_JUTE = BLOCKS.registerBlock("wild_jute", io.github.ChanesCMD.trailcraft.block.WildJuteBlock::new, wildPlantProps());

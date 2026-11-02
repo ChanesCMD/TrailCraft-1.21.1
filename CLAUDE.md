@@ -88,6 +88,9 @@
   Ягодные кусты — `block/BerryBushBlock.java`, дикие морковь и картофель — `GrassPlantBlock`, дикий джут — ванильный
   `DoublePlantBlock`, посевы джута — `block/JuteCropBlock.java` (как ванильный кувшинчик, все 5 стадий в два блока — так нарисовано у автора,
   `scripts/templates/jute_stages.png`; дикий джут — как спелый).
+  Новые травы: просо, крапива, подорожник, полынь — `GrassPlantBlock`; водосбор — `ColumbineBlock` (только глина);
+  рогоз — `CattailBlock` (два блока, нижняя половина над пресной водой). Их модели, лут и генерацию пишет
+  `scripts/gen_farm.py`, текстуры — `scripts/gen_wild_plant_textures.py`.
   Все JSON (модели, блокстейты, лут, тэги, рецепты тяпок и верёвки, генерация `*_patch` и
   `neoforge/biome_modifier/wild_plants_*.json`, переводы) пишет `scripts/gen_farm.py`, текстуры —
   `scripts/gen_farm_textures.py` (нужен Pillow); тяпки — рисунок автора с обводкой головки, как у кирок (`outline()`),

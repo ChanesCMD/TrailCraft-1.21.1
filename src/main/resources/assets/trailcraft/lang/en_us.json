@@ -1314,5 +1314,11 @@
   "item.trailcraft.brown_cushion": "Brown Cushion",
   "item.trailcraft.green_cushion": "Green Cushion",
   "item.trailcraft.red_cushion": "Red Cushion",
-  "item.trailcraft.black_cushion": "Black Cushion"
+  "item.trailcraft.black_cushion": "Black Cushion",
+  "block.trailcraft.millet": "Millet",
+  "block.trailcraft.nettle": "Nettle",
+  "block.trailcraft.plantain": "Plantain",
+  "block.trailcraft.wormwood": "Wormwood",
+  "block.trailcraft.columbine": "Columbine",
+  "block.trailcraft.cattail": "Cattail"
 }

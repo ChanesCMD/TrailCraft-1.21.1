@@ -6,7 +6,9 @@
   "features": [
     "trailcraft:currant_bush_patch",
     "trailcraft:blackberry_bush_patch",
-    "trailcraft:wild_jute_patch"
+    "trailcraft:wild_jute_patch",
+    "trailcraft:nettle_patch",
+    "trailcraft:cattail_patch"
   ],
   "step": "vegetal_decoration"
 }

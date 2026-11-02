@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "trailcraft:chernozem_river"
+  ],
+  "features": [
+    "trailcraft:cattail_patch"
+  ],
+  "step": "vegetal_decoration"
+}

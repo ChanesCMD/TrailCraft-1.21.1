@@ -8,7 +8,10 @@
     "trailcraft:gooseberry_bush_patch",
     "trailcraft:blackberry_bush_patch",
     "trailcraft:wild_carrot_patch",
-    "trailcraft:wild_jute_patch"
+    "trailcraft:wild_jute_patch",
+    "trailcraft:millet_patch",
+    "trailcraft:nettle_patch",
+    "trailcraft:wormwood_patch"
   ],
   "step": "vegetal_decoration"
 }

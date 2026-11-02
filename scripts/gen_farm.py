@@ -1,6 +1,7 @@
 """
-Генерирует JSON для земледелия: тяпки, грядки, ягодные кусты и ягоды, дикие морковь и картофель, джут и верёвку —
-модели, блокстейты, лут, тэги, рецепты, генерацию в мире и переводы.
+Генерирует JSON для земледелия: тяпки, грядки, ягодные кусты и ягоды, дикие морковь и картофель, джут и верёвку,
+а также новые травы (просо, крапива, подорожник, полынь, водосбор, рогоз) — модели, блокстейты, лут, тэги,
+рецепты, генерацию в мире и переводы.
 Блоки и предметы те же, что в ModBlocks / ModItems / ModTools — меняя список, меняйте в обоих местах.
 
 Запуск из корня проекта:  python scripts/gen_farm.py
@@ -39,6 +40,32 @@ BERRIES = [
     ("blackberry", "Куст ежевики", "Blackberry Bush", "Ежевика", "Blackberries"),
 ]
 
+# Новые дикие растения: (id, ru, en). Рогоз — двойной, водосбор — только на глине.
+PLANTS = [
+    ("millet", "Просо", "Millet"),
+    ("nettle", "Крапива", "Nettle"),
+    ("plantain", "Подорожник", "Plantain"),
+    ("wormwood", "Полынь", "Wormwood"),
+    ("columbine", "Водосбор", "Columbine"),
+    ("cattail", "Рогоз", "Cattail"),
+]
+PLANT_BIOMES = {
+    "burozem_plains": ["millet", "plantain", "columbine"],
+    "chernozem_plains": ["millet", "plantain", "wormwood", "columbine"],
+    "zheltozem_plains": ["millet", "plantain", "wormwood", "columbine"],
+    "chernozem_forest_steppe": ["millet", "nettle", "wormwood"],
+    "burozem_forest": ["nettle", "plantain", "columbine"],
+    "birch_forest": ["nettle", "plantain", "columbine"],
+    "maple_forest": ["nettle", "columbine"],
+    "alder_forest": ["nettle"],
+    "burozem_willow_forest": ["nettle", "cattail"],
+    "chernozem_willow_forest": ["cattail"],
+    "savanna": ["millet", "plantain", "wormwood"],
+    "burozem_river": ["cattail"],
+    "chernozem_river": ["cattail"],
+    "zheltozem_river": ["cattail"],
+}
+
 # Где растут дикие растения: биом -> что в нём растёт (леса — scripts/gen_forests.py). TODO: уточнить биомы.
 # Смородина и крыжовник — умеренные равнины и леса (смородина — и в сырых), морошка — самая прохладная полоса,
 # ежевика — тёплые и умеренные леса и опушки, картофель — умеренные равнины, морковь — равнины и светлые рощи,
@@ -75,7 +102,16 @@ PATCHES = {
     "wild_carrot": (4, 2, 6),
     "wild_potato": (4, 2, 8),
     "wild_jute": (8, 2, 8),
+    "millet": (10, 2, 4),
+    "nettle": (8, 2, 5),
+    "plantain": (8, 2, 6),
+    "wormwood": (6, 2, 8),
+    "columbine": (4, 2, 10),
+    "cattail": (12, 3, 6),
 }
+
+for _biome, _plants in PLANT_BIOMES.items():
+    WILD_BY_BIOME.setdefault(_biome, []).extend(_plants)
 
 LANG = {
     "block.trailcraft.wild_carrot": ("Дикая морковь", "Wild Carrot"),
@@ -177,6 +213,17 @@ def models():
         blockstate(plant, {"": plant})
         item_model(plant, f"{NS}:block/{plant}")
 
+    for plant, *_ in PLANTS:
+        if plant == "cattail":
+            cross("cattail_bottom")
+            cross("cattail_top")
+            blockstate("cattail", {"half=lower": "cattail_bottom", "half=upper": "cattail_top"})
+            item_model("cattail", f"{NS}:block/cattail_top")
+        else:
+            cross(plant)
+            blockstate(plant, {"": plant})
+            item_model(plant, f"{NS}:block/{plant}")
+
     cross("wild_jute_bottom")
     cross("wild_jute_top")
     blockstate("wild_jute", {"half=lower": "wild_jute_bottom", "half=upper": "wild_jute_top"})
@@ -230,6 +277,12 @@ def loot():
         loot_table(f"{berry}_bush", [pool(f"{NS}:stick_branch", [count(1, 2)])])
     loot_table("wild_carrot", [pool("minecraft:carrot", [count(1, 2)])])
     loot_table("wild_potato", [pool("minecraft:potato", [count(1, 2)])])
+    for plant, *_ in PLANTS:
+        if plant == "cattail":
+            cut = state_is("cattail", half="lower")
+            loot_table("cattail", [pool(f"{NS}:cattail", [count(1, 2)], [cut])])
+        else:
+            loot_table(plant, [pool(f"{NS}:{plant}")])
     # двойные растения — только с нижней половины (верхнюю ломают — нижняя ломается следом и даёт лут)
     lower = state_is("wild_jute", half="lower")
     loot_table("wild_jute", [pool(f"{NS}:jute", [count(1, 2)], [lower]), pool(f"{NS}:jute_seeds", [], [lower])])
@@ -253,7 +306,9 @@ def tags():
     tag("block", "minecraft:maintains_farmland", [f"{NS}:jute_crop"])
     tag("block", "minecraft:crops", [f"{NS}:jute_crop"])
     tag("block", "minecraft:replaceable_by_trees",
-        [f"{NS}:{b}_bush" for b, *_ in BERRIES] + [f"{NS}:wild_carrot", f"{NS}:wild_potato", f"{NS}:wild_jute"])
+        [f"{NS}:{b}_bush" for b, *_ in BERRIES]
+        + [f"{NS}:wild_carrot", f"{NS}:wild_potato", f"{NS}:wild_jute"]
+        + [f"{NS}:{p}" for p, *_ in PLANTS])
     tag("item", "c:seeds", [f"{NS}:jute_seeds"])
     tag("item", "c:foods/berry", [f"{NS}:{b}" for b, *_ in BERRIES])
     tag("item", "c:ropes", [f"{NS}:rope"])
@@ -294,26 +349,46 @@ def patch_state(plant):
 def worldgen():
     for plant, (tries, spread, rarity) in PATCHES.items():
         name = f"{plant}_patch"
-        write(f"data/{NS}/worldgen/configured_feature/{name}.json", {
-            "type": "minecraft:random_patch",
-            "config": {
-                "tries": tries, "xz_spread": spread, "y_spread": 1,
-                "feature": {
-                    "feature": {"type": "minecraft:simple_block", "config": {"to_place": patch_state(plant)}},
-                    # только на воздух или на место нашей травы (не в воду)
-                    "placement": [{"type": "minecraft:block_predicate_filter", "predicate": {
-                        "type": "minecraft:matching_blocks",
-                        "blocks": ["minecraft:air", f"{NS}:grass_small", f"{NS}:grass_medium", f"{NS}:grass_tall"]}}],
+        if plant == "cattail":
+            # Рогоз ставится над водой: heightmap MOTION_BLOCKING даёт поверхность воды,
+            # CattailBlock сам проверяет, что снизу пресная вода.
+            configured = {
+                "type": "minecraft:random_patch",
+                "config": {
+                    "tries": tries, "xz_spread": spread, "y_spread": 1,
+                    "feature": {
+                        "feature": {"type": "minecraft:simple_block", "config": {
+                            "to_place": {"type": "minecraft:simple_state_provider", "state": {
+                                "Name": f"{NS}:cattail", "Properties": {"half": "lower"}}}}},
+                        "placement": [{"type": "minecraft:block_predicate_filter", "predicate": {
+                            "type": "minecraft:matching_blocks", "blocks": "minecraft:air"}}],
+                    },
                 },
-            },
-        })
+            }
+            heightmap = "MOTION_BLOCKING"
+        else:
+            configured = {
+                "type": "minecraft:random_patch",
+                "config": {
+                    "tries": tries, "xz_spread": spread, "y_spread": 1,
+                    "feature": {
+                        "feature": {"type": "minecraft:simple_block", "config": {"to_place": patch_state(plant)}},
+                        # только на воздух или на место нашей травы (не в воду)
+                        "placement": [{"type": "minecraft:block_predicate_filter", "predicate": {
+                            "type": "minecraft:matching_blocks",
+                            "blocks": ["minecraft:air", f"{NS}:grass_small", f"{NS}:grass_medium", f"{NS}:grass_tall"]}}],
+                    },
+                },
+            }
+            heightmap = "WORLD_SURFACE"
+        write(f"data/{NS}/worldgen/configured_feature/{name}.json", configured)
         write(f"data/{NS}/worldgen/placed_feature/{name}.json", {
             "feature": f"{NS}:{name}",
             "placement": [
                 {"type": "minecraft:rarity_filter", "chance": rarity},
                 {"type": "minecraft:in_square"},
                 # высота земли до деревьев (WORLD_SURFACE_WG в лесу уже по кронам)
-                {"type": "minecraft:heightmap", "heightmap": "WORLD_SURFACE"},
+                {"type": "minecraft:heightmap", "heightmap": heightmap},
                 {"type": "minecraft:biome"},
             ],
         })
@@ -343,6 +418,8 @@ def lang():
     for berry, bush_ru, bush_en, ru, en in BERRIES:
         entries[f"block.{NS}.{berry}_bush"] = (bush_ru, bush_en)
         entries[f"item.{NS}.{berry}"] = (ru, en)
+    for plant, ru, en in PLANTS:
+        entries[f"block.{NS}.{plant}"] = (ru, en)
     for code, k in (("ru_ru", 0), ("en_us", 1)):
         rel = f"assets/{NS}/lang/{code}.json"
         data = read(rel)

@@ -1314,5 +1314,11 @@
   "item.trailcraft.brown_cushion": "Коричневая подушка",
   "item.trailcraft.green_cushion": "Зелёная подушка",
   "item.trailcraft.red_cushion": "Красная подушка",
-  "item.trailcraft.black_cushion": "Чёрная подушка"
+  "item.trailcraft.black_cushion": "Чёрная подушка",
+  "block.trailcraft.millet": "Просо",
+  "block.trailcraft.nettle": "Крапива",
+  "block.trailcraft.plantain": "Подорожник",
+  "block.trailcraft.wormwood": "Полынь",
+  "block.trailcraft.columbine": "Водосбор",
+  "block.trailcraft.cattail": "Рогоз"
 }

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "trailcraft:block/cattail_bottom"
+    },
+    "half=upper": {
+      "model": "trailcraft:block/cattail_top"
+    }
+  }
+}

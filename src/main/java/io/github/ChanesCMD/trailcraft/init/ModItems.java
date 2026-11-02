@@ -101,6 +101,15 @@ public class ModItems {
     public static final DeferredItem<DoubleHighBlockItem> WILD_JUTE = ITEMS.registerItem("wild_jute",
             props -> new DoubleHighBlockItem(ModBlocks.WILD_JUTE.get(), props));
 
+    // === НОВЫЕ ДИКИЕ РАСТЕНИЯ ===
+    public static final DeferredItem<BlockItem> MILLET = ITEMS.registerSimpleBlockItem("millet", ModBlocks.MILLET);
+    public static final DeferredItem<BlockItem> NETTLE = ITEMS.registerSimpleBlockItem("nettle", ModBlocks.NETTLE);
+    public static final DeferredItem<BlockItem> PLANTAIN = ITEMS.registerSimpleBlockItem("plantain", ModBlocks.PLANTAIN);
+    public static final DeferredItem<BlockItem> WORMWOOD = ITEMS.registerSimpleBlockItem("wormwood", ModBlocks.WORMWOOD);
+    public static final DeferredItem<BlockItem> COLUMBINE = ITEMS.registerSimpleBlockItem("columbine", ModBlocks.COLUMBINE);
+    public static final DeferredItem<DoubleHighBlockItem> CATTAIL = ITEMS.registerItem("cattail",
+            props -> new DoubleHighBlockItem(ModBlocks.CATTAIL.get(), props));
+
     // === ЯГОДЫ (еда, Farm.BERRY_FOOD) ===
     public static final DeferredItem<Item> CURRANT = ITEMS.registerItem("currant", props -> new Item(props.food(Farm.BERRY_FOOD)));
     public static final DeferredItem<Item> CLOUDBERRY = ITEMS.registerItem("cloudberry", props -> new Item(props.food(Farm.BERRY_FOOD)));

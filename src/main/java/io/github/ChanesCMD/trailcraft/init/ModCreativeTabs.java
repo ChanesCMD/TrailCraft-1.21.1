@@ -164,6 +164,12 @@ public class ModCreativeTabs {
                         output.accept(ModItems.WILD_CARROT);
                         output.accept(ModItems.WILD_POTATO);
                         output.accept(ModItems.WILD_JUTE);
+                        output.accept(ModItems.MILLET);
+                        output.accept(ModItems.NETTLE);
+                        output.accept(ModItems.PLANTAIN);
+                        output.accept(ModItems.WORMWOOD);
+                        output.accept(ModItems.COLUMBINE);
+                        output.accept(ModItems.CATTAIL);
                         output.accept(ModItems.JUTE);
                         output.accept(ModItems.JUTE_SEEDS);
                         output.accept(ModItems.ROPE);

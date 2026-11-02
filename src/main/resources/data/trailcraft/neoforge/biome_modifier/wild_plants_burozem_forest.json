@@ -6,7 +6,10 @@
   "features": [
     "trailcraft:currant_bush_patch",
     "trailcraft:gooseberry_bush_patch",
-    "trailcraft:blackberry_bush_patch"
+    "trailcraft:blackberry_bush_patch",
+    "trailcraft:nettle_patch",
+    "trailcraft:plantain_patch",
+    "trailcraft:columbine_patch"
   ],
   "step": "vegetal_decoration"
 }
