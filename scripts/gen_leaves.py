@@ -64,6 +64,23 @@ REF = {
     "white_poplar": "516d42 658953 70985c 7daa67 8cbe73",
     "willow": "5f7534 779241 84a248 94b551 a5ca5a",
 }
+# Общие оттенки по просьбе автора: ванильные дуб/берёза/хвоя и нынешний белый тополь.
+_OAK = "375b23 45722b 4d7f30 568e36 609f3c"
+_BIRCH = "51752d 659238 70a23e 7db545 8cca4e"
+_CONIFER = "1d3c2b 244c36 28543c 2d5e43 32694b"
+_POPLAR = "516d42 658953 70985c 7daa67 8cbe73"
+REF.update({
+    # амадзу и фруктовые деревья — нынешний белый тополь
+    "amadzu": _POPLAR,
+    # верба, белый тополь, акация, осина — ванильная берёза
+    "willow": _BIRCH, "white_poplar": _BIRCH, "acacia": _BIRCH, "aspen": _BIRCH,
+    # туя, сосна, пихта, ель — ванильная хвоя
+    "thuja": _CONIFER, "pine": _CONIFER, "fir": _CONIFER, "spruce": _CONIFER,
+    # дуб, берёза, каштан, клён, липа, орех, ольха — ванильный дуб
+    "oak": _OAK, "birch": _OAK, "chestnut": _OAK, "maple": _OAK,
+    "linden": _OAK, "walnut": _OAK, "alder": _OAK,
+})
+
 # вторые палитры: цветы, серебристая изнанка листа, серёжки
 EXTRA = {
     "lilac_flower": "6c4590 8a5cab a875c6 c492dd e3b4f5",
@@ -74,6 +91,8 @@ EXTRA = {
     "catkin": "8d8c86 aeada6 c9c8c0 dfded6 f4f3ec",
     "fir_silver": "4f7a68 6a9584 86ae9e a3c6b8 c2ddd2",
 }
+# Сакура — ванильная вишня: и листья, и цветы розовые.
+EXTRA["sakura_leaf"] = REF["sakura"]
 
 YELLOW, BLUE = 0.15, 0.62
 # наименьший разброс яркости между тёмным и светлым тоном палитры
@@ -410,6 +429,10 @@ SPECIES = {
     "cedar": dict(kind="tuft", fixed=True, big=True),
     "thuja": dict(kind="spray", fixed=True),
 }
+# У этих пород убираем прежние вторые оттенки — они должны быть ровно в ванильном цвете.
+for _plain in ("aspen", "white_poplar", "fir"):
+    SPECIES[_plain].pop("alt", None)
+    SPECIES[_plain].pop("alt_share", None)
 # стиль: (зерно — номер варианта, из которого выбирал автор; параметры). scale — размер листьев, contact — сколько
 # сторон лист может касаться соседей, dark_gaps — доля щелей, закрашенных тёмным (остальные прозрачные), deep —
 # задний слой темнее и листья бросают тень, sun — доля светлых пикселей-бликов
