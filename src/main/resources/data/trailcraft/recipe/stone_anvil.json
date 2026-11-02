@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "BB",
+    "BB"
+  ],
+  "key": {
+    "B": {
+      "tag": "trailcraft:stone_bricks"
+    }
+  },
+  "result": {
+    "id": "trailcraft:stone_anvil",
+    "count": 1
+  }
+}

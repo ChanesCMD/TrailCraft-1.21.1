@@ -38,6 +38,7 @@ import net.minecraft.world.level.material.PushReaction;
 import io.github.ChanesCMD.trailcraft.block.GrassPlantBlock;
 import io.github.ChanesCMD.trailcraft.block.CattailBlock;
 import io.github.ChanesCMD.trailcraft.block.ColumbineBlock;
+import io.github.ChanesCMD.trailcraft.block.StoneAnvilBlock;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -432,6 +433,11 @@ public class ModBlocks {
 
     /** Рогоз — два блока из пресной воды. */
     public static final DeferredBlock<Block> CATTAIL = BLOCKS.registerBlock("cattail", CattailBlock::new, wildPlantProps());
+
+    /** Каменная наковальня: получается ударом каменного молотка по породе. */
+    public static final DeferredBlock<Block> STONE_ANVIL = BLOCKS.registerBlock("stone_anvil", StoneAnvilBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(2.0f, 6.0f).sound(SoundType.STONE)
+                    .requiresCorrectToolForDrops());
 
     /** Дикий джут: в два блока высотой, с нижней половины падают джут и семена джута. */
     public static final DeferredBlock<Block> WILD_JUTE = BLOCKS.registerBlock("wild_jute", io.github.ChanesCMD.trailcraft.block.WildJuteBlock::new, wildPlantProps());

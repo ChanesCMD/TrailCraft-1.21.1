@@ -109,6 +109,7 @@ public class ModItems {
     public static final DeferredItem<BlockItem> COLUMBINE = ITEMS.registerSimpleBlockItem("columbine", ModBlocks.COLUMBINE);
     public static final DeferredItem<DoubleHighBlockItem> CATTAIL = ITEMS.registerItem("cattail",
             props -> new DoubleHighBlockItem(ModBlocks.CATTAIL.get(), props));
+    public static final DeferredItem<BlockItem> STONE_ANVIL = ITEMS.registerSimpleBlockItem("stone_anvil", ModBlocks.STONE_ANVIL);
 
     // === ЯГОДЫ (еда, Farm.BERRY_FOOD) ===
     public static final DeferredItem<Item> CURRANT = ITEMS.registerItem("currant", props -> new Item(props.food(Farm.BERRY_FOOD)));

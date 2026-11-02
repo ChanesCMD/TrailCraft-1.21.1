@@ -204,6 +204,7 @@ public class ModCreativeTabs {
                         }
                         ModSmelting.STONE_BRICKS.values().forEach(output::accept);
                         ModSmelting.REINFORCED_BRICK_ITEMS.values().forEach(output::accept);
+                        output.accept(ModItems.STONE_ANVIL);
                         output.accept(ModItems.CLOTH_BLANK);
                         output.accept(ModItems.CLOTH);
                         output.accept(ModSmelting.STRAW);

@@ -2,15 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "pattern": [
-    "RR",
-    "RI"
+    " B ",
+    "B B",
+    " B "
   ],
   "key": {
-    "R": {
-      "item": "trailcraft:reinforced_brick"
-    },
-    "I": {
-      "item": "minecraft:iron_ingot"
+    "B": {
+      "tag": "c:ingots/bronze"
     }
   },
   "result": {

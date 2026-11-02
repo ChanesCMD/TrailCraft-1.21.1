@@ -57,7 +57,7 @@ def main():
     variants = {}
     for facing in ("north", "east", "south", "west"):
         for lit in ("false", "true"):
-            variants[f"facing={facing},lit={lit}"] = "large_bloomery"
+            variants[f"facing={facing},lit={lit}"] = f"{NS}:block/large_bloomery"
     write(f"assets/{NS}/blockstates/large_bloomery.json", {"variants": variants})
     write(f"assets/{NS}/models/item/bloom.json",
           {"parent": "minecraft:item/generated", "textures": {"layer0": "minecraft:item/raw_iron"}})
@@ -68,8 +68,8 @@ def main():
            "random_sequence": f"{NS}:blocks/large_bloomery"})
     write(f"data/{NS}/recipe/large_bloomery.json", {
         "type": "minecraft:crafting_shaped", "category": "building",
-        "pattern": ["RR", "RI"],
-        "key": {"R": {"item": f"{NS}:reinforced_brick"}, "I": {"item": "minecraft:iron_ingot"}},
+        "pattern": [" B ", "B B", " B "],
+        "key": {"B": {"tag": "c:ingots/bronze"}},
         "result": {"id": f"{NS}:large_bloomery", "count": 1},
     })
     write(f"data/{NS}/tags/block/bloomery_bricks.json",

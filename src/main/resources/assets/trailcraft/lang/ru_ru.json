@@ -1360,5 +1360,6 @@
   "block.trailcraft.large_bloomery": "Люк большого сыродутного горна",
   "item.trailcraft.bloom": "Крица",
   "message.trailcraft.large_bloomery.invalid": "Нужна труба 3×3×3 из укреплённых кирпичей вокруг люка",
-  "jei.trailcraft.large_bloomery": "Большой горн: 8 руды + 8 топлива → крица"
+  "jei.trailcraft.large_bloomery": "Большой горн: 8 руды + 8 топлива → крица",
+  "block.trailcraft.stone_anvil": "Каменная наковальня"
 }

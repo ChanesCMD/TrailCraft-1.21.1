@@ -52,6 +52,7 @@ import java.util.function.Predicate;
 @JeiPlugin
 public class TrailJeiPlugin implements IModPlugin {
     static final RecipeType<TrailJeiRecipe> BLOOMERY = RecipeType.create(TrailCraft.MODID, "small_bloomery", TrailJeiRecipe.class);
+    static final RecipeType<TrailJeiRecipe> LARGE_BLOOMERY = RecipeType.create(TrailCraft.MODID, "large_bloomery", TrailJeiRecipe.class);
     static final RecipeType<TrailJeiRecipe> HANDWORK = RecipeType.create(TrailCraft.MODID, "handwork", TrailJeiRecipe.class);
     static final RecipeType<TrailJeiRecipe> APIARY = RecipeType.create(TrailCraft.MODID, "apiary", TrailJeiRecipe.class);
 
@@ -83,6 +84,8 @@ public class TrailJeiPlugin implements IModPlugin {
         registration.addRecipeCategories(
                 new TrailJeiCategory(gui, BLOOMERY, Component.translatable("jei.trailcraft.small_bloomery"),
                         new ItemStack(ModSmelting.SMALL_BLOOMERY_ITEM.get())),
+                new TrailJeiCategory(gui, LARGE_BLOOMERY, Component.translatable("jei.trailcraft.large_bloomery"),
+                        new ItemStack(ModSmelting.LARGE_BLOOMERY_ITEM.get())),
                 new TrailJeiCategory(gui, HANDWORK, Component.translatable("jei.trailcraft.handwork"),
                         new ItemStack(ModItems.STICK_PROCESSED.get())),
                 new TrailJeiCategory(gui, APIARY, Component.translatable("block.trailcraft.apiary"),
@@ -92,7 +95,7 @@ public class TrailJeiPlugin implements IModPlugin {
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(new ItemStack(ModSmelting.SMALL_BLOOMERY_ITEM.get()), BLOOMERY);
-        registration.addRecipeCatalyst(new ItemStack(ModSmelting.LARGE_BLOOMERY_ITEM.get()), BLOOMERY);
+        registration.addRecipeCatalyst(new ItemStack(ModSmelting.LARGE_BLOOMERY_ITEM.get()), LARGE_BLOOMERY);
         registration.addRecipeCatalyst(new ItemStack(ModSmelting.JUG.get()), BLOOMERY);
         registration.addRecipeCatalyst(new ItemStack(ModBees.APIARY_ITEM.get()), APIARY);
         // свой костёр жарит то же, что ванильный
@@ -155,6 +158,7 @@ public class TrailJeiPlugin implements IModPlugin {
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         registration.addRecipes(BLOOMERY, bloomery());
+        registration.addRecipes(LARGE_BLOOMERY, largeBloomery());
         registration.addRecipes(HANDWORK, handwork());
         registration.addRecipes(APIARY, apiary());
     }
@@ -201,7 +205,11 @@ public class TrailJeiPlugin implements IModPlugin {
         }
         recipes.add(new TrailJeiRecipe(List.of(List.of(stack(TrailCraft.MODID + ":brass_mix"))),
                 new ItemStack(Metal.BRASS.ingot()), mix));
-        // большой горн: 8 кусков железной руды и 8 топлива -> крица
+        return recipes;
+    }
+
+    /** Большой горн: 8 кусков железной руды и 8 топлива -> крица. */
+    private static List<TrailJeiRecipe> largeBloomery() {
         List<ItemStack> iron = List.of(
                 stack(TrailCraft.MODID + ":raw_hematite").copyWithCount(8),
                 stack(TrailCraft.MODID + ":raw_magnetite").copyWithCount(8),
@@ -210,9 +218,8 @@ public class TrailJeiPlugin implements IModPlugin {
         for (int i = 0; i < fuel.size(); i++) {
             fuel.set(i, fuel.get(i).copyWithCount(8));
         }
-        recipes.add(new TrailJeiRecipe(List.of(iron, fuel), new ItemStack(ModSmelting.BLOOM.get(), 1),
+        return List.of(new TrailJeiRecipe(List.of(iron, fuel), new ItemStack(ModSmelting.BLOOM.get(), 1),
                 Component.translatable("jei.trailcraft.large_bloomery")));
-        return recipes;
     }
 
     private static List<TrailJeiRecipe> handwork() {
