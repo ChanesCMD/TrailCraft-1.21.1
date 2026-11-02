@@ -175,6 +175,11 @@ public final class MapSampler {
         if (state.getMapColor(level, pos) == MapColor.NONE) {
             return true;
         }
+        // Листва проходима, но на карте она должна быть видна как крона, а не проваливаться
+        // сквозь неё в воздух (из-за этого вокруг деревьев были чёрные пятна).
+        if (state.is(BlockTags.LEAVES)) {
+            return false;
+        }
         return state.getFluidState().isEmpty() && !state.is(Blocks.SNOW) && state.getCollisionShape(level, pos).isEmpty();
     }
 
