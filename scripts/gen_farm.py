@@ -414,7 +414,7 @@ def worldgen():
     # на четверти глиняных пятен.
     write(f"data/{NS}/neoforge/biome_modifier/columbine_all.json", {
         "type": "neoforge:add_features",
-        "biomes": ["#minecraft:is_overworld"],
+        "biomes": ["#trailcraft:trailworldgen_biomes"],
         "features": [f"{NS}:columbine_patch"],
         "step": "vegetal_decoration",
     })

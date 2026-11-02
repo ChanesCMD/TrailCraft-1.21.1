@@ -1,7 +1,7 @@
 {
   "type": "neoforge:add_features",
   "biomes": [
-    "#minecraft:is_overworld"
+    "#trailcraft:trailworldgen_biomes"
   ],
   "features": [
     "trailcraft:columbine_patch"
