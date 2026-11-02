@@ -311,9 +311,6 @@ def assets():
             item_model(f"{material}_{tool}_head")
     item_model("jug_molten")
     item_model("jug", overrides=[{"predicate": {f"{NS}:molten": 1}, "model": f"{NS}:item/jug_molten"}])
-    # свои перо и кость пока выглядят как ванильные
-    item_model("feather", "minecraft:item/feather")
-    item_model("bone", "minecraft:item/bone", parent="minecraft:item/handheld")
 
 
 def data():
@@ -334,9 +331,6 @@ def data():
             write(f"data/{NS}/recipe/{material}_{tool}.json", {
                 "type": "minecraft:crafting_shaped", "category": "equipment", "key": key, "pattern": pattern,
                 "result": {"id": f"{NS}:{material}_{tool}", "count": 1}})
-    # свои перо и кость — в общих тэгах, ванильные стрелы и костная мука делаются и из них
-    write("data/c/tags/item/feathers.json", {"replace": False, "values": [f"{NS}:feather"]})
-    write("data/c/tags/item/bones.json", {"replace": False, "values": [f"{NS}:bone"]})
     # 4 стрелы: наш кремень, обработанная палка, перо (ванильный рецепт убирает RecipePruner)
     write(f"data/{NS}/recipe/arrow.json", {
         "type": "minecraft:crafting_shaped", "category": "equipment",
@@ -345,15 +339,7 @@ def data():
     write("data/minecraft/recipe/bone_meal.json", {
         "type": "minecraft:crafting_shapeless", "category": "misc", "group": "bonemeal",
         "ingredients": [{"tag": "c:bones"}], "result": {"id": "minecraft:bone_meal", "count": 3}})
-    # ванильные перо и кость из любого лута — свои (loot/ReplaceItemModifier)
-    for name, item in (("feather", "feather"), ("bone", "bone")):
-        write(f"data/{NS}/loot_modifiers/{name}.json", {
-            "type": f"{NS}:replace_item", "conditions": [], "from": f"minecraft:{item}", "to": f"{NS}:{item}"})
-    mods = read("data/neoforge/loot_modifiers/global_loot_modifiers.json")  # там и модификаторы других скриптов
-    for entry in (f"{NS}:feather", f"{NS}:bone"):
-        if entry not in mods["entries"]:
-            mods["entries"].append(entry)
-    write("data/neoforge/loot_modifiers/global_loot_modifiers.json", mods)
+
 
 
 def lang():

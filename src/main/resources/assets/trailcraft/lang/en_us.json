@@ -1327,8 +1327,6 @@
   "item.trailcraft.bronze_chisel_head": "Bronze Chisel Head",
   "item.trailcraft.iron_chisel_head": "Iron Chisel Head",
   "item.trailcraft.steel_chisel_head": "Steel Chisel Head",
-  "item.trailcraft.feather": "Feather",
-  "item.trailcraft.bone": "Bone",
   "block.trailcraft.reinforced_bricks_andesite": "Reinforced Andesite Bricks",
   "item.trailcraft.stone_brick_andesite": "Andesite Stone Brick",
   "block.trailcraft.reinforced_bricks_basalt": "Reinforced Basalt Bricks",
@@ -1356,5 +1354,7 @@
   "item.trailcraft.copper_chisel": "Copper Chisel",
   "item.trailcraft.bronze_chisel": "Bronze Chisel",
   "item.trailcraft.iron_chisel": "Iron Chisel",
-  "item.trailcraft.steel_chisel": "Steel Chisel"
+  "item.trailcraft.steel_chisel": "Steel Chisel",
+  "item.trailcraft.feather": "Feather",
+  "item.trailcraft.bone": "Bone"
 }

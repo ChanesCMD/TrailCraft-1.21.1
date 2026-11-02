@@ -2,8 +2,6 @@
   "replace": false,
   "entries": [
     "trailcraft:leather",
-    "trailcraft:egg",
-    "trailcraft:feather",
-    "trailcraft:bone"
+    "trailcraft:egg"
   ]
 }

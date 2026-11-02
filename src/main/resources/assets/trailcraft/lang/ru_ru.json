@@ -1327,8 +1327,6 @@
   "item.trailcraft.bronze_chisel_head": "Бронзовая головка зубила",
   "item.trailcraft.iron_chisel_head": "Железная головка зубила",
   "item.trailcraft.steel_chisel_head": "Стальная головка зубила",
-  "item.trailcraft.feather": "Перо",
-  "item.trailcraft.bone": "Кость",
   "block.trailcraft.reinforced_bricks_andesite": "Укреплённые кирпичи: Андезит",
   "item.trailcraft.stone_brick_andesite": "Каменный кирпич: Андезит",
   "block.trailcraft.reinforced_bricks_basalt": "Укреплённые кирпичи: Базальт",
@@ -1356,5 +1354,7 @@
   "item.trailcraft.copper_chisel": "Медное зубило",
   "item.trailcraft.bronze_chisel": "Бронзовое зубило",
   "item.trailcraft.iron_chisel": "Железное зубило",
-  "item.trailcraft.steel_chisel": "Стальное зубило"
+  "item.trailcraft.steel_chisel": "Стальное зубило",
+  "item.trailcraft.feather": "Перо",
+  "item.trailcraft.bone": "Кость"
 }
