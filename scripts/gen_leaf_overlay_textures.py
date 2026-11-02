@@ -35,13 +35,16 @@ def make_overlay(path, seed):
             r, g, b, a = base.getpixel((x % 16, y % 16))
             if not a:
                 continue
-            # Внутри — сплошная листва; рваной остаётся только кромка в 3–4 пикселя.
-            # Углы тоже сохраняются: маска не радиальная, иначе они вырезаются полностью.
+            # Внутри — сплошная листва. По серединам рёбер листвы меньше, по углам — больше:
+            # так силуэт креста скругляется, а не остаётся прямоугольным.
             edge = min(x, y, SIZE - 1 - x, SIZE - 1 - y)
-            if edge >= 3:
+            corner = min(x, SIZE - 1 - x) < 7 and min(y, SIZE - 1 - y) < 7
+            if edge >= 4:
                 keep = True
+            elif corner:
+                keep = rng.random() < 0.85
             else:
-                keep = rng.random() < 0.45 + 0.55 * (noise.getpixel((x, y)) / 255)
+                keep = rng.random() < 0.18 + 0.25 * (noise.getpixel((x, y)) / 255)
             if not keep or rng.random() < 0.03:
                 continue
             out.putpixel((x, y), (round(r * DARK), round(g * DARK), round(b * DARK), a))

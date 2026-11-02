@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "#minecraft:is_overworld"
+  ],
+  "features": [
+    "trailcraft:columbine_patch"
+  ],
+  "step": "vegetal_decoration"
+}

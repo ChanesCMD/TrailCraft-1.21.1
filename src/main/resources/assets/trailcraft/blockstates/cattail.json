@@ -1,9 +1,15 @@
 {
   "variants": {
-    "half=lower": {
+    "half=lower,waterlogged=false": {
       "model": "trailcraft:block/cattail_bottom"
     },
-    "half=upper": {
+    "half=lower,waterlogged=true": {
+      "model": "trailcraft:block/cattail_bottom"
+    },
+    "half=upper,waterlogged=false": {
+      "model": "trailcraft:block/cattail_top"
+    },
+    "half=upper,waterlogged=true": {
       "model": "trailcraft:block/cattail_top"
     }
   }

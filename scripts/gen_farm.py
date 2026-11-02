@@ -50,13 +50,13 @@ PLANTS = [
     ("cattail", "Рогоз", "Cattail"),
 ]
 PLANT_BIOMES = {
-    "burozem_plains": ["millet", "plantain", "columbine"],
-    "chernozem_plains": ["millet", "plantain", "wormwood", "columbine"],
-    "zheltozem_plains": ["millet", "plantain", "wormwood", "columbine"],
+    "burozem_plains": ["millet", "plantain"],
+    "chernozem_plains": ["millet", "plantain", "wormwood"],
+    "zheltozem_plains": ["millet", "plantain", "wormwood"],
     "chernozem_forest_steppe": ["millet", "nettle", "wormwood"],
-    "burozem_forest": ["nettle", "plantain", "columbine"],
-    "birch_forest": ["nettle", "plantain", "columbine"],
-    "maple_forest": ["nettle", "columbine"],
+    "burozem_forest": ["nettle", "plantain"],
+    "birch_forest": ["nettle", "plantain"],
+    "maple_forest": ["nettle"],
     "alder_forest": ["nettle"],
     "burozem_willow_forest": ["nettle", "cattail"],
     "chernozem_willow_forest": ["cattail"],
@@ -106,7 +106,7 @@ PATCHES = {
     "nettle": (8, 2, 5),
     "plantain": (8, 2, 6),
     "wormwood": (6, 2, 8),
-    "columbine": (4, 2, 10),
+    "columbine": (1, 0, 4),
     "cattail": (12, 3, 6),
 }
 
@@ -217,7 +217,12 @@ def models():
         if plant == "cattail":
             cross("cattail_bottom")
             cross("cattail_top")
-            blockstate("cattail", {"half=lower": "cattail_bottom", "half=upper": "cattail_top"})
+            blockstate("cattail", {
+                "half=lower,waterlogged=false": "cattail_bottom",
+                "half=lower,waterlogged=true": "cattail_bottom",
+                "half=upper,waterlogged=false": "cattail_top",
+                "half=upper,waterlogged=true": "cattail_top",
+            })
             item_model("cattail", f"{NS}:block/cattail_top")
         else:
             cross(plant)
@@ -359,13 +364,13 @@ def worldgen():
                     "feature": {
                         "feature": {"type": "minecraft:simple_block", "config": {
                             "to_place": {"type": "minecraft:simple_state_provider", "state": {
-                                "Name": f"{NS}:cattail", "Properties": {"half": "lower"}}}}},
+                                "Name": f"{NS}:cattail", "Properties": {"half": "lower", "waterlogged": "true"}}}}},
                         "placement": [{"type": "minecraft:block_predicate_filter", "predicate": {
-                            "type": "minecraft:matching_blocks", "blocks": "minecraft:air"}}],
+                            "type": "minecraft:matching_blocks", "blocks": "minecraft:water"}}],
                     },
                 },
             }
-            heightmap = "MOTION_BLOCKING"
+            heightmap = "OCEAN_FLOOR"
         else:
             configured = {
                 "type": "minecraft:random_patch",
@@ -405,6 +410,14 @@ def worldgen():
             "features": [f"{NS}:{p}_patch" for p in PATCHES if p in plants],
             "step": "vegetal_decoration",
         })
+    # Водосбор — в любом биоме, но только на глине; редкость 1/4, поэтому он есть примерно
+    # на четверти глиняных пятен.
+    write(f"data/{NS}/neoforge/biome_modifier/columbine_all.json", {
+        "type": "neoforge:add_features",
+        "biomes": ["#minecraft:is_overworld"],
+        "features": [f"{NS}:columbine_patch"],
+        "step": "vegetal_decoration",
+    })
 
 
 # ============================== ПЕРЕВОДЫ ==============================
