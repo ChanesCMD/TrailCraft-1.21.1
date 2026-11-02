@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " T ",
+    "Z Z",
+    " Z "
+  ],
+  "key": {
+    "T": {
+      "item": "trailcraft:jute_thread"
+    },
+    "Z": {
+      "item": "trailcraft:zinc_sheet"
+    }
+  },
+  "result": {
+    "id": "trailcraft:flask",
+    "count": 1
+  }
+}

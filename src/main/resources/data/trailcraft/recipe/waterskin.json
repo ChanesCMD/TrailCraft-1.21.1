@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "tag": "c:leathers"
+    },
+    {
+      "tag": "c:leathers"
+    },
+    {
+      "tag": "c:leathers"
+    },
+    {
+      "item": "trailcraft:rope"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:waterskin",
+    "count": 1
+  }
+}

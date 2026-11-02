@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "TLT"
+  ],
+  "key": {
+    "T": {
+      "item": "trailcraft:jute_thread"
+    },
+    "L": {
+      "tag": "c:leathers"
+    }
+  },
+  "result": {
+    "id": "trailcraft:belt",
+    "count": 1
+  }
+}

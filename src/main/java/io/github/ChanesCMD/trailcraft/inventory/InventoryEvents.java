@@ -279,7 +279,7 @@ public class InventoryEvents {
         ItemStack flask = belt.flask();
         int flags = (backpack.has(BackpackItem.ATLAS) || inHotbar(player, ModItems.ATLAS.get()) ? GearPayload.ATLAS : 0)
                 | (backpack.has(BackpackItem.CALENDAR) || inHotbar(player, ModItems.CALENDAR.get()) ? GearPayload.CALENDAR : 0)
-                | (!flask.isEmpty() && FlaskItem.water(flask) < Water.FLASK_SIPS ? GearPayload.FLASK : 0)
+                | (!flask.isEmpty() && FlaskItem.water(flask) < FlaskItem.capacity(flask) ? GearPayload.FLASK : 0)
                 | (belt.hasInstrument(BeltHandler.ALTIMETER) ? GearPayload.ALTIMETER : 0)
                 | (belt.hasInstrument(BeltHandler.SEXTANT) ? GearPayload.SEXTANT : 0)
                 | (belt.hasInstrument(BeltHandler.CHRONOMETER) || inHotbar(player, ModItems.CHRONOMETER.get())

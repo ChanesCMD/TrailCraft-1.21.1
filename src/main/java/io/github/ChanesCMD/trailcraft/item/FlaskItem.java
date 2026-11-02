@@ -17,8 +17,19 @@ import java.util.List;
  * воду другого вида нальёт только пустая фляга. Запас — в глотках, полоска под предметом показывает остаток.
  */
 public class FlaskItem extends Item {
+    private final int capacity;
+
     public FlaskItem(Item.Properties properties) {
+        this(properties, Water.FLASK_SIPS);
+    }
+
+    public FlaskItem(Item.Properties properties, int capacity) {
         super(properties);
+        this.capacity = capacity;
+    }
+
+    public static int capacity(ItemStack stack) {
+        return stack.getItem() instanceof FlaskItem flask ? flask.capacity : Water.FLASK_SIPS;
     }
 
     public static int water(ItemStack stack) {
@@ -26,7 +37,7 @@ public class FlaskItem extends Item {
     }
 
     public static void setWater(ItemStack stack, int water) {
-        stack.set(ModComponents.WATER.get(), Mth.clamp(water, 0, Water.FLASK_SIPS));
+        stack.set(ModComponents.WATER.get(), Mth.clamp(water, 0, capacity(stack)));
         if (water <= 0) {
             stack.remove(ModComponents.SALTY.get());
         }
@@ -38,7 +49,7 @@ public class FlaskItem extends Item {
 
     /** Наполнить флягу доверху водой этого вида. */
     public static void fill(ItemStack stack, boolean salty) {
-        setWater(stack, Water.FLASK_SIPS);
+        setWater(stack, capacity(stack));
         if (salty) {
             stack.set(ModComponents.SALTY.get(), true);
         } else {
@@ -49,7 +60,7 @@ public class FlaskItem extends Item {
     /** Можно долить воду этого вида: фляга не полная и пустая либо с водой того же вида. */
     public static boolean canFill(ItemStack stack, boolean salty) {
         int water = water(stack);
-        return water < Water.FLASK_SIPS && (water == 0 || isSalty(stack) == salty);
+        return water < capacity(stack) && (water == 0 || isSalty(stack) == salty);
     }
 
     @Override
@@ -59,7 +70,7 @@ public class FlaskItem extends Item {
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        return Math.round(13f * water(stack) / Water.FLASK_SIPS);
+        return Math.round(13f * water(stack) / capacity(stack));
     }
 
     @Override
@@ -69,7 +80,7 @@ public class FlaskItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable("tooltip.trailcraft.flask.water", water(stack), Water.FLASK_SIPS).withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("tooltip.trailcraft.flask.water", water(stack), capacity(stack)).withStyle(ChatFormatting.GRAY));
         if (water(stack) > 0) {
             tooltip.add(Component.translatable(isSalty(stack) ? "tooltip.trailcraft.flask.sea" : "tooltip.trailcraft.flask.fresh")
                     .withStyle(isSalty(stack) ? ChatFormatting.AQUA : ChatFormatting.BLUE));

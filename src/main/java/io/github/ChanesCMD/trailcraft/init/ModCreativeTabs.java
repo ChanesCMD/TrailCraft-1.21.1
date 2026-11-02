@@ -132,6 +132,7 @@ public class ModCreativeTabs {
                         output.accept(ModItems.LARGE_POCKET);
                         output.accept(ModItems.BELT);
                         output.accept(ModItems.FLASK);
+        output.accept(ModItems.WATERSKIN);
                         output.accept(ModItems.WALLET);
                         output.accept(ModItems.BRASS_ALTIMETER);
                         output.accept(ModItems.SEXTANT);
@@ -264,6 +265,7 @@ public class ModCreativeTabs {
                         output.accept(Items.IRON_INGOT);
                         output.accept(Items.GOLD_INGOT);
                         output.accept(AllItems.ZINC_INGOT.get());
+        output.accept(ModItems.ZINC_SHEET);
                         output.accept(AllItems.BRASS_INGOT.get());
                         ModOres.INGOTS.forEach(output::accept);
                     }).build());

@@ -295,6 +295,10 @@ public class ModItems {
     public static final DeferredItem<Item> BELT = ITEMS.registerItem("belt", props -> new Item(props.stacksTo(1)));
     /** Фляга для питьевой воды: кладётся в окно пояса. */
     public static final DeferredItem<FlaskItem> FLASK = ITEMS.registerItem("flask", props -> new FlaskItem(props.stacksTo(1)));
+    /** Бурдюк на 3 глотка. */
+    public static final DeferredItem<FlaskItem> WATERSKIN = ITEMS.registerItem("waterskin", props -> new FlaskItem(props.stacksTo(1), 3));
+    /** Цинковый лист: как железный лист Create, но из цинка. */
+    public static final DeferredItem<Item> ZINC_SHEET = ITEMS.registerSimpleItem("zinc_sheet");
     /** Кошелёк на 8 видов монет: носится в слоте кошелька. */
     public static final DeferredItem<WalletItem> WALLET = ITEMS.registerItem("wallet", props -> new WalletItem(props.stacksTo(1)));
     /** Приборы на поясе (см. BeltHandler, client/Coords): высотомер показывает высоту полосой, секстант уточняет X */

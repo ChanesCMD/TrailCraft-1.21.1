@@ -136,7 +136,7 @@ public class WaterBarrelBlock extends BaseEntityBlock {
         }
         if (stack.getItem() instanceof FlaskItem && barrel.water() > 0 && FlaskItem.canFill(stack, barrel.isSalty())) {
             if (!level.isClientSide) {
-                int sips = Math.min(Water.FLASK_SIPS - FlaskItem.water(stack), barrel.water() / WaterBarrelBlockEntity.SIP_MB);
+                int sips = Math.min(FlaskItem.capacity(stack) - FlaskItem.water(stack), barrel.water() / WaterBarrelBlockEntity.SIP_MB);
                 if (sips > 0) {
                     boolean salty = barrel.isSalty();
                     barrel.take(sips * WaterBarrelBlockEntity.SIP_MB);

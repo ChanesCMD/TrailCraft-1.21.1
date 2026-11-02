@@ -496,10 +496,10 @@ public class TrailInventoryScreen extends AbstractContainerScreen<TrailInventory
         int water = FlaskItem.water(flask);
         boolean salty = FlaskItem.isSalty(flask);
         Component label = flask.isEmpty() ? Component.translatable("gui.trailcraft.belt.no_flask")
-                : Component.translatable(salty ? "gui.trailcraft.belt.flask_sea" : "gui.trailcraft.belt.flask", water, Water.FLASK_SIPS);
+                : Component.translatable(salty ? "gui.trailcraft.belt.flask_sea" : "gui.trailcraft.belt.flask", water, FlaskItem.capacity(flask));
         g.drawString(font, label, px + 29, py + 21, UiDraw.LABEL, false);
         UiDraw.frame(g, px + 29, py + 31, 90, 6, 0xFF373737, 0xFFFFFFFF, 0xFF555555);
-        g.fill(px + 30, py + 32, px + 30 + Math.round(88f * water / Water.FLASK_SIPS), py + 36, 0xFF000000 | flask.getBarColor());
+        g.fill(px + 30, py + 32, px + 30 + Math.round(88f * water / FlaskItem.capacity(flask)), py + 36, 0xFF000000 | flask.getBarColor());
 
         beltButton(g, px + DRINK_X, py + DRINK_Y, "gui.trailcraft.belt.drink", canDrinkFromFlask(), mouseX, mouseY);
         beltButton(g, px + POUR_X, py + DRINK_Y, "gui.trailcraft.belt.pour", water > 0, mouseX, mouseY);

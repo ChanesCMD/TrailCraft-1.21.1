@@ -1361,5 +1361,7 @@
   "item.trailcraft.bloom": "Bloom",
   "message.trailcraft.large_bloomery.invalid": "Build a 3×3×3 tube of reinforced bricks around the hatch",
   "jei.trailcraft.large_bloomery": "Large bloomery: 8 ore + 8 fuel → bloom",
-  "block.trailcraft.stone_anvil": "Stone Anvil"
+  "block.trailcraft.stone_anvil": "Stone Anvil",
+  "item.trailcraft.zinc_sheet": "Zinc Sheet",
+  "item.trailcraft.waterskin": "Waterskin"
 }

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "LP",
+    "PC"
+  ],
+  "key": {
+    "L": {
+      "tag": "c:leathers"
+    },
+    "P": {
+      "item": "minecraft:paper"
+    },
+    "C": {
+      "item": "trailcraft:charcoal"
+    }
+  },
+  "result": {
+    "id": "trailcraft:atlas",
+    "count": 1
+  }
+}
