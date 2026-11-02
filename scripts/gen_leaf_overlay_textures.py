@@ -23,6 +23,89 @@ DARK = 0.82
 SIZE = 26          # сколько пикселей текстуры реально используется (UV 0..13)
 
 
+def _opaque(out):
+    return {(x, y) for y in range(SIZE) for x in range(SIZE) if out.getpixel((x, y))[3]}
+
+
+def _components(cells):
+    left = set(cells)
+    result = []
+    while left:
+        start = left.pop()
+        comp = {start}
+        stack = [start]
+        while stack:
+            x, y = stack.pop()
+            for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                p = (x + dx, y + dy)
+                if p in left:
+                    left.remove(p)
+                    comp.add(p)
+                    stack.append(p)
+        result.append(comp)
+    return result
+
+
+def _line(a, b):
+    x0, y0 = a
+    x1, y1 = b
+    dx, dy = abs(x1 - x0), abs(y1 - y0)
+    sx, sy = (1 if x0 < x1 else -1), (1 if y0 < y1 else -1)
+    err = dx - dy
+    while True:
+        yield x0, y0
+        if x0 == x1 and y0 == y1:
+            break
+        e2 = 2 * err
+        if e2 > -dy:
+            err -= dy
+            x0 += sx
+        if e2 < dx:
+            err += dx
+            y0 += sy
+
+
+def _prune(out):
+    """Срезает одиночные пиксели и кончики цепочек, которые в 3D выглядят летающими."""
+    while True:
+        cells = _opaque(out)
+        drop = [p for p in cells if sum((p[0] + dx, p[1] + dy) in cells
+                                        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))) <= 1]
+        if not drop:
+            return out
+        for x, y in drop:
+            out.putpixel((x, y), (0, 0, 0, 0))
+
+
+def _cleanup(out):
+    """Убирает далеко оторванные мелкие пятна, а близкие к основной куче — пришивает к ней."""
+    cells = _opaque(out)
+    comps = _components(cells)
+    if not comps:
+        return out
+    # Главная куча одна; всё остальное — либо пришиваем к ней коротким мостиком, либо убираем.
+    main = max(comps, key=len)
+    large_cells = set(main)
+    for comp in comps:
+        if comp is main:
+            continue
+        best = None
+        for p in comp:
+            for q in large_cells:
+                d = max(abs(p[0] - q[0]), abs(p[1] - q[1]))
+                if best is None or d < best[0]:
+                    best = (d, p, q)
+        if best is not None and best[0] <= 2:
+            color = out.getpixel(best[1])
+            for x, y in _line(best[1], best[2]):
+                if out.getpixel((x, y))[3] == 0:
+                    out.putpixel((x, y), (color[0], color[1], color[2], 255))
+        else:
+            for x, y in comp:
+                out.putpixel((x, y), (0, 0, 0, 0))
+    return out
+
+
 def make_overlay(path, seed):
     base = Image.open(path).convert("RGBA")
     rng = random.Random(seed)
@@ -50,7 +133,7 @@ def make_overlay(path, seed):
             if not keep or rng.random() < 0.03:
                 continue
             out.putpixel((x, y), (round(r * DARK), round(g * DARK), round(b * DARK), a))
-    return out
+    return _cleanup(_prune(out))
 
 
 def write(folder, name):
