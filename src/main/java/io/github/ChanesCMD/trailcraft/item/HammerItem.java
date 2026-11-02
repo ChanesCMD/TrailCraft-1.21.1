@@ -1,7 +1,10 @@
 package io.github.ChanesCMD.trailcraft.item;
 
+import io.github.ChanesCMD.trailcraft.block.AnvilRock;
+import io.github.ChanesCMD.trailcraft.block.StoneAnvilBlock;
 import io.github.ChanesCMD.trailcraft.init.ModBlocks;
 import io.github.ChanesCMD.trailcraft.init.ModTags;
+import io.github.ChanesCMD.trailcraft.ore.Rock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -29,11 +32,13 @@ public class HammerItem extends Item {
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
         BlockState state = level.getBlockState(pos);
-        if (!state.is(ModTags.ROCKS)) {
+        Rock source = state.is(ModTags.ROCKS) ? Rock.of(state.getBlock()) : null;
+        AnvilRock anvilRock = source == null ? null : AnvilRock.of(source);
+        if (anvilRock == null) {
             return InteractionResult.PASS;
         }
         if (!level.isClientSide) {
-            level.setBlock(pos, ModBlocks.STONE_ANVIL.get().defaultBlockState(), 3);
+            level.setBlock(pos, ModBlocks.STONE_ANVIL.get().defaultBlockState().setValue(StoneAnvilBlock.ROCK, anvilRock), 3);
             level.playSound(null, pos, SoundEvents.STONE_BREAK, SoundSource.BLOCKS, 0.8f, 0.8f);
             if (context.getPlayer() != null) {
                 context.getItemInHand().hurtAndBreak(1, context.getPlayer(), EquipmentSlot.MAINHAND);

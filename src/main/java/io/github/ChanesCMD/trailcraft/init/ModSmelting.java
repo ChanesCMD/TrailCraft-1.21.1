@@ -6,6 +6,7 @@ import io.github.ChanesCMD.trailcraft.smelting.BloomeryMenu;
 import io.github.ChanesCMD.trailcraft.smelting.LargeBloomeryBlock;
 import io.github.ChanesCMD.trailcraft.smelting.LargeBloomeryBlockEntity;
 import io.github.ChanesCMD.trailcraft.smelting.LargeBloomeryMenu;
+import io.github.ChanesCMD.trailcraft.block.StoneAnvilBlockEntity;
 import io.github.ChanesCMD.trailcraft.smelting.ClayMoldItem;
 import io.github.ChanesCMD.trailcraft.smelting.JugItem;
 import io.github.ChanesCMD.trailcraft.smelting.JugMenu;
@@ -154,6 +155,10 @@ public final class ModSmelting {
                     () -> BlockEntityType.Builder.of(LargeBloomeryBlockEntity::new, LARGE_BLOOMERY.get()).build(null));
     public static final DeferredHolder<MenuType<?>, MenuType<LargeBloomeryMenu>> LARGE_BLOOMERY_MENU =
             ModMenus.MENUS.register("large_bloomery", () -> new MenuType<>(LargeBloomeryMenu::new, FeatureFlags.DEFAULT_FLAGS));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<StoneAnvilBlockEntity>> STONE_ANVIL_ENTITY =
+            ModBlockEntities.BLOCK_ENTITIES.register("stone_anvil",
+                    () -> BlockEntityType.Builder.of(StoneAnvilBlockEntity::new, ModBlocks.STONE_ANVIL.get()).build(null));
     public static final DeferredHolder<MenuType<?>, MenuType<JugMenu>> JUG_MENU =
             ModMenus.MENUS.register("jug", () -> new MenuType<>(JugMenu::new, FeatureFlags.DEFAULT_FLAGS));
 

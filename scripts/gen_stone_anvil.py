@@ -10,6 +10,7 @@ ASSETS = os.path.join(ROOT, "assets", NS)
 DATA = os.path.join(ROOT, "data", NS)
 ROCKS = ["andesite", "basalt", "chalk", "diorite", "dolomite", "gabbro", "granite", "gray_granite",
          "limestone", "marble", "sandstone", "shale"]
+ANVIL_ROCKS = ["andesite", "basalt", "diorite", "granite", "gray_granite", "gabbro"]
 
 
 def write(path, data):
@@ -46,18 +47,22 @@ def face(cull=None):
 
 def main():
     texture()
-    write(f"assets/{NS}/models/block/stone_anvil.json", {
-        "parent": "minecraft:block/block",
-        "textures": {"particle": "#all", "all": f"{NS}:block/stone_anvil"},
-        "elements": [{
-            "from": [0, 0, 0], "to": [16, 14, 16],
-            "faces": {"down": face("down"), "up": face("up"), "north": face("north"), "south": face("south"),
-                      "west": face("west"), "east": face("east")}
-        }]
-    })
-    write(f"assets/{NS}/blockstates/stone_anvil.json",
-          {"variants": {"": {"model": f"{NS}:block/stone_anvil"}}})
-    write(f"assets/{NS}/models/item/stone_anvil.json", {"parent": f"{NS}:block/stone_anvil"})
+    variants = {}
+    for rock in ANVIL_ROCKS:
+        tex = "minecraft:block/basalt" if rock == "basalt" else f"{NS}:block/{rock}"
+        name = f"stone_anvil_{rock}"
+        write(f"assets/{NS}/models/block/{name}.json", {
+            "parent": "minecraft:block/block",
+            "textures": {"particle": tex, "all": tex},
+            "elements": [{
+                "from": [0, 0, 0], "to": [16, 14, 16],
+                "faces": {"down": face("down"), "up": face("up"), "north": face("north"),
+                          "south": face("south"), "west": face("west"), "east": face("east")}
+            }]
+        })
+        variants[f"rock={rock}"] = {"model": f"{NS}:block/{name}"}
+    write(f"assets/{NS}/blockstates/stone_anvil.json", {"variants": variants})
+    write(f"assets/{NS}/models/item/stone_anvil.json", {"parent": f"{NS}:block/stone_anvil_andesite"})
     write(f"data/{NS}/loot_table/blocks/stone_anvil.json",
           {"type": "minecraft:block", "pools": [{"rolls": 1.0, "bonus_rolls": 0.0, "entries": [
               {"type": "minecraft:item", "name": f"{NS}:stone_anvil"}],

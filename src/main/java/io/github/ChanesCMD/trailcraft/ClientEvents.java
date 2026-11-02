@@ -40,6 +40,8 @@ public class ClientEvents {
         e.registerEntityRenderer(ModEntities.CUSHION.get(), CushionRenderer::new);
         e.registerBlockEntityRenderer(ModBlockEntities.CAMPFIRE.get(), TrailCampfireRenderer::new);
         e.registerBlockEntityRenderer(ModBlockEntities.LOG_PILE.get(), io.github.ChanesCMD.trailcraft.client.LogPileRenderer::new);
+        e.registerBlockEntityRenderer(io.github.ChanesCMD.trailcraft.init.ModSmelting.STONE_ANVIL_ENTITY.get(),
+                io.github.ChanesCMD.trailcraft.client.StoneAnvilRenderer::new);
         e.registerBlockEntityRenderer(ModBlockEntities.WOOD_CHEST.get(), io.github.ChanesCMD.trailcraft.client.WoodChestRenderer::new);
         // укреплённый бак — свой тип блок-сущности, рисуется рендером бака Create (жидкость внутри)
         e.registerBlockEntityRenderer(io.github.ChanesCMD.trailcraft.init.ModReinforced.TANK_ENTITY.get(),

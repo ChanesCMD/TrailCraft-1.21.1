@@ -1,7 +1,22 @@
 {
   "variants": {
-    "": {
-      "model": "trailcraft:block/stone_anvil"
+    "rock=andesite": {
+      "model": "trailcraft:block/stone_anvil_andesite"
+    },
+    "rock=basalt": {
+      "model": "trailcraft:block/stone_anvil_basalt"
+    },
+    "rock=diorite": {
+      "model": "trailcraft:block/stone_anvil_diorite"
+    },
+    "rock=granite": {
+      "model": "trailcraft:block/stone_anvil_granite"
+    },
+    "rock=gray_granite": {
+      "model": "trailcraft:block/stone_anvil_gray_granite"
+    },
+    "rock=gabbro": {
+      "model": "trailcraft:block/stone_anvil_gabbro"
     }
   }
 }
