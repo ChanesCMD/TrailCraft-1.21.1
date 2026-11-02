@@ -175,6 +175,10 @@ def cross(name, texture=None):
     block_model(name, "minecraft:block/cross", {"cross": f"{NS}:block/{texture or name}"}, cutout=True)
 
 
+def has_overlay(name):
+    return os.path.exists(os.path.join(ROOT, "assets", NS, "textures", "block", f"{name}_overlay.png"))
+
+
 def tinted_cross(name, overlay=True):
     """Крест с биомным тинтом; overlay — цветы/ягоды/колосья, которые не тинтуются."""
     textures = {"tinted": f"{NS}:block/{name}"}
@@ -212,13 +216,14 @@ def models():
 
     for berry, *_ in BERRIES:
         for i in range(4):
-            tinted_cross(f"{berry}_bush_stage{i}")
+            stage = f"{berry}_bush_stage{i}"
+            tinted_cross(stage, overlay=has_overlay(stage))
         blockstate(f"{berry}_bush", {f"age={i}": f"{berry}_bush_stage{i}" for i in range(4)})
         item_model(f"{berry}_bush", f"{NS}:block/{berry}_bush_stage3")
         item_model(berry)
 
     for plant in ("wild_carrot", "wild_potato"):
-        tinted_cross(plant)
+        tinted_cross(plant, overlay=has_overlay(plant))
         blockstate(plant, {"": plant})
         item_model(plant, f"{NS}:block/{plant}")
 
@@ -234,12 +239,12 @@ def models():
             })
             item_model("cattail", f"{NS}:block/cattail_top")
         else:
-            tinted_cross(plant)
+            tinted_cross(plant, overlay=has_overlay(plant))
             blockstate(plant, {"": plant})
             item_model(plant, f"{NS}:block/{plant}")
 
-    tinted_cross("wild_jute_bottom")
-    tinted_cross("wild_jute_top")
+    tinted_cross("wild_jute_bottom", overlay=has_overlay("wild_jute_bottom"))
+    tinted_cross("wild_jute_top", overlay=has_overlay("wild_jute_top"))
     blockstate("wild_jute", {"half=lower": "wild_jute_bottom", "half=upper": "wild_jute_top"})
     item_model("wild_jute", f"{NS}:block/wild_jute_top")
 

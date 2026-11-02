@@ -1,8 +1,7 @@
 {
-  "parent": "trailcraft:block/cross_tinted_overlay",
+  "parent": "trailcraft:block/cross_tinted",
   "render_type": "minecraft:cutout",
   "textures": {
-    "tinted": "trailcraft:block/cloudberry_bush_stage0",
-    "overlay": "trailcraft:block/cloudberry_bush_stage0_overlay"
+    "tinted": "trailcraft:block/cloudberry_bush_stage0"
   }
 }
