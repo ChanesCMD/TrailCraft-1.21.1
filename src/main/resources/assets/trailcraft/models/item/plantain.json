@@ -1,6 +1,3 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "trailcraft:block/plantain"
-  }
+  "parent": "trailcraft:block/plantain"
 }

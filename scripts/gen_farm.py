@@ -197,6 +197,11 @@ def item_model(item_id, texture=None, parent="minecraft:item/generated"):
           {"parent": parent, "textures": {"layer0": texture or f"{NS}:item/{item_id}"}})
 
 
+def block_item_model(item_id, model):
+    """Предмет — сама модель блока, чтобы в инвентаре были видны и цветы/ягоды/колоски из overlay."""
+    write(f"assets/{NS}/models/item/{item_id}.json", {"parent": f"{NS}:block/{model}"})
+
+
 def blockstate(name, variants):
     write(f"assets/{NS}/blockstates/{name}.json",
           {"variants": {k: {"model": f"{NS}:block/{v}"} for k, v in variants.items()}})
@@ -219,13 +224,13 @@ def models():
             stage = f"{berry}_bush_stage{i}"
             tinted_cross(stage, overlay=has_overlay(stage))
         blockstate(f"{berry}_bush", {f"age={i}": f"{berry}_bush_stage{i}" for i in range(4)})
-        item_model(f"{berry}_bush", f"{NS}:block/{berry}_bush_stage3")
+        block_item_model(f"{berry}_bush", f"{berry}_bush_stage3")
         item_model(berry)
 
     for plant in ("wild_carrot", "wild_potato"):
         tinted_cross(plant, overlay=has_overlay(plant))
         blockstate(plant, {"": plant})
-        item_model(plant, f"{NS}:block/{plant}")
+        block_item_model(plant, plant)
 
     for plant, *_ in PLANTS:
         if plant == "cattail":
@@ -237,16 +242,16 @@ def models():
                 "half=upper,waterlogged=false": "cattail_top",
                 "half=upper,waterlogged=true": "cattail_top",
             })
-            item_model("cattail", f"{NS}:block/cattail_top")
+            block_item_model("cattail", "cattail_top")
         else:
             tinted_cross(plant, overlay=has_overlay(plant))
             blockstate(plant, {"": plant})
-            item_model(plant, f"{NS}:block/{plant}")
+            block_item_model(plant, plant)
 
     tinted_cross("wild_jute_bottom", overlay=has_overlay("wild_jute_bottom"))
     tinted_cross("wild_jute_top", overlay=has_overlay("wild_jute_top"))
     blockstate("wild_jute", {"half=lower": "wild_jute_bottom", "half=upper": "wild_jute_top"})
-    item_model("wild_jute", f"{NS}:block/wild_jute_top")
+    block_item_model("wild_jute", "wild_jute_top")
 
     # Посевы джута: все стадии в два блока (рисунок автора — scripts/templates/jute_stages.png), на 4-й — цветы
     variants = {}

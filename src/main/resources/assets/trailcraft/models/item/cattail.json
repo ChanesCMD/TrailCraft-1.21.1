@@ -1,6 +1,3 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "trailcraft:block/cattail_top"
-  }
+  "parent": "trailcraft:block/cattail_top"
 }

@@ -1,6 +1,3 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "trailcraft:block/millet"
-  }
+  "parent": "trailcraft:block/millet"
 }

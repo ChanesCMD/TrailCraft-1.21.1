@@ -1,6 +1,3 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "trailcraft:block/wild_jute_top"
-  }
+  "parent": "trailcraft:block/wild_jute_top"
 }
