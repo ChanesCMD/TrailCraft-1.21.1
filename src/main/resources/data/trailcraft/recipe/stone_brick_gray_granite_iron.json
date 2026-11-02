@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "trailcraft:iron_chisel"
+    },
+    {
+      "item": "trailcraft:gray_granite_pebble"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:stone_brick_gray_granite",
+    "count": 1
+  }
+}

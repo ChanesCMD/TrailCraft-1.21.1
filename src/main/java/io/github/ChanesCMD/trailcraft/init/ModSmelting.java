@@ -8,6 +8,7 @@ import io.github.ChanesCMD.trailcraft.smelting.JugItem;
 import io.github.ChanesCMD.trailcraft.smelting.JugMenu;
 import io.github.ChanesCMD.trailcraft.smelting.Mold;
 import io.github.ChanesCMD.trailcraft.smelting.MoldItem;
+import io.github.ChanesCMD.trailcraft.ore.Rock;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
@@ -55,6 +56,24 @@ public final class ModSmelting {
             BRICK_BLOCKS.put(clay, block);
             BRICK_BLOCK_ITEMS.put(clay, ModItems.ITEMS.registerSimpleBlockItem("bricks_" + clay, block));
         });
+    }
+
+    /** Каменный кирпич каждой породы: зубило + камушек этой породы. */
+    public static final Map<Rock, DeferredItem<Item>> STONE_BRICKS = new LinkedHashMap<>();
+    /** Блок укреплённых кирпичей породы: 2 укреплённых + 2 каменных кирпича. */
+    public static final Map<Rock, DeferredBlock<Block>> REINFORCED_BRICKS = new LinkedHashMap<>();
+    public static final Map<Rock, DeferredItem<BlockItem>> REINFORCED_BRICK_ITEMS = new LinkedHashMap<>();
+
+    static {
+        for (Rock rock : Rock.values()) {
+            String id = rock.getSerializedName();
+            STONE_BRICKS.put(rock, ModItems.ITEMS.registerSimpleItem("stone_brick_" + id));
+            DeferredBlock<Block> block = ModBlocks.BLOCKS.registerSimpleBlock("reinforced_bricks_" + id,
+                    BlockBehaviour.Properties.of().mapColor(MapColor.STONE).requiresCorrectToolForDrops()
+                            .strength(2.5f, 7.0f).sound(SoundType.STONE));
+            REINFORCED_BRICKS.put(rock, block);
+            REINFORCED_BRICK_ITEMS.put(rock, ModItems.ITEMS.registerSimpleBlockItem("reinforced_bricks_" + id, block));
+        }
     }
 
     /** Солома: с травы, срезанной ножом, серпом или косой (StrawEvents). */

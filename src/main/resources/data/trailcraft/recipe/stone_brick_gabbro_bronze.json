@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "trailcraft:bronze_chisel"
+    },
+    {
+      "item": "trailcraft:gabbro_pebble"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:stone_brick_gabbro",
+    "count": 1
+  }
+}

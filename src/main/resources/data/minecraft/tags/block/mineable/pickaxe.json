@@ -101,6 +101,18 @@
     "trailcraft:reinforced_portable_fluid_interface",
     "trailcraft:reinforced_fluid_tank",
     "trailcraft:reinforced_glass_fluid_pipe",
-    "trailcraft:reinforced_encased_fluid_pipe"
+    "trailcraft:reinforced_encased_fluid_pipe",
+    "trailcraft:reinforced_bricks_andesite",
+    "trailcraft:reinforced_bricks_basalt",
+    "trailcraft:reinforced_bricks_chalk",
+    "trailcraft:reinforced_bricks_diorite",
+    "trailcraft:reinforced_bricks_dolomite",
+    "trailcraft:reinforced_bricks_gabbro",
+    "trailcraft:reinforced_bricks_granite",
+    "trailcraft:reinforced_bricks_gray_granite",
+    "trailcraft:reinforced_bricks_limestone",
+    "trailcraft:reinforced_bricks_marble",
+    "trailcraft:reinforced_bricks_sandstone",
+    "trailcraft:reinforced_bricks_shale"
   ]
 }

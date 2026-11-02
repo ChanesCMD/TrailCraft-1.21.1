@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
  */
 public enum Mold {
     INGOT("ingot"), PICKAXE("pickaxe"), AXE("axe"), SHOVEL("shovel"), HOE("hoe"), KNIFE("knife"), SPEAR("spear"),
-    SAW("saw"), SICKLE("sickle"), SCYTHE("scythe"), CUTTERS("cutters");
+    SAW("saw"), SICKLE("sickle"), SCYTHE("scythe"), CUTTERS("cutters"), CHISEL("chisel");
 
     public final String id;
 

@@ -2,6 +2,7 @@ package io.github.ChanesCMD.trailcraft.init;
 
 import io.github.ChanesCMD.trailcraft.init.ModTiers.Material;
 import io.github.ChanesCMD.trailcraft.item.BroomItem;
+import io.github.ChanesCMD.trailcraft.item.ChiselItem;
 import io.github.ChanesCMD.trailcraft.item.KnifeItem;
 import io.github.ChanesCMD.trailcraft.item.SawItem;
 import io.github.ChanesCMD.trailcraft.item.SpearItem;
@@ -95,6 +96,12 @@ public final class ModTools {
         for (Material m : Material.values()) {
             if (m.isMetal()) {
                 tool(m, "_cutters", ModTiers.CUTTERS_DAMAGE, ModTiers.CUTTERS_SPEED);
+            }
+        }
+        // зубило: медь, бронза, железо, сталь (как остальные металлические инструменты)
+        for (Material m : Material.values()) {
+            if (m.isMetal()) {
+                reg(m.id + "_chisel", p -> new ChiselItem(m.tier, p.durability(m.tier.getUses())));
             }
         }
 

@@ -1,0 +1,6 @@
+{
+  "type": "trailcraft:replace_item",
+  "conditions": [],
+  "from": "minecraft:feather",
+  "to": "trailcraft:feather"
+}

@@ -10,7 +10,7 @@ public enum ClayShape {
     JUG("jug", ModSmelting.UNFIRED_JUG::get),
     INGOT_MOLD(Mold.INGOT), PICKAXE_MOLD(Mold.PICKAXE), AXE_MOLD(Mold.AXE), SHOVEL_MOLD(Mold.SHOVEL), HOE_MOLD(Mold.HOE),
     KNIFE_MOLD(Mold.KNIFE), SPEAR_MOLD(Mold.SPEAR), SAW_MOLD(Mold.SAW), SICKLE_MOLD(Mold.SICKLE),
-    SCYTHE_MOLD(Mold.SCYTHE), CUTTERS_MOLD(Mold.CUTTERS);
+    SCYTHE_MOLD(Mold.SCYTHE), CUTTERS_MOLD(Mold.CUTTERS), CHISEL_MOLD(Mold.CHISEL);
 
     public final String id;
     private final Supplier<Item> result;

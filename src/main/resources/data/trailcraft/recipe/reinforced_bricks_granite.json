@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "RB",
+    "BR"
+  ],
+  "key": {
+    "R": {
+      "item": "trailcraft:reinforced_brick"
+    },
+    "B": {
+      "item": "trailcraft:stone_brick_granite"
+    }
+  },
+  "result": {
+    "id": "trailcraft:reinforced_bricks_granite",
+    "count": 1
+  }
+}
