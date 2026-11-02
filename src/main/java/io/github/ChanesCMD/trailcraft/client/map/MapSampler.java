@@ -2,6 +2,7 @@ package io.github.ChanesCMD.trailcraft.client.map;
 
 import io.github.ChanesCMD.trailcraft.TrailCraft;
 import io.github.ChanesCMD.trailcraft.client.ClientGear;
+import io.github.ChanesCMD.trailcraft.init.ModBlocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.BiomeColors;
@@ -198,7 +199,10 @@ public final class MapSampler {
             }
             shade = 0.85f - depth * 0.03f + ((x + z) & 1) * 0.02f;
         } else {
-            if (state.is(Blocks.GRASS_BLOCK)) {
+            int turf = turfColor(state);
+            if (turf >= 0) {
+                rgb = turf;
+            } else if (state.is(Blocks.GRASS_BLOCK)) {
                 rgb = BiomeColors.getAverageGrassColor(level, pos);
             } else if (state.is(BlockTags.LEAVES) && !state.is(Blocks.CHERRY_LEAVES) && !state.is(Blocks.AZALEA_LEAVES)
                     && !state.is(Blocks.FLOWERING_AZALEA_LEAVES)) {
@@ -212,6 +216,20 @@ public final class MapSampler {
         int g = Mth.clamp((int) ((rgb >> 8 & 0xFF) * shade), 0, 255);
         int b = Mth.clamp((int) ((rgb & 0xFF) * shade), 0, 255);
         return 0xFF000000 | b << 16 | g << 8 | r;
+    }
+
+    /** Дёрн на карте — зелёный, по почве: чернозём темнее, бурозём средний, жёлтозём с желтизной. */
+    private static int turfColor(BlockState state) {
+        if (state.is(ModBlocks.CHERNOZEM_GRASS.get())) return 0x3F6B2F;
+        if (state.is(ModBlocks.BUROZEM_GRASS.get())) return 0x6A9A4A;
+        if (state.is(ModBlocks.ZHELTOZEM_GRASS.get())) return 0x9DBB4A;
+        if (state.is(ModBlocks.LOAM_GRASS.get())) return 0x5E8F42;
+        if (state.is(ModBlocks.PEAT_GRASS.get())) return 0x3B5A34;
+        if (state.is(ModBlocks.CLAY_WHITE_GRASS.get())) return 0x7FA85A;
+        if (state.is(ModBlocks.CLAY_BLUE_GRASS.get())) return 0x6E9A5A;
+        if (state.is(ModBlocks.CLAY_RED_GRASS.get())) return 0x79A24E;
+        if (state.is(ModBlocks.CLAY_GRAY_GRASS.get())) return 0x638B4A;
+        return -1;
     }
 
     private MapSampler() {}
