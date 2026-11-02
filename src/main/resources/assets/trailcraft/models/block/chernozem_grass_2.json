@@ -4,9 +4,9 @@
   "textures": {
     "particle": "trailcraft:block/chernozem_2",
     "bottom": "trailcraft:block/chernozem_2",
-    "top": "trailcraft:block/turf_top_2",
+    "top": "trailcraft:block/turf_top",
     "side": "trailcraft:block/chernozem_2",
-    "overlay": "trailcraft:block/turf_side_2"
+    "overlay": "trailcraft:block/turf_side"
   },
   "elements": [
     {

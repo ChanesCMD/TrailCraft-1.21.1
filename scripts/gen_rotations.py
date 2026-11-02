@@ -47,17 +47,16 @@ def soil_rotation(soil):
         grass_template = json.load(f)
     variants = []
     for n, angle in enumerate((0, 90, 180, 270)):
-        for tex in (soil, "turf_top", "turf_side"):
-            rotate_texture(tex, angle)
+        rotate_texture(soil, angle)
         write(f"models/block/{soil}_{n}.json",
               {"parent": "minecraft:block/cube_all", "textures": {"all": f"{NS}:block/{soil}_{n}"}})
         grass = deepcopy(grass_template)
         grass["textures"] = {
             "particle": f"{NS}:block/{soil}_{n}",
             "bottom": f"{NS}:block/{soil}_{n}",
-            "top": f"{NS}:block/turf_top_{n}",
+            "top": f"{NS}:block/turf_top",
             "side": f"{NS}:block/{soil}_{n}",
-            "overlay": f"{NS}:block/turf_side_{n}",
+            "overlay": f"{NS}:block/turf_side",
         }
         write(f"models/block/{soil}_grass_{n}.json", grass)
         variants.append({"model": f"{NS}:block/{soil}_{n}"})
