@@ -45,7 +45,7 @@ def main():
           {"parent": "minecraft:item/handheld", "textures": {"layer0": f"{NS}:item/flint_shears"}})
     write(f"data/{NS}/recipe/flint_shears.json", {
         "type": "minecraft:crafting_shapeless", "category": "equipment",
-        "ingredients": [{"item": f"{NS}:flint"}, {"item": f"{NS}:flint"}, {"item": f"{NS}:stick_processed"}],
+        "ingredients": [{"item": f"{NS}:flint"}, {"item": f"{NS}:flint"}, {"item": f"{NS}:rope"}],
         "result": {"id": f"{NS}:flint_shears", "count": 1},
     })
     for code, idx in (("ru_ru", 0), ("en_us", 1)):

@@ -2,19 +2,16 @@
   "variants": {
     "": [
       {
-        "model": "trailcraft:block/zheltozem"
+        "model": "trailcraft:block/zheltozem_0"
       },
       {
-        "model": "trailcraft:block/zheltozem",
-        "y": 90
+        "model": "trailcraft:block/zheltozem_1"
       },
       {
-        "model": "trailcraft:block/zheltozem",
-        "y": 180
+        "model": "trailcraft:block/zheltozem_2"
       },
       {
-        "model": "trailcraft:block/zheltozem",
-        "y": 270
+        "model": "trailcraft:block/zheltozem_3"
       }
     ]
   }

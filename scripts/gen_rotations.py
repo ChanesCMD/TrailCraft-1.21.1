@@ -7,9 +7,13 @@
 """
 import json
 import os
+from copy import deepcopy
+
+from PIL import Image
 
 NS = "trailcraft"
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "main", "resources", "assets", NS)
+TEX = os.path.join(ROOT, "textures", "block")
 SOILS = ["zheltozem", "burozem", "chernozem", "loam", "clay_white", "clay_blue", "clay_red", "clay_gray", "peat"]
 SANDS = ["sand_gray", "sand_red", "sand_white", "sand_yellow"]
 GRAVELS = [f"{r}_gravel" for r in ["andesite", "basalt", "chalk", "diorite", "dolomite", "gabbro", "granite",
@@ -31,10 +35,44 @@ def turned(model):
     return {"variants": {"": [{"model": model}] + [{"model": model, "y": y} for y in (90, 180, 270)]}}
 
 
+def rotate_texture(name, angle):
+    src = os.path.join(TEX, f"{name}.png")
+    dst = os.path.join(TEX, f"{name}_{angle // 90}.png")
+    Image.open(src).convert("RGBA").rotate(-angle, expand=False).save(dst)
+
+
+def soil_rotation(soil):
+    """Четыре варианта почвы, у которых повёрнуты и верх, и боковые текстуры."""
+    with open(os.path.join(ROOT, "models", "block", f"{soil}_grass.json"), encoding="utf-8") as f:
+        grass_template = json.load(f)
+    variants = []
+    for n, angle in enumerate((0, 90, 180, 270)):
+        for tex in (soil, "turf_top", "turf_side"):
+            rotate_texture(tex, angle)
+        write(f"models/block/{soil}_{n}.json",
+              {"parent": "minecraft:block/cube_all", "textures": {"all": f"{NS}:block/{soil}_{n}"}})
+        grass = deepcopy(grass_template)
+        grass["textures"] = {
+            "particle": f"{NS}:block/{soil}_{n}",
+            "bottom": f"{NS}:block/{soil}_{n}",
+            "top": f"{NS}:block/turf_top_{n}",
+            "side": f"{NS}:block/{soil}_{n}",
+            "overlay": f"{NS}:block/turf_side_{n}",
+        }
+        write(f"models/block/{soil}_grass_{n}.json", grass)
+        variants.append({"model": f"{NS}:block/{soil}_{n}"})
+    write(f"blockstates/{soil}.json", {"variants": {"": variants}})
+    write(f"blockstates/{soil}_grass.json",
+          {"variants": {"": [{"model": f"{NS}:block/{soil}_grass_{n}"} for n in range(4)]}})
+
+
 def main():
     for soil in SOILS:
-        write(f"blockstates/{soil}.json", turned(f"{NS}:block/{soil}"))
-        write(f"blockstates/{soil}_grass.json", turned(f"{NS}:block/{soil}_grass"))
+        if soil in ("zheltozem", "burozem", "chernozem"):
+            soil_rotation(soil)
+        else:
+            write(f"blockstates/{soil}.json", turned(f"{NS}:block/{soil}"))
+            write(f"blockstates/{soil}_grass.json", turned(f"{NS}:block/{soil}_grass"))
     for block in SANDS + GRAVELS:
         write(f"blockstates/{block}.json", turned(f"{NS}:block/{block}"))
     for rock in ROCKS:
