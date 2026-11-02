@@ -10,6 +10,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -22,6 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -82,6 +84,7 @@ public class StoneAnvilBlock extends BaseEntityBlock {
             if (!anvil.hasBloom()) {
                 if (!level.isClientSide) {
                     stack.shrink(1);
+                    clearOldBlooms(level, pos);
                     anvil.setBloom(new ItemStack(ModSmelting.BLOOM.get()));
                     level.playSound(null, pos, SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 0.6f, 1.2f);
                 }
@@ -89,16 +92,35 @@ public class StoneAnvilBlock extends BaseEntityBlock {
             }
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
-        if (stack.is(ModItems.STONE_HAMMER.get()) && anvil.hasBloom()) {
+        if (stack.is(ModItems.STONE_HAMMER.get())) {
             if (!level.isClientSide) {
-                anvil.takeBloom();
-                player.addItem(new ItemStack(Items.IRON_INGOT));
-                stack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
-                level.playSound(null, pos, SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 0.8f, 1.0f);
+                boolean had = anvil.hasBloom();
+                if (had) {
+                    anvil.takeBloom();
+                }
+                // старые крицы из прежней версии лежали сущностями — убираем их заодно
+                had |= clearOldBlooms(level, pos);
+                if (had) {
+                    player.addItem(new ItemStack(Items.IRON_INGOT));
+                    stack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
+                    level.playSound(null, pos, SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 0.8f, 1.0f);
+                    return ItemInteractionResult.sidedSuccess(false);
+                }
             }
-            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
+
+    private static boolean clearOldBlooms(Level level, BlockPos pos) {
+        boolean found = false;
+        for (ItemEntity item : level.getEntitiesOfClass(ItemEntity.class, new AABB(pos).inflate(1.2, 1.5, 1.2))) {
+            if (item.getItem().is(ModSmelting.BLOOM.get())) {
+                item.discard();
+                found = true;
+            }
+        }
+        return found;
     }
 
     @Override

@@ -35,11 +35,7 @@ public class StoneAnvilBlockEntity extends BlockEntity {
 
     public ItemStack takeBloom() {
         ItemStack result = bloom;
-        bloom = ItemStack.EMPTY;
-        setChanged();
-        if (level != null && !level.isClientSide) {
-            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
-        }
+        setBloom(ItemStack.EMPTY);
         return result;
     }
 

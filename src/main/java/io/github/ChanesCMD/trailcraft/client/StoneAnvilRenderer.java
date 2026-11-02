@@ -1,6 +1,7 @@
 package io.github.ChanesCMD.trailcraft.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import io.github.ChanesCMD.trailcraft.block.StoneAnvilBlockEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -26,6 +27,7 @@ public class StoneAnvilRenderer implements BlockEntityRenderer<StoneAnvilBlockEn
         }
         pose.pushPose();
         pose.translate(0.5, 0.90, 0.5);
+        pose.mulPose(Axis.XP.rotationDegrees(90));
         pose.scale(0.55f, 0.55f, 0.55f);
         items.renderStatic(bloom, ItemDisplayContext.GROUND, packedLight, packedOverlay, pose, buffer,
                 anvil.getLevel(), 0);
