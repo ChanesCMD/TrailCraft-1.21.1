@@ -26,6 +26,8 @@ public final class MapGrid {
             g.pose().mulPose(Axis.ZP.rotationDegrees(rotation));
         }
         g.pose().scale(scale, scale, 1);
+        // Дробный сдвиг центра: иначе сетка дёргается на пиксель при движении карты
+        g.pose().translate(-(float) (centerX - Math.floor(centerX)), -(float) (centerZ - Math.floor(centerZ)), 0);
         double half = Math.hypot(w, h) / 2.0 / scale + CHUNK;
         int minX = Mth.floor(centerX - half), maxX = Mth.ceil(centerX + half);
         int minZ = Mth.floor(centerZ - half), maxZ = Mth.ceil(centerZ + half);
@@ -77,6 +79,7 @@ public final class MapGrid {
             g.pose().mulPose(Axis.ZP.rotationDegrees(rotation));
         }
         g.pose().scale(scale, scale, 1);
+        g.pose().translate(-(float) (centerX - Math.floor(centerX)), -(float) (centerZ - Math.floor(centerZ)), 0);
         int cx = Mth.floor(centerX), cz = Mth.floor(centerZ);
         if (ClientConfig.mapSpawnChunk()) {
             int sx = Math.floorDiv(spawnX, CHUNK) * CHUNK - cx;
