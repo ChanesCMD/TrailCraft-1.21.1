@@ -43,6 +43,42 @@
         "uvlock": true,
         "y": 270
       }
+    },
+    {
+      "when": {
+        "diagonal_south_east": "true"
+      },
+      "apply": {
+        "model": "trailcraft:block/pussy_willow_fence_diagonal",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "diagonal_north_east": "true"
+      },
+      "apply": {
+        "model": "trailcraft:block/pussy_willow_fence_diagonal",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "diagonal_north_west": "true"
+      },
+      "apply": {
+        "model": "trailcraft:block/pussy_willow_fence_diagonal",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "diagonal_south_west": "true"
+      },
+      "apply": {
+        "model": "trailcraft:block/pussy_willow_fence_diagonal",
+        "y": 270
+      }
     }
   ]
 }

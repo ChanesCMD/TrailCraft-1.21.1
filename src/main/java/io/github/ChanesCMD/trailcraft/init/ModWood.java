@@ -1,6 +1,7 @@
 package io.github.ChanesCMD.trailcraft.init;
 
 import io.github.ChanesCMD.trailcraft.TrailCraft;
+import io.github.ChanesCMD.trailcraft.block.DiagonalFenceBlock;
 import io.github.ChanesCMD.trailcraft.block.FruitBlock;
 import io.github.ChanesCMD.trailcraft.block.FruitLeavesBlock;
 import io.github.ChanesCMD.trailcraft.block.StrippableLogBlock;
@@ -133,7 +134,7 @@ public final class ModWood {
         s.planks = ModBlocks.BLOCKS.registerSimpleBlock(id + "_planks", wood(planksColor, 2.0f, 3.0f));
         s.stairs = reg(id + "_stairs", p -> new StairBlock(s.planks.get().defaultBlockState(), p), wood(planksColor, 2.0f, 3.0f));
         s.slab = reg(id + "_slab", SlabBlock::new, wood(planksColor, 2.0f, 3.0f));
-        s.fence = reg(id + "_fence", FenceBlock::new, wood(planksColor, 2.0f, 3.0f).forceSolidOn());
+        s.fence = reg(id + "_fence", DiagonalFenceBlock::new, wood(planksColor, 2.0f, 3.0f).forceSolidOn());
         s.gate = reg(id + "_fence_gate", p -> new FenceGateBlock(WoodType.OAK, p), wood(planksColor, 2.0f, 3.0f).forceSolidOn());
         s.door = reg(id + "_door", p -> new DoorBlock(BlockSetType.OAK, p), wood(planksColor, 3.0f, 3.0f).noOcclusion().pushReaction(PushReaction.DESTROY));
         s.trapdoor = reg(id + "_trapdoor", p -> new TrapDoorBlock(BlockSetType.OAK, p), wood(planksColor, 3.0f, 3.0f).noOcclusion().isValidSpawn((st, lv, pos, e) -> false));
