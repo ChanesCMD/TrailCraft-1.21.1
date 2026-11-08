@@ -55,7 +55,7 @@
     },
     {
       "when": {
-        "diagonal_north_east": "true"
+        "diagonal_south_west": "true"
       },
       "apply": {
         "model": "trailcraft:block/walnut_fence_diagonal",
@@ -73,7 +73,7 @@
     },
     {
       "when": {
-        "diagonal_south_west": "true"
+        "diagonal_north_east": "true"
       },
       "apply": {
         "model": "trailcraft:block/walnut_fence_diagonal",

@@ -22,7 +22,7 @@ def write(path, data):
 
 def rail(y0, y1, side_uv):
     return {
-        "from": [7, y0, 7], "to": [9, y1, 16],
+        "from": [7, y0, 8], "to": [9, y1, 19.32],
         "rotation": {"origin": [8, 8, 8], "axis": "y", "angle": 45, "rescale": False},
         "faces": {
             "down": {"uv": [7, 0, 9, 9], "texture": "#texture"},
@@ -50,12 +50,13 @@ def main():
         path = os.path.join(STATES, name)
         data = read(path)
         parts = data.setdefault("multipart", [])
-        existing = {json.dumps(p, sort_keys=True) for p in parts}
-        for corner, y in (("diagonal_south_east", 0), ("diagonal_north_east", 90),
-                          ("diagonal_north_west", 180), ("diagonal_south_west", 270)):
-            part = {"when": {corner: "true"}, "apply": {"model": f"{NS}:block/{diagonal}", "y": y}}
-            if json.dumps(part, sort_keys=True) not in existing:
-                parts.append(part)
+        # Убираем старые диагональные части, чтобы не дублировать их
+        parts = [p for p in parts if not any(k.startswith("diagonal_") for k in p.get("when", {}))]
+        for corner, y in (("diagonal_south_east", 0), ("diagonal_south_west", 90),
+                          ("diagonal_north_west", 180), ("diagonal_north_east", 270)):
+            parts.append({"when": {corner: "true"},
+                          "apply": {"model": f"{NS}:block/{diagonal}", "y": y}})
+        data["multipart"] = parts
         write(path, data)
     print("ok")
 
