@@ -1,5 +1,6 @@
 {
   "parent": "minecraft:block/block",
+  "ambientocclusion": false,
   "textures": {
     "particle": "trailcraft:block/walnut_planks",
     "texture": "trailcraft:block/walnut_planks"
@@ -34,7 +35,8 @@
             9,
             9
           ],
-          "texture": "#texture"
+          "texture": "#texture",
+          "shade": false
         },
         "up": {
           "uv": [
@@ -43,7 +45,8 @@
             9,
             9
           ],
-          "texture": "#texture"
+          "texture": "#texture",
+          "shade": false
         },
         "south": {
           "uv": [
@@ -53,7 +56,7 @@
             10
           ],
           "texture": "#texture",
-          "cullface": "south"
+          "shade": false
         },
         "west": {
           "uv": [
@@ -62,7 +65,8 @@
             9,
             10
           ],
-          "texture": "#texture"
+          "texture": "#texture",
+          "shade": false
         },
         "east": {
           "uv": [
@@ -71,7 +75,8 @@
             9,
             10
           ],
-          "texture": "#texture"
+          "texture": "#texture",
+          "shade": false
         }
       }
     },
@@ -104,7 +109,8 @@
             9,
             9
           ],
-          "texture": "#texture"
+          "texture": "#texture",
+          "shade": false
         },
         "up": {
           "uv": [
@@ -113,7 +119,8 @@
             9,
             9
           ],
-          "texture": "#texture"
+          "texture": "#texture",
+          "shade": false
         },
         "south": {
           "uv": [
@@ -123,7 +130,7 @@
             4
           ],
           "texture": "#texture",
-          "cullface": "south"
+          "shade": false
         },
         "west": {
           "uv": [
@@ -132,7 +139,8 @@
             9,
             4
           ],
-          "texture": "#texture"
+          "texture": "#texture",
+          "shade": false
         },
         "east": {
           "uv": [
@@ -141,7 +149,8 @@
             9,
             4
           ],
-          "texture": "#texture"
+          "texture": "#texture",
+          "shade": false
         }
       }
     }
