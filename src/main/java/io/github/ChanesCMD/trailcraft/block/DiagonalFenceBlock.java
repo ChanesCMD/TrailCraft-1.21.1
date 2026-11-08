@@ -72,7 +72,8 @@ public class DiagonalFenceBlock extends FenceBlock {
         for (int i = 0; i < DIAGONALS.length; i++) {
             BlockPos other = pos.offset(OFFSETS[i][0], 0, OFFSETS[i][1]);
             if (level.getBlockState(other).getBlock() instanceof DiagonalFenceBlock
-                    && level.getBlockState(other).getValue(ALLOW_DIAGONAL)) {
+                    && level.getBlockState(other).getValue(ALLOW_DIAGONAL)
+                    && !level.getBlockState(other).getValue(DIAGONALS[OPPOSITE[i]])) {
                 level.setBlock(other, level.getBlockState(other).setValue(DIAGONALS[OPPOSITE[i]], true), 3);
             }
         }
@@ -109,8 +110,12 @@ public class DiagonalFenceBlock extends FenceBlock {
                     BlockPos other = pos.offset(OFFSETS[i][0], 0, OFFSETS[i][1]);
                     if (level.getBlockState(other).getBlock() instanceof DiagonalFenceBlock
                             && level.getBlockState(other).getValue(ALLOW_DIAGONAL)) {
-                        level.setBlock(pos, level.getBlockState(pos).setValue(DIAGONALS[i], true), 3);
-                        level.setBlock(other, level.getBlockState(other).setValue(DIAGONALS[OPPOSITE[i]], true), 3);
+                        if (!level.getBlockState(pos).getValue(DIAGONALS[i])) {
+                            level.setBlock(pos, level.getBlockState(pos).setValue(DIAGONALS[i], true), 3);
+                        }
+                        if (!level.getBlockState(other).getValue(DIAGONALS[OPPOSITE[i]])) {
+                            level.setBlock(other, level.getBlockState(other).setValue(DIAGONALS[OPPOSITE[i]], true), 3);
+                        }
                     }
                 }
             } else {
