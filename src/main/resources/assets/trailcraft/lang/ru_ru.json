@@ -1367,11 +1367,18 @@
   "item.trailcraft.flint_shears": "Кремнёвые ножницы",
   "gui.trailcraft.map.settings.chunk_grid": "Сетка чанков",
   "gui.trailcraft.map.settings.minimap_grid": "Сетка на миникарте",
-  "gui.trailcraft.map.settings.grid_step": "Шаг сетки: %s чанк(ов)",
+  "gui.trailcraft.map.settings.grid_step": "Шаг сетки",
   "gui.trailcraft.map.settings.grid_opacity": "Прозрачность сетки: %s%%",
   "gui.trailcraft.map.settings.slime": "Слизневые чанки",
   "gui.trailcraft.map.settings.spawn": "Чанк спавна",
   "gui.trailcraft.map.settings.border": "Граница мира",
   "gui.trailcraft.map.settings.death": "Точка смерти",
-  "gui.trailcraft.map.death": "Смерть"
+  "gui.trailcraft.map.death": "Смерть",
+  "gui.trailcraft.map.settings.grid_color": "Цвет сетки",
+  "gui.trailcraft.map.settings.color.white": "Белый",
+  "gui.trailcraft.map.settings.color.black": "Чёрный",
+  "gui.trailcraft.map.settings.color.green": "Зелёный",
+  "gui.trailcraft.map.settings.color.cyan": "Голубой",
+  "gui.trailcraft.map.settings.color.yellow": "Жёлтый",
+  "gui.trailcraft.map.settings.color.red": "Красный"
 }

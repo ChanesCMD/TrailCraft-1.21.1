@@ -1367,11 +1367,18 @@
   "item.trailcraft.flint_shears": "Flint Shears",
   "gui.trailcraft.map.settings.chunk_grid": "Chunk grid",
   "gui.trailcraft.map.settings.minimap_grid": "Minimap grid",
-  "gui.trailcraft.map.settings.grid_step": "Grid step: %s chunk(s)",
+  "gui.trailcraft.map.settings.grid_step": "Grid step",
   "gui.trailcraft.map.settings.grid_opacity": "Grid opacity: %s%%",
   "gui.trailcraft.map.settings.slime": "Slime chunks",
   "gui.trailcraft.map.settings.spawn": "Spawn chunk",
   "gui.trailcraft.map.settings.border": "World border",
   "gui.trailcraft.map.settings.death": "Death point",
-  "gui.trailcraft.map.death": "Death"
+  "gui.trailcraft.map.death": "Death",
+  "gui.trailcraft.map.settings.grid_color": "Grid color",
+  "gui.trailcraft.map.settings.color.white": "White",
+  "gui.trailcraft.map.settings.color.black": "Black",
+  "gui.trailcraft.map.settings.color.green": "Green",
+  "gui.trailcraft.map.settings.color.cyan": "Cyan",
+  "gui.trailcraft.map.settings.color.yellow": "Yellow",
+  "gui.trailcraft.map.settings.color.red": "Red"
 }

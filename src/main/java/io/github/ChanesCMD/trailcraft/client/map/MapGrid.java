@@ -47,7 +47,7 @@ public final class MapGrid {
         if (grid) {
             int step = ClientConfig.chunkGridStep().chunks * CHUNK;
             int alpha = Math.round(255 * ClientConfig.chunkGridOpacity() / 100f);
-            int color = (alpha << 24) | 0xFFFFFF;
+            int color = (alpha << 24) | ClientConfig.chunkGridColor().rgb;
             int t = Math.max(1, Math.round(1f / scale));
             int firstX = Math.floorDiv(minX, step) * step;
             int firstZ = Math.floorDiv(minZ, step) * step;

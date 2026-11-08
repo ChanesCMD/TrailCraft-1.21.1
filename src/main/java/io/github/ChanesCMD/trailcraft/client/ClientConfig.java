@@ -61,13 +61,27 @@ public final class ClientConfig {
 
     /** Шаг сетки чанков: один чанк, 4 чанка или регион 16×16 чанков. */
     public enum ChunkGridStep {
-        ONE(1, "1"), FOUR(4, "4"), REGION(16, "16");
+        ONE(1, "1"), SECTOR(9, "9");
 
         public final int chunks;
         public final String label;
 
         ChunkGridStep(int chunks, String label) {
             this.chunks = chunks;
+            this.label = label;
+        }
+    }
+
+    /** Цвет сетки чанков. */
+    public enum GridColor {
+        WHITE(0xFFFFFF, "white"), BLACK(0x000000, "black"), GREEN(0x55FF55, "green"),
+        CYAN(0x55FFFF, "cyan"), YELLOW(0xFFFF55, "yellow"), RED(0xFF5555, "red");
+
+        public final int rgb;
+        public final String label;
+
+        GridColor(int rgb, String label) {
+            this.rgb = rgb;
             this.label = label;
         }
     }
@@ -107,8 +121,11 @@ public final class ClientConfig {
             .comment("Chunk grid opacity in percent.")
             .defineInRange("chunkGridOpacity", 45, 10, 100);
     public static final ModConfigSpec.EnumValue<ChunkGridStep> CHUNK_GRID_STEP = BUILDER
-            .comment("Chunk grid step: ONE chunk, FOUR chunks or a 16x16 REGION.")
+            .comment("Chunk grid step: ONE chunk or a 9x9 SECTOR.")
             .defineEnum("chunkGridStep", ChunkGridStep.ONE);
+    public static final ModConfigSpec.EnumValue<GridColor> CHUNK_GRID_COLOR = BUILDER
+            .comment("Chunk grid color.")
+            .defineEnum("chunkGridColor", GridColor.WHITE);
     public static final ModConfigSpec.BooleanValue MAP_SLIME_CHUNKS = BUILDER
             .comment("Highlight slime chunks on the map.")
             .define("mapSlimeChunks", false);
@@ -190,6 +207,10 @@ public final class ClientConfig {
         return SPEC.isLoaded() ? CHUNK_GRID_STEP.get() : ChunkGridStep.ONE;
     }
 
+    public static GridColor chunkGridColor() {
+        return SPEC.isLoaded() ? CHUNK_GRID_COLOR.get() : GridColor.WHITE;
+    }
+
     public static boolean mapSlimeChunks() {
         return SPEC.isLoaded() && MAP_SLIME_CHUNKS.get();
     }
@@ -229,6 +250,7 @@ public final class ClientConfig {
         MINIMAP_CHUNK_GRID.set(MINIMAP_CHUNK_GRID.getDefault());
         CHUNK_GRID_OPACITY.set(CHUNK_GRID_OPACITY.getDefault());
         CHUNK_GRID_STEP.set(CHUNK_GRID_STEP.getDefault());
+        CHUNK_GRID_COLOR.set(CHUNK_GRID_COLOR.getDefault());
         MAP_SLIME_CHUNKS.set(MAP_SLIME_CHUNKS.getDefault());
         MAP_SPAWN_CHUNK.set(MAP_SPAWN_CHUNK.getDefault());
         MAP_WORLD_BORDER.set(MAP_WORLD_BORDER.getDefault());

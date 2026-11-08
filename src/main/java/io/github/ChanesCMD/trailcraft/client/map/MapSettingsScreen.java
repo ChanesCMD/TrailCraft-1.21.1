@@ -3,6 +3,7 @@ package io.github.ChanesCMD.trailcraft.client.map;
 import io.github.ChanesCMD.trailcraft.client.ClientConfig;
 import io.github.ChanesCMD.trailcraft.client.ClientConfig.Corner;
 import io.github.ChanesCMD.trailcraft.client.ClientConfig.ChunkGridStep;
+import io.github.ChanesCMD.trailcraft.client.ClientConfig.GridColor;
 import io.github.ChanesCMD.trailcraft.client.ClientConfig.DateMode;
 import io.github.ChanesCMD.trailcraft.client.ClientConfig.Zoom;
 import io.github.ChanesCMD.trailcraft.client.gui.UiDraw;
@@ -23,8 +24,8 @@ import java.util.function.IntSupplier;
  * Значения лежат в ClientConfig и сохраняются при закрытии окна.
  */
 public class MapSettingsScreen extends Screen {
-    private static final int COLUMN_W = 130, GAP = 6, PAD = 10, HEAD = 26, ROW = 24;
-    private static final int PANEL_W = 2 * COLUMN_W + GAP + 2 * PAD, PANEL_H = HEAD + 10 * ROW + 4;
+    private static final int COLUMN_W = 130, GAP = 6, PAD = 10, HEAD = 26, ROW = 20;
+    private static final int PANEL_W = 2 * COLUMN_W + GAP + 2 * PAD, PANEL_H = HEAD + 11 * ROW + 4;
 
     private final Screen parent;
 
@@ -89,23 +90,29 @@ public class MapSettingsScreen extends Screen {
                 .withValues(ChunkGridStep.values()).withInitialValue(ClientConfig.chunkGridStep())
                 .create(left, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.grid_step"),
                         (button, value) -> ClientConfig.CHUNK_GRID_STEP.set(value)));
-        addRenderableWidget(new IntSlider(right, y, COLUMN_W, 10, 100, "gui.trailcraft.map.settings.grid_opacity",
+        addRenderableWidget(CycleButton.<GridColor>builder(color -> Component.translatable("gui.trailcraft.map.settings.color." + color.label))
+                .withValues(GridColor.values()).withInitialValue(ClientConfig.chunkGridColor())
+                .create(right, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.grid_color"),
+                        (button, value) -> ClientConfig.CHUNK_GRID_COLOR.set(value)));
+
+        y += ROW;
+        addRenderableWidget(new IntSlider(left, y, COLUMN_W, 10, 100, "gui.trailcraft.map.settings.grid_opacity",
                 ClientConfig::chunkGridOpacity, ClientConfig.CHUNK_GRID_OPACITY::set));
-
-        y += ROW;
         addRenderableWidget(CycleButton.onOffBuilder(ClientConfig.mapSlimeChunks())
-                .create(left, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.slime"),
+                .create(right, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.slime"),
                         (button, value) -> ClientConfig.MAP_SLIME_CHUNKS.set(value)));
-        addRenderableWidget(CycleButton.onOffBuilder(ClientConfig.mapSpawnChunk())
-                .create(right, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.spawn"),
-                        (button, value) -> ClientConfig.MAP_SPAWN_CHUNK.set(value)));
 
         y += ROW;
+        addRenderableWidget(CycleButton.onOffBuilder(ClientConfig.mapSpawnChunk())
+                .create(left, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.spawn"),
+                        (button, value) -> ClientConfig.MAP_SPAWN_CHUNK.set(value)));
         addRenderableWidget(CycleButton.onOffBuilder(ClientConfig.mapWorldBorder())
-                .create(left, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.border"),
+                .create(right, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.border"),
                         (button, value) -> ClientConfig.MAP_WORLD_BORDER.set(value)));
+
+        y += ROW;
         addRenderableWidget(CycleButton.onOffBuilder(ClientConfig.mapDeathPoint())
-                .create(right, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.death"),
+                .create(left, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.death"),
                         (button, value) -> ClientConfig.MAP_DEATH_POINT.set(value)));
 
         y += ROW;
