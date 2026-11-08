@@ -25,11 +25,11 @@ def rail(y0, y1, side_uv):
         "from": [7, y0, 8], "to": [9, y1, 19.32],
         "rotation": {"origin": [8, 8, 8], "axis": "y", "angle": 45, "rescale": False},
         "faces": {
-            "down": {"uv": [7, 0, 9, 9], "texture": "#texture", "shade": False},
-            "up": {"uv": [7, 0, 9, 9], "texture": "#texture", "shade": False},
+            "down": {"uv": side_uv, "texture": "#texture", "shade": False},
+            "up": {"uv": side_uv, "texture": "#texture", "shade": False},
             "south": {"uv": side_uv, "texture": "#texture", "shade": False},
-            "west": {"uv": [0, side_uv[1], 9, side_uv[3]], "texture": "#texture", "shade": False},
-            "east": {"uv": [0, side_uv[1], 9, side_uv[3]], "texture": "#texture", "shade": False},
+            "west": {"uv": side_uv, "texture": "#texture", "shade": False},
+            "east": {"uv": side_uv, "texture": "#texture", "shade": False},
         },
     }
 
