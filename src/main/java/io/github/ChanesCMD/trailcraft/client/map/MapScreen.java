@@ -1,5 +1,6 @@
 package io.github.ChanesCMD.trailcraft.client.map;
 
+import io.github.ChanesCMD.trailcraft.client.ClientConfig;
 import io.github.ChanesCMD.trailcraft.client.Coords;
 import io.github.ChanesCMD.trailcraft.client.gui.UiDraw;
 import net.minecraft.Util;
@@ -97,6 +98,12 @@ public class MapScreen extends Screen {
         }
         g.fill(0, BAR_H, width, height, 0xFF000000);
         MapTiles.draw(g, player.level().dimension().location(), 0, BAR_H, width, mapHeight(), centerX, centerZ, zoom);
+        MapGrid.draw(g, 0, BAR_H, width, mapHeight(), centerX, centerZ, zoom, 0, MapGrid.seed(), false);
+        var border = player.level().getWorldBorder();
+        BlockPos spawn = player.level().getSharedSpawnPos();
+        MapGrid.drawLandmarks(g, 0, BAR_H, width, mapHeight(), centerX, centerZ, zoom, 0,
+                new double[]{border.getMinX(), border.getMinZ(), border.getMaxX(), border.getMaxZ()},
+                spawn.getX(), spawn.getZ());
         double midX = width / 2.0, midY = BAR_H + mapHeight() / 2.0;
         ResourceLocation dimension = player.level().dimension().location();
         Waypoint hovered = menu.isEmpty() ? waypointAt(dimension, mouseX, mouseY) : null;
@@ -111,6 +118,19 @@ public class MapScreen extends Screen {
         int px = (int) Math.round(midX + (pos.x - centerX) * zoom), py = (int) Math.round(midY + (pos.z - centerZ) * zoom);
         if (py >= BAR_H) {
             Minimap.playerMarker(g, px, py, player.getViewYRot(partialTick));
+        }
+        if (ClientConfig.mapDeathPoint() && ClientMapMarkers.lastDeath() != null) {
+            var death = ClientMapMarkers.lastDeath();
+            if (death.dimension().equals(dimension.toString())) {
+                int dx = screenX(death.pos().getX() + 0.5), dy = screenY(death.pos().getZ() + 0.5);
+                if (dx > -20 && dx < width + 20 && dy > BAR_H - 20 && dy < height + 20) {
+                    g.fill(dx - 3, dy - 1, dx + 4, dy + 1, 0xFF000000);
+                    g.fill(dx - 1, dy - 3, dx + 1, dy + 4, 0xFF000000);
+                    g.fill(dx - 2, dy - 1, dx + 3, dy, 0xFFFF4040);
+                    g.fill(dx - 1, dy - 2, dx, dy + 3, 0xFFFF4040);
+                    g.drawString(font, Component.translatable("gui.trailcraft.map.death"), dx + 5, dy - 3, 0xFFFF8080, true);
+                }
+            }
         }
 
         // Полоса сверху: название, настройки, закрыть

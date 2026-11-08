@@ -2,6 +2,7 @@ package io.github.ChanesCMD.trailcraft.client.map;
 
 import io.github.ChanesCMD.trailcraft.client.ClientConfig;
 import io.github.ChanesCMD.trailcraft.client.ClientConfig.Corner;
+import io.github.ChanesCMD.trailcraft.client.ClientConfig.ChunkGridStep;
 import io.github.ChanesCMD.trailcraft.client.ClientConfig.DateMode;
 import io.github.ChanesCMD.trailcraft.client.ClientConfig.Zoom;
 import io.github.ChanesCMD.trailcraft.client.gui.UiDraw;
@@ -23,7 +24,7 @@ import java.util.function.IntSupplier;
  */
 public class MapSettingsScreen extends Screen {
     private static final int COLUMN_W = 130, GAP = 6, PAD = 10, HEAD = 26, ROW = 24;
-    private static final int PANEL_W = 2 * COLUMN_W + GAP + 2 * PAD, PANEL_H = HEAD + 6 * ROW + 4;
+    private static final int PANEL_W = 2 * COLUMN_W + GAP + 2 * PAD, PANEL_H = HEAD + 10 * ROW + 4;
 
     private final Screen parent;
 
@@ -74,6 +75,38 @@ public class MapSettingsScreen extends Screen {
         addRenderableWidget(CycleButton.onOffBuilder(ClientConfig.minimapCoords())
                 .create(right, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.coords"),
                         (button, value) -> ClientConfig.MINIMAP_COORDS.set(value)));
+
+        y += ROW;
+        addRenderableWidget(CycleButton.onOffBuilder(ClientConfig.mapChunkGrid())
+                .create(left, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.chunk_grid"),
+                        (button, value) -> ClientConfig.MAP_CHUNK_GRID.set(value)));
+        addRenderableWidget(CycleButton.onOffBuilder(ClientConfig.minimapChunkGrid())
+                .create(right, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.minimap_grid"),
+                        (button, value) -> ClientConfig.MINIMAP_CHUNK_GRID.set(value)));
+
+        y += ROW;
+        addRenderableWidget(CycleButton.<ChunkGridStep>builder(step -> Component.literal(step.label))
+                .withValues(ChunkGridStep.values()).withInitialValue(ClientConfig.chunkGridStep())
+                .create(left, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.grid_step"),
+                        (button, value) -> ClientConfig.CHUNK_GRID_STEP.set(value)));
+        addRenderableWidget(new IntSlider(right, y, COLUMN_W, 10, 100, "gui.trailcraft.map.settings.grid_opacity",
+                ClientConfig::chunkGridOpacity, ClientConfig.CHUNK_GRID_OPACITY::set));
+
+        y += ROW;
+        addRenderableWidget(CycleButton.onOffBuilder(ClientConfig.mapSlimeChunks())
+                .create(left, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.slime"),
+                        (button, value) -> ClientConfig.MAP_SLIME_CHUNKS.set(value)));
+        addRenderableWidget(CycleButton.onOffBuilder(ClientConfig.mapSpawnChunk())
+                .create(right, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.spawn"),
+                        (button, value) -> ClientConfig.MAP_SPAWN_CHUNK.set(value)));
+
+        y += ROW;
+        addRenderableWidget(CycleButton.onOffBuilder(ClientConfig.mapWorldBorder())
+                .create(left, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.border"),
+                        (button, value) -> ClientConfig.MAP_WORLD_BORDER.set(value)));
+        addRenderableWidget(CycleButton.onOffBuilder(ClientConfig.mapDeathPoint())
+                .create(right, y, COLUMN_W, 20, Component.translatable("gui.trailcraft.map.settings.death"),
+                        (button, value) -> ClientConfig.MAP_DEATH_POINT.set(value)));
 
         y += ROW;
         addRenderableWidget(CycleButton.<DateMode>builder(mode -> Component.translatable("gui.trailcraft.map.settings.date." + mode.name().toLowerCase(Locale.ROOT)))

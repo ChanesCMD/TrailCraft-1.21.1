@@ -34,6 +34,8 @@ public final class Minimap {
         g.fill(x + 1, y + 1, x + size - 1, y + size - 1, withAlpha(0xFF000000, alpha));
         float rotation = rotate ? 180 - yaw : 0;
         MapTiles.draw(g, player.level().dimension().location(), x + 1, y + 1, map, map, pos.x, pos.z, ClientConfig.minimapZoom().scale, rotation, alpha);
+        MapGrid.draw(g, x + 1, y + 1, map, map, pos.x, pos.z, ClientConfig.minimapZoom().scale, rotation,
+                MapGrid.seed(), true);
         int cx = x + 1 + map / 2, cy = y + 1 + map / 2;
         if (rotate) {
             playerMarker(g, cx, cy, 180);

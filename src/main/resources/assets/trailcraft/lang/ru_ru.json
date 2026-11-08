@@ -1364,5 +1364,14 @@
   "block.trailcraft.stone_anvil": "Каменная наковальня",
   "item.trailcraft.zinc_sheet": "Цинковый лист",
   "item.trailcraft.waterskin": "Бурдюк",
-  "item.trailcraft.flint_shears": "Кремнёвые ножницы"
+  "item.trailcraft.flint_shears": "Кремнёвые ножницы",
+  "gui.trailcraft.map.settings.chunk_grid": "Сетка чанков",
+  "gui.trailcraft.map.settings.minimap_grid": "Сетка на миникарте",
+  "gui.trailcraft.map.settings.grid_step": "Шаг сетки: %s чанк(ов)",
+  "gui.trailcraft.map.settings.grid_opacity": "Прозрачность сетки: %s%%",
+  "gui.trailcraft.map.settings.slime": "Слизневые чанки",
+  "gui.trailcraft.map.settings.spawn": "Чанк спавна",
+  "gui.trailcraft.map.settings.border": "Граница мира",
+  "gui.trailcraft.map.settings.death": "Точка смерти",
+  "gui.trailcraft.map.death": "Смерть"
 }

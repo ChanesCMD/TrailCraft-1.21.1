@@ -35,6 +35,8 @@ public class ClientInventoryEvents {
 
     /** Сервер прислал журнал смертей — показываем его в открытом инвентаре. */
     public static void showDeathLog(DeathLogPayloads.Log log) {
+        io.github.ChanesCMD.trailcraft.client.map.ClientMapMarkers.setLastDeath(
+                log.records().isEmpty() ? null : log.records().get(0));
         if (Minecraft.getInstance().screen instanceof TrailInventoryScreen screen) {
             screen.showDeathLog(log);
         }

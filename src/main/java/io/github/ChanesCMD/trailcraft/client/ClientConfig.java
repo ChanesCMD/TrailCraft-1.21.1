@@ -59,6 +59,19 @@ public final class ClientConfig {
         }
     }
 
+    /** Шаг сетки чанков: один чанк, 4 чанка или регион 16×16 чанков. */
+    public enum ChunkGridStep {
+        ONE(1, "1"), FOUR(4, "4"), REGION(16, "16");
+
+        public final int chunks;
+        public final String label;
+
+        ChunkGridStep(int chunks, String label) {
+            this.chunks = chunks;
+            this.label = label;
+        }
+    }
+
     public static final ModConfigSpec.EnumValue<Zoom> MINIMAP_ZOOM = BUILDER
             .comment("Minimap zoom: HALF (0.5 pixel per block), ONE or TWO.")
             .defineEnum("minimapZoom", Zoom.ONE);
@@ -83,6 +96,31 @@ public final class ClientConfig {
     public static final ModConfigSpec.IntValue MINIMAP_OPACITY = BUILDER
             .comment("Minimap opacity in percent.")
             .defineInRange("minimapOpacity", 100, 20, 100);
+
+    public static final ModConfigSpec.BooleanValue MAP_CHUNK_GRID = BUILDER
+            .comment("Show the chunk grid on the fullscreen map.")
+            .define("mapChunkGrid", true);
+    public static final ModConfigSpec.BooleanValue MINIMAP_CHUNK_GRID = BUILDER
+            .comment("Show the chunk grid on the minimap.")
+            .define("minimapChunkGrid", false);
+    public static final ModConfigSpec.IntValue CHUNK_GRID_OPACITY = BUILDER
+            .comment("Chunk grid opacity in percent.")
+            .defineInRange("chunkGridOpacity", 45, 10, 100);
+    public static final ModConfigSpec.EnumValue<ChunkGridStep> CHUNK_GRID_STEP = BUILDER
+            .comment("Chunk grid step: ONE chunk, FOUR chunks or a 16x16 REGION.")
+            .defineEnum("chunkGridStep", ChunkGridStep.ONE);
+    public static final ModConfigSpec.BooleanValue MAP_SLIME_CHUNKS = BUILDER
+            .comment("Highlight slime chunks on the map.")
+            .define("mapSlimeChunks", false);
+    public static final ModConfigSpec.BooleanValue MAP_SPAWN_CHUNK = BUILDER
+            .comment("Show the spawn chunk marker on the fullscreen map.")
+            .define("mapSpawnChunk", true);
+    public static final ModConfigSpec.BooleanValue MAP_WORLD_BORDER = BUILDER
+            .comment("Show the world border on the fullscreen map.")
+            .define("mapWorldBorder", true);
+    public static final ModConfigSpec.BooleanValue MAP_DEATH_POINT = BUILDER
+            .comment("Show the last death point on the fullscreen map when it is known.")
+            .define("mapDeathPoint", true);
 
     /** Погода частицами (client/weather/) вместо ванильной текстуры дождя и снега. */
     public static final ModConfigSpec.BooleanValue WEATHER_PARTICLES = BUILDER
@@ -136,6 +174,38 @@ public final class ClientConfig {
         return SPEC.isLoaded() ? MINIMAP_OPACITY.get() / 100f : 1f;
     }
 
+    public static boolean mapChunkGrid() {
+        return !SPEC.isLoaded() || MAP_CHUNK_GRID.get();
+    }
+
+    public static boolean minimapChunkGrid() {
+        return SPEC.isLoaded() && MINIMAP_CHUNK_GRID.get();
+    }
+
+    public static int chunkGridOpacity() {
+        return SPEC.isLoaded() ? CHUNK_GRID_OPACITY.get() : 45;
+    }
+
+    public static ChunkGridStep chunkGridStep() {
+        return SPEC.isLoaded() ? CHUNK_GRID_STEP.get() : ChunkGridStep.ONE;
+    }
+
+    public static boolean mapSlimeChunks() {
+        return SPEC.isLoaded() && MAP_SLIME_CHUNKS.get();
+    }
+
+    public static boolean mapSpawnChunk() {
+        return !SPEC.isLoaded() || MAP_SPAWN_CHUNK.get();
+    }
+
+    public static boolean mapWorldBorder() {
+        return !SPEC.isLoaded() || MAP_WORLD_BORDER.get();
+    }
+
+    public static boolean mapDeathPoint() {
+        return !SPEC.isLoaded() || MAP_DEATH_POINT.get();
+    }
+
     public static boolean weatherParticles() {
         return !SPEC.isLoaded() || WEATHER_PARTICLES.get();
     }
@@ -155,6 +225,14 @@ public final class ClientConfig {
         MINIMAP_BIOME.set(MINIMAP_BIOME.getDefault());
         MINIMAP_COORDS.set(MINIMAP_COORDS.getDefault());
         MINIMAP_OPACITY.set(MINIMAP_OPACITY.getDefault());
+        MAP_CHUNK_GRID.set(MAP_CHUNK_GRID.getDefault());
+        MINIMAP_CHUNK_GRID.set(MINIMAP_CHUNK_GRID.getDefault());
+        CHUNK_GRID_OPACITY.set(CHUNK_GRID_OPACITY.getDefault());
+        CHUNK_GRID_STEP.set(CHUNK_GRID_STEP.getDefault());
+        MAP_SLIME_CHUNKS.set(MAP_SLIME_CHUNKS.getDefault());
+        MAP_SPAWN_CHUNK.set(MAP_SPAWN_CHUNK.getDefault());
+        MAP_WORLD_BORDER.set(MAP_WORLD_BORDER.getDefault());
+        MAP_DEATH_POINT.set(MAP_DEATH_POINT.getDefault());
     }
 
     public static boolean isHidden(String channel) {
