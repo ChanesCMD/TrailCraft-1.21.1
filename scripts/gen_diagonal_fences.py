@@ -20,16 +20,17 @@ def write(path, data):
         f.write("\n")
 
 
-def faces():
-    return {face: {"uv": [0, 0, 16, 16], "texture": "#texture"}
-            for face in ("down", "up", "north", "south", "west", "east")}
-
-
-def rail(y0, y1):
+def rail(y0, y1, side_uv):
     return {
-        "from": [7, y0, 7], "to": [16, y1, 9],
+        "from": [7, y0, 7], "to": [9, y1, 16],
         "rotation": {"origin": [8, 8, 8], "axis": "y", "angle": 45, "rescale": False},
-        "faces": faces(),
+        "faces": {
+            "down": {"uv": [7, 0, 9, 9], "texture": "#texture"},
+            "up": {"uv": [7, 0, 9, 9], "texture": "#texture"},
+            "south": {"uv": side_uv, "texture": "#texture", "cullface": "south"},
+            "west": {"uv": [0, side_uv[1], 9, side_uv[3]], "texture": "#texture"},
+            "east": {"uv": [0, side_uv[1], 9, side_uv[3]], "texture": "#texture"},
+        },
     }
 
 
@@ -44,7 +45,7 @@ def main():
         write(os.path.join(MODELS, diagonal + ".json"), {
             "parent": "minecraft:block/block",
             "textures": {"particle": texture, "texture": texture},
-            "elements": [rail(6, 9), rail(12, 15)],
+            "elements": [rail(6, 9, [7, 7, 9, 10]), rail(12, 15, [7, 1, 9, 4])],
         })
         path = os.path.join(STATES, name)
         data = read(path)
