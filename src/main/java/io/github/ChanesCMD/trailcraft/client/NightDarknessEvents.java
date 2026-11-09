@@ -19,9 +19,10 @@ public final class NightDarknessEvents {
             return;
         }
         float k = 1f - 0.6f * night;
-        event.setRed(event.getRed() * k);
-        event.setGreen(event.getGreen() * k);
-        event.setBlue(event.getBlue() * k);
+        float[] tint = SeasonSky.tint(Minecraft.getInstance().level);
+        event.setRed(event.getRed() * k * tint[0]);
+        event.setGreen(event.getGreen() * k * tint[1]);
+        event.setBlue(event.getBlue() * k * tint[2]);
     }
 
     @SubscribeEvent
