@@ -10,7 +10,7 @@ import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.ViewportEvent;
 
 /** Тестовая тёмная ночь: туман + затемняющий слой над миром, GUI остаётся ярким. */
-@EventBusSubscriber(modid = TrailCraft.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = TrailCraft.MODID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public final class NightDarknessEvents {
     @SubscribeEvent
     public static void fog(ViewportEvent.ComputeFogColor event) {

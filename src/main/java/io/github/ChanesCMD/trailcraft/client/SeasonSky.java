@@ -15,10 +15,10 @@ public final class SeasonSky {
     public static float[] tint(Level level) {
         Calendar.Season season = Seasons.current();
         return switch (season) {
-            case SPRING -> new float[]{0.94f, 1.0f, 0.96f};
-            case SUMMER -> new float[]{1.0f, 0.98f, 0.90f};
-            case AUTUMN -> new float[]{1.0f, 0.90f, 0.78f};
-            case WINTER -> new float[]{0.90f, 0.95f, 1.0f};
+            case SPRING -> new float[]{0.82f, 1.0f, 0.88f};
+            case SUMMER -> new float[]{1.0f, 0.94f, 0.78f};
+            case AUTUMN -> new float[]{1.0f, 0.80f, 0.62f};
+            case WINTER -> new float[]{0.78f, 0.88f, 1.0f};
         };
     }
 
