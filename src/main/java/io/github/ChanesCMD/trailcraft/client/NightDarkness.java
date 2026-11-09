@@ -1,25 +1,41 @@
 package io.github.ChanesCMD.trailcraft.client;
 
+import io.github.ChanesCMD.trailcraft.calendar.Calendar;
+import io.github.ChanesCMD.trailcraft.season.Seasons;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 
-/** Плавный фактор ночи: 0 днём, 1 около полуночи. */
+/** Плавный фактор ночи: 0 днём, 1 около полуночи; длина ночи зависит от сезона, яркость — от луны. */
 public final class NightDarkness {
     public static float factor(Level level) {
         if (level == null) {
             return 0f;
         }
         long time = Math.floorMod(level.getDayTime(), 24000L);
-        if (time < 12000 || time >= 24000) {
-            return 0f;
+        Calendar.Season season = Seasons.current();
+        int start = switch (season) {
+            case SUMMER -> 12500;
+            case WINTER -> 11500;
+            default -> 12000;
+        };
+        int end = switch (season) {
+            case SUMMER -> 22500;
+            case WINTER -> 23500;
+            default -> 23000;
+        };
+        float base;
+        if (time < start || time >= end) {
+            base = 0f;
+        } else if (time < start + 1000) {
+            base = smooth((time - start) / 1000f);
+        } else if (time > end - 1000) {
+            base = smooth((end - time) / 1000f);
+        } else {
+            base = 1f;
         }
-        if (time < 14000) {
-            return smooth((time - 12000f) / 2000f);
-        }
-        if (time < 22000) {
-            return 1f;
-        }
-        return smooth((24000f - time) / 2000f);
+        // полная луна светлее, новолуние — самое тёмное
+        float moon = 1f - 0.35f * level.getMoonBrightness();
+        return base * moon;
     }
 
     private static float smooth(float t) {
