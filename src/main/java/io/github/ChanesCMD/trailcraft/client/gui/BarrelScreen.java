@@ -167,20 +167,8 @@ public class BarrelScreen extends AbstractContainerScreen<BarrelMenu> {
                 && mouseY >= y && mouseY < y + BarrelMenu.SEAL_SIZE;
         UiDraw.frame(g, x, y, BarrelMenu.SEAL_SIZE, BarrelMenu.SEAL_SIZE, 0xFF373737, 0xFFFFFFFF,
                 hover ? 0xFFD8D8D8 : UiDraw.PANEL);
-        drawSealIcon(g, x + 5, y + 5, !menu.sealed());
-    }
-
-    /** Замок по центру кнопки: закрытый — ровно, открытый — дужка сдвинута. */
-    private static void drawSealIcon(GuiGraphics g, int x, int y, boolean open) {
-        int dark = open ? 0xFF6B4A2A : 0xFF4A3218;
-        int shift = open ? 2 : 0;
-        g.fill(x + 1, y + 6, x + 11, y + 13, dark);
-        g.fill(x + 2, y + 7, x + 10, y + 12, 0xFFD8B07A);
-        g.fill(x + 3 + shift, y, x + 9 + shift, y + 1, dark);
-        g.fill(x + 2 + shift, y + 1, x + 3 + shift, y + 6, dark);
-        g.fill(x + 9 + shift, y + 1, x + 10 + shift, y + 6, dark);
-        g.fill(x + 6, y + 8, x + 7, y + 11, dark);
-        g.fill(x + 7, y + 10, x + 8, y + 11, dark);
+        // тот же замок, что и на запертом выходном слоте, только по центру кнопки
+        UiDraw.padlock(g, x + 7, y + 6, !menu.sealed(), 0xFF4A3218);
     }
 
     private void drawLock(GuiGraphics g, int sx, int sy) {
