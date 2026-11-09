@@ -139,6 +139,11 @@ public final class ClientConfig {
             .comment("Show the last death point on the fullscreen map when it is known.")
             .define("mapDeathPoint", true);
 
+    /** Тестовая настройка тёмной ночи: 0 — выключено, 100 — максимальное затемнение. */
+    public static final ModConfigSpec.IntValue NIGHT_DARKNESS = BUILDER
+            .comment("Test setting: extra night darkness in percent (0 = off).")
+            .defineInRange("nightDarkness", 35, 0, 100);
+
     /** Погода частицами (client/weather/) вместо ванильной текстуры дождя и снега. */
     public static final ModConfigSpec.BooleanValue WEATHER_PARTICLES = BUILDER
             .comment("Particle weather: rain drops, snow flakes, splashes, ripples and dust storms instead of the vanilla rain texture.")
@@ -225,6 +230,11 @@ public final class ClientConfig {
 
     public static boolean mapDeathPoint() {
         return !SPEC.isLoaded() || MAP_DEATH_POINT.get();
+    }
+
+    /** 0…1, тестовая сила тёмной ночи. */
+    public static float nightDarkness() {
+        return SPEC.isLoaded() ? NIGHT_DARKNESS.get() / 100f : 0.35f;
     }
 
     public static boolean weatherParticles() {
