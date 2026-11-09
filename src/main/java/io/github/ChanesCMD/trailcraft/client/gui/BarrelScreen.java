@@ -72,7 +72,7 @@ public class BarrelScreen extends AbstractContainerScreen<BarrelMenu> {
             UiDraw.slot(g, x + slot.x - 1, y + slot.y - 1);
         }
 
-        // бак: рамка, столбик жидкости снизу вверх, деления через 2000 mB и отметка 4000 mB (сколько нужно для дубления)
+        // бак: аккуратная рамка, столбик жидкости и деления
         int tx = x + BarrelMenu.TANK_X, ty = y + BarrelMenu.TANK_Y;
         int w = BarrelMenu.TANK_W, h = BarrelMenu.TANK_H;
         UiDraw.frame(g, tx - 1, ty - 1, w + 2, h + 2, 0xFF373737, 0xFFFFFFFF, 0xFF8B8B8B);
@@ -89,22 +89,36 @@ public class BarrelScreen extends AbstractContainerScreen<BarrelMenu> {
         int mark = ty + h - Math.round((float) h * WaterBarrelBlockEntity.TANNIN_NEEDED / WaterBarrelBlockEntity.CAPACITY);
         g.fill(tx, mark, tx + w, mark + 1, 0xFF373737);
 
-        // вертикальный прогресс дубления между шкурами и кожей
-        int ax = x + BarrelMenu.HIDES_X + 6, ay = y + BarrelMenu.HIDES_Y + 18;
-        int shaft = BarrelMenu.LEATHER_Y - (BarrelMenu.HIDES_Y + 18) - 5;
-        g.fill(ax, ay, ax + 5, ay + shaft, 0xFF8B8B8B);
-        int ph = Math.round(shaft * Math.min(1f, menu.soak()));
+        // подписи бака
+        Component tankName = kind == WaterBarrelBlockEntity.EMPTY
+                ? Component.translatable("gui.trailcraft.barrel.empty") : Component.translatable(KINDS[kind]);
+        g.drawString(font, tankName, tx, ty - 11, UiDraw.LABEL, false);
+        Component amount = Component.translatable("gui.trailcraft.barrel.amount.short", menu.amount(),
+                WaterBarrelBlockEntity.CAPACITY);
+        g.pose().pushPose();
+        g.pose().translate(tx, ty + h + 3, 0);
+        g.pose().scale(0.6f, 0.6f, 1);
+        g.drawString(font, amount, 0, 0, 0xFF505050, false);
+        g.pose().popPose();
+
+        // вертикальный прогресс дубления — отдельной колонкой
+        int ax = x + BarrelMenu.PROGRESS_X, ay = y + BarrelMenu.PROGRESS_Y;
+        UiDraw.frame(g, ax - 1, ay - 1, BarrelMenu.PROGRESS_W + 2, BarrelMenu.PROGRESS_H + 2,
+                0xFF373737, 0xFFFFFFFF, 0xFF8B8B8B);
+        g.fill(ax, ay, ax + BarrelMenu.PROGRESS_W, ay + BarrelMenu.PROGRESS_H, 0xFFD9D9D9);
+        int ph = Math.round(BarrelMenu.PROGRESS_H * Math.min(1f, menu.soak()));
         if (ph > 0) {
-            g.fill(ax, ay + shaft - ph, ax + 5, ay + shaft, TANNIN_COLOR);
+            g.fill(ax, ay + BarrelMenu.PROGRESS_H - ph, ax + BarrelMenu.PROGRESS_W,
+                    ay + BarrelMenu.PROGRESS_H, TANNIN_COLOR);
+            g.fill(ax, ay + BarrelMenu.PROGRESS_H - ph, ax + BarrelMenu.PROGRESS_W,
+                    ay + BarrelMenu.PROGRESS_H - ph + 1, 0xFFD89A52);
         }
-        for (int i = 0; i < 5; i++) {
-            g.fill(ax - i, ay + shaft + i, ax + 5 + i, ay + shaft + i + 1, 0xFF8B8B8B);
-        }
-        if (ph > 0) {
-            for (int i = 0; i < 5; i++) {
-                g.fill(ax - i, ay + shaft + i, ax + 5 + i, ay + shaft + i + 1, TANNIN_COLOR);
-            }
-        }
+        Component percent = Component.literal(Math.round(menu.soak() * 100) + "%");
+        g.pose().pushPose();
+        g.pose().translate(ax + BarrelMenu.PROGRESS_W / 2f, ay + BarrelMenu.PROGRESS_H + 3, 0);
+        g.pose().scale(0.6f, 0.6f, 1);
+        g.drawString(font, percent, -font.width(percent) / 2, 0, 0xFF505050, false);
+        g.pose().popPose();
 
         drawSealButton(g, mouseX, mouseY);
     }
@@ -112,12 +126,12 @@ public class BarrelScreen extends AbstractContainerScreen<BarrelMenu> {
     @Override
     protected void renderLabels(GuiGraphics g, int mouseX, int mouseY) {
         super.renderLabels(g, mouseX, mouseY);
-        label(g, "gui.trailcraft.barrel.hides", BarrelMenu.HIDES_X + 22, BarrelMenu.HIDES_Y + 4);
-        label(g, "gui.trailcraft.barrel.leather", BarrelMenu.LEATHER_X + 22, BarrelMenu.LEATHER_Y + 4);
+        label(g, "gui.trailcraft.barrel.hides", BarrelMenu.HIDES_X, BarrelMenu.HIDES_Y - 10);
+        label(g, "gui.trailcraft.barrel.leather", BarrelMenu.LEATHER_X, BarrelMenu.LEATHER_Y - 10);
 
         Component status = status();
         g.pose().pushPose();
-        g.pose().translate(imageWidth / 2f, 76, 0);
+        g.pose().translate(imageWidth / 2f, 108, 0);
         g.pose().scale(0.75f, 0.75f, 1);
         g.drawString(font, status, -font.width(status) / 2, 0, statusColor(), false);
         g.pose().popPose();

@@ -1380,5 +1380,6 @@
   "gui.trailcraft.map.settings.color.green": "Зелёный",
   "gui.trailcraft.map.settings.color.cyan": "Голубой",
   "gui.trailcraft.map.settings.color.yellow": "Жёлтый",
-  "gui.trailcraft.map.settings.color.red": "Красный"
+  "gui.trailcraft.map.settings.color.red": "Красный",
+  "gui.trailcraft.barrel.amount.short": "%s / %s mB"
 }
