@@ -89,14 +89,19 @@ public class BarrelScreen extends AbstractContainerScreen<BarrelMenu> {
         int mark = ty + h - Math.round((float) h * WaterBarrelBlockEntity.TANNIN_NEEDED / WaterBarrelBlockEntity.CAPACITY);
         g.fill(tx, mark, tx + w, mark + 1, 0xFF373737);
 
-        // подписи бака
+        // подписи жидкости — напротив полоски, по центру её высоты
         Component tankName = kind == WaterBarrelBlockEntity.EMPTY
                 ? Component.translatable("gui.trailcraft.barrel.empty") : Component.translatable(KINDS[kind]);
-        g.drawString(font, tankName, tx, ty - 11, UiDraw.LABEL, false);
-        Component amount = Component.translatable("gui.trailcraft.barrel.amount.short", menu.amount(),
-                WaterBarrelBlockEntity.CAPACITY);
+        Component amount = Component.translatable("gui.trailcraft.barrel.amount.short", menu.amount());
+        int textX = tx + w + 4;
+        float textY = ty + h / 2f;
         g.pose().pushPose();
-        g.pose().translate(tx, ty + h + 3, 0);
+        g.pose().translate(textX, textY - 12, 0);
+        g.pose().scale(0.7f, 0.7f, 1);
+        g.drawString(font, tankName, 0, 0, UiDraw.LABEL, false);
+        g.pose().popPose();
+        g.pose().pushPose();
+        g.pose().translate(textX, textY + 1, 0);
         g.pose().scale(0.6f, 0.6f, 1);
         g.drawString(font, amount, 0, 0, 0xFF505050, false);
         g.pose().popPose();
@@ -126,23 +131,6 @@ public class BarrelScreen extends AbstractContainerScreen<BarrelMenu> {
     @Override
     protected void renderLabels(GuiGraphics g, int mouseX, int mouseY) {
         super.renderLabels(g, mouseX, mouseY);
-        label(g, "gui.trailcraft.barrel.hides", BarrelMenu.HIDES_X, BarrelMenu.HIDES_Y - 10);
-        label(g, "gui.trailcraft.barrel.leather", BarrelMenu.LEATHER_X, BarrelMenu.LEATHER_Y - 10);
-
-        Component status = status();
-        g.pose().pushPose();
-        g.pose().translate(imageWidth / 2f, 108, 0);
-        g.pose().scale(0.75f, 0.75f, 1);
-        g.drawString(font, status, -font.width(status) / 2, 0, statusColor(), false);
-        g.pose().popPose();
-    }
-
-    private void label(GuiGraphics g, String key, int x, int y) {
-        g.pose().pushPose();
-        g.pose().translate(x, y, 0);
-        g.pose().scale(0.7f, 0.7f, 1);
-        g.drawString(font, Component.translatable(key), 0, 0, UiDraw.LABEL, false);
-        g.pose().popPose();
     }
 
     private Component status() {
@@ -179,7 +167,20 @@ public class BarrelScreen extends AbstractContainerScreen<BarrelMenu> {
                 && mouseY >= y && mouseY < y + BarrelMenu.SEAL_SIZE;
         UiDraw.frame(g, x, y, BarrelMenu.SEAL_SIZE, BarrelMenu.SEAL_SIZE, 0xFF373737, 0xFFFFFFFF,
                 hover ? 0xFFD8D8D8 : UiDraw.PANEL);
-        UiDraw.padlock(g, x + 6, y + 5, !menu.sealed(), 0xFF4A3218);
+        drawSealIcon(g, x + 5, y + 5, !menu.sealed());
+    }
+
+    /** Замок по центру кнопки: закрытый — ровно, открытый — дужка сдвинута. */
+    private static void drawSealIcon(GuiGraphics g, int x, int y, boolean open) {
+        int dark = open ? 0xFF6B4A2A : 0xFF4A3218;
+        int shift = open ? 2 : 0;
+        g.fill(x + 1, y + 6, x + 11, y + 13, dark);
+        g.fill(x + 2, y + 7, x + 10, y + 12, 0xFFD8B07A);
+        g.fill(x + 3 + shift, y, x + 9 + shift, y + 1, dark);
+        g.fill(x + 2 + shift, y + 1, x + 3 + shift, y + 6, dark);
+        g.fill(x + 9 + shift, y + 1, x + 10 + shift, y + 6, dark);
+        g.fill(x + 6, y + 8, x + 7, y + 11, dark);
+        g.fill(x + 7, y + 10, x + 8, y + 11, dark);
     }
 
     private void drawLock(GuiGraphics g, int sx, int sy) {

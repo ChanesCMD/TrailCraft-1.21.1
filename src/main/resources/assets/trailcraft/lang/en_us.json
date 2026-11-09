@@ -1381,5 +1381,5 @@
   "gui.trailcraft.map.settings.color.cyan": "Cyan",
   "gui.trailcraft.map.settings.color.yellow": "Yellow",
   "gui.trailcraft.map.settings.color.red": "Red",
-  "gui.trailcraft.barrel.amount.short": "%s / %s mB"
+  "gui.trailcraft.barrel.amount.short": "%s mB"
 }

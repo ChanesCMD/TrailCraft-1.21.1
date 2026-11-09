@@ -24,9 +24,9 @@ import org.jetbrains.annotations.Nullable;
 public class BarrelMenu extends AbstractContainerMenu {
     public static final int WIDTH = 176, HEIGHT = 150, HOTBAR_Y = 124;
     public static final int TANK_X = 12, TANK_Y = 24, TANK_W = 22, TANK_H = 72;
-    public static final int HIDES_X = 60, HIDES_Y = 26, LEATHER_X = 60, LEATHER_Y = 68;
+    public static final int HIDES_X = 70, HIDES_Y = 26, LEATHER_X = 70, LEATHER_Y = 68;
     public static final int PROGRESS_X = 94, PROGRESS_Y = 30, PROGRESS_W = 7, PROGRESS_H = 62;
-    public static final int SEAL_X = 122, SEAL_Y = 30, SEAL_SIZE = 22;
+    public static final int SEAL_X = 122, SEAL_Y = 45, SEAL_SIZE = 22;
     private static final int CONTAINER_SLOTS = 2;
 
     private final ContainerData data;
