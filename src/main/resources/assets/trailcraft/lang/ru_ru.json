@@ -1381,5 +1381,6 @@
   "gui.trailcraft.map.settings.color.cyan": "Голубой",
   "gui.trailcraft.map.settings.color.yellow": "Жёлтый",
   "gui.trailcraft.map.settings.color.red": "Красный",
-  "gui.trailcraft.barrel.amount.short": "%s mB"
+  "gui.trailcraft.barrel.amount.short": "%s mB",
+  "commands.trailcraft.night_darkness": "Тёмная ночь: %s%%"
 }
