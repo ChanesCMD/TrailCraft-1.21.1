@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/block",
-  "ambientocclusion": false,
+  "ambientocclusion": true,
   "textures": {
     "particle": "trailcraft:block/fir_planks",
     "texture": "trailcraft:block/fir_planks"

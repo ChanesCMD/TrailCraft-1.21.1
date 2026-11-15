@@ -23,7 +23,7 @@ def write(path, data):
 def post(side_uv):
     """Столбик у дальнего конца диагонали — внутри своего блока: если он вылезает за границу, у блока,\n    поставленного по диагонали, перила темнеют и мерцают."""
     return {
-        "from": [11.5, 0, 11.5], "to": [15.5, 16, 15.5],
+        "from": [14, 0, 14], "to": [18, 16, 18],
         "faces": {
             "down": {"uv": side_uv, "texture": "#texture", "shade": True},
             "up": {"uv": side_uv, "texture": "#texture", "shade": True},
@@ -60,14 +60,14 @@ def main():
         rails = [rail(6, 9, [7, 7, 9, 10]), rail(12, 15, [7, 1, 9, 4])]
         write(os.path.join(MODELS, diagonal + ".json"), {
             "parent": "minecraft:block/block",
-            "ambientocclusion": False,
+            "ambientocclusion": True,
             "textures": {"particle": texture, "texture": texture},
             "elements": rails,
         })
         # столбик посреди диагонали рисует только одна сторона пары (NE и SE), иначе он двоился бы
         write(os.path.join(MODELS, diagonal + "_post.json"), {
             "parent": "minecraft:block/block",
-            "ambientocclusion": False,
+            "ambientocclusion": True,
             "textures": {"particle": texture, "texture": texture},
             "elements": rails + [post([4, 4, 12, 12])],
         })
