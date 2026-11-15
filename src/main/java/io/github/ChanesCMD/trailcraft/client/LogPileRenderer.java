@@ -137,14 +137,19 @@ public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> 
                 light, overlay, 0.8f, 0, 0, 1);
     }
 
-    /** Грань по четырём углам: UV от левого верхнего угла спрайта, окно width×height пикселей; с обеих сторон. */
+    /**
+     * Грань по четырём углам: UV — окно width×height пикселей по центру спрайта (у торца бревна кольца как раз в
+     * середине, у коры — середина полосы). Рисуется с обеих сторон.
+     */
     private static void box(VertexConsumer vc, PoseStack.Pose pose, float[][] corners, TextureAtlasSprite sprite,
                             float widthPx, float heightPx, int light, int overlay, float shade, float nx, float ny, float nz) {
         float texU = (sprite.getU1() - sprite.getU0()) / 16f, texV = (sprite.getV1() - sprite.getV0()) / 16f;
-        uvQuad(vc, pose, corners, sprite.getU0(), sprite.getV0(), widthPx * texU, heightPx * texV,
+        float u0 = sprite.getU0() + (16f - widthPx) / 2f * texU;
+        float v0 = sprite.getV0() + (16f - heightPx) / 2f * texV;
+        uvQuad(vc, pose, corners, u0, v0, widthPx * texU, heightPx * texV,
                 light, overlay, shade, nx, ny, nz);
         float[][] reversed = {corners[3], corners[2], corners[1], corners[0]};
-        uvQuad(vc, pose, reversed, sprite.getU0(), sprite.getV0(), widthPx * texU, heightPx * texV,
+        uvQuad(vc, pose, reversed, u0, v0, widthPx * texU, heightPx * texV,
                 light, overlay, shade, -nx, -ny, -nz);
     }
 
