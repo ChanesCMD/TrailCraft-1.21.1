@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:remove_features",
+  "biomes": "#trailcraft:trailworldgen_biomes",
+  "features": [
+    "minecraft:classic_vines_cave_feature",
+    "minecraft:ore_clay",
+    "minecraft:disk_clay",
+    "minecraft:lush_caves_clay"
+  ]
+}

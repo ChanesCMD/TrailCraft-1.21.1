@@ -422,6 +422,11 @@ def underground():
     tag("block", "minecraft:dripstone_replaceable_blocks", ["#minecraft:base_stone_overworld", f"#{NS}:rocks"])
     # пышные пещеры: мох растёт только на ванильном камне, если не добавить наши породы
     tag("block", "minecraft:moss_replaceable", [f"#{NS}:rocks"])
+    # ванильные лианы и ванильная глина в нашем мире не нужны (глина своя, лианы — только светящиеся ягоды)
+    write(f"data/{NS}/neoforge/biome_modifier/no_vines_and_clay.json", {
+        "type": "neoforge:remove_features", "biomes": f"#{NS}:trailworldgen_biomes",
+        "features": ["minecraft:classic_vines_cave_feature", "minecraft:ore_clay", "minecraft:disk_clay",
+                     "minecraft:lush_caves_clay"]})
 
 
 def mountains():
@@ -782,7 +787,8 @@ if __name__ == "__main__":
     sakura_hill()
     caves()
     surface()
-    tag("worldgen/biome", f"{NS}:trailworldgen_biomes", [f"{NS}:{b}" for b in list(FORESTS) + list(MOUNTAINS)] + [b for b in UNDERGROUND if ":" in b],
+    tag("worldgen/biome", f"{NS}:trailworldgen_biomes", [f"{NS}:{b}" for b in list(FORESTS) + list(MOUNTAINS)]
+        + [b for b in UNDERGROUND if ":" in b] + ["minecraft:lush_caves"],
         [f"{NS}:{b}" for b in REMOVED_BIOMES])
     lang()
     # животные во всех биомах (новые биомы — копии равнин со старым списком)
