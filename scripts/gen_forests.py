@@ -397,7 +397,7 @@ MOUNTAINS = {
 # пород — они в тэге #minecraft:dripstone_replaceable_blocks.
 LOCAL_MODIFICATIONS, UNDERGROUND_DECORATION = 2, 7
 UNDERGROUND = {
-    "dripstone_caves": dict(continentalness=(0.8, 1.0), humidity=(-1.0, 0.7), temperature=0.8, downfall=0.4,
+    "minecraft:dripstone_caves": dict(continentalness=(0.8, 1.0), humidity=(-1.0, 0.7), temperature=0.8, downfall=0.4,
                             features={LOCAL_MODIFICATIONS: ["minecraft:large_dripstone"],
                                       UNDERGROUND_DECORATION: ["minecraft:dripstone_cluster", "minecraft:pointed_dripstone"]},
                             music="minecraft:music.overworld.dripstone_caves",
@@ -407,6 +407,8 @@ UNDERGROUND = {
 
 def underground():
     for biome, u in UNDERGROUND.items():
+        if ":" in biome:          # ванильный биом — файл не нужен
+            continue
         data = read(f"data/{NS}/worldgen/biome/burozem_plains.json")
         data["temperature"] = u["temperature"]
         data["downfall"] = u["downfall"]
@@ -418,6 +420,8 @@ def underground():
                                     "sound": u["music"]}
         write(f"data/{NS}/worldgen/biome/{biome}.json", data)
     tag("block", "minecraft:dripstone_replaceable_blocks", ["#minecraft:base_stone_overworld", f"#{NS}:rocks"])
+    # пышные пещеры: мох растёт только на ванильном камне, если не добавить наши породы
+    tag("block", "minecraft:moss_replaceable", [f"#{NS}:rocks"])
 
 
 def mountains():
@@ -759,6 +763,8 @@ def lang():
         for biome in REMOVED_BIOMES:
             data.pop(f"biome.{NS}.{biome}", None)
         for biome, f in list(FORESTS.items()) + list(MOUNTAINS.items()) + list(UNDERGROUND.items()):
+            if ":" in biome:      # ванильный биом — перевод у ванили
+                continue
             data[f"biome.{NS}.{biome}"] = f[k]
         write(rel, data)
 
@@ -776,7 +782,7 @@ if __name__ == "__main__":
     sakura_hill()
     caves()
     surface()
-    tag("worldgen/biome", f"{NS}:trailworldgen_biomes", [f"{NS}:{b}" for b in list(FORESTS) + list(MOUNTAINS) + list(UNDERGROUND)],
+    tag("worldgen/biome", f"{NS}:trailworldgen_biomes", [f"{NS}:{b}" for b in list(FORESTS) + list(MOUNTAINS)] + [b for b in UNDERGROUND if ":" in b],
         [f"{NS}:{b}" for b in REMOVED_BIOMES])
     lang()
     # животные во всех биомах (новые биомы — копии равнин со старым списком)

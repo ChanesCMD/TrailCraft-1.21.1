@@ -12969,7 +12969,7 @@
               }
             },
             {
-              "biome": "trailcraft:dripstone_caves",
+              "biome": "minecraft:dripstone_caves",
               "parameters": {
                 "temperature": [
                   -2.0,
