@@ -138,26 +138,31 @@ public class DiagonalFenceBlock extends FenceBlock {
     }
 
     /**
-     * Коллизия и выделение диагонали — ровно по схеме: красная коробка 4×4 между столбом и промежуточным
-     * столбиком (10…14 пикселя) и зелёная — сам промежуточный столбик на углу (14…18).
+     * Коллизия и выделение диагонали — по схеме: коробка между столбом и промежуточным столбиком (10…14) и сам
+     * столбик на углу (14…18). Выделение — на пиксель выше столба (17), коллизия — как у ванильного забора (24).
      */
-    private static final VoxelShape[] DIAGONAL_SHAPES = {
-            diagonal(1, -1),   // NE
-            diagonal(-1, -1),  // NW
-            diagonal(1, 1),    // SE
-            diagonal(-1, 1),   // SW
+    private static final VoxelShape[] SELECTION = {
+            diagonal(1, -1, 17),
+            diagonal(-1, -1, 17),
+            diagonal(1, 1, 17),
+            diagonal(-1, 1, 17),
+    };
+    private static final VoxelShape[] COLLISION = {
+            diagonal(1, -1, 24),
+            diagonal(-1, -1, 24),
+            diagonal(1, 1, 24),
+            diagonal(-1, 1, 24),
     };
 
-    /** Полоса диагонали: коробка between столбом и углом и коробка на самом углу. */
-    private static VoxelShape diagonal(int sx, int sz) {
-        return Shapes.or(band(sx, sz, 10, 14), band(sx, sz, 14, 18));
+    private static VoxelShape diagonal(int sx, int sz, int height) {
+        return Shapes.or(band(sx, sz, 10, 14, height), band(sx, sz, 14, 18, height));
     }
 
     /** Коробка 4×4 пикселя на расстоянии from…to от центра блока вдоль диагонали (sx, sz). */
-    private static VoxelShape band(int sx, int sz, int from, int to) {
+    private static VoxelShape band(int sx, int sz, int from, int to, int height) {
         int ax = 8 + sx * (from - 8), az = 8 + sz * (from - 8);
         int bx = 8 + sx * (to - 8), bz = 8 + sz * (to - 8);
-        return Block.box(Math.min(ax, bx), 0, Math.min(az, bz), Math.max(ax, bx), 16, Math.max(az, bz));
+        return Block.box(Math.min(ax, bx), 0, Math.min(az, bz), Math.max(ax, bx), height, Math.max(az, bz));
     }
 
     @Override
@@ -165,7 +170,7 @@ public class DiagonalFenceBlock extends FenceBlock {
         VoxelShape shape = super.getShape(state, level, pos, context);
         for (int i = 0; i < DIAGONALS.length; i++) {
             if (state.getValue(DIAGONALS[i])) {
-                shape = Shapes.or(shape, DIAGONAL_SHAPES[i]);
+                shape = Shapes.or(shape, SELECTION[i]);
             }
         }
         return shape;
@@ -173,7 +178,13 @@ public class DiagonalFenceBlock extends FenceBlock {
 
     @Override
     protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return getShape(state, level, pos, context);
+        VoxelShape shape = super.getCollisionShape(state, level, pos, context);
+        for (int i = 0; i < DIAGONALS.length; i++) {
+            if (state.getValue(DIAGONALS[i])) {
+                shape = Shapes.or(shape, COLLISION[i]);
+            }
+        }
+        return shape;
     }
 
     @Override
