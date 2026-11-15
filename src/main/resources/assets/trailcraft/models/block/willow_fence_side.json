@@ -1,4 +1,5 @@
 {
+  "ambientocclusion": false,
   "parent": "minecraft:block/fence_side",
   "textures": {
     "texture": "trailcraft:block/willow_planks"

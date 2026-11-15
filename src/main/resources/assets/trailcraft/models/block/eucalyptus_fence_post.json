@@ -1,4 +1,5 @@
 {
+  "ambientocclusion": false,
   "parent": "minecraft:block/fence_post",
   "textures": {
     "texture": "trailcraft:block/eucalyptus_planks"
