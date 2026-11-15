@@ -52,8 +52,8 @@ public final class NightSky {
         List<Star> list = new ArrayList<>(STARS);
         // холодные, тёплые и чисто белые звёзды
         float[][] palette = {
-                {0.75F, 0.85F, 1.0F}, {1.0F, 1.0F, 1.0F}, {1.0F, 0.93F, 0.78F},
-                {0.85F, 0.92F, 1.0F}, {1.0F, 0.82F, 0.70F}, {0.92F, 0.97F, 1.0F},
+                {0.45F, 0.65F, 1.0F}, {1.0F, 1.0F, 1.0F}, {1.0F, 0.78F, 0.45F},
+                {0.65F, 0.95F, 1.0F}, {1.0F, 0.60F, 0.42F}, {0.78F, 0.62F, 1.0F},
         };
         while (list.size() < STARS) {
             float x = random.nextFloat() * 2.0F - 1.0F;
@@ -67,7 +67,7 @@ public final class NightSky {
             float[] color = palette[random.nextInt(palette.length)];
             float bright = 0.45F + random.nextFloat() * 0.55F;
             list.add(new Star(pos,
-                    0.10F + random.nextFloat() * 0.26F + (random.nextFloat() < 0.08F ? 0.18F : 0.0F),
+                    0.07F + random.nextFloat() * 0.17F + (random.nextFloat() < 0.08F ? 0.12F : 0.0F),
                     color[0] * bright, color[1] * bright, color[2] * bright,
                     0.55F + random.nextFloat() * 0.45F));
         }
@@ -206,7 +206,9 @@ public final class NightSky {
     }
 
     private static void draw(BufferBuilder bb) {
-        MeshData mesh = bb.buildOrThrow();
-        BufferUploader.drawWithShader(mesh);
+        MeshData mesh = bb.build();
+        if (mesh != null) {
+            BufferUploader.drawWithShader(mesh);
+        }
     }
 }
