@@ -23,7 +23,8 @@ import java.util.Map;
 /**
  * Руды (список — {@link Ore}), то, что с них падает, самородки на поверхности, слитки, шихта и древесный уголь.
  * Медь, железо, золото — ванильные слитки, цинк — слиток Create (create:zinc_ingot).
- * Плавятся на костре (рецепты campfire_cooking), шихта бронз дробится из кусков руды молотком на верстаке.
+ * Чистую шихту дробят молотком: кусок руды + металлический молоток (тэг trailcraft:ore_hammers) или 3 самородка +
+ * каменный; сплавную шихту смешивают из чистой без молотка. Плавится в кувшине только шихта (smelting/Smelting.java).
  */
 public final class ModOres {
     public static final Map<Ore, DeferredBlock<OreBlock>> BLOCKS = new EnumMap<>(Ore.class);
