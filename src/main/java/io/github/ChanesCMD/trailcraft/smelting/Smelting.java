@@ -20,11 +20,12 @@ import java.util.Optional;
 
 /**
  * Плавка в кувшине (как в TerraFirmaCraft). Каждый предмет в кувшине — одна единица металла (один слиток, UNIT mB):
- * кусок руды, дроблёная руда Create, шихта или слиток. Шихта и слитки сплавов раскладываются на чистые металлы по своему составу. Потом весь
+ * в кувшин кладут только шихту — чистую (кусок руды или 3 самородка, раздробленные молотком) или сплавную (её
+ * смешивают из чистой без молотка). Шихта сплавов раскладывается на чистые металлы по своему составу. Потом весь
  * кувшин плавится разом в жидкий металл (Molten): один металл — он сам; доли металлов попали в состав сплава — сплав
- * (так сплав можно собрать прямо в кувшине из кусков руды: 3 меди и 1 олово — 4 единицы бронзы); иначе металлы не
+ * (так сплав можно собрать прямо в кувшине из шихты: 3 меди и 1 олово — 4 единицы бронзы); иначе металлы не
  * сплавляются и печь кувшин не плавит. Жидкий металл разливают по формам (Mold). Железо, никель, литий и алюминий
- * в малой сыродутной печи не плавятся — в кувшин не кладутся.
+ * в малой сыродутной печи не плавятся — шихты для них нет.
  */
 public final class Smelting {
     /** Жидкого металла на один слиток (одну форму), mB. */
@@ -92,34 +93,19 @@ public final class Smelting {
     private static final Map<ResourceLocation, Map<Metal, Double>> MELTS = new HashMap<>();
 
     static {
-        for (String id : List.of("trailcraft:raw_malachite", "trailcraft:raw_native_copper", "trailcraft:raw_tetrahedrite",
-                "trailcraft:copper_mix", "minecraft:copper_ingot", "create:crushed_raw_copper")) {
-            pure(id, Metal.COPPER);
-        }
-        for (String id : List.of("trailcraft:raw_cassiterite", "trailcraft:tin_mix", "trailcraft:tin_ingot", "create:crushed_raw_tin")) {
-            pure(id, Metal.TIN);
-        }
-        for (String id : List.of("trailcraft:raw_sphalerite", "trailcraft:zinc_mix", "create:zinc_ingot", "create:crushed_raw_zinc")) {
-            pure(id, Metal.ZINC);
-        }
-        for (String id : List.of("trailcraft:raw_native_bismuth", "trailcraft:bismuth_ingot")) {
-            pure(id, Metal.BISMUTH);
-        }
-        for (String id : List.of("trailcraft:raw_galena", "trailcraft:lead_ingot", "create:crushed_raw_lead")) {
-            pure(id, Metal.LEAD);
-        }
-        for (String id : List.of("trailcraft:raw_native_gold", "minecraft:gold_ingot", "create:crushed_raw_gold")) {
-            pure(id, Metal.GOLD);
-        }
-        for (String id : List.of("trailcraft:tin_bronze_mix", "trailcraft:tin_bronze_ingot")) {
-            MELTS.put(ResourceLocation.parse(id), Map.of(Metal.COPPER, 0.75, Metal.TIN, 0.25));
-        }
-        for (String id : List.of("trailcraft:brass_mix", "create:brass_ingot")) {
-            MELTS.put(ResourceLocation.parse(id), Map.of(Metal.COPPER, 0.75, Metal.ZINC, 0.25));
-        }
-        for (String id : List.of("trailcraft:bismuth_bronze_mix", "trailcraft:bismuth_bronze_ingot")) {
-            MELTS.put(ResourceLocation.parse(id), Map.of(Metal.COPPER, 0.5, Metal.BISMUTH, 0.25, Metal.ZINC, 0.25));
-        }
+        // В кувшине плавится только шихта: её дробят из кусков руды молотком (или 3 самородка + каменный молоток)
+        pure("trailcraft:copper_mix", Metal.COPPER);
+        pure("trailcraft:tin_mix", Metal.TIN);
+        pure("trailcraft:zinc_mix", Metal.ZINC);
+        pure("trailcraft:bismuth_mix", Metal.BISMUTH);
+        pure("trailcraft:lead_mix", Metal.LEAD);
+        pure("trailcraft:gold_mix", Metal.GOLD);
+        MELTS.put(ResourceLocation.parse("trailcraft:tin_bronze_mix"),
+                Map.of(Metal.COPPER, 0.75, Metal.TIN, 0.25));
+        MELTS.put(ResourceLocation.parse("trailcraft:brass_mix"),
+                Map.of(Metal.COPPER, 0.75, Metal.ZINC, 0.25));
+        MELTS.put(ResourceLocation.parse("trailcraft:bismuth_bronze_mix"),
+                Map.of(Metal.COPPER, 0.5, Metal.BISMUTH, 0.25, Metal.ZINC, 0.25));
     }
 
     private static void pure(String id, Metal metal) {

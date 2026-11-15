@@ -279,6 +279,7 @@ public class ModCreativeTabs {
                     .icon(() -> ModTools.ITEMS.get(0).get().getDefaultInstance())
                     .displayItems((parameters, output) -> {
                         output.accept(ModItems.STONE_HAMMER);
+                        ModItems.HAMMERS.values().forEach(output::accept);
                         output.accept(ModItems.STEIGER_HAMMER);
                         output.accept(ModItems.GEOLOGICAL_HAMMER);
                         output.accept(ModItems.TURF_CUTTER);

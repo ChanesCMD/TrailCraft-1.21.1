@@ -31,6 +31,7 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import io.github.ChanesCMD.trailcraft.animal.Species;
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.List;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -195,9 +196,18 @@ public class ModItems {
     /** Огниво: складывает костёр из выброшенных тонких брёвен (1–4) и 4 веток и разжигает его (FirestarterItem). */
     public static final DeferredItem<FirestarterItem> FIRESTARTER = ITEMS.registerItem("firestarter",
             props -> new FirestarterItem(props.durability(FirestarterItem.DURABILITY)));
-    /** Каменный молоток: твёрдый камешек на обработанной палке, дробит куски руды в шихту бронз (HammerItem). */
+    /** Каменный молоток: твёрдый камешек на обработанной палке, дробит самородки в шихту (HammerItem). */
     public static final DeferredItem<HammerItem> STONE_HAMMER = ITEMS.registerItem("stone_hammer",
             props -> new HammerItem(props.durability(HammerItem.DURABILITY)));
+    /** Медный, бронзовый, железный и стальной молотки: ими дробят куски руды в чистую шихту (HammerItem). */
+    public static final Map<String, DeferredItem<HammerItem>> HAMMERS = new LinkedHashMap<>();
+
+    static {
+        for (String[] hammer : new String[][]{{"copper", "190"}, {"bronze", "220"}, {"iron", "250"}, {"steel", "700"}}) {
+            HAMMERS.put(hammer[0], ITEMS.registerItem(hammer[0] + "_hammer",
+                    props -> new HammerItem(props.durability(Integer.parseInt(hammer[1])))));
+        }
+    }
 
     // === ПЕНЬ ДЛЯ РУБКИ ===
     public static final DeferredItem<BlockItem> CHOPPING_STUMP = ITEMS.registerSimpleBlockItem("chopping_stump", ModBlocks.CHOPPING_STUMP);

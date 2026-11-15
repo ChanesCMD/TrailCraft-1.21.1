@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "trailcraft:raw_sphalerite"
+    },
+    {
+      "tag": "trailcraft:ore_hammers"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:zinc_mix",
+    "count": 1
+  }
+}

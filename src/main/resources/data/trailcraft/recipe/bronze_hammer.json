@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "I": {
+      "tag": "c:ingots/bronze"
+    },
+    "S": {
+      "item": "trailcraft:stick_processed"
+    }
+  },
+  "pattern": [
+    "I",
+    "S"
+  ],
+  "result": {
+    "id": "trailcraft:bronze_hammer",
+    "count": 1
+  }
+}

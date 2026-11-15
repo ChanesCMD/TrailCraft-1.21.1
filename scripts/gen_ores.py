@@ -102,6 +102,9 @@ OTHER_ITEMS = [
     ("copper_mix", "Шихта чистой меди", "Pure Copper Mix"),
     ("tin_mix", "Шихта чистого олова", "Pure Tin Mix"),
     ("zinc_mix", "Шихта чистого цинка", "Pure Zinc Mix"),
+    ("bismuth_mix", "Шихта чистого висмута", "Pure Bismuth Mix"),
+    ("lead_mix", "Шихта чистого свинца", "Pure Lead Mix"),
+    ("gold_mix", "Шихта чистого золота", "Pure Gold Mix"),
     ("charcoal", "Древесный уголь", "Charcoal"),
     ("firestarter", "Огниво", "Firestarter"),
     ("stone_hammer", "Каменный молоток", "Stone Hammer"),
@@ -257,6 +260,8 @@ def tags():
         tag(kind, "c:ores/quicksilver", add=[f"{NS}:cinnabar_ore"])
     raws = [o for o in ORES if o[4].startswith("raw_")]
     tag("item", "c:raw_materials", add=[f"{NS}:{o[4]}" for o in raws])
+    # Руду дробят только металлические молотки (каменный — для самородков)
+    tag("item", f"{NS}:ore_hammers", add=[f"{NS}:{m}_hammer" for m in ("copper", "bronze", "iron")])
     for o in raws:
         tag("item", f"c:raw_materials/{o[1]}", add=[f"{NS}:{o[4]}"])
     tag("item", "c:ingots", add=[f"{NS}:{i[0]}" for i in INGOTS])
@@ -279,24 +284,25 @@ def recipes():
         "type": "minecraft:campfire_cooking", "category": "misc", "cookingtime": 600, "experience": 0.15,
         "ingredient": {"tag": f"{NS}:thin_logs"}, "result": {"id": f"{NS}:charcoal", "count": 1},
     })
-    # Шихта бронз: куски руды, раздробленные молотком (молоток остаётся, теряет прочность — HammerItem)
+    # Шихта: кусок руды, раздробленный молотком от медного и выше (молоток остаётся, теряет прочность — HammerItem).
+    # Каменным молотком руду не раздробить — он только для самородков.
     hammer = {"item": f"{NS}:stone_hammer"}
-    write(f"data/{NS}/recipe/tin_bronze_mix.json", {
-        "type": "minecraft:crafting_shapeless", "category": "misc",
-        "ingredients": [{"tag": "c:raw_materials/copper"}] * 3 + [{"tag": "c:raw_materials/tin"}, hammer],
-        "result": {"id": f"{NS}:tin_bronze_mix", "count": 4},
-    })
-    write(f"data/{NS}/recipe/bismuth_bronze_mix.json", {
-        "type": "minecraft:crafting_shapeless", "category": "misc",
-        "ingredients": [{"tag": "c:raw_materials/copper"}] * 2
-                       + [{"tag": "c:raw_materials/bismuth"}, {"tag": "c:raw_materials/zinc"}, hammer],
-        "result": {"id": f"{NS}:bismuth_bronze_mix", "count": 4},
-    })
-    write(f"data/{NS}/recipe/brass_mix.json", {
-        "type": "minecraft:crafting_shapeless", "category": "misc",
-        "ingredients": [{"tag": "c:raw_materials/copper"}] * 3 + [{"tag": "c:raw_materials/zinc"}, hammer],
-        "result": {"id": f"{NS}:brass_mix", "count": 4},
-    })
+    ore_hammer = {"tag": f"{NS}:ore_hammers"}
+    RAWS = {
+        "copper_mix": ["raw_malachite", "raw_native_copper", "raw_tetrahedrite"],
+        "tin_mix": ["raw_cassiterite"],
+        "zinc_mix": ["raw_sphalerite"],
+        "bismuth_mix": ["raw_native_bismuth"],
+        "lead_mix": ["raw_galena"],
+        "gold_mix": ["raw_native_gold"],
+    }
+    for mix, raws in RAWS.items():
+        for raw in raws:
+            write(f"data/{NS}/recipe/{mix}_from_{raw}.json", {
+                "type": "minecraft:crafting_shapeless", "category": "misc",
+                "ingredients": [{"item": f"{NS}:{raw}"}, ore_hammer],
+                "result": {"id": f"{NS}:{mix}", "count": 1},
+            })
     # Киноварь, раздробленная молотком, — 2 редстоуна (жёрнов и дробилка Create дают больше — gen_create_compat.py)
     write(f"data/{NS}/recipe/redstone_from_cinnabar.json", {
         "type": "minecraft:crafting_shapeless", "category": "misc",
@@ -310,10 +316,13 @@ def recipes():
             "ingredients": [{"item": f"{NS}:{ore}_nugget"}] * 3 + [hammer],
             "result": {"id": f"{NS}:{mix}", "count": 1},
         })
-    for alloy, second in (("tin_bronze_mix", "tin_mix"), ("brass_mix", "zinc_mix")):
+    for alloy, parts in (
+            ("tin_bronze_mix", [("copper_mix", 3), ("tin_mix", 1)]),
+            ("brass_mix", [("copper_mix", 3), ("zinc_mix", 1)]),
+            ("bismuth_bronze_mix", [("copper_mix", 2), ("bismuth_mix", 1), ("zinc_mix", 1)])):
         write(f"data/{NS}/recipe/{alloy}_from_pure_mix.json", {
             "type": "minecraft:crafting_shapeless", "category": "misc",
-            "ingredients": [{"item": f"{NS}:copper_mix"}] * 3 + [{"item": f"{NS}:{second}"}],
+            "ingredients": [{"item": f"{NS}:{mix}"} for mix, count in parts for _ in range(count)],
             "result": {"id": f"{NS}:{alloy}", "count": 4},
         })
     write(f"data/{NS}/recipe/stone_hammer.json", {
@@ -390,7 +399,8 @@ def nuggets():
     """
     folder = path("assets", NS, "models", "block")
     shapes = sorted(int(f[len("nugget_shape_"):-5]) for f in os.listdir(folder)
-                    if f.startswith("nugget_shape_") and f.endswith(".json"))
+                    if f.startswith("nugget_shape_") and f.endswith(".json")
+                    and f[len("nugget_shape_"):-5].isdigit())
     for ore, _, _, _ in NUGGETS:
         block = f"{ore}_nugget"
         for v in "abcd":  # старые модели по образцу кремня

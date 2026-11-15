@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "trailcraft:copper_hammer",
+    "trailcraft:bronze_hammer",
+    "trailcraft:iron_hammer"
+  ]
+}

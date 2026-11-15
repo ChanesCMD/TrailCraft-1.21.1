@@ -54,8 +54,11 @@ public final class ModOres {
     public static final DeferredItem<Item> COPPER_MIX = ModItems.ITEMS.registerSimpleItem("copper_mix");
     public static final DeferredItem<Item> TIN_MIX = ModItems.ITEMS.registerSimpleItem("tin_mix");
     public static final DeferredItem<Item> ZINC_MIX = ModItems.ITEMS.registerSimpleItem("zinc_mix");
-    public static final List<DeferredItem<Item>> MIXES = List.of(COPPER_MIX, TIN_MIX, ZINC_MIX, TIN_BRONZE_MIX,
-            BISMUTH_BRONZE_MIX, BRASS_MIX);
+    public static final DeferredItem<Item> BISMUTH_MIX = ModItems.ITEMS.registerSimpleItem("bismuth_mix");
+    public static final DeferredItem<Item> LEAD_MIX = ModItems.ITEMS.registerSimpleItem("lead_mix");
+    public static final DeferredItem<Item> GOLD_MIX = ModItems.ITEMS.registerSimpleItem("gold_mix");
+    public static final List<DeferredItem<Item>> MIXES = List.of(COPPER_MIX, TIN_MIX, ZINC_MIX, BISMUTH_MIX, LEAD_MIX,
+            GOLD_MIX, TIN_BRONZE_MIX, BISMUTH_BRONZE_MIX, BRASS_MIX);
 
     /**
      * Самородки: лежат на поверхности над большой жилой своей руды (worldgen/NuggetDepositFeature), подбираются ПКМ,

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "trailcraft:raw_cassiterite"
+    },
+    {
+      "tag": "trailcraft:ore_hammers"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:tin_mix",
+    "count": 1
+  }
+}

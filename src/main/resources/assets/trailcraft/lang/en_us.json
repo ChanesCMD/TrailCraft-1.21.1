@@ -1388,5 +1388,12 @@
   "gui.trailcraft.map.settings.color.yellow": "Yellow",
   "gui.trailcraft.map.settings.color.red": "Red",
   "gui.trailcraft.barrel.amount.short": "%s mB",
-  "commands.trailcraft.night_darkness": "Night darkness: %s%%"
+  "commands.trailcraft.night_darkness": "Night darkness: %s%%",
+  "item.trailcraft.copper_hammer": "Copper Hammer",
+  "item.trailcraft.bronze_hammer": "Bronze Hammer",
+  "item.trailcraft.iron_hammer": "Iron Hammer",
+  "item.trailcraft.hammer.desc": "Crushes an ore chunk into pure mix (stays in the grid, loses durability)",
+  "item.trailcraft.bismuth_mix": "Pure Bismuth Mix",
+  "item.trailcraft.lead_mix": "Pure Lead Mix",
+  "item.trailcraft.gold_mix": "Pure Gold Mix"
 }

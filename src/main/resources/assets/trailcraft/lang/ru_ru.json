@@ -1388,5 +1388,12 @@
   "gui.trailcraft.map.settings.color.yellow": "Жёлтый",
   "gui.trailcraft.map.settings.color.red": "Красный",
   "gui.trailcraft.barrel.amount.short": "%s mB",
-  "commands.trailcraft.night_darkness": "Тёмная ночь: %s%%"
+  "commands.trailcraft.night_darkness": "Тёмная ночь: %s%%",
+  "item.trailcraft.copper_hammer": "Медный молоток",
+  "item.trailcraft.bronze_hammer": "Бронзовый молоток",
+  "item.trailcraft.iron_hammer": "Железный молоток",
+  "item.trailcraft.hammer.desc": "Дробит кусок руды в чистую шихту (остаётся в сетке, теряет прочность)",
+  "item.trailcraft.bismuth_mix": "Шихта чистого висмута",
+  "item.trailcraft.lead_mix": "Шихта чистого свинца",
+  "item.trailcraft.gold_mix": "Шихта чистого золота"
 }

@@ -166,11 +166,16 @@ METALS = {
     "tin": ramp("2e3034", "4a4c50", "6e7278", "9a9ea4", "c4c8cc", "e4e8ec"),
     "zinc": ramp("262c34", "3e4652", "5e6a78", "8492a0", "aab6c2", "cfd8e0"),
     "bismuth": ramp("2e2232", "4a3a4e", "725a78", "9c84a2", "c4b0c8", "e8dcec"),
+    "lead": ramp("1c1e26", "2e323c", "4a4e5a", "6c7280", "949aa8", "c2c8d6"),
+    "gold": ramp("3a2a06", "5e4410", "8c6a18", "b8922a", "e0bc4a", "f8e08a"),
 }
 MIXES = {
     "copper_mix": ("copper", (), 0, 3),
     "tin_mix": ("tin", (), 0, 4),
     "zinc_mix": ("zinc", (), 0, 5),
+    "bismuth_mix": ("bismuth", (), 0, 9),
+    "lead_mix": ("lead", (), 0, 10),
+    "gold_mix": ("gold", (), 0, 11),
     "tin_bronze_mix": ("copper", ("tin",), 0.3, 6),
     "bismuth_bronze_mix": ("copper", ("bismuth", "zinc"), 0.45, 7),
     "brass_mix": ("copper", ("zinc",), 0.3, 8),

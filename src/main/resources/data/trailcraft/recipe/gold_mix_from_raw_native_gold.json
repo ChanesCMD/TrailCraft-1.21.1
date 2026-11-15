@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "trailcraft:raw_native_gold"
+    },
+    {
+      "tag": "trailcraft:ore_hammers"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:gold_mix",
+    "count": 1
+  }
+}

@@ -46,6 +46,11 @@ LANG = {
                                      "Right-click the side of a support to place a beam"),
     "item.trailcraft.steiger_hammer": ("Молоток штейгера", "Steiger's Hammer"),
     "item.trailcraft.geological_hammer": ("Геологический молоток", "Geological Hammer"),
+    "item.trailcraft.copper_hammer": ("Медный молоток", "Copper Hammer"),
+    "item.trailcraft.bronze_hammer": ("Бронзовый молоток", "Bronze Hammer"),
+    "item.trailcraft.iron_hammer": ("Железный молоток", "Iron Hammer"),
+    "item.trailcraft.hammer.desc": ("Дробит кусок руды в чистую шихту (остаётся в сетке, теряет прочность)",
+                                    "Crushes an ore chunk into pure mix (stays in the grid, loses durability)"),
     "item.trailcraft.geological_hammer.desc": ("ПКМ по блоку — какой руды больше всего в %s блоках вокруг",
                                                "Right-click a block: which ore is most common within %s blocks"),
     "item.trailcraft.geological_hammer.found": ("%s: %s", "%s: %s"),
@@ -244,6 +249,30 @@ def geological_hammer():
         "result": {"id": f"{NS}:geological_hammer", "count": 1}})
 
 
+def metal_hammers():
+    """Молотки из металла: тот же черенок, головка в цвет слитка. Ими дробят куски руды в чистую шихту
+    (каменным — только самородки)."""
+    arms = {
+        "copper_hammer": ((58, 30, 18, 255), (140, 74, 40, 255), (196, 110, 62, 255), (236, 160, 110, 255),
+                          {"item": "minecraft:copper_ingot"}),
+        "bronze_hammer": ((46, 30, 12, 255), (132, 92, 40, 255), (190, 140, 62, 255), (232, 190, 110, 255),
+                          {"tag": "c:ingots/bronze"}),
+        "iron_hammer": ((30, 30, 34, 255), (92, 94, 102, 255), (150, 152, 158, 255), (208, 210, 214, 255),
+                        {"item": "minecraft:iron_ingot"}),
+    }
+    for name, (outline, dark, mid, light, ingot) in arms.items():
+        head = {}
+        head_band(head, -2, 3, mid, dark, light)
+        head_face(head, 5, 3, 2, 2, dark, mid, light)
+        head.pop((12, 10))
+        head[(12, 9)] = dark
+        hammer_texture(name, head, outline)
+        write(f"data/{NS}/recipe/{name}.json", {
+            "type": "minecraft:crafting_shaped", "category": "equipment",
+            "key": {"I": ingot, "S": {"item": f"{NS}:stick_processed"}}, "pattern": ["I", "S"],
+            "result": {"id": f"{NS}:{name}", "count": 1}})
+
+
 def tags():
     tag("block", f"{NS}:can_collapse", [f"#{NS}:rocks", f"#{NS}:ores"])
     tag("block", f"{NS}:collapsible_soils",
@@ -264,6 +293,7 @@ if __name__ == "__main__":
     materials()
     steiger_hammer()
     geological_hammer()
+    metal_hammers()
     tags()
     lang()
     print("ok")

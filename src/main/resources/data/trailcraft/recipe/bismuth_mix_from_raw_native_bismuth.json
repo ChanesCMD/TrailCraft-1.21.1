@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "trailcraft:raw_native_bismuth"
+    },
+    {
+      "tag": "trailcraft:ore_hammers"
+    }
+  ],
+  "result": {
+    "id": "trailcraft:bismuth_mix",
+    "count": 1
+  }
+}

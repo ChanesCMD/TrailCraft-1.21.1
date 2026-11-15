@@ -107,12 +107,12 @@ REMOVED_BIOMES = ["zheltozem_forest", "acacia_grove", "palm_grove"]
 PLAINS_TREES = [
     ("lone_lilacs", {"young_lilac": 1}, ("rarity", 16)),
     ("lone_pussy_willows", {"pussy_willow": 1}, ("rarity", 16)),
-    ("lone_apples", {"apple": 1}, ("rarity", 20)),
+    ("lone_apples", {"apple": 1}, ("rarity", 60)),
     # остальные фруктовые деревья (на амадзу, gen_wood.py; плоды — gen_fruit_trees.py) — только на своих равнинах
-    ("lone_pears", {"pear": 1}, ("rarity", 30), ["burozem_plains", "chernozem_plains"]),
-    ("lone_plums", {"plum": 1}, ("rarity", 30), ["burozem_plains", "chernozem_plains"]),
-    ("lone_cherries", {"cherry": 1}, ("rarity", 30), ["chernozem_plains"]),
-    ("lone_apricots", {"apricot": 1}, ("rarity", 30), ["zheltozem_plains"]),
+    ("lone_pears", {"pear": 1}, ("rarity", 90), ["burozem_plains", "chernozem_plains"]),
+    ("lone_plums", {"plum": 1}, ("rarity", 90), ["burozem_plains", "chernozem_plains"]),
+    ("lone_cherries", {"cherry": 1}, ("rarity", 90), ["chernozem_plains"]),
+    ("lone_apricots", {"apricot": 1}, ("rarity", 90), ["zheltozem_plains"]),
 ]
 PLAINS = ["burozem_plains", "chernozem_plains", "zheltozem_plains"]
 
