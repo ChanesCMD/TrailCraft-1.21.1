@@ -45,6 +45,11 @@ public final class ModComponents {
             COMPONENTS.registerComponentType("molten", builder -> builder.persistent(Molten.CODEC)
                     .networkSynchronized(Molten.STREAM_CODEC));
 
+    /** Нагрев кувшина в процентах (0..JugItem.MAX_HEAT); нет компонента — кувшин холодный. */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> HEAT =
+            COMPONENTS.registerComponentType("heat", builder -> builder.persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.VAR_INT));
+
     /** Какой металл залит в форму (нет компонента — форма пустая). */
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Metal>> CAST =
             COMPONENTS.registerComponentType("cast", builder -> builder.persistent(Metal.CODEC)

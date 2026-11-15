@@ -21,9 +21,9 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Малая сыродутная печь. Слоты: 0 — кувшин, 1 — топливо (#trailcraft:bloomery_fuels: древесный и каменный уголь, торф).
- * Пока в кувшине есть что плавить (Smelting.melt), печь жжёт топливо (одно на FUEL_TICKS) и копит прогресс; готово —
- * содержимое кувшина становится жидким металлом (Molten) в нём же, кувшин остаётся в печи. Без огня прогресс понемногу
- * остывает.
+ * Выхода у печи нет: пока горит топливо, она просто греет кувшин (компонент trailcraft:heat, 1 % за HEAT_EVERY тиков
+ * до MAX_HEAT). Как только нагрев дошёл до MELT_HEAT, металл в кувшине становится жидким (Molten) — дальше его льют
+ * по формам в окне кувшина, пока он не остыл. Без огня кувшин в печи остывает сам.
  */
 public class BloomeryBlockEntity extends BlockEntity implements MenuProvider {
     public static final int JUG = 0, FUEL = 1, SLOTS = 2;
@@ -50,17 +50,16 @@ public class BloomeryBlockEntity extends BlockEntity implements MenuProvider {
             setChanged();
         }
     };
-    private int burn, burnMax, progress, total;
+    private int burn, burnMax;
 
-    /** Для окна: огонь, его максимум, прогресс, сколько всего нужно. */
+    /** Для окна: огонь, его максимум и нагрев кувшина в процентах. */
     private final ContainerData data = new ContainerData() {
         @Override
         public int get(int index) {
             return switch (index) {
                 case 0 -> burn;
                 case 1 -> burnMax;
-                case 2 -> progress;
-                default -> total;
+                default -> JugItem.heat(items.getStackInSlot(JUG));
             };
         }
 
@@ -69,14 +68,14 @@ public class BloomeryBlockEntity extends BlockEntity implements MenuProvider {
             switch (index) {
                 case 0 -> burn = value;
                 case 1 -> burnMax = value;
-                case 2 -> progress = value;
-                default -> total = value;
+                default -> {
+                }
             }
         }
 
         @Override
         public int getCount() {
-            return 4;
+            return 3;
         }
     };
 
@@ -97,37 +96,39 @@ public class BloomeryBlockEntity extends BlockEntity implements MenuProvider {
         if (burn > 0) {
             burn--;
         }
-        ItemStack jug = items.getStackInSlot(JUG);
-        Molten result = jug.isEmpty() || JugItem.molten(jug) != null ? null : Smelting.melt(JugItem.contents(jug)).orElse(null);
-        boolean work = result != null;
-        if (work) {
-            if (burn == 0) {
+        ItemStack jugStack = items.getStackInSlot(JUG);
+        boolean changed = false;
+        if (!jugStack.isEmpty()) {
+            int heat = JugItem.heat(jugStack);
+            // топливо нужно только пока кувшин не раскалён
+            if (burn == 0 && heat < JugItem.MAX_HEAT) {
                 ItemStack fuel = items.getStackInSlot(FUEL);
                 if (!fuel.isEmpty()) {
                     burn = burnMax = fuel.is(ModBlocks.PEAT.get().asItem()) ? PEAT_TICKS : FUEL_TICKS;
                     items.extractItem(FUEL, 1, false);
                 }
             }
-            total = Smelting.time(result.amount() / Smelting.UNIT);
-            if (burn > 0) {
-                if (++progress >= total) {
-                    ItemStack melted = jug.copy();
-                    JugItem.clear(melted);
-                    JugItem.setMolten(melted, result);
-                    items.setStackInSlot(JUG, melted);
-                    progress = 0;
-                }
-            } else {
-                progress = Math.max(0, progress - 2);
+            boolean burning = burn > 0;
+            boolean heating = burning && heat < JugItem.MAX_HEAT && level.getGameTime() % JugItem.HEAT_EVERY == 0;
+            boolean cooling = !burning && heat > 0 && level.getGameTime() % JugItem.COOL_EVERY == 0;
+            if (heating || cooling) {
+                JugItem.setHeat(jugStack, heat + (heating ? 1 : -1));
+                changed = true;
             }
-        } else {
-            progress = 0;
-            total = 0;
+            // раскалился — металл в кувшине становится жидким
+            if (JugItem.heat(jugStack) >= JugItem.MELT_HEAT && JugItem.molten(jugStack) == null) {
+                Molten result = Smelting.melt(JugItem.contents(jugStack)).orElse(null);
+                if (result != null) {
+                    JugItem.clear(jugStack);
+                    JugItem.setMolten(jugStack, result);
+                    changed = true;
+                }
+            }
         }
         if (wasLit != burn > 0) {
             level.setBlock(pos, state.setValue(BloomeryBlock.LIT, burn > 0), 3);
         }
-        if (work || wasLit) {
+        if (changed || wasLit || burn > 0) {
             setChanged();
         }
     }
@@ -138,7 +139,6 @@ public class BloomeryBlockEntity extends BlockEntity implements MenuProvider {
         tag.put("items", items.serializeNBT(registries));
         tag.putInt("burn", burn);
         tag.putInt("burn_max", burnMax);
-        tag.putInt("progress", progress);
     }
 
     @Override
@@ -147,7 +147,6 @@ public class BloomeryBlockEntity extends BlockEntity implements MenuProvider {
         items.deserializeNBT(registries, tag.getCompound("items"));
         burn = tag.getInt("burn");
         burnMax = tag.getInt("burn_max");
-        progress = tag.getInt("progress");
     }
 
     @Override

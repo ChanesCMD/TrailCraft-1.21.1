@@ -8,9 +8,11 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -22,12 +24,16 @@ import java.util.List;
 
 /**
  * Кувшин (как малый сосуд в TerraFirmaCraft): ПКМ в правой руке — окно на 4 слота, туда кладут куски руды, шихту и
- * слитки (Smelting.melts, по 16) и мелочь — палки, солому, кирпичи, комки глины… (тэг JUG_ITEMS, по 64). Кувшин только
- * с металлами плавят в малой сыродутной печи — в нём остаётся жидкий металл (Molten, компонент trailcraft:molten),
- * его разливают по формам в окне кувшина. Содержимое — в компоненте trailcraft:contents.
+ * слитки (Smelting.melts, по 16) и мелочь — палки, солому, кирпичи, комки глины… (тэг JUG_ITEMS, по 64).
+ * В малой сыродутной печи кувшин нагревается (компонент trailcraft:heat, 0..MAX_HEAT): с MELT_HEAT металл в нём
+ * становится жидким (Molten, компонент trailcraft:molten) и его можно разлить по формам, пока кувшин не остыл.
+ * На воле кувшин остывает сам; содержимое — в компоненте trailcraft:contents.
  */
 public class JugItem extends Item {
     public static final int SLOTS = 4, SLOT_LIMIT = 16, SMALL_LIMIT = 64;
+    /** Нагрев: полный, с которого металл жидкий и льётся, и как часто печь греет (тиков на 1 %) и кувшин остывает. */
+    public static final int MAX_HEAT = 100, MELT_HEAT = 80;
+    public static final int HEAT_EVERY = 10, COOL_EVERY = 20;
     public static final TagKey<Item> JUG_ITEMS = TagKey.create(Registries.ITEM,
             ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "jug_items"));
 
@@ -73,11 +79,50 @@ public class JugItem extends Item {
         }
     }
 
+    /** Нагрев кувшина в процентах, 0 — холодный. */
+    public static int heat(ItemStack jug) {
+        Integer heat = jug.get(ModComponents.HEAT.get());
+        return heat == null ? 0 : heat;
+    }
+
+    public static void setHeat(ItemStack jug, int heat) {
+        heat = Mth.clamp(heat, 0, MAX_HEAT);
+        if (heat <= 0) {
+            jug.remove(ModComponents.HEAT.get());
+        } else {
+            jug.set(ModComponents.HEAT.get(), heat);
+        }
+    }
+
+    /** Жидкость достаточно горячая, чтобы литься в форму. */
+    public static boolean canPour(ItemStack jug) {
+        return heat(jug) >= MELT_HEAT;
+    }
+
+    /** Без печи кувшин остывает сам: 1 % в секунду. */
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
+        int heat = heat(stack);
+        if (heat <= 0 || level.isClientSide || level.getGameTime() % COOL_EVERY != 0) {
+            return;
+        }
+        setHeat(stack, heat - 1);
+    }
+
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         Molten molten = molten(stack);
         if (molten != null) {
             tooltip.add(molten.describe().withStyle(ChatFormatting.GOLD));
+        }
+        int heat = heat(stack);
+        if (heat > 0) {
+            tooltip.add(Component.translatable("tooltip.trailcraft.jug.heat", heat)
+                    .withStyle(canPour(stack) ? ChatFormatting.GOLD : ChatFormatting.GRAY));
+            if (molten != null && !canPour(stack)) {
+                tooltip.add(Component.translatable("tooltip.trailcraft.jug.cold", MELT_HEAT)
+                        .withStyle(ChatFormatting.GRAY));
+            }
         }
     }
 

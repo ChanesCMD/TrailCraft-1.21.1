@@ -107,8 +107,8 @@ public final class ModSmelting {
 
     static {
         for (Mold mold : Mold.values()) {
-            UNFIRED_MOLDS.put(mold, ModItems.ITEMS.registerItem("unfired_" + mold.id + "_mold", p -> new Item(p.stacksTo(1))));
-            MOLDS.put(mold, ModItems.ITEMS.registerItem(mold.id + "_mold", p -> new MoldItem(mold, p.stacksTo(1))));
+            UNFIRED_MOLDS.put(mold, ModItems.ITEMS.registerItem("unfired_" + mold.id + "_mold", p -> new Item(p.stacksTo(16))));
+            MOLDS.put(mold, ModItems.ITEMS.registerItem(mold.id + "_mold", p -> new MoldItem(mold, p.stacksTo(16))));
         }
         for (String material : CAST_MATERIALS) {
             registerHeads(material, List.of(Mold.values()));

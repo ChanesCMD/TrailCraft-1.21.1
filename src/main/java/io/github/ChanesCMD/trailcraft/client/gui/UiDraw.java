@@ -1,6 +1,7 @@
 package io.github.ChanesCMD.trailcraft.client.gui;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.util.Mth;
 
 /** Рисование в ванильном стиле без текстур: панели, рамки слотов, кружки-кнопки. */
 public final class UiDraw {
@@ -73,6 +74,48 @@ public final class UiDraw {
         for (int i = 0; i < 8; i++) {
             g.fill(x + 14 + i, y + i, x + 15 + i, y + 15 - i, GREY);
         }
+    }
+
+    /** Полоска нагрева: холодная — синевато-серая, горячая — оранжевая; белая метка — порог литья (mark долей). */
+    public static void heatBar(GuiGraphics g, int x, int y, int w, int h, float value, float mark) {
+        frame(g, x, y, w, h, 0xFF373737, 0xFFFFFFFF, 0xFF262626);
+        int room = Math.max(0, w - 2);
+        int fill = Math.round(room * Mth.clamp(value, 0f, 1f));
+        if (fill > 0) {
+            g.fill(x + 1, y + 1, x + 1 + fill, y + h - 1, heatColor(value));
+        }
+        if (mark > 0f && mark < 1f) {
+            int mx = x + 1 + Math.round(room * mark);
+            g.fill(mx, y + 1, mx + 1, y + h - 1, 0xFFFFFFFF);
+        }
+    }
+
+    /** Та же полоска, но растёт снизу вверх. */
+    public static void heatBarVertical(GuiGraphics g, int x, int y, int w, int h, float value, float mark) {
+        frame(g, x, y, w, h, 0xFF373737, 0xFFFFFFFF, 0xFF262626);
+        int room = Math.max(0, h - 2);
+        int fill = Math.round(room * Mth.clamp(value, 0f, 1f));
+        if (fill > 0) {
+            g.fill(x + 1, y + h - 1 - fill, x + w - 1, y + h - 1, heatColor(value));
+        }
+        if (mark > 0f && mark < 1f) {
+            int my = y + h - 1 - Math.round(room * mark);
+            g.fill(x + 1, my, x + w - 1, my + 1, 0xFFFFFFFF);
+        }
+    }
+
+    /** Цвет нагрева: синевато-серый → оранжевый → жёлто-белый. */
+    public static int heatColor(float value) {
+        float v = Mth.clamp(value, 0f, 1f);
+        return v < 0.5f ? mix(0xFF6E7C8C, 0xFFE8701A, v / 0.5f)
+                : mix(0xFFE8701A, 0xFFFFE98A, (v - 0.5f) / 0.5f);
+    }
+
+    private static int mix(int a, int b, float t) {
+        int r = Math.round(((a >> 16) & 0xFF) + ((((b >> 16) & 0xFF) - ((a >> 16) & 0xFF)) * t));
+        int gr = Math.round(((a >> 8) & 0xFF) + ((((b >> 8) & 0xFF) - ((a >> 8) & 0xFF)) * t));
+        int bl = Math.round((a & 0xFF) + (((b & 0xFF) - (a & 0xFF)) * t));
+        return 0xFF000000 | (r << 16) | (gr << 8) | bl;
     }
 
     /** Пиксельный замок 8×10: у открытого дужка сдвинута вправо, у закрытого — по центру. */

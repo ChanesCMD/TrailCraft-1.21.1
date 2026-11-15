@@ -41,13 +41,26 @@ public class MoldItem extends Item {
         }
         if (!level.isClientSide) {
             ItemStack result = mold.result(metal);
-            stack.remove(ModComponents.CAST.get());
-            if (!player.getInventory().add(result)) {
-                player.drop(result, false);
+            if (stack.getCount() > 1) {
+                // формы стакаются: пустеет ровно одна, остальные остаются залитыми
+                ItemStack empty = stack.copyWithCount(1);
+                empty.remove(ModComponents.CAST.get());
+                stack.shrink(1);
+                give(player, result);
+                give(player, empty);
+            } else {
+                stack.remove(ModComponents.CAST.get());
+                give(player, result);
             }
             level.playSound(null, player.blockPosition(), SoundEvents.DECORATED_POT_BREAK, SoundSource.PLAYERS, 0.6f, 1.4f);
         }
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
+    }
+
+    private static void give(Player player, ItemStack stack) {
+        if (!player.getInventory().add(stack)) {
+            player.drop(stack, false);
+        }
     }
 
     @Override

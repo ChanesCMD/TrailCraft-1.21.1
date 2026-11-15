@@ -20,6 +20,8 @@ import net.minecraft.world.item.ItemStack;
  */
 public class JugMenu extends AbstractContainerMenu {
     public static final int WIDTH = 176, HEIGHT = 112, JUG_Y = 20, MOLD_X = 80, MOLD_Y = 56, HOTBAR_Y = 86;
+    /** Полоска нагрева справа от слотов кувшина. */
+    public static final int HEAT_X = 132, HEAT_Y = 20, HEAT_W = 6, HEAT_H = 20;
     /** Номера слотов меню: 0..3 — кувшин, MOLD — форма, дальше хотбар. */
     public static final int MOLD = JugItem.SLOTS, HOTBAR = MOLD + 1;
     private final Inventory inventory;
@@ -36,7 +38,13 @@ public class JugMenu extends AbstractContainerMenu {
         addSlot(new Slot(mold, 0, MOLD_X, MOLD_Y) {
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return stack.getItem() instanceof MoldItem;
+                // стакан форм кладётся по одной: заливается ровно та, что в слоте
+                return stack.getItem() instanceof MoldItem && MoldItem.cast(stack) == null;
+            }
+
+            @Override
+            public int getMaxStackSize() {
+                return 1;
             }
 
             @Override
@@ -71,14 +79,25 @@ public class JugMenu extends AbstractContainerMenu {
             return;
         }
         Molten molten = JugItem.molten(jug);
-        if (molten == null || molten.amount() < Smelting.UNIT || item.mold.result(molten.metal()).isEmpty()) {
+        if (molten == null || molten.amount() < Smelting.UNIT || item.mold.result(molten.metal()).isEmpty()
+                || !JugItem.canPour(jug)) {
             return;
         }
-        ItemStack filled = form.copy();
+        ItemStack filled = form.copyWithCount(1);
         filled.set(ModComponents.CAST.get(), molten.metal());
         JugItem.setMolten(jug, new Molten(molten.metal(), molten.amount() - Smelting.UNIT));
         mold.setItem(0, filled);
         player.level().playSound(null, player.blockPosition(), SoundEvents.LAVA_EXTINGUISH, SoundSource.PLAYERS, 0.4f, 1.6f);
+    }
+
+    /** Нагрев кувшина от 0 до 1 (для полоски в окне). */
+    public float heat() {
+        return JugItem.heat(inventory.player.getMainHandItem()) / (float) JugItem.MAX_HEAT;
+    }
+
+    /** Достаточно ли горячий кувшин, чтобы лить. */
+    public boolean canPour() {
+        return JugItem.canPour(inventory.player.getMainHandItem());
     }
 
     /** Содержимое кувшина, как его видит окно (для подсказки «что выплавится»). */
