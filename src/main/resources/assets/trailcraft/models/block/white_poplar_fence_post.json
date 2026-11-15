@@ -2,7 +2,7 @@
   "ambientocclusion": false,
   "textures": {
     "particle": "#texture",
-    "texture": "trailcraft:block/white_poplar_planks"
+    "texture": "trailcraft:block/white_poplar_fence_post"
   },
   "elements": [
     {

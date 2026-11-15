@@ -2,7 +2,7 @@
   "ambientocclusion": false,
   "textures": {
     "particle": "#texture",
-    "texture": "trailcraft:block/lilac_planks"
+    "texture": "trailcraft:block/lilac_fence_post"
   },
   "elements": [
     {

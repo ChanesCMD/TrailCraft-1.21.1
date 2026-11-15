@@ -2,7 +2,7 @@
   "ambientocclusion": false,
   "textures": {
     "particle": "#texture",
-    "texture": "trailcraft:block/maple_planks"
+    "texture": "trailcraft:block/maple_fence_post"
   },
   "elements": [
     {

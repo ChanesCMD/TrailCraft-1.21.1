@@ -2,7 +2,7 @@
   "ambientocclusion": false,
   "textures": {
     "particle": "#texture",
-    "texture": "trailcraft:block/chestnut_planks"
+    "texture": "trailcraft:block/chestnut_fence_post"
   },
   "elements": [
     {

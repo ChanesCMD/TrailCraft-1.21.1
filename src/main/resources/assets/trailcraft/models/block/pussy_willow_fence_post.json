@@ -2,7 +2,7 @@
   "ambientocclusion": false,
   "textures": {
     "particle": "#texture",
-    "texture": "trailcraft:block/pussy_willow_planks"
+    "texture": "trailcraft:block/pussy_willow_fence_post"
   },
   "elements": [
     {

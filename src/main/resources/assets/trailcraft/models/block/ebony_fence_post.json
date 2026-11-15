@@ -2,7 +2,7 @@
   "ambientocclusion": false,
   "textures": {
     "particle": "#texture",
-    "texture": "trailcraft:block/ebony_planks"
+    "texture": "trailcraft:block/ebony_fence_post"
   },
   "elements": [
     {

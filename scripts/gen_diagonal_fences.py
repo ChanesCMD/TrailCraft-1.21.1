@@ -20,19 +20,14 @@ def write(path, data):
         f.write("\n")
 
 
-def post(side_uv):
-    """Столбик у дальнего конца диагонали, целиком внутри своего блока: за границу он не выходит, поэтому\n    не накладывается на текстуры соседних блоков и не даёт тёмных полос."""
-    return {
-        "from": [14, 0, 14], "to": [18, 17, 18],
-        "faces": {
-            "down": {"uv": side_uv, "texture": "#texture", "shade": False},
-            "up": {"uv": side_uv, "texture": "#texture", "shade": False},
-            "north": {"uv": side_uv, "texture": "#texture", "shade": False},
-            "south": {"uv": side_uv, "texture": "#texture", "shade": False},
-            "west": {"uv": side_uv, "texture": "#texture", "shade": False},
-            "east": {"uv": side_uv, "texture": "#texture", "shade": False},
-        },
-    }
+def post():
+    """Столбик на дальнем конце диагонали — с текстурой и UV как у основного столба забора."""
+    faces = {}
+    for name in ("down", "up"):
+        faces[name] = {"uv": [6, 6, 10, 10], "texture": "#post", "shade": False}
+    for name in ("north", "south", "west", "east"):
+        faces[name] = {"uv": [6, 0, 10, 16], "texture": "#post", "shade": False}
+    return {"from": [14, 0, 14], "to": [18, 17, 18], "faces": faces}
 
 
 def rail(y0, y1, side_uv, end=19.32):
@@ -68,8 +63,8 @@ def main():
         write(os.path.join(MODELS, diagonal + "_post.json"), {
             "parent": "minecraft:block/block",
             "ambientocclusion": False,
-            "textures": {"particle": texture, "texture": texture},
-            "elements": rails + [post([4, 4, 12, 12])],
+            "textures": {"particle": texture, "texture": texture, "post": f"{NS}:block/{wood}_fence_post"},
+            "elements": rails + [post()],
         })
         path = os.path.join(STATES, name)
         data = read(path)

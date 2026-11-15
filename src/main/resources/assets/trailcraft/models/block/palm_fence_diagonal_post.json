@@ -3,7 +3,8 @@
   "ambientocclusion": false,
   "textures": {
     "particle": "trailcraft:block/palm_planks",
-    "texture": "trailcraft:block/palm_planks"
+    "texture": "trailcraft:block/palm_planks",
+    "post": "trailcraft:block/palm_fence_post"
   },
   "elements": [
     {
@@ -168,62 +169,62 @@
       "faces": {
         "down": {
           "uv": [
-            4,
-            4,
-            12,
-            12
+            6,
+            6,
+            10,
+            10
           ],
-          "texture": "#texture",
+          "texture": "#post",
           "shade": false
         },
         "up": {
           "uv": [
-            4,
-            4,
-            12,
-            12
+            6,
+            6,
+            10,
+            10
           ],
-          "texture": "#texture",
+          "texture": "#post",
           "shade": false
         },
         "north": {
           "uv": [
-            4,
-            4,
-            12,
-            12
+            6,
+            0,
+            10,
+            16
           ],
-          "texture": "#texture",
+          "texture": "#post",
           "shade": false
         },
         "south": {
           "uv": [
-            4,
-            4,
-            12,
-            12
+            6,
+            0,
+            10,
+            16
           ],
-          "texture": "#texture",
+          "texture": "#post",
           "shade": false
         },
         "west": {
           "uv": [
-            4,
-            4,
-            12,
-            12
+            6,
+            0,
+            10,
+            16
           ],
-          "texture": "#texture",
+          "texture": "#post",
           "shade": false
         },
         "east": {
           "uv": [
-            4,
-            4,
-            12,
-            12
+            6,
+            0,
+            10,
+            16
           ],
-          "texture": "#texture",
+          "texture": "#post",
           "shade": false
         }
       }

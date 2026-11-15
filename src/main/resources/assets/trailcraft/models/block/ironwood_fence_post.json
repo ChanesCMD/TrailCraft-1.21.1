@@ -2,7 +2,7 @@
   "ambientocclusion": false,
   "textures": {
     "particle": "#texture",
-    "texture": "trailcraft:block/ironwood_planks"
+    "texture": "trailcraft:block/ironwood_fence_post"
   },
   "elements": [
     {

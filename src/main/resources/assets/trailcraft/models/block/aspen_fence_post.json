@@ -2,7 +2,7 @@
   "ambientocclusion": false,
   "textures": {
     "particle": "#texture",
-    "texture": "trailcraft:block/aspen_planks"
+    "texture": "trailcraft:block/aspen_fence_post"
   },
   "elements": [
     {

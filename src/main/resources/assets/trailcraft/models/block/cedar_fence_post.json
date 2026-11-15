@@ -2,7 +2,7 @@
   "ambientocclusion": false,
   "textures": {
     "particle": "#texture",
-    "texture": "trailcraft:block/cedar_planks"
+    "texture": "trailcraft:block/cedar_fence_post"
   },
   "elements": [
     {
