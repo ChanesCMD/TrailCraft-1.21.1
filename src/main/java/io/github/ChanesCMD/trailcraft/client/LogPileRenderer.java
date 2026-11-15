@@ -88,8 +88,8 @@ public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> 
 
     /**
      * Бревно: коробка {@code size}×{@code size}×16 пикселей вдоль Z. Бока — кора: по ширине 8 пикселей текстуры у
-     * толстого и 4 у тонкого, по длине — 32 (две половины по 16, текстура повторяется и не вылезает за спрайт). Торцы —
-     * кусок текстуры торца: 8 пикселей у толстого бревна, 4 у тонкого. Спрайты берутся по оси бревна (не по мировой оси Y), грани
+     * толстого и 4 у тонкого, по длине — 32 (две половины по 16, текстура повторяется и не вылезает за спрайт). Торцы — вся
+     * текстура торца с корой по краю, сжатая в размер бревна. Спрайты берутся по оси бревна (не по мировой оси Y), грани
      * рисуются с двух сторон — от намотки вершин не зависим.
      */
     private void renderLog(BlockState log, PoseStack pose, MultiBufferSource buffers, int light, int overlay,
@@ -130,10 +130,10 @@ public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> 
             box(vc, p, new float[][]{{x1, y0, z}, {x1, y1, z}, {x1, y1, z2}, {x1, y0, z2}}, side, texelWidth, lengthTexels,
                     light, overlay, 0.6f, 1, 0, 0);
         }
-        // торцы — кусок текстуры торца: у толстого 8 пикселей, у тонкого 4
-        box(vc, p, new float[][]{{x0, y1, 0f}, {x1, y1, 0f}, {x1, y0, 0f}, {x0, y0, 0f}}, end, texelWidth, texelWidth,
+        // торцы — вся текстура торца (с корой по краю), сжатая в размер бревна
+        box(vc, p, new float[][]{{x0, y1, 0f}, {x1, y1, 0f}, {x1, y0, 0f}, {x0, y0, 0f}}, end, 16f, 16f,
                 light, overlay, 0.8f, 0, 0, -1);
-        box(vc, p, new float[][]{{x0, y1, 1f}, {x1, y1, 1f}, {x1, y0, 1f}, {x0, y0, 1f}}, end, texelWidth, texelWidth,
+        box(vc, p, new float[][]{{x0, y1, 1f}, {x1, y1, 1f}, {x1, y0, 1f}, {x0, y0, 1f}}, end, 16f, 16f,
                 light, overlay, 0.8f, 0, 0, 1);
     }
 
