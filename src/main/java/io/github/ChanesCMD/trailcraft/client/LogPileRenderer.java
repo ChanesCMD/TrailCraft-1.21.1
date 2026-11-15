@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,6 +26,10 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> {
     private static final float CELL = LogPileBlockEntity.CELL, MARGIN = LogPileBlockEntity.MARGIN;
+    /** Подпорки: столбик 2×2 пикселя на каждом краю, вдоль брёвен — на четверти и на трёх четвертях длины. */
+    private static final float STAKE = 2 / 16f;
+    private static final float[] STAKE_Z = {4 / 16f, 12 / 16f};
+    private static final BlockState STAKE_POST = Blocks.OAK_FENCE.defaultBlockState();
     /** Тонкое бревно занимает 6 из 16 пикселей блока, а в клетке для него — половина клетки. */
     private static final float THIN_SCALE = (CELL / 2) / (6 / 16f);
     private static final int THIN_PER_CELL = 4;
@@ -73,7 +78,27 @@ public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> 
                 pose.popPose();
             }
         }
+        renderStakes(pile, pose, buffers, light, overlay);
         pose.popPose();
+    }
+
+    /** Четыре палки по краям: чуть выше верхнего ряда брёвен (столбик забора, сжатый до 2×2 пикселей). */
+    private void renderStakes(LogPileBlockEntity pile, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
+        int top = pile.topRow();
+        if (top < 0) {
+            return;
+        }
+        float height = Math.min(1f, (top + 1) * CELL + 1 / 16f);
+        for (float edge : new float[]{STAKE / 2, 1 - STAKE / 2}) {
+            for (float z : STAKE_Z) {
+                pose.pushPose();
+                pose.translate(edge, 0, z);
+                pose.scale(STAKE / (4 / 16f), height, STAKE / (4 / 16f));  // у столбика забора сечение 4×4 пикселя
+                pose.translate(-0.5, 0, -0.5);
+                blocks.renderSingleBlock(STAKE_POST, pose, buffers, light, overlay);
+                pose.popPose();
+            }
+        }
     }
 
     /** Тонкое бревно во весь блок вдоль Z: ответвления только на север и юг. */
