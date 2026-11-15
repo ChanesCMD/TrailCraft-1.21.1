@@ -5,6 +5,7 @@ import io.github.ChanesCMD.trailcraft.client.ClientCasting;
 import io.github.ChanesCMD.trailcraft.client.ClientOres;
 import io.github.ChanesCMD.trailcraft.client.DevInstance;
 import io.github.ChanesCMD.trailcraft.client.NightDarknessEvents;
+import io.github.ChanesCMD.trailcraft.client.nightsky.NightSky;
 import net.minecraft.client.Minecraft;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.api.distmarker.Dist;
@@ -33,6 +34,8 @@ public class TrailCraftClient {
         container.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
         NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, false, NightDarknessEvents::fog);
         NeoForge.EVENT_BUS.addListener(NightDarknessEvents::overlay);
+        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.client.event.ClientTickEvent.Post event) ->
+                NightSky.tick(Minecraft.getInstance().level));
         // Только запуск из среды разработки (play.bat): у игроков этого свойства нет
         String pidFile = System.getProperty("trailcraft.pidFile");
         if (pidFile != null) {

@@ -14,6 +14,11 @@ public final class ClientConfig {
             .comment("Extra server chat channels hidden on this client.")
             .defineListAllowEmpty("hiddenChannels", List.of(), () -> "trading", value -> value instanceof String);
 
+    /** Ночное небо: свои цветные звёзды и падающие звёзды. */
+    public static final ModConfigSpec.BooleanValue NIGHT_SKY = BUILDER
+            .comment("Fancy night sky: extra coloured stars and shooting stars.")
+            .define("nightSky", true);
+
     /** Размер миникарты в пикселях интерфейса (квадрат); по умолчанию 66, один пиксель — один блок. */
     public static final int MINIMAP_MIN = 40, MINIMAP_MAX = 160, MINIMAP_DEFAULT = 66;
     public static final ModConfigSpec.IntValue MINIMAP_SIZE = BUILDER

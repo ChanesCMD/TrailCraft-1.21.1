@@ -1,6 +1,7 @@
 package io.github.ChanesCMD.trailcraft.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.math.Axis;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.MeshData;
@@ -8,9 +9,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import io.github.ChanesCMD.trailcraft.client.TreeSnow;
+import io.github.ChanesCMD.trailcraft.client.nightsky.NightSky;
 import io.github.ChanesCMD.trailcraft.client.weather.WeatherParticles;
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.CloudStatus;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
@@ -139,5 +144,22 @@ public abstract class LevelRendererMixin {
     @Inject(method = "blockChanged", at = @At("HEAD"))
     private void trailcraft$treeSnow(BlockGetter level, BlockPos pos, BlockState oldState, BlockState newState, int flags, CallbackInfo ci) {
         TreeSnow.onBlockChanged(pos, oldState, newState);
+    }
+
+    /** Свои цветные звёзды и падающие звёзды (client/nightsky/NightSky): рисуем в конце неба тем же поворотом. */
+    @Inject(method = "renderSky(Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;FLnet/minecraft/client/Camera;ZLjava/lang/Runnable;)V",
+            at = @At("TAIL"))
+    private void trailcraft$nightSky(Matrix4f frustumMatrix, Matrix4f projectionMatrix, float partialTick, Camera camera,
+                                     boolean isFoggy, Runnable skyFogSetup, CallbackInfo ci) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (isFoggy || minecraft.level == null
+                || minecraft.level.effects().skyType() != DimensionSpecialEffects.SkyType.NORMAL) {
+            return;
+        }
+        PoseStack pose = new PoseStack();
+        pose.mulPose(frustumMatrix);
+        pose.mulPose(Axis.YP.rotationDegrees(-90.0F));
+        pose.mulPose(Axis.XP.rotationDegrees(minecraft.level.getTimeOfDay(partialTick) * 360.0F));
+        NightSky.render(pose, projectionMatrix, partialTick, minecraft.level);
     }
 }
