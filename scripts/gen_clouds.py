@@ -21,19 +21,19 @@ OUT = os.path.join(ROOT, "assets", "minecraft", "textures", "environment", "clou
 # Параметры выбранного варианта: длинные, не квадратные, с нормальными промежутками.
 PARAMS = dict(
     name="29. Гряды",
-    count=8,
-    spacing=64,
-    target=0.26,
-    banks=(2, 3),
-    w=(20, 34),
-    h=(5, 8),
-    step=3,
+    count=26,
+    spacing=30,
+    target=0.22,
+    banks=(1, 3),
+    w=(8, 18),
+    h=(4, 7),
+    step=2,
     profile="flat",
     holes=0,
-    drift=2,
+    drift=1,
     crumbs=0,
     tails=0,
-    bumps=10,
+    bumps=5,
 )
 SEED = 1308
 
@@ -56,7 +56,7 @@ def snap(v, step):
 
 def far_points(rng, count, min_dist):
     pts, tries = [], 0
-    while len(pts) < count and tries < 6000:
+    while len(pts) < count and tries < 60000:
         tries += 1
         p = (rng.uniform(0, SIZE), rng.uniform(0, SIZE))
         if all(math.hypot(min(abs(p[0] - q[0]), SIZE - abs(p[0] - q[0])),
@@ -165,7 +165,7 @@ def shrink(mask, factor=2):
 
 def main():
     mask = fit(PARAMS, SEED, PARAMS["target"])
-    mask = shrink(mask, 2)
+    # без сжатия: узор уже нарисован в половинном масштабе, поэтому и без 4 повторов
     rgba = np.dstack([np.full((SIZE, SIZE), 255, np.uint8)] * 3 +
                      [(mask * 255).astype(np.uint8)])
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
