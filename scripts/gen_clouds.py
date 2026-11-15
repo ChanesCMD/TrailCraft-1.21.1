@@ -1,4 +1,4 @@
-"""Плотные средние облачные массивы без дырок."""
+"""Диагональные ступенчатые облачные полосы."""
 import os
 import random
 
@@ -11,27 +11,29 @@ rng = random.Random(20261115)
 img = Image.new("RGBA", (256, 256), (0, 0, 0, 0))
 draw = ImageDraw.Draw(img)
 WHITE = (255, 255, 255, 255)
-CELL = 16
 
-for cy in range(0, 256, CELL):
-    for cx in range(0, 256, CELL):
-        if rng.random() > 0.86:
-            continue
-        w = rng.randint(9, 15)
-        h = rng.randint(5, 10)
-        x = cx + rng.randint(0, CELL - w)
-        y = cy + rng.randint(0, CELL - h)
-        draw.rectangle((x, y, x + w, y + h), fill=WHITE)
-        # ступенька, но без дырок внутри
-        if rng.random() < 0.5:
-            draw.rectangle((x + 2, y - 2, x + w - 2, y), fill=WHITE)
-        if rng.random() < 0.35:
-            draw.rectangle((x + w, y + 2, x + w + 2, y + h - 2), fill=WHITE)
 
-# Немного более длинных полос поверх сетки.
-for _ in range(26):
-    x, y = rng.randint(0, 240), rng.randint(0, 245)
-    draw.rectangle((x, y, x + rng.randint(16, 34), y + rng.randint(3, 6)), fill=WHITE)
+def band(x, y, dx, dy, width):
+    draw.line([(x - dx * 2, y - dy * 2), (x + dx, y + dy)], fill=WHITE, width=width)
+    # короткие ответвления, чтобы silhouette был рваным
+    if rng.random() < 0.55:
+        draw.line([(x, y), (x + rng.randint(18, 50), y + rng.randint(-18, 18))], fill=WHITE,
+                  width=max(2, width // 2))
+
+
+# Диагонали в обе стороны.
+for i in range(12):
+    y = -20 + i * 24 + rng.randint(-5, 5)
+    band(rng.randint(0, 90), y, rng.randint(160, 260), rng.randint(110, 190), rng.randint(6, 13))
+for i in range(8):
+    x = -10 + i * 34 + rng.randint(-6, 6)
+    band(x, rng.randint(0, 70), rng.randint(90, 170), rng.randint(130, 220), rng.randint(5, 11))
+
+# Немного коротких поперечных клочков.
+for _ in range(20):
+    x, y = rng.randint(0, 240), rng.randint(0, 240)
+    draw.line([(x, y), (x + rng.randint(8, 26), y + rng.randint(-8, 8))], fill=WHITE,
+              width=rng.randint(2, 5))
 
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 img.save(OUT)
