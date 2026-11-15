@@ -2,7 +2,8 @@
 
 Ванильная вода имеет альфу 180 из 255 (около 0,71) — сквозь неё слишком хорошо видно дно.
 Скрипт берёт ванильные water_still и water_flow и поднимает альфу до ALPHA, цвет не трогает.
-Файлы кладутся в assets/minecraft/textures/block, поэтому перекрывают ванильные.
+Рядом кладётся ванильный .mcmeta: без него игра считает текстуру статичной и показывает
+всю полосу кадров сжатой в один блок.
 
 Запуск из корня проекта:  python scripts/gen_water.py   (нужен Pillow)
 """
@@ -33,6 +34,10 @@ def main():
                 r, g, b, a = px[x, y]
                 px[x, y] = (r, g, b, ALPHA if a else 0)
         im.save(os.path.join(DST, name + ".png"))
+        # без .mcmeta в том же пакете анимация не работает — текстура показывается одним кадром
+        mcmeta = jar.read(f"assets/minecraft/textures/block/{name}.png.mcmeta").decode("utf-8")
+        with open(os.path.join(DST, name + ".png.mcmeta"), "w", encoding="utf-8", newline="\n") as f:
+            f.write(mcmeta)
     print("ok")
 
 
