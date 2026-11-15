@@ -35,11 +35,11 @@ import org.joml.Vector3f;
  */
 public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> {
     private static final float CELL = LogPileBlockEntity.CELL, MARGIN = LogPileBlockEntity.MARGIN;
-    /** Подпорки: столбик 1 пиксель толщиной и в два блока высотой (из них один — над поленницей). */
-    private static final float STAKE = 1 / 16f, STAKE_HEIGHT = 2f;
-    /** Палки стоят по углам блока: по краям (поперёк брёвен) и у торцов, наполовину выступая за блок. */
+    /** Подпорки: палка 1 пиксель толщиной и в один блок высотой (текстура столбика не растягивается). */
+    private static final float STAKE = 1 / 16f, STAKE_HEIGHT = 1f;
+    /** Палки стоят по краям (поперёк брёвен) с отступом от торцов на четверть длины. */
     private static final float[] STAKE_X = {0f, 1f};
-    private static final float[] STAKE_Z = {STAKE / 2, 1 - STAKE / 2};
+    private static final float[] STAKE_Z = {4 / 16f, 12 / 16f};
     private static final BlockState STAKE_POST = Blocks.OAK_FENCE.defaultBlockState();
     /** Тонкое бревно занимает 6 из 16 пикселей блока, а в клетке для него — половина клетки. */
     private static final float THIN_SCALE = (CELL / 2) / (6 / 16f);
