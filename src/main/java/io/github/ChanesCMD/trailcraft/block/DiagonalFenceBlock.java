@@ -138,22 +138,22 @@ public class DiagonalFenceBlock extends FenceBlock {
     }
 
     /**
-     * Коллизия и выделение диагонали — одна полоса шириной 4 пикселя от столба к углу (три коробки лесенкой),
-     * у самого столба форма остаётся обычной, заборной.
+     * Коллизия и выделение диагонали — цепочка из двух коробок 4×4 пикселя, стоящих по диагонали и касающихся
+     * углами (как на схеме автора): от столба к промежуточному столбику на стыке.
      */
     private static final VoxelShape[] DIAGONAL_SHAPES = {
-            beam(1, 1),
-            beam(-1, 1),
-            beam(1, -1),
-            beam(-1, -1),
+            chain(1, 1),
+            chain(-1, 1),
+            chain(1, -1),
+            chain(-1, -1),
     };
 
-    /** Полоса 4 пикселя шириной по диагонали к углу (sx, sz — в какую сторону идёт соединение). */
-    private static VoxelShape beam(int sx, int sz) {
+    /** Две коробки 4×4 по диагонали к углу (sx, sz — в какую сторону идёт соединение). */
+    private static VoxelShape chain(int sx, int sz) {
         VoxelShape shape = Shapes.empty();
-        for (int step = 0; step < 3; step++) {
-            int a = 8 + sx * step * 2, b = 8 - sz * step * 2;
-            int a2 = a + sx * 4, b2 = b - sz * 4;
+        for (int step = 0; step < 2; step++) {
+            int a = 8 + sx * step * 4, b = 8 + sz * step * 4;
+            int a2 = a + sx * 4, b2 = b + sz * 4;
             shape = Shapes.or(shape, Block.box(Math.min(a, a2), 0, Math.min(b, b2),
                     Math.max(a, a2), 16, Math.max(b, b2)));
         }

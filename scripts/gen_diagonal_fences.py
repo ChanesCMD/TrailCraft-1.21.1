@@ -37,7 +37,7 @@ def post(side_uv):
 
 def rail(y0, y1, side_uv):
     return {
-        "from": [7, y0, 8], "to": [9, y1, 17.8],
+        "from": [7, y0, 8], "to": [9, y1, 15.4],
         "rotation": {"origin": [8, 8, 8], "axis": "y", "angle": 45, "rescale": False},
         "faces": {
             "down": {"uv": side_uv, "texture": "#texture", "shade": True},
