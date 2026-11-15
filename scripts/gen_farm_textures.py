@@ -757,11 +757,19 @@ def plants():
             save(bush(kind, stage), f"block/{kind}_bush_stage{stage}")
     save(wild_carrot(), "block/wild_carrot")
     save(wild_potato(), "block/wild_potato")
-    # Джут — рисунок автора: 5 стадий по 16×32 (два блока), дикий джут — как спелый (5-я стадия, с цветами)
+    # Джут — рисунок автора: 5 стадий по 16×32 (два блока), дикий джут — как спелый (5-я стадия, с цветами).
+    # Росток (стадия 0) вдвое ниже: верхний блок пустой, из нижнего убрана верхняя половина растения.
     stages = Image.open(os.path.join(os.path.dirname(__file__), "templates", "jute_stages.png")).convert("RGBA")
     for age in range(5):
-        save(stages.crop((16 * age, 16, 16 * age + 16, 32)), f"block/jute_crop_stage{age}_bottom")
-        save(stages.crop((16 * age, 0, 16 * age + 16, 16)), f"block/jute_crop_stage{age}_top")
+        top = stages.crop((16 * age, 0, 16 * age + 16, 16))
+        bottom = stages.crop((16 * age, 16, 16 * age + 16, 32))
+        if age == 0:
+            top = Image.new("RGBA", (16, 16))
+            cut = Image.new("RGBA", (16, 16))
+            cut.paste(bottom.crop((0, 6, 16, 16)), (0, 6))
+            bottom = cut
+        save(bottom, f"block/jute_crop_stage{age}_bottom")
+        save(top, f"block/jute_crop_stage{age}_top")
     save(stages.crop((64, 16, 80, 32)), "block/wild_jute_bottom")
     save(stages.crop((64, 0, 80, 16)), "block/wild_jute_top")
     for old in ("jute_crop_stage0", "jute_crop_stage1", "jute_crop_stage2"):

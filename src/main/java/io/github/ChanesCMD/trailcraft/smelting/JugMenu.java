@@ -21,7 +21,7 @@ import net.minecraft.world.item.ItemStack;
 public class JugMenu extends AbstractContainerMenu {
     public static final int WIDTH = 176, HEIGHT = 112, JUG_Y = 20, MOLD_X = 80, MOLD_Y = 56, HOTBAR_Y = 86;
     /** Полоска нагрева — справа от слота формы. */
-    public static final int HEAT_X = 102, HEAT_Y = 56, HEAT_W = 6, HEAT_H = 18;
+    public static final int HEAT_X = 102, HEAT_Y = 55, HEAT_W = 6, HEAT_H = 18;
     /** Номера слотов меню: 0..3 — кувшин, MOLD — форма, дальше хотбар. */
     public static final int MOLD = JugItem.SLOTS, HOTBAR = MOLD + 1;
     private final Inventory inventory;
