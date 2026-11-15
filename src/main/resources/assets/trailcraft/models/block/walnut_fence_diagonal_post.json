@@ -1,0 +1,232 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "trailcraft:block/walnut_planks",
+    "texture": "trailcraft:block/walnut_planks"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        6,
+        8
+      ],
+      "to": [
+        9,
+        9,
+        19.32
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": false
+      },
+      "faces": {
+        "down": {
+          "uv": [
+            7,
+            7,
+            9,
+            10
+          ],
+          "texture": "#texture",
+          "shade": false
+        },
+        "up": {
+          "uv": [
+            7,
+            7,
+            9,
+            10
+          ],
+          "texture": "#texture",
+          "shade": false
+        },
+        "south": {
+          "uv": [
+            7,
+            7,
+            9,
+            10
+          ],
+          "texture": "#texture",
+          "shade": false
+        },
+        "west": {
+          "uv": [
+            7,
+            7,
+            9,
+            10
+          ],
+          "texture": "#texture",
+          "shade": false
+        },
+        "east": {
+          "uv": [
+            7,
+            7,
+            9,
+            10
+          ],
+          "texture": "#texture",
+          "shade": false
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        12,
+        8
+      ],
+      "to": [
+        9,
+        15,
+        19.32
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": false
+      },
+      "faces": {
+        "down": {
+          "uv": [
+            7,
+            1,
+            9,
+            4
+          ],
+          "texture": "#texture",
+          "shade": false
+        },
+        "up": {
+          "uv": [
+            7,
+            1,
+            9,
+            4
+          ],
+          "texture": "#texture",
+          "shade": false
+        },
+        "south": {
+          "uv": [
+            7,
+            1,
+            9,
+            4
+          ],
+          "texture": "#texture",
+          "shade": false
+        },
+        "west": {
+          "uv": [
+            7,
+            1,
+            9,
+            4
+          ],
+          "texture": "#texture",
+          "shade": false
+        },
+        "east": {
+          "uv": [
+            7,
+            1,
+            9,
+            4
+          ],
+          "texture": "#texture",
+          "shade": false
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        0,
+        14
+      ],
+      "to": [
+        18,
+        16,
+        18
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            4,
+            4,
+            12,
+            12
+          ],
+          "texture": "#texture",
+          "shade": false
+        },
+        "up": {
+          "uv": [
+            4,
+            4,
+            12,
+            12
+          ],
+          "texture": "#texture",
+          "shade": false
+        },
+        "north": {
+          "uv": [
+            4,
+            4,
+            12,
+            12
+          ],
+          "texture": "#texture",
+          "shade": false
+        },
+        "south": {
+          "uv": [
+            4,
+            4,
+            12,
+            12
+          ],
+          "texture": "#texture",
+          "shade": false
+        },
+        "west": {
+          "uv": [
+            4,
+            4,
+            12,
+            12
+          ],
+          "texture": "#texture",
+          "shade": false
+        },
+        "east": {
+          "uv": [
+            4,
+            4,
+            12,
+            12
+          ],
+          "texture": "#texture",
+          "shade": false
+        }
+      }
+    }
+  ]
+}

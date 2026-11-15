@@ -49,7 +49,7 @@
         "diagonal_south_east": "true"
       },
       "apply": {
-        "model": "trailcraft:block/cedar_fence_diagonal",
+        "model": "trailcraft:block/cedar_fence_diagonal_post",
         "y": 0
       }
     },
@@ -76,7 +76,7 @@
         "diagonal_north_east": "true"
       },
       "apply": {
-        "model": "trailcraft:block/cedar_fence_diagonal",
+        "model": "trailcraft:block/cedar_fence_diagonal_post",
         "y": 270
       }
     }

@@ -20,6 +20,21 @@ def write(path, data):
         f.write("\n")
 
 
+def post(side_uv):
+    """Столбик на дальнем конце диагонали — общий для пары диагональных заборов, поэтому только в одном из двух."""
+    return {
+        "from": [14, 0, 14], "to": [18, 16, 18],
+        "faces": {
+            "down": {"uv": side_uv, "texture": "#texture", "shade": False},
+            "up": {"uv": side_uv, "texture": "#texture", "shade": False},
+            "north": {"uv": side_uv, "texture": "#texture", "shade": False},
+            "south": {"uv": side_uv, "texture": "#texture", "shade": False},
+            "west": {"uv": side_uv, "texture": "#texture", "shade": False},
+            "east": {"uv": side_uv, "texture": "#texture", "shade": False},
+        },
+    }
+
+
 def rail(y0, y1, side_uv):
     return {
         "from": [7, y0, 8], "to": [9, y1, 19.32],
@@ -42,21 +57,29 @@ def main():
         side = read(os.path.join(MODELS, f"{wood}_fence_side.json"))
         texture = side.get("textures", {}).get("texture", f"{NS}:block/{wood}_planks")
         diagonal = f"{wood}_fence_diagonal"
+        rails = [rail(6, 9, [7, 7, 9, 10]), rail(12, 15, [7, 1, 9, 4])]
         write(os.path.join(MODELS, diagonal + ".json"), {
             "parent": "minecraft:block/block",
             "ambientocclusion": False,
             "textures": {"particle": texture, "texture": texture},
-            "elements": [rail(6, 9, [7, 7, 9, 10]), rail(12, 15, [7, 1, 9, 4])],
+            "elements": rails,
+        })
+        # столбик посреди диагонали рисует только одна сторона пары (NE и SE), иначе он двоился бы
+        write(os.path.join(MODELS, diagonal + "_post.json"), {
+            "parent": "minecraft:block/block",
+            "ambientocclusion": False,
+            "textures": {"particle": texture, "texture": texture},
+            "elements": rails + [post([4, 4, 12, 12])],
         })
         path = os.path.join(STATES, name)
         data = read(path)
         parts = data.setdefault("multipart", [])
         # Убираем старые диагональные части, чтобы не дублировать их
         parts = [p for p in parts if not any(k.startswith("diagonal_") for k in p.get("when", {}))]
-        for corner, y in (("diagonal_south_east", 0), ("diagonal_south_west", 90),
-                          ("diagonal_north_west", 180), ("diagonal_north_east", 270)):
-            parts.append({"when": {corner: "true"},
-                          "apply": {"model": f"{NS}:block/{diagonal}", "y": y}})
+        for corner, y, own_post in (("diagonal_south_east", 0, True), ("diagonal_south_west", 90, False),
+                                    ("diagonal_north_west", 180, False), ("diagonal_north_east", 270, True)):
+            model = f"{NS}:block/{diagonal}" + ("_post" if own_post else "")
+            parts.append({"when": {corner: "true"}, "apply": {"model": model, "y": y}})
         data["multipart"] = parts
         write(path, data)
     print("ok")

@@ -137,13 +137,37 @@ public class DiagonalFenceBlock extends FenceBlock {
         return state.getBlock() instanceof DiagonalFenceBlock && state.getValue(ALLOW_DIAGONAL);
     }
 
+    /** Тонкие полосы вдоль диагонали: целые углы давали бы невидимую стену и портили свет соседям. */
+    private static final VoxelShape[] DIAGONAL_SHAPES = {
+            Shapes.or(Block.box(8, 0, 0, 16, 16, 4), Block.box(12, 0, 0, 16, 16, 8)),
+            Shapes.or(Block.box(0, 0, 0, 8, 16, 4), Block.box(0, 0, 0, 4, 16, 8)),
+            Shapes.or(Block.box(8, 0, 12, 16, 16, 16), Block.box(12, 0, 8, 16, 16, 16)),
+            Shapes.or(Block.box(0, 0, 12, 8, 16, 16), Block.box(0, 0, 8, 4, 16, 16)),
+    };
+
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         VoxelShape shape = super.getShape(state, level, pos, context);
-        if (state.getValue(NE)) shape = Shapes.or(shape, Block.box(8, 0, 0, 16, 16, 8));
-        if (state.getValue(NW)) shape = Shapes.or(shape, Block.box(0, 0, 0, 8, 16, 8));
-        if (state.getValue(SE)) shape = Shapes.or(shape, Block.box(8, 0, 8, 16, 16, 16));
-        if (state.getValue(SW)) shape = Shapes.or(shape, Block.box(0, 0, 8, 8, 16, 16));
+        for (int i = 0; i < DIAGONALS.length; i++) {
+            if (state.getValue(DIAGONALS[i])) {
+                shape = Shapes.or(shape, DIAGONAL_SHAPES[i]);
+            }
+        }
         return shape;
+    }
+
+    @Override
+    protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return getShape(state, level, pos, context);
+    }
+
+    /** Для соседей и света — форма обычного забора, без диагоналей: иначе блок по диагонали темнеет. */
+    @Override
+    protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
+        BlockState plain = state;
+        for (BooleanProperty property : DIAGONALS) {
+            plain = plain.setValue(property, false);
+        }
+        return super.getShape(plain, level, pos, CollisionContext.empty());
     }
 }
