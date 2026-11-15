@@ -26,6 +26,27 @@ CELL = 4            # сетка искажения: меньше — мельч
 JITTER = 5          # шум на пиксель
 SPECKS = 6          # редкие яркие/тёмные крапинки (только у верха)
 
+# силуэт боковой травы — как у прежней текстуры (обрезанная сверху, с подтёками)
+SIDE_MASK = [
+    "################",
+    "################",
+    "################",
+    "############.###",
+    "..###.####......",
+    "....#...........",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+]
+
+
 
 def warp_field(rnd, amp, cell):
     grid = [[(rnd.uniform(-amp, amp), rnd.uniform(-amp, amp)) for _ in range(cell + 1)] for _ in range(cell + 1)]
@@ -68,21 +89,46 @@ def main():
         px[x, y] = (v, v, v, 255)
     top.save(os.path.join(TEX, "turf_top.png"))
 
-    # боковая трава: ванильный оверлей, искажённый тем же способом (прозрачность сохраняем)
+    # боковая трава: силуэт прежний (наша маска), а яркость — ванильный оверлей с тем же искажением
     overlay = vanilla("grass_block_side_overlay")
     field = warp_field(random.Random(SEED + 1), WARP, CELL)
     rnd = random.Random(SEED + 1)
-    side = Image.new("RGBA", (16, 16))
-    px = side.load()
+    warped = [[0] * 16 for _ in range(16)]
+    known = [[False] * 16 for _ in range(16)]
     for y in range(16):
         for x in range(16):
             dx, dy = field[y][x]
             r, g, b, a = overlay.getpixel(((x + round(dx)) % 16, (y + round(dy)) % 16))
-            if a == 0:
+            if a:
+                warped[y][x] = r
+                known[y][x] = True
+
+    # прозрачные места ванильного оверлея заполняем ближайшей известной яркостью
+    while not all(all(row) for row in known):
+        snapshot = [row[:] for row in known]
+        for y in range(16):
+            for x in range(16):
+                if snapshot[y][x]:
+                    continue
+                total = count = 0
+                for ddx, ddy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nx, ny = (x + ddx) % 16, (y + ddy) % 16
+                    if snapshot[ny][nx]:
+                        total += warped[ny][nx]
+                        count += 1
+                if count:
+                    warped[y][x] = total // count
+                    known[y][x] = True
+
+    side = Image.new("RGBA", (16, 16))
+    px = side.load()
+    for y in range(16):
+        for x in range(16):
+            if SIDE_MASK[y][x] != "#":
                 px[x, y] = (0, 0, 0, 0)
                 continue
-            v = max(100, min(205, round(r + rnd.uniform(-JITTER, JITTER))))
-            px[x, y] = (v, v, v, a)
+            v = max(100, min(205, round(warped[y][x] + rnd.uniform(-JITTER, JITTER))))
+            px[x, y] = (v, v, v, 255)
     side.save(os.path.join(TEX, "turf_side.png"))
     print("ok")
 
