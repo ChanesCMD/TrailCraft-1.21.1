@@ -24,8 +24,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,15 +58,6 @@ public class LogPileBlock extends BaseEntityBlock {
         return RenderShape.INVISIBLE;
     }
 
-    @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return level.getBlockEntity(pos) instanceof LogPileBlockEntity pile ? pile.shape() : super.getShape(state, level, pos, context);
-    }
-
-    @Override
-    protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return getShape(state, level, pos, context);
-    }
 
     @Override
     protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
