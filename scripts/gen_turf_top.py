@@ -13,12 +13,12 @@ from gen_create_compat import find_jar  # noqa: E402
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 TEX = os.path.join(ROOT, "src", "main", "resources", "assets", "trailcraft", "textures", "block")
 
-SEED = 109
-WARP = 1.6          # сила искажения рисунка, пикселей
+SEED = 101
+WARP = 0.7          # сила искажения рисунка, пикселей
 CELL = 4            # сетка искажения: меньше — мельче завихрения
-JITTER = 6          # шум на пиксель
-SPECKS = 8          # редкие яркие/тёмные крапинки
-MIX = 0.35          # доля процедурного шума в яркости
+JITTER = 5          # шум на пиксель
+SPECKS = 6          # редкие яркие/тёмные крапинки
+MIX = 0.0          # доля процедурного шума в яркости
 
 
 def warp_field(rnd, amp, cell):
@@ -49,7 +49,8 @@ def main():
         for x in range(16):
             dx, dy = field[y][x]
             v = base[(y + round(dy)) % 16][(x + round(dx)) % 16]
-            v = v * (1 - MIX) + (112 + rnd.random() * 83) * MIX
+            if MIX:
+                v = v * (1 - MIX) + (112 + rnd.random() * 83) * MIX
             v = max(100, min(205, round(v + rnd.uniform(-JITTER, JITTER))))
             px[x, y] = (v, v, v, 255)
     for _ in range(SPECKS):
@@ -62,4 +63,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
 
