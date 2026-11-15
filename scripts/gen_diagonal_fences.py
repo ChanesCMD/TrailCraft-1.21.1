@@ -21,9 +21,9 @@ def write(path, data):
 
 
 def post(side_uv):
-    """Столбик на дальнем конце диагонали — общий для пары диагональных заборов, поэтому только в одном из двух."""
+    """Столбик у дальнего конца диагонали — внутри своего блока: если он вылезает за границу, у блока,\n    поставленного по диагонали, перила темнеют и мерцают."""
     return {
-        "from": [14, 0, 14], "to": [18, 16, 18],
+        "from": [11.5, 0, 11.5], "to": [15.5, 16, 15.5],
         "faces": {
             "down": {"uv": side_uv, "texture": "#texture", "shade": True},
             "up": {"uv": side_uv, "texture": "#texture", "shade": True},
@@ -37,7 +37,7 @@ def post(side_uv):
 
 def rail(y0, y1, side_uv):
     return {
-        "from": [7, y0, 8], "to": [9, y1, 19.32],
+        "from": [7, y0, 8], "to": [9, y1, 18.6],
         "rotation": {"origin": [8, 8, 8], "axis": "y", "angle": 45, "rescale": False},
         "faces": {
             "down": {"uv": side_uv, "texture": "#texture", "shade": True},
