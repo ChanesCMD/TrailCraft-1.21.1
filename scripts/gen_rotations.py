@@ -15,6 +15,8 @@ NS = "trailcraft"
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "main", "resources", "assets", NS)
 TEX = os.path.join(ROOT, "textures", "block")
 SOILS = ["zheltozem", "burozem", "chernozem", "loam", "clay_white", "clay_blue", "clay_red", "clay_gray", "peat"]
+# у глины сама глина статичная: поворачивается только трава (верх), боковая трава тоже одна
+CLAYS = {"clay_white", "clay_blue", "clay_red", "clay_gray"}
 SANDS = ["sand_gray", "sand_red", "sand_white", "sand_yellow"]
 GRAVELS = [f"{r}_gravel" for r in ["andesite", "basalt", "chalk", "diorite", "dolomite", "gabbro", "granite",
                                      "gray_granite", "limestone", "marble", "sandstone", "shale"]]
@@ -42,26 +44,31 @@ def rotate_texture(name, angle):
 
 
 def soil_rotation(soil):
-    """Четыре варианта почвы: повёрнуты и верх, и боковые текстуры. У дёрна верх (turf_top) тоже
-    поворачивается, а боковая трава (turf_side) — нет, как у ванильного дёрна."""
+    """Четыре варианта дёрна: верх (turf_top) поворачивается всегда, почва — кроме глины, боковая трава — никогда."""
     with open(os.path.join(ROOT, "models", "block", f"{soil}_grass.json"), encoding="utf-8") as f:
         grass_template = json.load(f)
+    static_soil = soil in CLAYS
     variants = []
     for n, angle in enumerate((0, 90, 180, 270)):
-        rotate_texture(soil, angle)
-        write(f"models/block/{soil}_{n}.json",
-              {"parent": "minecraft:block/cube_all", "textures": {"all": f"{NS}:block/{soil}_{n}"}})
+        if not static_soil:
+            rotate_texture(soil, angle)
+            write(f"models/block/{soil}_{n}.json",
+                  {"parent": "minecraft:block/cube_all", "textures": {"all": f"{NS}:block/{soil}_{n}"}})
+        soil_tex = f"{NS}:block/{soil}" if static_soil else f"{NS}:block/{soil}_{n}"
         grass = deepcopy(grass_template)
         grass["textures"] = {
-            "particle": f"{NS}:block/{soil}_{n}",
-            "bottom": f"{NS}:block/{soil}_{n}",
+            "particle": soil_tex,
+            "bottom": soil_tex,
             "top": f"{NS}:block/turf_top_{n}",
-            "side": f"{NS}:block/{soil}_{n}",
+            "side": soil_tex,
             "overlay": f"{NS}:block/turf_side",
         }
         write(f"models/block/{soil}_grass_{n}.json", grass)
         variants.append({"model": f"{NS}:block/{soil}_{n}"})
-    write(f"blockstates/{soil}.json", {"variants": {"": variants}})
+    if static_soil:
+        write(f"blockstates/{soil}.json", {"variants": {"": {"model": f"{NS}:block/{soil}"}}})
+    else:
+        write(f"blockstates/{soil}.json", {"variants": {"": variants}})
     write(f"blockstates/{soil}_grass.json",
           {"variants": {"": [{"model": f"{NS}:block/{soil}_grass_{n}"} for n in range(4)]}})
 

@@ -2,10 +2,10 @@
   "parent": "minecraft:block/block",
   "render_type": "minecraft:cutout_mipped",
   "textures": {
-    "particle": "trailcraft:block/clay_gray_0",
-    "bottom": "trailcraft:block/clay_gray_0",
+    "particle": "trailcraft:block/clay_gray",
+    "bottom": "trailcraft:block/clay_gray",
     "top": "trailcraft:block/turf_top_0",
-    "side": "trailcraft:block/clay_gray_0",
+    "side": "trailcraft:block/clay_gray",
     "overlay": "trailcraft:block/turf_side"
   },
   "elements": [
