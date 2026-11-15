@@ -165,9 +165,12 @@ public class DiagonalFenceBlock extends FenceBlock {
         return Block.box(Math.min(ax, bx), 0, Math.min(az, bz), Math.max(ax, bx), height, Math.max(az, bz));
     }
 
+    /** Столб по центру тоже на пиксель выше 16: выделение должно совпадать с моделью (столб 4×17×4). */
+    private static final VoxelShape POST_TOP = Block.box(6, 16, 6, 10, 17, 10);
+
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        VoxelShape shape = super.getShape(state, level, pos, context);
+        VoxelShape shape = Shapes.or(super.getShape(state, level, pos, context), POST_TOP);
         for (int i = 0; i < DIAGONALS.length; i++) {
             if (state.getValue(DIAGONALS[i])) {
                 shape = Shapes.or(shape, SELECTION[i]);
