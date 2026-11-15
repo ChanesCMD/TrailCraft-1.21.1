@@ -1,4 +1,4 @@
-"""Диагональные ступенчатые облачные полосы."""
+"""Небольшие облачные массивы неправильной ступенчатой формы."""
 import os
 import random
 
@@ -13,27 +13,37 @@ draw = ImageDraw.Draw(img)
 WHITE = (255, 255, 255, 255)
 
 
-def band(x, y, dx, dy, width):
-    draw.line([(x - dx * 2, y - dy * 2), (x + dx, y + dy)], fill=WHITE, width=width)
-    # короткие ответвления, чтобы silhouette был рваным
-    if rng.random() < 0.55:
-        draw.line([(x, y), (x + rng.randint(18, 50), y + rng.randint(-18, 18))], fill=WHITE,
-                  width=max(2, width // 2))
+def puff(x, y, w, h):
+    draw.rectangle((x, y, x + w, y + h), fill=WHITE)
 
 
-# Диагонали в обе стороны.
-for i in range(12):
-    y = -20 + i * 24 + rng.randint(-5, 5)
-    band(rng.randint(0, 90), y, rng.randint(160, 260), rng.randint(110, 190), rng.randint(6, 13))
-for i in range(8):
-    x = -10 + i * 34 + rng.randint(-6, 6)
-    band(x, rng.randint(0, 70), rng.randint(90, 170), rng.randint(130, 220), rng.randint(5, 11))
+def walk(x, y, steps):
+    """Ступенчатая облачная клякса: направление и выступы меняются случайно."""
+    for _ in range(steps):
+        w = rng.randint(3, 9)
+        h = rng.randint(2, 6)
+        puff(x, y, w, h)
+        # случайный выступ вбок
+        if rng.random() < 0.35:
+            if rng.random() < 0.5:
+                puff(x + w, y + rng.randint(-2, h), rng.randint(2, 6), rng.randint(2, 4))
+            else:
+                puff(x - rng.randint(2, 6), y + rng.randint(-2, h), rng.randint(2, 5), rng.randint(2, 4))
+        # шаг в одном из восьми направлений, но с разной длиной
+        dir = rng.choice([(1, 0), (0, 1), (1, 1), (1, -1), (2, 1), (1, 2), (-1, 1), (2, -1)])
+        x += dir[0] * rng.randint(2, 6)
+        y += dir[1] * rng.randint(2, 6)
+        x = max(-10, min(260, x))
+        y = max(-10, min(260, y))
 
-# Немного коротких поперечных клочков.
-for _ in range(20):
-    x, y = rng.randint(0, 240), rng.randint(0, 240)
-    draw.line([(x, y), (x + rng.randint(8, 26), y + rng.randint(-8, 8))], fill=WHITE,
-              width=rng.randint(2, 5))
+
+# Несколько десятков небольших рваных массивов.
+for _ in range(92):
+    walk(rng.randint(-10, 250), rng.randint(-10, 250), rng.randint(7, 13))
+
+# Короткие отдельные клочки между ними.
+for _ in range(55):
+    puff(rng.randint(0, 250), rng.randint(0, 250), rng.randint(3, 7), rng.randint(2, 5))
 
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 img.save(OUT)
