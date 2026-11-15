@@ -57,14 +57,12 @@ def main():
         side = read(os.path.join(MODELS, f"{wood}_fence_side.json"))
         texture = side.get("textures", {}).get("texture", f"{NS}:block/{wood}_planks")
         diagonal = f"{wood}_fence_diagonal"
-        # у модели без столбика перила короче: стык закрывает столбик соседа, иначе концы накладываются
-        short = [rail(6, 9, [7, 7, 9, 10], 15.4), rail(12, 15, [7, 1, 9, 4], 15.4)]
         rails = [rail(6, 9, [7, 7, 9, 10]), rail(12, 15, [7, 1, 9, 4])]
         write(os.path.join(MODELS, diagonal + ".json"), {
             "parent": "minecraft:block/block",
             "ambientocclusion": False,
             "textures": {"particle": texture, "texture": texture},
-            "elements": short,
+            "elements": rails,
         })
         # столбик посреди диагонали рисует только одна сторона пары (NE и SE), иначе он двоился бы
         write(os.path.join(MODELS, diagonal + "_post.json"), {
