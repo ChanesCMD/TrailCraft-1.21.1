@@ -19,6 +19,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * Поленница (LogPileBlock), как в TFC: 16 слотов сечением 4×4, в каждом брёвна одного вида — до 4 толстых или до 16 тонких.
@@ -35,6 +37,21 @@ public class LogPileBlockEntity extends BlockEntity {
     public static final int THICK_CAPACITY = 4, THIN_CAPACITY = 16;
 
     private final NonNullList<ItemStack> items = NonNullList.withSize(SLOTS, ItemStack.EMPTY);
+
+    /**
+     * Габарит поленницы — по занятой части сетки: заполнение идёт слева направо и снизу вверх, поэтому хватает
+     * самого правого занятого столбца и самого верхнего занятого ряда. Пустая поленница — без формы.
+     */
+    public VoxelShape shape() {
+        int columns = 0, rows = 0;
+        for (int slot = 0; slot < SLOTS; slot++) {
+            if (!items.get(slot).isEmpty()) {
+                columns = Math.max(columns, slot % COLUMNS + 1);
+                rows = Math.max(rows, slot / COLUMNS + 1);
+            }
+        }
+        return rows == 0 ? Shapes.empty() : Shapes.box(0, 0, 0, columns * CELL, rows * CELL, 1);
+    }
 
     public LogPileBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.LOG_PILE.get(), pos, state);
