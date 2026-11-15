@@ -149,9 +149,63 @@ public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> 
                 float v = sprite.getV0() + texel(iy, n, block) * texV;
                 float ax = x0 + ix * stepX, bx = ax + stepX;
                 float ay = y0 + iy * stepY, by = ay + stepY;
-                pixel(vc, p, ax, ay, bx, by, z, u, v, light, overlay, 0.8f, normal);
+                // у тёмных пород (эбен, сосна, туя, железное дерево) кора и сердцевина почти одного цвета —
+                // множители считаются по самой текстуре и растягивают слабый контраст
+                int ring = Math.min(Math.min(ix, n - 1 - ix), Math.min(iy, n - 1 - iy));
+                float[] factors = contrast(sprite);
+                float shade = ring == 0 ? factors[0] : ring == 1 ? (factors[0] + factors[1]) / 2f : factors[1];
+                pixel(vc, p, ax, ay, bx, by, z, u, v, light, overlay, shade, normal);
             }
         }
+    }
+
+
+    private static final java.util.Map<TextureAtlasSprite, float[]> CONTRAST = new java.util.HashMap<>();
+
+    /**
+     * Множители яркости для коры и сердцевины торца: если у породы они почти одного цвета (эбен, сосна, туя,
+     * железное дерево), разница растягивается до заметной. Считается один раз на спрайт по его картинке.
+     */
+    private static float[] contrast(TextureAtlasSprite sprite) {
+        return CONTRAST.computeIfAbsent(sprite, s -> {
+            float edge = 0, inner = 0, edgeN = 0, innerN = 0;
+            try {
+                net.minecraft.client.renderer.texture.SpriteContents contents = s.contents();
+                var img = contents.getOriginalImage();
+                int w = img.getWidth(), h = img.getHeight();
+                for (int y = 0; y < h; y++) {
+                    for (int x = 0; x < w; x++) {
+                        int c = img.getPixelRGBA(x, y);
+                        if (((c >>> 24) & 0xFF) < 128) {
+                            continue;
+                        }
+                        float lum = 0.299f * (c & 0xFF) + 0.587f * ((c >> 8) & 0xFF) + 0.114f * ((c >> 16) & 0xFF);
+                        boolean border = x == 0 || y == 0 || x == w - 1 || y == h - 1;
+                        if (border) {
+                            edge += lum;
+                            edgeN++;
+                        } else {
+                            inner += lum;
+                            innerN++;
+                        }
+                    }
+                }
+            } catch (RuntimeException e) {
+                return new float[]{1f, 1f};
+            }
+            if (edgeN == 0 || innerN == 0) {
+                return new float[]{1f, 1f};
+            }
+            float e = edge / edgeN, i = inner / innerN, diff = e - i;
+            float target = 90f;
+            if (Math.abs(diff) >= target) {
+                return new float[]{1f, 1f};
+            }
+            float sign = diff >= 0 ? 1f : -1f, extra = (target - Math.abs(diff)) / 2f;
+            float fe = e <= 1f ? 1f : Math.max(0.25f, Math.min(2.2f, (e + sign * extra) / e));
+            float fi = i <= 1f ? 1f : Math.max(0.25f, Math.min(2.2f, (i - sign * extra) / i));
+            return new float[]{fe, fi};
+        });
     }
 
     /** Номер текселя текстуры для пикселя торца: у кромки — самый край (там кора), внутри — середина блока. */
