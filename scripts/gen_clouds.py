@@ -33,6 +33,7 @@ PARAMS = dict(
     drift=2,
     crumbs=0,
     tails=0,
+    bumps=10,
 )
 SEED = 1308
 
@@ -64,16 +65,17 @@ def far_points(rng, count, min_dist):
     return pts
 
 
-def bank(a, rng, cx, cy, w, h, step=2, taper=0.55, holes=0, drift_max=1, profile="flat"):
+def bank(a, rng, cx, cy, w, h, step=2, taper=0.55, holes=0, drift_max=1, profile="flat", bumps=5):
     """Один массив: силуэт из строк, края щёлкают по сетке своего шага (1–3)."""
     drift = 0
     hold = 0
+    rows = []
     for row in range(h):
         t = (row + 0.5) / h
         if profile == "flat":                  # кучевое: широкий низ, сужается кверху
-            prof = (1.0 - t) ** 0.45 + rng.uniform(-0.06, 0.06)
-            if rng.random() < 0.28:
-                prof += rng.uniform(0.08, 0.3)  # наплыв-лопасть
+            prof = (1.0 - t) ** 0.45 + rng.uniform(-0.08, 0.08)
+            if rng.random() < 0.5:
+                prof += rng.uniform(0.1, 0.4)   # наплыв-лопасть
         else:
             prof = max(0.06, math.sin(math.pi * t) ** taper)
         half = w * 0.5 * prof
@@ -88,6 +90,20 @@ def bank(a, rng, cx, cy, w, h, step=2, taper=0.55, holes=0, drift_max=1, profile
         x1 = snap(cx + half + drift + rng.uniform(-1, 1), st)
         if x1 - x0 >= max(2, step):
             rect(a, x0, cy + row, x1 - x0, 1)
+            rows.append((cy + row, x0, x1))
+    # выпуклости: горбики над верхней кромкой, бугры по бокам и снизу
+    for _ in range(bumps if rows else 0):
+        ry, rx0, rx1 = rows[rng.randrange(len(rows))]
+        bw = rng.randint(2, max(2, min(10, rx1 - rx0)))
+        bx = rng.randint(rx0, max(rx0, rx1 - bw))
+        where = rng.random()
+        if where < 0.55:                       # сверху
+            rect(a, bx, ry - rng.randint(1, 2), bw, rng.randint(1, 2))
+        elif where < 0.8:                      # сбоку
+            sx = rx0 - bw if rng.random() < 0.5 else rx1
+            rect(a, sx, ry - rng.randint(0, 1), bw, rng.randint(1, 2))
+        else:                                  # снизу
+            rect(a, bx, ry + 1, bw, rng.randint(1, 2))
     for _ in range(holes):
         clear(a, cx + rng.randint(-w // 3, w // 3), cy + rng.randint(1, max(1, h - 2)),
               rng.choice((1, 2, 2, 3)), 1)
@@ -104,13 +120,13 @@ def mass(a, rng, cx, cy, c):
         h = int(h0 * rng.uniform(0.6, 1.0))
         bank(a, rng, cx + rng.randint(-w0 // 2, w0 // 2), cy + rng.randint(-2, 2) + i * (h0 // 3),
              w, h, step=c["step"], taper=c.get("taper", 0.55), holes=c.get("holes", 0),
-             drift_max=c.get("drift", 1), profile=c.get("profile", "flat"))
+             drift_max=c.get("drift", 1), profile=c.get("profile", "flat"), bumps=c.get("bumps", 5))
     if rng.random() < 0.35:                    # соседний массив впритык — получается гряда
         w = int(w0 * rng.uniform(0.5, 0.9))
         h = int(h0 * rng.uniform(0.5, 0.9))
         bank(a, rng, cx + rng.choice((-1, 1)) * rng.randint(w0 // 3, w0), cy + rng.randint(-3, 3),
              w, h, step=c["step"], taper=c.get("taper", 0.55), holes=0, drift_max=c.get("drift", 1),
-             profile=c.get("profile", "flat"))
+             profile=c.get("profile", "flat"), bumps=c.get("bumps", 5))
 
 
 def build(c, seed, count, spacing):
