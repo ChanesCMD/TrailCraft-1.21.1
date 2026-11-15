@@ -41,8 +41,6 @@ public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> 
     private static final float[] STAKE_X = {0f, 1f};
     private static final float[] STAKE_Z = {4 / 16f, 12 / 16f};
     private static final BlockState STAKE_POST = Blocks.OAK_FENCE.defaultBlockState();
-    /** Тонкое бревно занимает 6 из 16 пикселей блока, а в клетке для него — половина клетки. */
-    private static final float THIN_SCALE = (CELL / 2) / (6 / 16f);
     private static final int THIN_PER_CELL = 4;
     private static final RandomSource RANDOM = RandomSource.create(42L);
 
@@ -69,21 +67,17 @@ public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> 
             if (stack.is(ModTags.THIN_LOGS)) {
                 BlockState thin = thinAlongZ(item.getBlock().defaultBlockState());
                 int shown = Math.max(1, (int) Math.ceil(stack.getCount() * (double) THIN_PER_CELL / LogPileBlockEntity.THIN_CAPACITY));
+                float half = CELL / 2;
                 for (int i = 0; i < shown; i++) {
-                    float half = CELL / 2;
-                    pose.pushPose();
-                    pose.translate(x + i % 2 * half + half / 2, y + i / 2 * half + half / 2, 0);
-                    pose.scale(THIN_SCALE, THIN_SCALE, 1f);
-                    pose.translate(-0.5, -0.5, 0);
-                    blocks.renderSingleBlock(thin, pose, buffers, light, overlay);
-                    pose.popPose();
+                    renderLog(thin, pose, buffers, light, overlay, x + i % 2 * half, y + i / 2 * half, half,
+                            Direction.Axis.Z, false);
                 }
             } else {
                 BlockState log = item.getBlock().defaultBlockState();
                 if (log.hasProperty(RotatedPillarBlock.AXIS)) {
                     log = log.setValue(RotatedPillarBlock.AXIS, Direction.Axis.Z);
                 }
-                renderLog(log, pose, buffers, light, overlay, x, y);
+                renderLog(log, pose, buffers, light, overlay, x, y, CELL, Direction.Axis.Z, true);
             }
         }
         renderStakes(pile, pose, buffers, light, overlay);
@@ -91,15 +85,13 @@ public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> 
     }
 
     /**
-     * Бревно в клетку: коробка {@code CELL}×{@code CELL}×16 пикселей, текстура — 1:1, без растяжения. Торец (передняя
-     * и задняя грани) — кусок текстуры торца, бока — кора во всю длину бревна. Грани рисуются с двух сторон, чтобы не
-     * зависеть от намотки вершин.
+     * Бревно: коробка {@code size}×{@code size}×16 пикселей вдоль Z, текстура 1:1. Бока — кора во всю длину бревна
+     * (волокна вдоль Z), торцы — текстура торца: у толстого бревна целиком (видны кольца), у тонкого — кусок 1:1.
+     * Спрайты берутся по оси бревна (не по мировой оси Y), грани рисуются с двух сторон — от намотки вершин не зависим.
      */
-    private void renderLog(BlockState log, PoseStack pose, MultiBufferSource buffers, int light, int overlay, float x, float y) {
+    private void renderLog(BlockState log, PoseStack pose, MultiBufferSource buffers, int light, int overlay,
+                           float x, float y, float size, Direction.Axis axis, boolean fullEnd) {
         BakedModel model = blocks.getBlockModel(log);
-        // у лежачего бревна торец — грань вдоль его оси, кора — остальные (ось у состояния всегда Z, поворот — в позе)
-        Direction.Axis axis = log.hasProperty(RotatedPillarBlock.AXIS)
-                ? log.getValue(RotatedPillarBlock.AXIS) : Direction.Axis.Z;
         TextureAtlasSprite side = null, end = null;
         for (Direction dir : Direction.values()) {
             java.util.List<BakedQuad> quads = model.getQuads(log, dir, RANDOM);
@@ -120,8 +112,8 @@ public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> 
         if (end == null) {
             end = side;
         }
-        float x0 = x, x1 = x + CELL, y0 = y, y1 = y + CELL, z0 = 0f, z1 = 1f;
-        float cross = CELL * 16f, length = 16f;
+        float x0 = x, x1 = x + size, y0 = y, y1 = y + size, z0 = 0f, z1 = 1f;
+        float cross = size * 16f, length = 16f, endPx = fullEnd ? 16f : cross;
         VertexConsumer vc = buffers.getBuffer(RenderType.cutout());
         PoseStack.Pose p = pose.last();
         // низ и верх — кора во всю длину
@@ -135,9 +127,9 @@ public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> 
         box(vc, p, new float[][]{{x1, y0, z0}, {x1, y1, z0}, {x1, y1, z1}, {x1, y0, z1}}, side, cross, length,
                 light, overlay, 0.6f, 1, 0, 0);
         // торцы — кусок текстуры торца
-        box(vc, p, new float[][]{{x0, y1, z0}, {x1, y1, z0}, {x1, y0, z0}, {x0, y0, z0}}, end, cross, cross,
+        box(vc, p, new float[][]{{x0, y1, z0}, {x1, y1, z0}, {x1, y0, z0}, {x0, y0, z0}}, end, endPx, endPx,
                 light, overlay, 0.8f, 0, 0, -1);
-        box(vc, p, new float[][]{{x0, y1, z1}, {x1, y1, z1}, {x1, y0, z1}, {x0, y0, z1}}, end, cross, cross,
+        box(vc, p, new float[][]{{x0, y1, z1}, {x1, y1, z1}, {x1, y0, z1}, {x0, y0, z1}}, end, endPx, endPx,
                 light, overlay, 0.8f, 0, 0, 1);
     }
 
