@@ -33,6 +33,8 @@ public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> 
     /** Тонкое бревно занимает 6 из 16 пикселей блока, а в клетке для него — половина клетки. */
     private static final float THIN_SCALE = (CELL / 2) / (6 / 16f);
     private static final int THIN_PER_CELL = 4;
+    /** Бок бревна собирается из четырёх уменьшенных брёвен подряд: так текстура ложится 64x16 на грань 16x4. */
+    private static final int SEGMENTS = 4;
 
     private final BlockRenderDispatcher blocks;
 
@@ -59,23 +61,28 @@ public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> 
                 int shown = Math.max(1, (int) Math.ceil(stack.getCount() * (double) THIN_PER_CELL / LogPileBlockEntity.THIN_CAPACITY));
                 for (int i = 0; i < shown; i++) {
                     float half = CELL / 2;
-                    pose.pushPose();
-                    pose.translate(x + i % 2 * half + half / 2, y + i / 2 * half + half / 2, 0);
-                    pose.scale(THIN_SCALE, THIN_SCALE, 1f);
-                    pose.translate(-0.5, -0.5, 0);
-                    blocks.renderSingleBlock(thin, pose, buffers, light, overlay);
-                    pose.popPose();
+                    for (int seg = 0; seg < SEGMENTS; seg++) {
+                        pose.pushPose();
+                        pose.translate(x + i % 2 * half + half / 2, y + i / 2 * half + half / 2, seg / (float) SEGMENTS);
+                        pose.scale(THIN_SCALE, THIN_SCALE, 1f / SEGMENTS);
+                        pose.translate(-0.5, -0.5, 0);
+                        blocks.renderSingleBlock(thin, pose, buffers, light, overlay);
+                        pose.popPose();
+                    }
                 }
             } else {
                 BlockState log = item.getBlock().defaultBlockState();
                 if (log.hasProperty(RotatedPillarBlock.AXIS)) {
                     log = log.setValue(RotatedPillarBlock.AXIS, Direction.Axis.Z);
                 }
-                pose.pushPose();
-                pose.translate(x, y, 0);
-                pose.scale(CELL, CELL, 1f);
-                blocks.renderSingleBlock(log, pose, buffers, light, overlay);
-                pose.popPose();
+                // бок — четыре уменьшенных бревна подряд: текстура 64x16 ложится на грань 16x4
+                for (int seg = 0; seg < SEGMENTS; seg++) {
+                    pose.pushPose();
+                    pose.translate(x, y, seg / (float) SEGMENTS);
+                    pose.scale(CELL, CELL, 1f / SEGMENTS);
+                    blocks.renderSingleBlock(log, pose, buffers, light, overlay);
+                    pose.popPose();
+                }
             }
         }
         renderStakes(pile, pose, buffers, light, overlay);
