@@ -59,9 +59,6 @@ def cane(h, s, v):  # стебли сочно-зелёные с желтизно
 
 RECOLOR = {
     # наша текстура: (ванильная, перекраска (h, s, v) → (h, s, v))
-    "block/tall_seaweed": ("block/kelp", lambda h, s, v: (h, s, v)),
-    "block/tall_seaweed_plant": ("block/kelp_plant", lambda h, s, v: (h, s, v)),
-    "item/tall_seaweed": ("item/kelp", lambda h, s, v: (h, s, v)),
     "item/dried_seaweed": ("item/dried_kelp", lambda h, s, v: (h - 0.05, s * 0.9, v)),
     "block/dried_seaweed_block_top": ("block/dried_kelp_top", lambda h, s, v: (h - 0.05, s * 0.9, v)),
     "block/dried_seaweed_block_side": ("block/dried_kelp_side", lambda h, s, v: (h - 0.05, s * 0.9, v)),
