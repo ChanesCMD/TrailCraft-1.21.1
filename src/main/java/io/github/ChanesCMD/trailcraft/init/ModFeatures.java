@@ -6,6 +6,7 @@ import io.github.ChanesCMD.trailcraft.worldgen.FallenBranchFeature;
 import io.github.ChanesCMD.trailcraft.worldgen.LoosePebbleFeature;
 import io.github.ChanesCMD.trailcraft.worldgen.NuggetDepositFeature;
 import io.github.ChanesCMD.trailcraft.worldgen.PondFeature;
+import io.github.ChanesCMD.trailcraft.worldgen.TallSeaweedFeature;
 import io.github.ChanesCMD.trailcraft.worldgen.TrailTreeConfig;
 import io.github.ChanesCMD.trailcraft.worldgen.TrailTreeFeature;
 import net.minecraft.core.registries.Registries;
@@ -34,6 +35,10 @@ public final class ModFeatures {
     /** Стручки какао на стволах пальм и эбеновых деревьев. */
     public static final DeferredHolder<Feature<?>, Feature<NoneFeatureConfiguration>> COCOA_PODS =
             FEATURES.register("cocoa_pods", CocoaPodFeature::new);
+
+    /** Заросли длинной водоросли на дне океанов и рек. */
+    public static final DeferredHolder<Feature<?>, Feature<NoneFeatureConfiguration>> TALL_SEAWEED =
+            FEATURES.register("tall_seaweed", TallSeaweedFeature::new);
 
     public static final DeferredHolder<Feature<?>, Feature<TrailTreeConfig>> TRAIL_TREE =
             FEATURES.register("trail_tree", TrailTreeFeature::new);

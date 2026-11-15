@@ -1395,5 +1395,7 @@
   "item.trailcraft.hammer.desc": "Дробит кусок руды в чистую шихту (остаётся в сетке, теряет прочность)",
   "item.trailcraft.bismuth_mix": "Шихта чистого висмута",
   "item.trailcraft.lead_mix": "Шихта чистого свинца",
-  "item.trailcraft.gold_mix": "Шихта чистого золота"
+  "item.trailcraft.gold_mix": "Шихта чистого золота",
+  "block.trailcraft.tall_seaweed": "Длинная водоросль",
+  "item.trailcraft.green_dye": "Зелёный краситель"
 }

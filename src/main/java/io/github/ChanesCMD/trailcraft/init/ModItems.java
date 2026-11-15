@@ -233,6 +233,7 @@ public class ModItems {
 
     // === СВОИ РАСТЕНИЯ (scripts/gen_plants.py) ===
     public static final DeferredItem<BlockItem> SEAWEED = ITEMS.registerSimpleBlockItem("seaweed", ModBlocks.SEAWEED);
+    public static final DeferredItem<BlockItem> TALL_SEAWEED = ITEMS.registerSimpleBlockItem("tall_seaweed", ModBlocks.TALL_SEAWEED);
     /** Сушёная водоросль (костёр): съедобна, как ванильная сушёная ламинария; ремни, воронки, туннели Create. */
     public static final DeferredItem<Item> DRIED_SEAWEED = ITEMS.registerItem("dried_seaweed",
             props -> new Item(props.food(new FoodProperties.Builder().nutrition(1).saturationModifier(0.3f).fast().build())));

@@ -98,6 +98,7 @@ public class ModCreativeTabs {
                         output.accept(ModItems.SCRAPED_HIDE);
                         output.accept(ModItems.LEATHER);
                         output.accept(ModItems.SEAWEED);
+                        output.accept(ModItems.TALL_SEAWEED);
                         output.accept(ModItems.DRIED_SEAWEED_BLOCK);
                         output.accept(ModItems.CACTUS);
                         output.accept(ModItems.WHEAT_SEEDS);

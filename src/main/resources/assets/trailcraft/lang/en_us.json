@@ -1395,5 +1395,7 @@
   "item.trailcraft.hammer.desc": "Crushes an ore chunk into pure mix (stays in the grid, loses durability)",
   "item.trailcraft.bismuth_mix": "Pure Bismuth Mix",
   "item.trailcraft.lead_mix": "Pure Lead Mix",
-  "item.trailcraft.gold_mix": "Pure Gold Mix"
+  "item.trailcraft.gold_mix": "Pure Gold Mix",
+  "block.trailcraft.tall_seaweed": "Tall Seaweed",
+  "item.trailcraft.green_dye": "Green Dye"
 }

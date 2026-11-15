@@ -59,6 +59,9 @@ def cane(h, s, v):  # стебли сочно-зелёные с желтизно
 
 RECOLOR = {
     # наша текстура: (ванильная, перекраска (h, s, v) → (h, s, v))
+    "block/tall_seaweed": ("block/kelp", lambda h, s, v: (h, s, v)),
+    "block/tall_seaweed_plant": ("block/kelp_plant", lambda h, s, v: (h, s, v)),
+    "item/tall_seaweed": ("item/kelp", lambda h, s, v: (h, s, v)),
     "item/dried_seaweed": ("item/dried_kelp", lambda h, s, v: (h - 0.05, s * 0.9, v)),
     "block/dried_seaweed_block_top": ("block/dried_kelp_top", lambda h, s, v: (h - 0.05, s * 0.9, v)),
     "block/dried_seaweed_block_side": ("block/dried_kelp_side", lambda h, s, v: (h - 0.05, s * 0.9, v)),
@@ -79,6 +82,7 @@ RECOLOR = {
 
 LANG = {
     "block.trailcraft.seaweed": ("Водоросль", "Seaweed"),
+    "block.trailcraft.tall_seaweed": ("Длинная водоросль", "Tall Seaweed"),
     "item.trailcraft.dried_seaweed": ("Сушёная водоросль", "Dried Seaweed"),
     "block.trailcraft.dried_seaweed_block": ("Блок сушёных водорослей", "Dried Seaweed Block"),
     "block.trailcraft.cactus": ("Кактус", "Cactus"),
@@ -168,6 +172,12 @@ def textures(client):
     with open(os.path.join(TEX, "block", "seaweed.png.mcmeta"), "wb") as f:
         f.write(client.read("assets/minecraft/textures/block/seagrass.png.mcmeta"))
     images = [seaweed.crop((0, 0, 16, 16))]
+    for ours, vanilla in (("block/tall_seaweed", "block/kelp"), ("block/tall_seaweed_plant", "block/kelp_plant"),
+                          ("item/tall_seaweed", "item/kelp")):
+        img = recolor(Image.open(BytesIO(client.read(f"assets/minecraft/textures/{vanilla}.png"))), SEAWEED)
+        os.makedirs(os.path.dirname(os.path.join(TEX, ours)), exist_ok=True)
+        img.save(os.path.join(TEX, *ours.split("/")) + ".png")
+        images.append(img)
     for ours, (vanilla, fn) in RECOLOR.items():
         img = hsv_map(Image.open(BytesIO(client.read(f"assets/minecraft/textures/{vanilla}.png"))), fn)
         os.makedirs(os.path.dirname(os.path.join(TEX, ours)), exist_ok=True)
@@ -201,7 +211,12 @@ def models(client):
     write(f"assets/{NS}/blockstates/seaweed.json", {"variants": {"": {"model": f"{NS}:block/seaweed"}}})
     write(f"assets/{NS}/models/block/seaweed.json", {"parent": "minecraft:block/cross", "render_type": "minecraft:cutout",
                                                     "textures": {"cross": f"{NS}:block/seaweed"}})
-    flat = {"seaweed": "block/seaweed", "dried_seaweed": "item/dried_seaweed", "green_dye": "item/green_dye",
+    for ours, tex in (("tall_seaweed", "block/tall_seaweed"), ("tall_seaweed_plant", "block/tall_seaweed_plant")):
+        write(f"assets/{NS}/blockstates/{ours}.json", {"variants": {"": {"model": f"{NS}:block/{ours}"}}})
+        write(f"assets/{NS}/models/block/{ours}.json", {"parent": "minecraft:block/cross",
+                                                      "render_type": "minecraft:cutout",
+                                                      "textures": {"cross": f"{NS}:{tex}"}})
+    flat = {"seaweed": "block/seaweed", "tall_seaweed": "item/tall_seaweed", "dried_seaweed": "item/dried_seaweed", "green_dye": "item/green_dye",
             "wheat": "item/wheat", "wheat_seeds": "item/wheat_seeds", "sugar_cane": "item/sugar_cane",
             "sugar_beet": "item/sugar_beet", "sugar_beet_seeds": "item/sugar_beet_seeds", "cocoa_beans": "item/cocoa_beans"}
     for item, texture in flat.items():
@@ -225,6 +240,12 @@ def loot(client):
         "type": "minecraft:block", "random_sequence": f"{NS}:blocks/seaweed",
         "pools": [{"rolls": 1.0, "bonus_rolls": 0.0, "entries": [{"type": "minecraft:item", "name": f"{NS}:seaweed"}],
                    "conditions": [{"condition": "minecraft:survives_explosion"}]}]})
+    for block in ("tall_seaweed", "tall_seaweed_plant"):
+        write(f"data/{NS}/loot_table/blocks/{block}.json", {
+            "type": "minecraft:block", "random_sequence": f"{NS}:blocks/{block}",
+            "pools": [{"rolls": 1.0, "bonus_rolls": 0.0,
+                       "entries": [{"type": "minecraft:item", "name": f"{NS}:tall_seaweed"}],
+                       "conditions": [{"condition": "minecraft:survives_explosion"}]}]})
     # трава: свои семена пшеницы вместо ванильных, реже — семена сахарной свёклы
     for grass in ("grass_small", "grass_medium", "grass_tall"):
         rel = f"data/{NS}/loot_table/blocks/{grass}.json"
@@ -256,6 +277,7 @@ def recipes():
             "result": {"id": result, "count": count}})
 
     campfire("dried_seaweed", {"item": f"{NS}:seaweed"}, f"{NS}:dried_seaweed")
+    campfire("dried_seaweed_from_tall", {"item": f"{NS}:tall_seaweed"}, f"{NS}:dried_seaweed")
     campfire("green_dye", {"item": f"{NS}:cactus"}, f"{NS}:green_dye")
     campfire("bread_from_dough", {"item": "create:dough"}, "minecraft:bread")
     write(f"data/{NS}/recipe/plants/dried_seaweed_block.json", {
@@ -299,9 +321,16 @@ def worldgen(client):
         write(f"data/{NS}/worldgen/placed_feature/patch_{plant}.json", {"feature": f"{NS}:patch_{plant}", "placement": [
             {"type": "minecraft:rarity_filter", "chance": rarity}, {"type": "minecraft:in_square"},
             {"type": "minecraft:heightmap", "heightmap": "MOTION_BLOCKING"}, {"type": "minecraft:biome"}]})
+    write(f"data/{NS}/worldgen/configured_feature/tall_seaweed.json", {"type": f"{NS}:tall_seaweed", "config": {}})
+    write(f"data/{NS}/worldgen/placed_feature/patch_tall_seaweed.json", {"feature": f"{NS}:tall_seaweed", "placement": [
+        {"type": "minecraft:count", "count": 10}, {"type": "minecraft:in_square"},
+        {"type": "minecraft:heightmap", "heightmap": "OCEAN_FLOOR_WG"}, {"type": "minecraft:biome"}]})
     write(f"data/{NS}/worldgen/configured_feature/cocoa_pods.json", {"type": f"{NS}:cocoa_pods", "config": {}})
     write(f"data/{NS}/worldgen/placed_feature/cocoa_pods.json", {"feature": f"{NS}:cocoa_pods",
                                                                  "placement": [{"type": "minecraft:biome"}]})
+    write(f"data/{NS}/neoforge/biome_modifier/plants_tall_seaweed.json", {
+        "type": "neoforge:add_features", "biomes": WORLD["seaweed"], "features": [f"{NS}:patch_tall_seaweed"],
+        "step": "vegetal_decoration"})
     for plant, biomes in WORLD.items():
         feature = "cocoa_pods" if plant == "cocoa" else f"patch_{plant}"
         write(f"data/{NS}/neoforge/biome_modifier/plants_{plant}.json", {

@@ -13,6 +13,8 @@ import io.github.ChanesCMD.trailcraft.pipe.ReinforcedPipeBlock;
 import io.github.ChanesCMD.trailcraft.block.WaterBarrelBlock;
 import io.github.ChanesCMD.trailcraft.block.plant.SeaweedBlock;
 import io.github.ChanesCMD.trailcraft.block.plant.SugarBeetBlock;
+import io.github.ChanesCMD.trailcraft.block.plant.TallSeaweedBlock;
+import io.github.ChanesCMD.trailcraft.block.plant.TallSeaweedPlantBlock;
 import io.github.ChanesCMD.trailcraft.block.plant.TrailCactusBlock;
 import io.github.ChanesCMD.trailcraft.block.plant.TrailCocoaBlock;
 import io.github.ChanesCMD.trailcraft.block.plant.TrailCropBlock;
@@ -337,6 +339,15 @@ public class ModBlocks {
     public static final DeferredBlock<SeaweedBlock> SEAWEED = BLOCKS.registerBlock("seaweed", SeaweedBlock::new,
             BlockBehaviour.Properties.of().mapColor(MapColor.WATER).replaceable().noCollission().instabreak()
                     .sound(SoundType.WET_GRASS).pushReaction(PushReaction.DESTROY));
+    /** Длинная водоросль (как ламинария): верхний блок, растёт вверх. */
+    public static final DeferredBlock<TallSeaweedBlock> TALL_SEAWEED = BLOCKS.registerBlock("tall_seaweed", TallSeaweedBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.WATER).replaceable().noCollission().instabreak()
+                    .sound(SoundType.WET_GRASS).pushReaction(PushReaction.DESTROY));
+    /** Стебель длинной водоросли: без предмета, ставится только ростом и генерацией. */
+    public static final DeferredBlock<TallSeaweedPlantBlock> TALL_SEAWEED_PLANT =
+            BLOCKS.registerBlock("tall_seaweed_plant", TallSeaweedPlantBlock::new,
+                    BlockBehaviour.Properties.of().mapColor(MapColor.WATER).replaceable().noCollission().instabreak()
+                            .sound(SoundType.WET_GRASS).pushReaction(PushReaction.DESTROY));
     public static final DeferredBlock<Block> DRIED_SEAWEED_BLOCK = BLOCKS.registerSimpleBlock("dried_seaweed_block",
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).strength(0.5f, 2.5f).sound(SoundType.GRASS));
     /** Кактус пустынь. */
