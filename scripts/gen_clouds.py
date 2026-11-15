@@ -23,7 +23,7 @@ PARAMS = dict(
     name="29. Гряды",
     count=8,
     spacing=64,
-    target=0.31,
+    target=0.26,
     banks=(2, 3),
     w=(20, 34),
     h=(5, 8),
@@ -156,8 +156,16 @@ def fit(c, seed, target):
     return a
 
 
+def shrink(mask, factor=2):
+    """Сжимает узор в factor раз и тайлит обратно: в новой текстуре ровно factor² старых."""
+    small = SIZE // factor
+    blocks = mask.reshape(small, factor, small, factor).sum(axis=(1, 3))
+    return np.tile(blocks >= (factor * factor) // 2, (factor, factor))
+
+
 def main():
     mask = fit(PARAMS, SEED, PARAMS["target"])
+    mask = shrink(mask, 2)
     rgba = np.dstack([np.full((SIZE, SIZE), 255, np.uint8)] * 3 +
                      [(mask * 255).astype(np.uint8)])
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
@@ -167,3 +175,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
