@@ -23,7 +23,7 @@ def write(path, data):
 def post(side_uv):
     """Столбик у дальнего конца диагонали, целиком внутри своего блока: за границу он не выходит, поэтому\n    не накладывается на текстуры соседних блоков и не даёт тёмных полос."""
     return {
-        "from": [14, 0, 14], "to": [18, 16, 18],
+        "from": [12, 0, 12], "to": [16, 16, 16],
         "faces": {
             "down": {"uv": side_uv, "texture": "#texture", "shade": True},
             "up": {"uv": side_uv, "texture": "#texture", "shade": True},
@@ -37,7 +37,7 @@ def post(side_uv):
 
 def rail(y0, y1, side_uv):
     return {
-        "from": [7, y0, 8], "to": [9, y1, 15.4],
+        "from": [7, y0, 8], "to": [9, y1, 19.32],
         "rotation": {"origin": [8, 8, 8], "axis": "y", "angle": 45, "rescale": False},
         "faces": {
             "down": {"uv": side_uv, "texture": "#texture", "shade": True},

@@ -142,10 +142,10 @@ public class DiagonalFenceBlock extends FenceBlock {
      * углами (как на схеме автора): от столба к промежуточному столбику на стыке.
      */
     private static final VoxelShape[] DIAGONAL_SHAPES = {
-            chain(1, 1),
-            chain(-1, 1),
-            chain(1, -1),
-            chain(-1, -1),
+            chain(1, -1),   // NE
+            chain(-1, -1),  // NW
+            chain(1, 1),    // SE
+            chain(-1, 1),   // SW
     };
 
     /** Две коробки 4×4 по диагонали к углу (sx, sz — в какую сторону идёт соединение). */
