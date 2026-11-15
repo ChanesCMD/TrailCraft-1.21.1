@@ -35,8 +35,10 @@ import org.joml.Vector3f;
  */
 public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> {
     private static final float CELL = LogPileBlockEntity.CELL, MARGIN = LogPileBlockEntity.MARGIN;
-    /** Подпорки: палка 1 пиксель толщиной и в один блок высотой (текстура столбика не растягивается). */
-    private static final float STAKE = 1 / 16f, STAKE_HEIGHT = 1f;
+    /** Подпорки: палка 1 пиксель толщиной и в один блок высотой без одного пикселя. */
+    private static final float STAKE = 1 / 16f, STAKE_HEIGHT = 15 / 16f;
+    /** Сколько пикселей текстуры приходится на торец и ширину бока: у толстого бревна 8, у тонкого 4. */
+    private static final float THICK_TEXELS = 8f, THIN_TEXELS = 4f;
     /** Палки стоят по краям (поперёк брёвен) с отступом от торцов на четверть длины. */
     private static final float[] STAKE_X = {0f, 1f};
     private static final float[] STAKE_Z = {4 / 16f, 12 / 16f};
@@ -70,14 +72,14 @@ public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> 
                 float half = CELL / 2;
                 for (int i = 0; i < shown; i++) {
                     renderLog(thin, pose, buffers, light, overlay, x + i % 2 * half, y + i / 2 * half, half,
-                            Direction.Axis.Z, false);
+                            Direction.Axis.Z, THIN_TEXELS);
                 }
             } else {
                 BlockState log = item.getBlock().defaultBlockState();
                 if (log.hasProperty(RotatedPillarBlock.AXIS)) {
                     log = log.setValue(RotatedPillarBlock.AXIS, Direction.Axis.Z);
                 }
-                renderLog(log, pose, buffers, light, overlay, x, y, CELL, Direction.Axis.Z, true);
+                renderLog(log, pose, buffers, light, overlay, x, y, CELL, Direction.Axis.Z, THICK_TEXELS);
             }
         }
         renderStakes(pile, pose, buffers, light, overlay);
@@ -85,12 +87,13 @@ public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> 
     }
 
     /**
-     * Бревно: коробка {@code size}×{@code size}×16 пикселей вдоль Z, текстура 1:1. Бока — кора во всю длину бревна
-     * (волокна вдоль Z), торцы — текстура торца: у толстого бревна целиком (видны кольца), у тонкого — кусок 1:1.
-     * Спрайты берутся по оси бревна (не по мировой оси Y), грани рисуются с двух сторон — от намотки вершин не зависим.
+     * Бревно: коробка {@code size}×{@code size}×16 пикселей вдоль Z. Текстура мельче модели вчетверо: у толстого бревна
+     * на торце и по ширине бока — 8 пикселей текстуры, у тонкого — 4, а по длине — 32 (бок рисуется двумя половинами по
+     * 16 пикселей, чтобы текстура повторялась и не вылезала за спрайт). Спрайты берутся по оси бревна (не по мировой
+     * оси Y), грани рисуются с двух сторон — от намотки вершин не зависим.
      */
     private void renderLog(BlockState log, PoseStack pose, MultiBufferSource buffers, int light, int overlay,
-                           float x, float y, float size, Direction.Axis axis, boolean fullEnd) {
+                           float x, float y, float size, Direction.Axis axis, float texelWidth) {
         BakedModel model = blocks.getBlockModel(log);
         TextureAtlasSprite side = null, end = null;
         for (Direction dir : Direction.values()) {
@@ -112,24 +115,25 @@ public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> 
         if (end == null) {
             end = side;
         }
-        float x0 = x, x1 = x + size, y0 = y, y1 = y + size, z0 = 0f, z1 = 1f;
-        float cross = size * 16f, length = 16f, endPx = fullEnd ? 16f : cross;
+        float x0 = x, x1 = x + size, y0 = y, y1 = y + size, lengthTexels = 16f;
         VertexConsumer vc = buffers.getBuffer(RenderType.cutout());
         PoseStack.Pose p = pose.last();
-        // низ и верх — кора во всю длину
-        box(vc, p, new float[][]{{x0, y0, z0}, {x1, y0, z0}, {x1, y0, z1}, {x0, y0, z1}}, side, cross, length,
-                light, overlay, 0.5f, 0, -1, 0);
-        box(vc, p, new float[][]{{x0, y1, z0}, {x1, y1, z0}, {x1, y1, z1}, {x0, y1, z1}}, side, cross, length,
-                light, overlay, 1.0f, 0, 1, 0);
-        // бока — кора: волокна вдоль бревна (U поперёк, V по длине)
-        box(vc, p, new float[][]{{x0, y0, z0}, {x0, y1, z0}, {x0, y1, z1}, {x0, y0, z1}}, side, cross, length,
-                light, overlay, 0.6f, -1, 0, 0);
-        box(vc, p, new float[][]{{x1, y0, z0}, {x1, y1, z0}, {x1, y1, z1}, {x1, y0, z1}}, side, cross, length,
-                light, overlay, 0.6f, 1, 0, 0);
-        // торцы — кусок текстуры торца
-        box(vc, p, new float[][]{{x0, y1, z0}, {x1, y1, z0}, {x1, y0, z0}, {x0, y0, z0}}, end, endPx, endPx,
+        // низ, верх и бока — кора: две половины вдоль бревна, в каждой своя копия текстуры (по длине — 32 пикселя)
+        for (float z : new float[]{0f, 0.5f}) {
+            float z2 = z + 0.5f;
+            box(vc, p, new float[][]{{x0, y0, z}, {x1, y0, z}, {x1, y0, z2}, {x0, y0, z2}}, side, texelWidth, lengthTexels,
+                    light, overlay, 0.5f, 0, -1, 0);
+            box(vc, p, new float[][]{{x0, y1, z}, {x1, y1, z}, {x1, y1, z2}, {x0, y1, z2}}, side, texelWidth, lengthTexels,
+                    light, overlay, 1.0f, 0, 1, 0);
+            box(vc, p, new float[][]{{x0, y0, z}, {x0, y1, z}, {x0, y1, z2}, {x0, y0, z2}}, side, texelWidth, lengthTexels,
+                    light, overlay, 0.6f, -1, 0, 0);
+            box(vc, p, new float[][]{{x1, y0, z}, {x1, y1, z}, {x1, y1, z2}, {x1, y0, z2}}, side, texelWidth, lengthTexels,
+                    light, overlay, 0.6f, 1, 0, 0);
+        }
+        // торцы
+        box(vc, p, new float[][]{{x0, y1, 0f}, {x1, y1, 0f}, {x1, y0, 0f}, {x0, y0, 0f}}, end, texelWidth, texelWidth,
                 light, overlay, 0.8f, 0, 0, -1);
-        box(vc, p, new float[][]{{x0, y1, z1}, {x1, y1, z1}, {x1, y0, z1}, {x0, y0, z1}}, end, endPx, endPx,
+        box(vc, p, new float[][]{{x0, y1, 1f}, {x1, y1, 1f}, {x1, y0, 1f}, {x0, y0, 1f}}, end, texelWidth, texelWidth,
                 light, overlay, 0.8f, 0, 0, 1);
     }
 
