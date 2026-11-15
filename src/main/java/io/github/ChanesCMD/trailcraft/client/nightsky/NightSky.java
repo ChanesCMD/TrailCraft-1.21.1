@@ -63,11 +63,14 @@ public final class NightSky {
             }
             Vector3f pos = new Vector3f(x, y, z).normalize(RADIUS);
             float[] color = palette[random.nextInt(palette.length)];
-            float bright = 0.45F + random.nextFloat() * 0.55F;
+            // редкая звезда: на четверть крупнее и на 30 % ярче
+            boolean rare = random.nextFloat() < 0.08F;
+            float boost = rare ? 1.3F : 1.0F;
+            float bright = Math.min(1.0F, (0.45F + random.nextFloat() * 0.55F) * boost);
+            float alpha = Math.min(1.0F, (0.55F + random.nextFloat() * 0.45F) * boost);
             list.add(new Star(pos,
-                    0.07F + random.nextFloat() * 0.17F + (random.nextFloat() < 0.08F ? 0.08F : 0.0F),
-                    color[0] * bright, color[1] * bright, color[2] * bright,
-                    0.55F + random.nextFloat() * 0.45F));
+                    0.07F + random.nextFloat() * 0.17F + (rare ? 0.08F : 0.0F),
+                    color[0] * bright, color[1] * bright, color[2] * bright, alpha));
         }
         stars = list;
     }
