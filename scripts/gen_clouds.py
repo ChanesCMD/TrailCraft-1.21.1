@@ -1,4 +1,4 @@
-"""Длинные пересекающиеся полосы облаков без дырок."""
+"""Плотные средние облачные массивы без дырок."""
 import os
 import random
 
@@ -10,45 +10,28 @@ rng = random.Random(20261115)
 
 img = Image.new("RGBA", (256, 256), (0, 0, 0, 0))
 draw = ImageDraw.Draw(img)
-W = (255, 255, 255, 255)
+WHITE = (255, 255, 255, 255)
+CELL = 16
 
+for cy in range(0, 256, CELL):
+    for cx in range(0, 256, CELL):
+        if rng.random() > 0.86:
+            continue
+        w = rng.randint(9, 15)
+        h = rng.randint(5, 10)
+        x = cx + rng.randint(0, CELL - w)
+        y = cy + rng.randint(0, CELL - h)
+        draw.rectangle((x, y, x + w, y + h), fill=WHITE)
+        # ступенька, но без дырок внутри
+        if rng.random() < 0.5:
+            draw.rectangle((x + 2, y - 2, x + w - 2, y), fill=WHITE)
+        if rng.random() < 0.35:
+            draw.rectangle((x + w, y + 2, x + w + 2, y + h - 2), fill=WHITE)
 
-def strip(x, y, length, thickness, vertical=False):
-    if vertical:
-        draw.rectangle((x, y, x + thickness, y + length), fill=W)
-        # ступенчатые края
-        if length > 24:
-            draw.rectangle((x - 2, y + 4, x, y + length - 5), fill=W)
-            draw.rectangle((x + thickness, y + 8, x + thickness + 3, y + length - 3), fill=W)
-    else:
-        draw.rectangle((x, y, x + length, y + thickness), fill=W)
-        if length > 30:
-            draw.rectangle((x + 4, y - 2, x + length - 6, y), fill=W)
-            draw.rectangle((x + 8, y + thickness, x + length - 4, y + thickness + 2), fill=W)
-
-
-# Длинные горизонтальные полосы.
-for i in range(18):
-    y = 6 + i * 13 + rng.randint(-3, 3)
-    x = rng.randint(-20, 90)
-    length = rng.randint(40, 120)
-    thickness = rng.randint(5, 11)
-    strip(x, y, length, thickness)
-    if rng.random() < 0.45:
-        strip(x + rng.randint(15, 55), y + rng.randint(-7, 7), rng.randint(20, 55), rng.randint(4, 8))
-
-# Пересекающие вертикальные полосы.
-for i in range(10):
-    x = 10 + i * 24 + rng.randint(-5, 5)
-    y = rng.randint(-10, 90)
-    length = rng.randint(35, 95)
-    thickness = rng.randint(5, 10)
-    strip(x, y, length, thickness, vertical=True)
-
-# Пара коротких соединителей, чтобы полосы читались как один массив.
-for _ in range(14):
-    x, y = rng.randint(0, 240), rng.randint(0, 240)
-    strip(x, y, rng.randint(12, 30), rng.randint(4, 7))
+# Немного более длинных полос поверх сетки.
+for _ in range(26):
+    x, y = rng.randint(0, 240), rng.randint(0, 245)
+    draw.rectangle((x, y, x + rng.randint(16, 34), y + rng.randint(3, 6)), fill=WHITE)
 
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 img.save(OUT)
