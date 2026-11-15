@@ -16,9 +16,9 @@ public final class SeasonSky {
         Calendar.Season season = Seasons.current();
         return switch (season) {
             case SPRING -> new float[]{0.96f, 1.0f, 0.97f};
-            case SUMMER -> new float[]{1.0f, 0.99f, 0.94f};
-            case AUTUMN -> new float[]{1.0f, 0.95f, 0.89f};
-            case WINTER -> new float[]{0.95f, 0.98f, 1.0f};
+            case SUMMER -> new float[]{1.0f, 0.94f, 0.78f};
+            case AUTUMN -> new float[]{1.0f, 0.80f, 0.62f};
+            case WINTER -> new float[]{0.78f, 0.88f, 1.0f};
         };
     }
 
