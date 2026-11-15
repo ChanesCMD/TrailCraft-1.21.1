@@ -97,13 +97,16 @@ public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> 
      */
     private void renderLog(BlockState log, PoseStack pose, MultiBufferSource buffers, int light, int overlay, float x, float y) {
         BakedModel model = blocks.getBlockModel(log);
+        // у лежачего бревна торец — грань вдоль его оси, кора — остальные (ось у состояния всегда Z, поворот — в позе)
+        Direction.Axis axis = log.hasProperty(RotatedPillarBlock.AXIS)
+                ? log.getValue(RotatedPillarBlock.AXIS) : Direction.Axis.Z;
         TextureAtlasSprite side = null, end = null;
         for (Direction dir : Direction.values()) {
             java.util.List<BakedQuad> quads = model.getQuads(log, dir, RANDOM);
             if (quads.isEmpty()) {
                 continue;
             }
-            if (dir.getAxis() == Direction.Axis.Y) {
+            if (dir.getAxis() == axis) {
                 if (end == null) {
                     end = quads.get(0).getSprite();
                 }
@@ -126,10 +129,10 @@ public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> 
                 light, overlay, 0.5f, 0, -1, 0);
         box(vc, p, new float[][]{{x0, y1, z0}, {x1, y1, z0}, {x1, y1, z1}, {x0, y1, z1}}, side, cross, length,
                 light, overlay, 1.0f, 0, 1, 0);
-        // бока — кора
-        box(vc, p, new float[][]{{x0, y0, z0}, {x0, y0, z1}, {x0, y1, z1}, {x0, y1, z0}}, side, length, cross,
+        // бока — кора: волокна вдоль бревна (U поперёк, V по длине)
+        box(vc, p, new float[][]{{x0, y0, z0}, {x0, y1, z0}, {x0, y1, z1}, {x0, y0, z1}}, side, cross, length,
                 light, overlay, 0.6f, -1, 0, 0);
-        box(vc, p, new float[][]{{x1, y0, z0}, {x1, y0, z1}, {x1, y1, z1}, {x1, y1, z0}}, side, length, cross,
+        box(vc, p, new float[][]{{x1, y0, z0}, {x1, y1, z0}, {x1, y1, z1}, {x1, y0, z1}}, side, cross, length,
                 light, overlay, 0.6f, 1, 0, 0);
         // торцы — кусок текстуры торца
         box(vc, p, new float[][]{{x0, y1, z0}, {x1, y1, z0}, {x1, y0, z0}, {x0, y0, z0}}, end, cross, cross,
