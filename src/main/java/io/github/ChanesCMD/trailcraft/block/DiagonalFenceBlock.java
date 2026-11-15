@@ -138,26 +138,26 @@ public class DiagonalFenceBlock extends FenceBlock {
     }
 
     /**
-     * Коллизия и выделение диагонали — цепочка из двух коробок 4×4 пикселя, стоящих по диагонали и касающихся
-     * углами (как на схеме автора): от столба к промежуточному столбику на стыке.
+     * Коллизия и выделение диагонали — ровно по схеме: красная коробка 4×4 между столбом и промежуточным
+     * столбиком (10…14 пикселя) и зелёная — сам промежуточный столбик на углу (14…18).
      */
     private static final VoxelShape[] DIAGONAL_SHAPES = {
-            chain(1, -1),   // NE
-            chain(-1, -1),  // NW
-            chain(1, 1),    // SE
-            chain(-1, 1),   // SW
+            diagonal(1, -1),   // NE
+            diagonal(-1, -1),  // NW
+            diagonal(1, 1),    // SE
+            diagonal(-1, 1),   // SW
     };
 
-    /** Две коробки 4×4 по диагонали к углу (sx, sz — в какую сторону идёт соединение). */
-    private static VoxelShape chain(int sx, int sz) {
-        VoxelShape shape = Shapes.empty();
-        for (int step = 0; step < 2; step++) {
-            int a = 8 + sx * step * 4, b = 8 + sz * step * 4;
-            int a2 = a + sx * 4, b2 = b + sz * 4;
-            shape = Shapes.or(shape, Block.box(Math.min(a, a2), 0, Math.min(b, b2),
-                    Math.max(a, a2), 16, Math.max(b, b2)));
-        }
-        return shape;
+    /** Полоса диагонали: коробка between столбом и углом и коробка на самом углу. */
+    private static VoxelShape diagonal(int sx, int sz) {
+        return Shapes.or(band(sx, sz, 10, 14), band(sx, sz, 14, 18));
+    }
+
+    /** Коробка 4×4 пикселя на расстоянии from…to от центра блока вдоль диагонали (sx, sz). */
+    private static VoxelShape band(int sx, int sz, int from, int to) {
+        int ax = 8 + sx * (from - 8), az = 8 + sz * (from - 8);
+        int bx = 8 + sx * (to - 8), bz = 8 + sz * (to - 8);
+        return Block.box(Math.min(ax, bx), 0, Math.min(az, bz), Math.max(ax, bx), 16, Math.max(az, bz));
     }
 
     @Override

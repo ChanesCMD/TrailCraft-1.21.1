@@ -23,7 +23,7 @@ def write(path, data):
 def post(side_uv):
     """Столбик у дальнего конца диагонали, целиком внутри своего блока: за границу он не выходит, поэтому\n    не накладывается на текстуры соседних блоков и не даёт тёмных полос."""
     return {
-        "from": [12, 0, 12], "to": [16, 16, 16],
+        "from": [14, 0, 14], "to": [18, 16, 18],
         "faces": {
             "down": {"uv": side_uv, "texture": "#texture", "shade": True},
             "up": {"uv": side_uv, "texture": "#texture", "shade": True},
@@ -35,9 +35,9 @@ def post(side_uv):
     }
 
 
-def rail(y0, y1, side_uv):
+def rail(y0, y1, side_uv, end=19.32):
     return {
-        "from": [7, y0, 8], "to": [9, y1, 19.32],
+        "from": [7, y0, 8], "to": [9, y1, end],
         "rotation": {"origin": [8, 8, 8], "axis": "y", "angle": 45, "rescale": False},
         "faces": {
             "down": {"uv": side_uv, "texture": "#texture", "shade": True},
@@ -57,12 +57,14 @@ def main():
         side = read(os.path.join(MODELS, f"{wood}_fence_side.json"))
         texture = side.get("textures", {}).get("texture", f"{NS}:block/{wood}_planks")
         diagonal = f"{wood}_fence_diagonal"
+        # у модели без столбика перила короче: стык закрывает столбик соседа, иначе концы накладываются
+        short = [rail(6, 9, [7, 7, 9, 10], 15.4), rail(12, 15, [7, 1, 9, 4], 15.4)]
         rails = [rail(6, 9, [7, 7, 9, 10]), rail(12, 15, [7, 1, 9, 4])]
         write(os.path.join(MODELS, diagonal + ".json"), {
             "parent": "minecraft:block/block",
             "ambientocclusion": False,
             "textures": {"particle": texture, "texture": texture},
-            "elements": rails,
+            "elements": short,
         })
         # столбик посреди диагонали рисует только одна сторона пары (NE и SE), иначе он двоился бы
         write(os.path.join(MODELS, diagonal + "_post.json"), {
