@@ -137,13 +137,27 @@ public class DiagonalFenceBlock extends FenceBlock {
         return state.getBlock() instanceof DiagonalFenceBlock && state.getValue(ALLOW_DIAGONAL);
     }
 
-    /** Тонкие полосы вдоль диагонали: целые углы давали бы невидимую стену и портили свет соседям. */
+    /**
+     * Коллизия и выделение диагонали — лесенка из четырёх коробок 2×2 пикселя вдоль линии перил: так и рамка
+     * повторяет диагональ, и пройти сквозь неё нельзя.
+     */
     private static final VoxelShape[] DIAGONAL_SHAPES = {
-            Shapes.or(Block.box(8, 0, 0, 16, 16, 4), Block.box(12, 0, 0, 16, 16, 8)),
-            Shapes.or(Block.box(0, 0, 0, 8, 16, 4), Block.box(0, 0, 0, 4, 16, 8)),
-            Shapes.or(Block.box(8, 0, 12, 16, 16, 16), Block.box(12, 0, 8, 16, 16, 16)),
-            Shapes.or(Block.box(0, 0, 12, 8, 16, 16), Block.box(0, 0, 8, 4, 16, 16)),
+            staircase(1, 1),
+            staircase(-1, 1),
+            staircase(1, -1),
+            staircase(-1, -1),
     };
+
+    /** Лесенка по 2 пикселя от центра блока к углу (sx, sz — в какую сторону света идёт диагональ). */
+    private static VoxelShape staircase(int sx, int sz) {
+        VoxelShape shape = Shapes.empty();
+        for (int step = 0; step < 4; step++) {
+            int a = 8 + sx * step * 2, b = 8 - sz * step * 2;
+            shape = Shapes.or(shape, Block.box(Math.min(a, a + sx * 2), 0, Math.min(b, b - sz * 2),
+                    Math.max(a, a + sx * 2), 16, Math.max(b, b - sz * 2)));
+        }
+        return shape;
+    }
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
@@ -161,7 +175,6 @@ public class DiagonalFenceBlock extends FenceBlock {
         return getShape(state, level, pos, context);
     }
 
-    /** Для соседей и света — форма обычного забора, без диагоналей: иначе блок по диагонали темнеет. */
     @Override
     protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
         BlockState plain = state;
