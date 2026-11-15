@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/block",
-  "ambientocclusion": true,
+  "ambientocclusion": false,
   "textures": {
     "particle": "trailcraft:block/spruce_planks",
     "texture": "trailcraft:block/spruce_planks"
@@ -15,7 +15,7 @@
       "to": [
         9,
         9,
-        18.6
+        17.8
       ],
       "rotation": {
         "origin": [
@@ -89,7 +89,7 @@
       "to": [
         9,
         15,
-        18.6
+        17.8
       ],
       "rotation": {
         "origin": [

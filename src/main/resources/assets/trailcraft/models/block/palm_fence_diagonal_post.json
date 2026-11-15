@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/block",
-  "ambientocclusion": true,
+  "ambientocclusion": false,
   "textures": {
     "particle": "trailcraft:block/palm_planks",
     "texture": "trailcraft:block/palm_planks"
@@ -15,7 +15,7 @@
       "to": [
         9,
         9,
-        18.6
+        17.8
       ],
       "rotation": {
         "origin": [
@@ -89,7 +89,7 @@
       "to": [
         9,
         15,
-        18.6
+        17.8
       ],
       "rotation": {
         "origin": [
@@ -156,14 +156,14 @@
     },
     {
       "from": [
-        12,
+        14,
         0,
-        12
+        14
       ],
       "to": [
+        18,
         16,
-        16,
-        16
+        18
       ],
       "faces": {
         "down": {
