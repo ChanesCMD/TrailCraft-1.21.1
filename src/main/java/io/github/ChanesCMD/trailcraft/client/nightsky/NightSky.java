@@ -32,14 +32,12 @@ public final class NightSky {
     private static final float RADIUS = 100.0F;
     /** Яркость, ниже которой звёзды не рисуем (день). */
     private static final float MIN_BRIGHTNESS = 0.02F;
-    /** Пауза между метеорами, тиков. */
-    private static final int METEOR_MIN_DELAY = 30 * 20, METEOR_MAX_DELAY = 90 * 20;
 
     /** Своя случайность: не трогаем random мира, иначе сбивается детерминизм генерации. */
     private static final RandomSource RANDOM = RandomSource.create();
     private static List<Star> stars;
     private static final List<Meteor> meteors = new ArrayList<>();
-    private static int meteorDelay = METEOR_MIN_DELAY;
+    private static int meteorDelay = -1;
 
     private NightSky() {}
 
@@ -67,7 +65,7 @@ public final class NightSky {
             float[] color = palette[random.nextInt(palette.length)];
             float bright = 0.45F + random.nextFloat() * 0.55F;
             list.add(new Star(pos,
-                    0.07F + random.nextFloat() * 0.17F + (random.nextFloat() < 0.08F ? 0.12F : 0.0F),
+                    0.07F + random.nextFloat() * 0.17F + (random.nextFloat() < 0.08F ? 0.8F : 0.0F),
                     color[0] * bright, color[1] * bright, color[2] * bright,
                     0.55F + random.nextFloat() * 0.45F));
         }
@@ -80,6 +78,11 @@ public final class NightSky {
             meteors.clear();
             return;
         }
+        int min = ClientConfig.SHOOTING_STAR_MIN.get() * 20;
+        int max = Math.max(min, ClientConfig.SHOOTING_STAR_MAX.get() * 20);
+        if (meteorDelay < 0) {
+            meteorDelay = min + RANDOM.nextInt(max - min + 1);
+        }
         if (meteorDelay > 0) {
             meteorDelay--;
             return;
@@ -87,7 +90,7 @@ public final class NightSky {
         if (level.getStarBrightness(1.0F) > 0.2F && level.getRainLevel(1.0F) < 0.2F
                 && RANDOM.nextInt(3) != 0) {
             spawnMeteor(RANDOM);
-            meteorDelay = METEOR_MIN_DELAY + RANDOM.nextInt(METEOR_MAX_DELAY - METEOR_MIN_DELAY);
+            meteorDelay = min + RANDOM.nextInt(max - min + 1);
         } else {
             meteorDelay = 20;
         }

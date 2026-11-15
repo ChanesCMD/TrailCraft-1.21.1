@@ -19,6 +19,14 @@ public final class ClientConfig {
             .comment("Fancy night sky: extra coloured stars and shooting stars.")
             .define("nightSky", true);
 
+    /** Пауза между падающими звёздами, секунды (для проверки можно поставить 2–5). */
+    public static final ModConfigSpec.IntValue SHOOTING_STAR_MIN = BUILDER
+            .comment("Min seconds between shooting stars.")
+            .defineInRange("shootingStarMinSeconds", 6, 1, 600);
+    public static final ModConfigSpec.IntValue SHOOTING_STAR_MAX = BUILDER
+            .comment("Max seconds between shooting stars.")
+            .defineInRange("shootingStarMaxSeconds", 20, 1, 600);
+
     /** Размер миникарты в пикселях интерфейса (квадрат); по умолчанию 66, один пиксель — один блок. */
     public static final int MINIMAP_MIN = 40, MINIMAP_MAX = 160, MINIMAP_DEFAULT = 66;
     public static final ModConfigSpec.IntValue MINIMAP_SIZE = BUILDER
