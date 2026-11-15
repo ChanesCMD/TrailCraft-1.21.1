@@ -130,11 +130,60 @@ public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> 
             box(vc, p, new float[][]{{x1, y0, z}, {x1, y1, z}, {x1, y1, z2}, {x1, y0, z2}}, side, texelWidth, lengthTexels,
                     light, overlay, 0.6f, 1, 0, 0);
         }
-        // торцы — вся текстура торца (с корой по краю), сжатая в размер бревна
-        box(vc, p, new float[][]{{x0, y1, 0f}, {x1, y1, 0f}, {x1, y0, 0f}, {x0, y0, 0f}}, end, 16f, 16f,
-                light, overlay, 0.8f, 0, 0, -1);
-        box(vc, p, new float[][]{{x0, y1, 1f}, {x1, y1, 1f}, {x1, y0, 1f}, {x0, y0, 1f}}, end, 16f, 16f,
-                light, overlay, 0.8f, 0, 0, 1);
+        // торцы — вся текстура торца, сжатая до 8 пикселей у толстого бревна и до 4 у тонкого: каждый пиксель
+        // результата берёт середину своего блока оригинала, поэтому кора по краю не теряется
+        endFace(vc, p, x0, y0, x1, y1, 0f, (int) texelWidth, end, light, overlay, -1);
+        endFace(vc, p, x0, y0, x1, y1, 1f, (int) texelWidth, end, light, overlay, 1);
+    }
+
+    /** Торец бревна, сжатый до {@code n}×{@code n} пикселей: один квад на пиксель, цвет — из середины блока текстуры. */
+    private void endFace(VertexConsumer vc, PoseStack.Pose p, float x0, float y0, float x1, float y1, float z,
+                         int n, TextureAtlasSprite sprite, int light, int overlay, int normal) {
+        float stepX = (x1 - x0) / n, stepY = (y1 - y0) / n;
+        float texU = (sprite.getU1() - sprite.getU0()) / 16f, texV = (sprite.getV1() - sprite.getV0()) / 16f;
+        float block = 16f / n;
+        for (int iy = 0; iy < n; iy++) {
+            for (int ix = 0; ix < n; ix++) {
+                // крайние пиксели берут кору у самой кромки спрайта, внутренние — середину своего блока
+                float u = sprite.getU0() + texel(ix, n, block) * texU;
+                float v = sprite.getV0() + texel(iy, n, block) * texV;
+                float ax = x0 + ix * stepX, bx = ax + stepX;
+                float ay = y0 + iy * stepY, by = ay + stepY;
+                pixel(vc, p, ax, ay, bx, by, z, u, v, light, overlay, 0.8f, normal);
+            }
+        }
+    }
+
+    /** Номер текселя текстуры для пикселя торца: у кромки — самый край (там кора), внутри — середина блока. */
+    private static float texel(int i, int n, float block) {
+        if (i == 0) {
+            return 0.5f;
+        }
+        if (i == n - 1) {
+            return 15.5f;
+        }
+        return i * block + block / 2f;
+    }
+
+    /** Один пиксель торца: квад с постоянным UV (цвет берётся из одной точки текстуры), с двух сторон. */
+    private static void pixel(VertexConsumer vc, PoseStack.Pose p, float x0, float y0, float x1, float y1, float z,
+                              float u, float v, int light, int overlay, float shade, int normal) {
+        int color = (int) (shade * 255);
+        color = color << 16 | color << 8 | color | 0xFF000000;
+        Vector3f pos = new Vector3f();
+        Vector3f n = p.transformNormal(0, 0, normal, new Vector3f());
+        float[][] corners = {{x0, y0}, {x1, y0}, {x1, y1}, {x0, y1}};
+        for (int i = 0; i < 8; i++) {
+            float[] c = corners[i < 4 ? i : 7 - i];
+            pos.set(c[0], c[1], z);
+            p.pose().transformPosition(pos);
+            vc.addVertex(pos.x, pos.y, pos.z)
+                    .setColor(color)
+                    .setUv(u, v)
+                    .setUv2(light & 0xFFFF, light >> 16 & 0xFFFF)
+                    .setOverlay(overlay)
+                    .setNormal(n.x, n.y, n.z);
+        }
     }
 
     /**
