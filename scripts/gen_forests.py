@@ -397,7 +397,7 @@ MOUNTAINS = {
 # пород — они в тэге #minecraft:dripstone_replaceable_blocks.
 LOCAL_MODIFICATIONS, UNDERGROUND_DECORATION = 2, 7
 UNDERGROUND = {
-    "dripstone_caves": dict(continentalness=(0.8, 1.0), temperature=0.8, downfall=0.4,
+    "dripstone_caves": dict(continentalness=(0.8, 1.0), humidity=(-1.0, 0.7), temperature=0.8, downfall=0.4,
                             features={LOCAL_MODIFICATIONS: ["minecraft:large_dripstone"],
                                       UNDERGROUND_DECORATION: ["minecraft:dripstone_cluster", "minecraft:pointed_dripstone"]},
                             music="minecraft:music.overworld.dripstone_caves",
@@ -492,7 +492,7 @@ def biomes():
 
 
 def entry(biome, t, h, c, e, w, depth=0.0):
-    return {"biome": f"{NS}:{biome}", "parameters": {
+    return {"biome": biome if ":" in biome else f"{NS}:{biome}", "parameters": {
         "temperature": list(t), "humidity": list(h), "continentalness": list(c), "erosion": list(e),
         "depth": list(depth) if isinstance(depth, tuple) else depth, "weirdness": list(w), "offset": 0.0}}
 
@@ -590,7 +590,10 @@ def layout_entries():
             out.append(entry(biome[side] if isinstance(biome, tuple) else biome, t, h, c, e, w))
     # как у ванильных: глубже подземных биомов (глубина 1) — снова биом поверхности
     out += [dict(e, parameters=dict(e["parameters"], depth=1.0)) for e in out]
-    out += [entry(b, ALL, ALL, u["continentalness"], ALL, ALL, (0.2, 0.9)) for b, u in UNDERGROUND.items()]
+    out += [entry(b, ALL, u.get("humidity", ALL), u["continentalness"], ALL, ALL, (0.2, 0.9))
+            for b, u in UNDERGROUND.items()]
+    # ванильные пышные пещеры — во влажных местах, поэтому натёчные занимают только сухие
+    out += [entry("minecraft:lush_caves", ALL, (0.7, 1.0), ALL, ALL, ALL, (0.2, 0.9))]
     return out
 
 

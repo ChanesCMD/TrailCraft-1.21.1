@@ -1,38 +1,50 @@
 package io.github.ChanesCMD.trailcraft.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import io.github.ChanesCMD.trailcraft.block.LogPileBlock;
 import io.github.ChanesCMD.trailcraft.block.ThinLogBlock;
 import io.github.ChanesCMD.trailcraft.block.entity.LogPileBlockEntity;
 import io.github.ChanesCMD.trailcraft.init.ModTags;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import org.joml.Vector3f;
 
 /**
- * Брёвна поленницы лежат горизонтально. Слот — клетка 3×3 пикселя в сечении (LogPileBlockEntity.slotAt): слева
- * направо, потом снизу вверх; по бокам сетки стоят палки-подпорки, по две с каждой стороны. Толстое бревно — одно в клетку, тонких в клетке до четырёх, по 2×2 (на 4 тонких в слоте
- * приходится одно нарисованное, слот из 16 — все четыре). Тонкое бревно — труба с ответвлениями (ThinLogBlock), поэтому
- * его состояние собирается вручную: ответвления только по оси брёвен.
+ * Брёвна поленницы лежат горизонтально. Слот — клетка {@code CELL} (4×4 пикселя) в сечении: слева направо, потом
+ * снизу вверх. Брёвна лежат вплотную к краю блока, между ними стоят палки-подпорки — тонкие (1 пиксель) столбики в два
+ * блока высотой: один блок торчит над поленницей, один внутри неё. Толстое бревно — одно в клетку, тонких в клетке до
+ * четырёх, по 2×2. Текстура бревна рисуется 1:1 (не растягивается на клетку): торцы — кусок текстуры торца, бока —
+ * полоса коры во всю длину бревна. Тонкое бревно — труба с ответвлениями (ThinLogBlock), её состояние собирается
+ * вручную: ответвления только по оси брёвен.
  */
 public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> {
     private static final float CELL = LogPileBlockEntity.CELL, MARGIN = LogPileBlockEntity.MARGIN;
-    /** Подпорки: столбик 2×2 пикселя на каждом краю, вдоль брёвен — на четверти и на трёх четвертях длины. */
-    private static final float STAKE = 2 / 16f;
-    private static final float[] STAKE_Z = {4 / 16f, 12 / 16f};
+    /** Подпорки: столбик 1 пиксель толщиной и в два блока высотой (из них один — над поленницей). */
+    private static final float STAKE = 1 / 16f, STAKE_HEIGHT = 2f;
+    /** Палки стоят по углам блока: по краям (поперёк брёвен) и у торцов, наполовину выступая за блок. */
+    private static final float[] STAKE_X = {0f, 1f};
+    private static final float[] STAKE_Z = {STAKE / 2, 1 - STAKE / 2};
     private static final BlockState STAKE_POST = Blocks.OAK_FENCE.defaultBlockState();
     /** Тонкое бревно занимает 6 из 16 пикселей блока, а в клетке для него — половина клетки. */
     private static final float THIN_SCALE = (CELL / 2) / (6 / 16f);
     private static final int THIN_PER_CELL = 4;
+    private static final RandomSource RANDOM = RandomSource.create(42L);
 
     private final BlockRenderDispatcher blocks;
 
@@ -71,29 +83,101 @@ public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> 
                 if (log.hasProperty(RotatedPillarBlock.AXIS)) {
                     log = log.setValue(RotatedPillarBlock.AXIS, Direction.Axis.Z);
                 }
-                pose.pushPose();
-                pose.translate(x, y, 0);
-                pose.scale(CELL, CELL, 1f);
-                blocks.renderSingleBlock(log, pose, buffers, light, overlay);
-                pose.popPose();
+                renderLog(log, pose, buffers, light, overlay, x, y);
             }
         }
         renderStakes(pile, pose, buffers, light, overlay);
         pose.popPose();
     }
 
-    /** Четыре палки по краям: чуть выше верхнего ряда брёвен (столбик забора, сжатый до 2×2 пикселей). */
+    /**
+     * Бревно в клетку: коробка {@code CELL}×{@code CELL}×16 пикселей, текстура — 1:1, без растяжения. Торец (передняя
+     * и задняя грани) — кусок текстуры торца, бока — кора во всю длину бревна. Грани рисуются с двух сторон, чтобы не
+     * зависеть от намотки вершин.
+     */
+    private void renderLog(BlockState log, PoseStack pose, MultiBufferSource buffers, int light, int overlay, float x, float y) {
+        BakedModel model = blocks.getBlockModel(log);
+        TextureAtlasSprite side = null, end = null;
+        for (Direction dir : Direction.values()) {
+            java.util.List<BakedQuad> quads = model.getQuads(log, dir, RANDOM);
+            if (quads.isEmpty()) {
+                continue;
+            }
+            if (dir.getAxis() == Direction.Axis.Y) {
+                if (end == null) {
+                    end = quads.get(0).getSprite();
+                }
+            } else if (side == null) {
+                side = quads.get(0).getSprite();
+            }
+        }
+        if (side == null) {
+            side = model.getParticleIcon();
+        }
+        if (end == null) {
+            end = side;
+        }
+        float x0 = x, x1 = x + CELL, y0 = y, y1 = y + CELL, z0 = 0f, z1 = 1f;
+        float cross = CELL * 16f, length = 16f;
+        VertexConsumer vc = buffers.getBuffer(RenderType.cutout());
+        PoseStack.Pose p = pose.last();
+        // низ и верх — кора во всю длину
+        box(vc, p, new float[][]{{x0, y0, z0}, {x1, y0, z0}, {x1, y0, z1}, {x0, y0, z1}}, side, cross, length,
+                light, overlay, 0.5f, 0, -1, 0);
+        box(vc, p, new float[][]{{x0, y1, z0}, {x1, y1, z0}, {x1, y1, z1}, {x0, y1, z1}}, side, cross, length,
+                light, overlay, 1.0f, 0, 1, 0);
+        // бока — кора
+        box(vc, p, new float[][]{{x0, y0, z0}, {x0, y0, z1}, {x0, y1, z1}, {x0, y1, z0}}, side, length, cross,
+                light, overlay, 0.6f, -1, 0, 0);
+        box(vc, p, new float[][]{{x1, y0, z0}, {x1, y0, z1}, {x1, y1, z1}, {x1, y1, z0}}, side, length, cross,
+                light, overlay, 0.6f, 1, 0, 0);
+        // торцы — кусок текстуры торца
+        box(vc, p, new float[][]{{x0, y1, z0}, {x1, y1, z0}, {x1, y0, z0}, {x0, y0, z0}}, end, cross, cross,
+                light, overlay, 0.8f, 0, 0, -1);
+        box(vc, p, new float[][]{{x0, y1, z1}, {x1, y1, z1}, {x1, y0, z1}, {x0, y0, z1}}, end, cross, cross,
+                light, overlay, 0.8f, 0, 0, 1);
+    }
+
+    /** Грань по четырём углам: UV от левого верхнего угла спрайта, окно width×height пикселей; с обеих сторон. */
+    private static void box(VertexConsumer vc, PoseStack.Pose pose, float[][] corners, TextureAtlasSprite sprite,
+                            float widthPx, float heightPx, int light, int overlay, float shade, float nx, float ny, float nz) {
+        float texU = (sprite.getU1() - sprite.getU0()) / 16f, texV = (sprite.getV1() - sprite.getV0()) / 16f;
+        uvQuad(vc, pose, corners, sprite.getU0(), sprite.getV0(), widthPx * texU, heightPx * texV,
+                light, overlay, shade, nx, ny, nz);
+        float[][] reversed = {corners[3], corners[2], corners[1], corners[0]};
+        uvQuad(vc, pose, reversed, sprite.getU0(), sprite.getV0(), widthPx * texU, heightPx * texV,
+                light, overlay, shade, -nx, -ny, -nz);
+    }
+
+    private static void uvQuad(VertexConsumer vc, PoseStack.Pose pose, float[][] corners, float u0, float v0,
+                               float du, float dv, int light, int overlay, float shade, float nx, float ny, float nz) {
+        float[][] uv = {{0, 0}, {du, 0}, {du, dv}, {0, dv}};
+        Vector3f pos = new Vector3f();
+        Vector3f normal = pose.transformNormal(nx, ny, nz, new Vector3f());
+        int color = (int) (shade * 255) << 16 | (int) (shade * 255) << 8 | (int) (shade * 255);
+        for (int i = 0; i < 4; i++) {
+            pos.set(corners[i][0], corners[i][1], corners[i][2]);
+            pose.pose().transformPosition(pos);
+            vc.addVertex(pos.x, pos.y, pos.z)
+                    .setColor(color | 0xFF000000)
+                    .setUv(u0 + uv[i][0], v0 + uv[i][1])
+                    .setUv2(light & 0xFFFF, light >> 16 & 0xFFFF)
+                    .setOverlay(overlay)
+                    .setNormal(normal.x, normal.y, normal.z);
+        }
+    }
+
+    /** Палки-подпорки по краям: 1 пиксель толщиной, в два блока высотой (поленница — нижний блок). */
     private void renderStakes(LogPileBlockEntity pile, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
         int top = pile.topRow();
         if (top < 0) {
             return;
         }
-        float height = Math.min(1f, (top + 1) * CELL + 1 / 16f);
-        for (float edge : new float[]{STAKE / 2, 1 - STAKE / 2}) {
+        for (float edge : STAKE_X) {
             for (float z : STAKE_Z) {
                 pose.pushPose();
                 pose.translate(edge, 0, z);
-                pose.scale(STAKE / (4 / 16f), height, STAKE / (4 / 16f));  // у столбика забора сечение 4×4 пикселя
+                pose.scale(STAKE / (4 / 16f), STAKE_HEIGHT, STAKE / (4 / 16f));  // у столбика забора сечение 4×4 пикселя
                 pose.translate(-0.5, 0, -0.5);
                 blocks.renderSingleBlock(STAKE_POST, pose, buffers, light, overlay);
                 pose.popPose();
