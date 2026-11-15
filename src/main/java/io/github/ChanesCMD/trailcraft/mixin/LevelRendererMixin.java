@@ -23,16 +23,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * Погода частицами (client/weather/WeatherParticles): ванильные полосы дождя и снега не рисуются, а в tickRain
  * не спавнятся ванильные брызги и дымок (их заменяют свои). Звук дождя из tickRain остаётся.
  * Снег появился на дереве или пропал (blockChanged) — client/TreeSnow сбрасывает кеш и перестраивает крону.
- * Облака рисуются дальше ванильного: площадка buildClouds расширена с 8 клеток (768 блоков) до 25 (2400 блоков),
+ * Облака рисуются дальше ванильного: площадка buildClouds расширена с 8 клеток (768 блоков) до 65 (6300 блоков),
  * и туман для них отодвинут к самому краю площадки — иначе шейдер облаков режет их по render distance.
  */
 @Mixin(LevelRenderer.class)
 public abstract class LevelRendererMixin {
-    /** Полуширина площадки облаков в клетках по 8 единиц (96 блоков). Ваниль — 3 (768 блоков), тут 12 (2400). */
-    private static final int TRAILCRAFT_CLOUD_CELLS = 12;
-    /** Туман облаков: до 900 блоков их не трогает вовсе, к 1140 (край площадки) они растворяются в небе. */
-    private static final float TRAILCRAFT_CLOUD_FOG_START = 900.0F;
-    private static final float TRAILCRAFT_CLOUD_FOG_END = 1140.0F;
+    /** Полуширина площадки облаков в клетках по 8 единиц (96 блоков). Ваниль — 3 (768 блоков), тут 32 (6300). */
+    private static final int TRAILCRAFT_CLOUD_CELLS = 32;
+    /** Туман облаков: до 2400 блоков их не трогает вовсе, к 3000 (край площадки) они растворяются в небе. */
+    private static final float TRAILCRAFT_CLOUD_FOG_START = 2400.0F;
+    private static final float TRAILCRAFT_CLOUD_FOG_END = 3000.0F;
     private float trailcraft$savedFogStart;
     private float trailcraft$savedFogEnd;
 
