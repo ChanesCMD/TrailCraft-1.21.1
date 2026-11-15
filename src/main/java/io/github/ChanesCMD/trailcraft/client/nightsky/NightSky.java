@@ -65,7 +65,7 @@ public final class NightSky {
             float[] color = palette[random.nextInt(palette.length)];
             float bright = 0.45F + random.nextFloat() * 0.55F;
             list.add(new Star(pos,
-                    0.07F + random.nextFloat() * 0.17F + (random.nextFloat() < 0.08F ? 0.12F : 0.0F),
+                    0.07F + random.nextFloat() * 0.17F + (random.nextFloat() < 0.08F ? 0.08F : 0.0F),
                     color[0] * bright, color[1] * bright, color[2] * bright,
                     0.55F + random.nextFloat() * 0.45F));
         }
