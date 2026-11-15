@@ -89,17 +89,19 @@ public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> 
         pose.popPose();
     }
 
-    /** Четыре палки по краям: чуть выше верхнего ряда брёвен (столбик забора, сжатый до 2×2 пикселей). */
+    /**
+     * Четыре палки по краям: 16 пикселей в высоту, сдвинуты на пиксель вниз и на пиксель в стороны от поленницы
+     * (столбик забора, сжатый до 2×2 пикселей).
+     */
     private void renderStakes(LogPileBlockEntity pile, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
-        int top = pile.topRow();
-        if (top < 0) {
+        if (pile.topRow() < 0) {
             return;
         }
-        float height = Math.min(1f, (top + 1) * CELL + 1 / 16f);
-        for (float edge : new float[]{STAKE / 2, 1 - STAKE / 2}) {
+        float height = 1f;
+        for (float edge : new float[]{STAKE / 2 - 1 / 16f, 1 - STAKE / 2 + 1 / 16f}) {
             for (float z : STAKE_Z) {
                 pose.pushPose();
-                pose.translate(edge, 0, z);
+                pose.translate(edge, -1 / 16f, z);
                 pose.scale(STAKE / (4 / 16f), height, STAKE / (4 / 16f));  // у столбика забора сечение 4×4 пикселя
                 pose.translate(-0.5, 0, -0.5);
                 blocks.renderSingleBlock(STAKE_POST, pose, buffers, light, overlay);
