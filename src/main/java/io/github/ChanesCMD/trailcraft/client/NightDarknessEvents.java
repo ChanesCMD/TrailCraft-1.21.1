@@ -32,9 +32,15 @@ public final class NightDarknessEvents {
             return;
         }
         GuiGraphics g = event.getGuiGraphics();
+        int width = mc.getWindow().getGuiScaledWidth(), height = mc.getWindow().getGuiScaledHeight();
+        // плотный тестовый оттенок сезона — видно даже без тумана
+        float[] tint = SeasonSky.tint(mc.level);
+        int tintAlpha = 24;
+        g.fill(0, 0, width, height, (tintAlpha << 24)
+                | ((int) (tint[0] * 255) << 16) | ((int) (tint[1] * 255) << 8) | (int) (tint[2] * 255));
         int alpha = Math.round(255f * 0.5f * night);
         if (alpha > 0) {
-            g.fill(0, 0, mc.getWindow().getGuiScaledWidth(), mc.getWindow().getGuiScaledHeight(), alpha << 24);
+            g.fill(0, 0, width, height, alpha << 24);
         }
     }
 

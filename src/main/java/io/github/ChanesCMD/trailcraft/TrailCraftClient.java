@@ -8,6 +8,7 @@ import io.github.ChanesCMD.trailcraft.client.NightDarknessEvents;
 import net.minecraft.client.Minecraft;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -30,7 +31,7 @@ public class TrailCraftClient {
         // Do not forget to add translations for your config options to the en_us.json file.
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
         container.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
-        NeoForge.EVENT_BUS.addListener(NightDarknessEvents::fog);
+        NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, false, NightDarknessEvents::fog);
         NeoForge.EVENT_BUS.addListener(NightDarknessEvents::overlay);
         // Только запуск из среды разработки (play.bat): у игроков этого свойства нет
         String pidFile = System.getProperty("trailcraft.pidFile");
