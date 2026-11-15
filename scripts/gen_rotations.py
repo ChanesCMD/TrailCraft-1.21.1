@@ -42,7 +42,8 @@ def rotate_texture(name, angle):
 
 
 def soil_rotation(soil):
-    """Четыре варианта почвы, у которых повёрнуты и верх, и боковые текстуры."""
+    """Четыре варианта почвы: повёрнуты и верх, и боковые текстуры. У дёрна верх (turf_top) тоже
+    поворачивается, а боковая трава (turf_side) — нет, как у ванильного дёрна."""
     with open(os.path.join(ROOT, "models", "block", f"{soil}_grass.json"), encoding="utf-8") as f:
         grass_template = json.load(f)
     variants = []
@@ -54,7 +55,7 @@ def soil_rotation(soil):
         grass["textures"] = {
             "particle": f"{NS}:block/{soil}_{n}",
             "bottom": f"{NS}:block/{soil}_{n}",
-            "top": f"{NS}:block/turf_top",
+            "top": f"{NS}:block/turf_top_{n}",
             "side": f"{NS}:block/{soil}_{n}",
             "overlay": f"{NS}:block/turf_side",
         }
@@ -66,12 +67,12 @@ def soil_rotation(soil):
 
 
 def main():
+    # верх дёрна поворачиваем вместе с почвой, боковую траву — нет
+    for n, angle in enumerate((0, 90, 180, 270)):
+        rotate_texture("turf_top", angle)
+        os.replace(os.path.join(TEX, f"turf_top_{angle // 90}.png"), os.path.join(TEX, f"turf_top_{n}.png"))
     for soil in SOILS:
-        if soil in ("zheltozem", "burozem", "chernozem"):
-            soil_rotation(soil)
-        else:
-            write(f"blockstates/{soil}.json", turned(f"{NS}:block/{soil}"))
-            write(f"blockstates/{soil}_grass.json", turned(f"{NS}:block/{soil}_grass"))
+        soil_rotation(soil)
     for block in SANDS + GRAVELS:
         write(f"blockstates/{block}.json", turned(f"{NS}:block/{block}"))
     for rock in ROCKS:

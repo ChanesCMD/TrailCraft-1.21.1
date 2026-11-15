@@ -2,19 +2,16 @@
   "variants": {
     "": [
       {
-        "model": "trailcraft:block/clay_gray_grass"
+        "model": "trailcraft:block/clay_gray_grass_0"
       },
       {
-        "model": "trailcraft:block/clay_gray_grass",
-        "y": 90
+        "model": "trailcraft:block/clay_gray_grass_1"
       },
       {
-        "model": "trailcraft:block/clay_gray_grass",
-        "y": 180
+        "model": "trailcraft:block/clay_gray_grass_2"
       },
       {
-        "model": "trailcraft:block/clay_gray_grass",
-        "y": 270
+        "model": "trailcraft:block/clay_gray_grass_3"
       }
     ]
   }

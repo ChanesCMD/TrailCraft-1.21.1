@@ -4,7 +4,7 @@
   "textures": {
     "particle": "trailcraft:block/burozem_3",
     "bottom": "trailcraft:block/burozem_3",
-    "top": "trailcraft:block/turf_top",
+    "top": "trailcraft:block/turf_top_3",
     "side": "trailcraft:block/burozem_3",
     "overlay": "trailcraft:block/turf_side"
   },
