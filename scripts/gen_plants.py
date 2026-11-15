@@ -175,6 +175,13 @@ def textures(client):
         os.makedirs(os.path.dirname(os.path.join(TEX, ours)), exist_ok=True)
         img.save(os.path.join(TEX, *ours.split("/")) + ".png")
         images.append(img)
+        # келп анимирован: без .mcmeta в том же пакете игра покажет всю полосу кадров сжатой
+        try:
+            meta = client.read(f"assets/minecraft/textures/{vanilla}.png.mcmeta")
+        except KeyError:
+            continue
+        with open(os.path.join(TEX, *ours.split("/")) + ".png.mcmeta", "wb") as f:
+            f.write(meta)
     for ours, (vanilla, fn) in RECOLOR.items():
         img = hsv_map(Image.open(BytesIO(client.read(f"assets/minecraft/textures/{vanilla}.png"))), fn)
         os.makedirs(os.path.dirname(os.path.join(TEX, ours)), exist_ok=True)
