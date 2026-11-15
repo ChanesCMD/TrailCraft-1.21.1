@@ -130,11 +130,22 @@ public class LogPileRenderer implements BlockEntityRenderer<LogPileBlockEntity> 
             box(vc, p, new float[][]{{x1, y0, z}, {x1, y1, z}, {x1, y1, z2}, {x1, y0, z2}}, side, texelWidth, lengthTexels,
                     light, overlay, 0.6f, 1, 0, 0);
         }
-        // торцы
-        box(vc, p, new float[][]{{x0, y1, 0f}, {x1, y1, 0f}, {x1, y0, 0f}, {x0, y0, 0f}}, end, texelWidth, texelWidth,
-                light, overlay, 0.8f, 0, 0, -1);
-        box(vc, p, new float[][]{{x0, y1, 1f}, {x1, y1, 1f}, {x1, y0, 1f}, {x0, y0, 1f}}, end, texelWidth, texelWidth,
-                light, overlay, 0.8f, 0, 0, 1);
+        // торцы: по краю пиксель коры, внутри — сердцевина (у толстого 6 пикселей, у тонкого 2)
+        endFace(vc, p, x0, y0, x1, y1, 0f, size / texelWidth, side, end, light, overlay, -1);
+        endFace(vc, p, x0, y0, x1, y1, 1f, size / texelWidth, side, end, light, overlay, 1);
+    }
+
+    /** Торец бревна: рамка коры толщиной rim и сердцевина (текстура торца целиком) внутри. */
+    private void endFace(VertexConsumer vc, PoseStack.Pose p, float x0, float y0, float x1, float y1, float z,
+                         float rim, TextureAtlasSprite side, TextureAtlasSprite end, int light, int overlay, int normal) {
+        float xt = x0 + rim, xr = x1 - rim, yt = y1 - rim, yb = y0 + rim;
+        // рамка коры четырьмя полосами — без наложений, чтобы не мерцало
+        box(vc, p, new float[][]{{x0, y1, z}, {x1, y1, z}, {x1, yt, z}, {x0, yt, z}}, side, 1, 1, light, overlay, 0.7f, 0, 0, normal);
+        box(vc, p, new float[][]{{x0, yb, z}, {x1, yb, z}, {x1, y0, z}, {x0, y0, z}}, side, 1, 1, light, overlay, 0.7f, 0, 0, normal);
+        box(vc, p, new float[][]{{x0, yt, z}, {xt, yt, z}, {xt, yb, z}, {x0, yb, z}}, side, 1, 1, light, overlay, 0.65f, 0, 0, normal);
+        box(vc, p, new float[][]{{xr, yt, z}, {x1, yt, z}, {x1, yb, z}, {xr, yb, z}}, side, 1, 1, light, overlay, 0.65f, 0, 0, normal);
+        // сердцевина — кольца
+        box(vc, p, new float[][]{{xt, yt, z}, {xr, yt, z}, {xr, yb, z}, {xt, yb, z}}, end, 16f, 16f, light, overlay, 0.85f, 0, 0, normal);
     }
 
     /** Грань по четырём углам: UV от левого верхнего угла спрайта, окно width×height пикселей; с обеих сторон. */
