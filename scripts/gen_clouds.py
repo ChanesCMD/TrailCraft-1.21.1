@@ -1,4 +1,4 @@
-"""Небольшие облачные массивы неправильной ступенчатой формы."""
+"""Плотные слоистые пласты: больше полос в группе, меньше вертикальных зазоров."""
 import os
 import random
 
@@ -13,37 +13,34 @@ draw = ImageDraw.Draw(img)
 WHITE = (255, 255, 255, 255)
 
 
-def puff(x, y, w, h):
-    draw.rectangle((x, y, x + w, y + h), fill=WHITE)
+def bar(x, y, length, height):
+    draw.rectangle((x, y, x + length, y + height), fill=WHITE)
+    if rng.random() < 0.5:
+        draw.rectangle((x + rng.randint(3, 12), y + height, x + length - rng.randint(2, 14), y + height + 1),
+                       fill=WHITE)
 
 
-def walk(x, y, steps):
-    """Ступенчатая облачная клякса: направление и выступы меняются случайно."""
-    for _ in range(steps):
-        w = rng.randint(3, 9)
-        h = rng.randint(2, 6)
-        puff(x, y, w, h)
-        # случайный выступ вбок
-        if rng.random() < 0.35:
-            if rng.random() < 0.5:
-                puff(x + w, y + rng.randint(-2, h), rng.randint(2, 6), rng.randint(2, 4))
-            else:
-                puff(x - rng.randint(2, 6), y + rng.randint(-2, h), rng.randint(2, 5), rng.randint(2, 4))
-        # шаг в одном из восьми направлений, но с разной длиной
-        dir = rng.choice([(1, 0), (0, 1), (1, 1), (1, -1), (2, 1), (1, 2), (-1, 1), (2, -1)])
-        x += dir[0] * rng.randint(2, 6)
-        y += dir[1] * rng.randint(2, 6)
-        x = max(-10, min(260, x))
-        y = max(-10, min(260, y))
+for gy in range(0, 256, 34):
+    for gx in range(0, 256, 36):
+        if rng.random() > 0.48:
+            continue
+        layers = rng.randint(3, 6)
+        base_x = gx + rng.randint(0, 12)
+        base_y = gy + rng.randint(0, 12)
+        for layer in range(layers):
+            length = rng.randint(28, 92)
+            x = base_x + rng.randint(-8, 8) + layer * rng.randint(-3, 3)
+            y = base_y + layer * rng.randint(4, 6)
+            if x + length > 256:
+                x = 256 - length
+            if x < 0:
+                x = 0
+            bar(x, y, length, rng.randint(2, 4))
 
-
-# Несколько десятков небольших рваных массивов.
-for _ in range(92):
-    walk(rng.randint(-10, 250), rng.randint(-10, 250), rng.randint(7, 13))
-
-# Короткие отдельные клочки между ними.
-for _ in range(55):
-    puff(rng.randint(0, 250), rng.randint(0, 250), rng.randint(3, 7), rng.randint(2, 5))
+# Длинные одиночные пласты.
+for _ in range(16):
+    x, y = rng.randint(0, 170), rng.randint(0, 250)
+    bar(x, y, rng.randint(45, 90), rng.randint(2, 4))
 
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 img.save(OUT)
