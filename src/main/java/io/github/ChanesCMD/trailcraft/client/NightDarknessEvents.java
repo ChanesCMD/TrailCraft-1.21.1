@@ -37,11 +37,13 @@ public final class NightDarknessEvents {
         float night = strength();
         GuiGraphics g = event.getGuiGraphics();
         int width = mc.getWindow().getGuiScaledWidth(), height = mc.getWindow().getGuiScaledHeight();
-        // сезонный оттенок: днём слабый, ночью чуть плотнее
+        // сезонный оттенок только днём: ночью он давал тёплый, а не чёрный чёрный (HSV 40/18/6)
         float[] tint = SeasonSky.tint(mc.level);
-        int tintAlpha = night > 0f ? 24 : 16;
-        g.fill(0, 0, width, height, (tintAlpha << 24)
-                | ((int) (tint[0] * 255) << 16) | ((int) (tint[1] * 255) << 8) | (int) (tint[2] * 255));
+        int tintAlpha = Math.round(16f * (1f - night));
+        if (tintAlpha > 0) {
+            g.fill(0, 0, width, height, (tintAlpha << 24)
+                    | ((int) (tint[0] * 255) << 16) | ((int) (tint[1] * 255) << 8) | (int) (tint[2] * 255));
+        }
         int alpha = Math.round(255f * 0.5f * night);
         if (alpha > 0) {
             g.fill(0, 0, width, height, alpha << 24);
