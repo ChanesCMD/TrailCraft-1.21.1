@@ -13,9 +13,20 @@ public final class NightDarknessEvents {
         float night = strength();
         float[] tint = SeasonSky.tint(Minecraft.getInstance().level);
         float k = 1f - 0.6f * night;
-        event.setRed(event.getRed() * k * tint[0]);
-        event.setGreen(event.getGreen() * k * tint[1]);
-        event.setBlue(event.getBlue() * k * tint[2]);
+        float red = event.getRed() * k * tint[0];
+        float green = event.getGreen() * k * tint[1];
+        float blue = event.getBlue() * k * tint[2];
+        if (night > 0f) {
+            // ночью туман тоже нейтральный и почти чёрный: иначе у горизонта видна светлая полоса и её ступеньки
+            float grey = (red + green + blue) / 3f;
+            float fade = 1f - 0.88f * night;
+            red = (red + (grey - red) * night) * fade;
+            green = (green + (grey - green) * night) * fade;
+            blue = (blue + (grey - blue) * night) * fade;
+        }
+        event.setRed(red);
+        event.setGreen(green);
+        event.setBlue(blue);
     }
 
     @SubscribeEvent
