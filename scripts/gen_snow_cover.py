@@ -164,7 +164,7 @@ def plants():
             for snow in range(9):
                 base = f"trailcraft:block/cattail_{'bottom' if half == 'lower' else 'top'}"
                 model = base if snow == 0 else base + "_snow"
-                key = f"half={half},waterlogged={waterlogged},snow={snow}"
+                key = {"AND": [{"half": half}, {"waterlogged": waterlogged}, {"snow": str(snow)}]}
                 entries = [{"model": model}]
                 if snow > 0 and half == "lower":
                     entries.append({"model": f"minecraft:block/{LAYERS[snow]}"})

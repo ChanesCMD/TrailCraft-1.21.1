@@ -1,7 +1,19 @@
 {
   "multipart": [
     {
-      "when": "half=lower,waterlogged=false,snow=0",
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "snow": "0"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_bottom"
@@ -9,7 +21,19 @@
       ]
     },
     {
-      "when": "half=lower,waterlogged=false,snow=1",
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "snow": "1"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_bottom_snow"
@@ -20,7 +44,19 @@
       ]
     },
     {
-      "when": "half=lower,waterlogged=false,snow=2",
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "snow": "2"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_bottom_snow"
@@ -31,7 +67,19 @@
       ]
     },
     {
-      "when": "half=lower,waterlogged=false,snow=3",
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "snow": "3"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_bottom_snow"
@@ -42,7 +90,19 @@
       ]
     },
     {
-      "when": "half=lower,waterlogged=false,snow=4",
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "snow": "4"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_bottom_snow"
@@ -53,7 +113,19 @@
       ]
     },
     {
-      "when": "half=lower,waterlogged=false,snow=5",
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "snow": "5"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_bottom_snow"
@@ -64,7 +136,19 @@
       ]
     },
     {
-      "when": "half=lower,waterlogged=false,snow=6",
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "snow": "6"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_bottom_snow"
@@ -75,7 +159,19 @@
       ]
     },
     {
-      "when": "half=lower,waterlogged=false,snow=7",
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "snow": "7"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_bottom_snow"
@@ -86,7 +182,19 @@
       ]
     },
     {
-      "when": "half=lower,waterlogged=false,snow=8",
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "snow": "8"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_bottom_snow"
@@ -97,7 +205,19 @@
       ]
     },
     {
-      "when": "half=lower,waterlogged=true,snow=0",
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "snow": "0"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_bottom"
@@ -105,7 +225,19 @@
       ]
     },
     {
-      "when": "half=lower,waterlogged=true,snow=1",
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "snow": "1"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_bottom_snow"
@@ -116,7 +248,19 @@
       ]
     },
     {
-      "when": "half=lower,waterlogged=true,snow=2",
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "snow": "2"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_bottom_snow"
@@ -127,7 +271,19 @@
       ]
     },
     {
-      "when": "half=lower,waterlogged=true,snow=3",
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "snow": "3"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_bottom_snow"
@@ -138,7 +294,19 @@
       ]
     },
     {
-      "when": "half=lower,waterlogged=true,snow=4",
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "snow": "4"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_bottom_snow"
@@ -149,7 +317,19 @@
       ]
     },
     {
-      "when": "half=lower,waterlogged=true,snow=5",
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "snow": "5"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_bottom_snow"
@@ -160,7 +340,19 @@
       ]
     },
     {
-      "when": "half=lower,waterlogged=true,snow=6",
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "snow": "6"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_bottom_snow"
@@ -171,7 +363,19 @@
       ]
     },
     {
-      "when": "half=lower,waterlogged=true,snow=7",
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "snow": "7"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_bottom_snow"
@@ -182,7 +386,19 @@
       ]
     },
     {
-      "when": "half=lower,waterlogged=true,snow=8",
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "snow": "8"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_bottom_snow"
@@ -193,7 +409,19 @@
       ]
     },
     {
-      "when": "half=upper,waterlogged=false,snow=0",
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "snow": "0"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_top"
@@ -201,7 +429,19 @@
       ]
     },
     {
-      "when": "half=upper,waterlogged=false,snow=1",
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "snow": "1"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_top_snow"
@@ -209,7 +449,19 @@
       ]
     },
     {
-      "when": "half=upper,waterlogged=false,snow=2",
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "snow": "2"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_top_snow"
@@ -217,7 +469,19 @@
       ]
     },
     {
-      "when": "half=upper,waterlogged=false,snow=3",
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "snow": "3"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_top_snow"
@@ -225,7 +489,19 @@
       ]
     },
     {
-      "when": "half=upper,waterlogged=false,snow=4",
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "snow": "4"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_top_snow"
@@ -233,7 +509,19 @@
       ]
     },
     {
-      "when": "half=upper,waterlogged=false,snow=5",
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "snow": "5"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_top_snow"
@@ -241,7 +529,19 @@
       ]
     },
     {
-      "when": "half=upper,waterlogged=false,snow=6",
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "snow": "6"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_top_snow"
@@ -249,7 +549,19 @@
       ]
     },
     {
-      "when": "half=upper,waterlogged=false,snow=7",
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "snow": "7"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_top_snow"
@@ -257,7 +569,19 @@
       ]
     },
     {
-      "when": "half=upper,waterlogged=false,snow=8",
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "snow": "8"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_top_snow"
@@ -265,7 +589,19 @@
       ]
     },
     {
-      "when": "half=upper,waterlogged=true,snow=0",
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "snow": "0"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_top"
@@ -273,7 +609,19 @@
       ]
     },
     {
-      "when": "half=upper,waterlogged=true,snow=1",
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "snow": "1"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_top_snow"
@@ -281,7 +629,19 @@
       ]
     },
     {
-      "when": "half=upper,waterlogged=true,snow=2",
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "snow": "2"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_top_snow"
@@ -289,7 +649,19 @@
       ]
     },
     {
-      "when": "half=upper,waterlogged=true,snow=3",
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "snow": "3"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_top_snow"
@@ -297,7 +669,19 @@
       ]
     },
     {
-      "when": "half=upper,waterlogged=true,snow=4",
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "snow": "4"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_top_snow"
@@ -305,7 +689,19 @@
       ]
     },
     {
-      "when": "half=upper,waterlogged=true,snow=5",
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "snow": "5"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_top_snow"
@@ -313,7 +709,19 @@
       ]
     },
     {
-      "when": "half=upper,waterlogged=true,snow=6",
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "snow": "6"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_top_snow"
@@ -321,7 +729,19 @@
       ]
     },
     {
-      "when": "half=upper,waterlogged=true,snow=7",
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "snow": "7"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_top_snow"
@@ -329,7 +749,19 @@
       ]
     },
     {
-      "when": "half=upper,waterlogged=true,snow=8",
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "snow": "8"
+          }
+        ]
+      },
       "apply": [
         {
           "model": "trailcraft:block/cattail_top_snow"
