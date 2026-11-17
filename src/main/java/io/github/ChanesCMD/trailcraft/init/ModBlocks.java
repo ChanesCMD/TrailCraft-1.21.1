@@ -6,6 +6,7 @@ import io.github.ChanesCMD.trailcraft.ore.Rock;
 import java.util.EnumMap;
 import java.util.Map;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import io.github.ChanesCMD.trailcraft.block.PebbleBlock;
 import io.github.ChanesCMD.trailcraft.block.SupportBlock;
 import io.github.ChanesCMD.trailcraft.block.CoalBurnerBlock;
@@ -348,6 +349,13 @@ public class ModBlocks {
             BLOCKS.registerBlock("tall_seaweed_plant", TallSeaweedPlantBlock::new,
                     BlockBehaviour.Properties.of().mapColor(MapColor.WATER).replaceable().noCollission().instabreak()
                             .sound(SoundType.WET_GRASS).pushReaction(PushReaction.DESTROY));
+    /** Корнистые зёмы: почва с корнями (наложение как у ванильного rooted_dirt), растут под деревьями азалии. */
+    public static final DeferredBlock<Block> ROOTED_ZELTOZEM = BLOCKS.registerSimpleBlock("rooted_zheltozem",
+            BlockBehaviour.Properties.ofFullCopy(Blocks.ROOTED_DIRT));
+    public static final DeferredBlock<Block> ROOTED_BUROZEM = BLOCKS.registerSimpleBlock("rooted_burozem",
+            BlockBehaviour.Properties.ofFullCopy(Blocks.ROOTED_DIRT));
+    public static final DeferredBlock<Block> ROOTED_CHERNOZEM = BLOCKS.registerSimpleBlock("rooted_chernozem",
+            BlockBehaviour.Properties.ofFullCopy(Blocks.ROOTED_DIRT));
     public static final DeferredBlock<Block> DRIED_SEAWEED_BLOCK = BLOCKS.registerSimpleBlock("dried_seaweed_block",
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).strength(0.5f, 2.5f).sound(SoundType.GRASS));
     /** Кактус пустынь. */

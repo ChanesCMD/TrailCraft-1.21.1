@@ -165,7 +165,11 @@ public final class SeasonColors {
     private static TextureAtlasSprite seasonal(TextureAtlasSprite sprite, String folder) {
         return SPRITES.computeIfAbsent(folder, f -> new ConcurrentHashMap<>()).computeIfAbsent(sprite, s -> {
             ResourceLocation name = s.contents().name();
-            if (!TrailCraft.MODID.equals(name.getNamespace()) || !name.getPath().startsWith("block/")) {
+            boolean ownNamespace = TrailCraft.MODID.equals(name.getNamespace());
+            // у ванильной азалии тоже есть сезонные текстуры (azalea_leaves, flowering_azalea_leaves)
+            boolean azalea = "minecraft".equals(name.getNamespace())
+                    && (name.getPath().equals("block/azalea_leaves") || name.getPath().equals("block/flowering_azalea_leaves"));
+            if ((!ownNamespace && !azalea) || !name.getPath().startsWith("block/")) {
                 return s;
             }
             ResourceLocation ours = ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "block/season/"

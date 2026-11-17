@@ -6,9 +6,15 @@
 такой есть). Хвоя (CONIFERS) не меняется; красный клён осенью остаётся красным (осенней копии нет). Нужен Pillow.
 """
 import colorsys
+import io
 import os
+import sys
+import zipfile
 
 from PIL import Image
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from gen_create_compat import find_jar  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(__file__), "..", "src", "main", "resources", "assets", "trailcraft", "textures", "block")
 # хвойные — та же листва круглый год (у них нет сезонных текстур, ClientEvents.wrapPipeModels их не меняет)
@@ -68,6 +74,20 @@ def main():
             if os.path.exists(meta):
                 with open(meta, encoding="utf-8") as f, open(os.path.join(folder, name + ".mcmeta"), "w", encoding="utf-8") as o:
                     o.write(f.read())
+        print(name)
+    vanilla_leaves()
+
+
+def vanilla_leaves():
+    """Листва азалии ванильная, но зимой ей тоже нужна своя текстура: белая, как у нашей листвы."""
+    jar = zipfile.ZipFile(find_jar("minecraft_1.21.1_client.jar"))
+    for name in ("azalea_leaves", "flowering_azalea_leaves"):
+        raw = jar.read(f"assets/minecraft/textures/block/{name}.png")
+        img = Image.open(io.BytesIO(raw)).convert("RGBA")
+        for season, fn in (("autumn", autumn), ("winter", winter), ("warm_winter", warm_winter)):
+            folder = os.path.join(ROOT, "season", season)
+            os.makedirs(folder, exist_ok=True)
+            recolor(img, fn).save(os.path.join(folder, name + ".png"))
         print(name)
 
 

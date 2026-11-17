@@ -1396,5 +1396,8 @@
   "item.trailcraft.lead_mix": "Шихта чистого свинца",
   "item.trailcraft.gold_mix": "Шихта чистого золота",
   "block.trailcraft.tall_seaweed": "Длинная водоросль",
-  "item.trailcraft.green_dye": "Зелёный краситель"
+  "item.trailcraft.green_dye": "Зелёный краситель",
+  "block.trailcraft.rooted_zheltozem": "Р–С‘Р»С‚РѕР·С‘Рј СЃ РєРѕСЂРЅСЏРјРё",
+  "block.trailcraft.rooted_burozem": "Р‘СѓСЂРѕР·С‘Рј СЃ РєРѕСЂРЅСЏРјРё",
+  "block.trailcraft.rooted_chernozem": "Р§РµСЂРЅРѕР·С‘Рј СЃ РєРѕСЂРЅСЏРјРё"
 }

@@ -13,6 +13,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.SnowLayerBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Map;
@@ -63,7 +64,7 @@ public final class TreeSnow {
         LongArrayList leaves = new LongArrayList();
         BlockPos.MutableBlockPos cur = new BlockPos.MutableBlockPos();
         BlockPos.MutableBlockPos next = new BlockPos.MutableBlockPos();
-        boolean snowy = false;
+        int snowLayers = 0, snowyBlocks = 0;
         seen.add(start.asLong());
         queue.enqueue(start.asLong());
         while (!queue.isEmpty() && seen.size() < LIMIT) {
@@ -72,8 +73,10 @@ public final class TreeSnow {
             boolean isLeaf = level.getBlockState(cur).getBlock() instanceof LeavesBlock;
             if (isLeaf) {
                 leaves.add(packed);
-                if (level.getBlockState(next.setWithOffset(cur, Direction.UP)).is(Blocks.SNOW)) {
-                    snowy = true;
+                BlockState above = level.getBlockState(next.setWithOffset(cur, Direction.UP));
+                if (above.is(Blocks.SNOW) || above.is(Blocks.SNOW_BLOCK)) {
+                    snowLayers += above.is(Blocks.SNOW_BLOCK) ? 8 : above.getValue(SnowLayerBlock.LAYERS);
+                    snowyBlocks++;
                 }
             }
             // листва держится за соседей и по диагонали (висящие на краю кроны листья), ствол — только гранями
@@ -94,7 +97,7 @@ public final class TreeSnow {
                 }
             }
         }
-        return new Scan(snowy, leaves);
+        return new Scan(snowLayers >= 4 && snowyBlocks >= 2, leaves);
     }
 
     private static boolean isTreePart(BlockState state) {

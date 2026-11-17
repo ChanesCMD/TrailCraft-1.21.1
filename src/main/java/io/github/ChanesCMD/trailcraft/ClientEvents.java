@@ -109,8 +109,11 @@ public class ClientEvents {
         // листва по сезонам (client/SeasonColors): осенью и зимой — свои текстуры; у хвои их нет, она не меняется
         io.github.ChanesCMD.trailcraft.client.SeasonColors.clearCache();
         for (net.minecraft.world.level.block.Block block : net.minecraft.core.registries.BuiltInRegistries.BLOCK) {
-            if (block instanceof net.minecraft.world.level.block.LeavesBlock
-                    && TrailCraft.MODID.equals(net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(block).getNamespace())) {
+            boolean ours = TrailCraft.MODID.equals(net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(block).getNamespace());
+            // листва азалии ванильная, но зимой у неё своя текстура — её модели тоже оборачиваем
+            boolean azalea = block == net.minecraft.world.level.block.Blocks.AZALEA_LEAVES
+                    || block == net.minecraft.world.level.block.Blocks.FLOWERING_AZALEA_LEAVES;
+            if (block instanceof net.minecraft.world.level.block.LeavesBlock && (ours || azalea)) {
                 for (var state : block.getStateDefinition().getPossibleStates()) {
                     e.getModels().computeIfPresent(net.minecraft.client.renderer.block.BlockModelShaper.stateToModelLocation(state),
                             (location, model) -> new io.github.ChanesCMD.trailcraft.client.SeasonColors.LeavesModel(model));

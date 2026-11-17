@@ -1396,5 +1396,8 @@
   "item.trailcraft.lead_mix": "Pure Lead Mix",
   "item.trailcraft.gold_mix": "Pure Gold Mix",
   "block.trailcraft.tall_seaweed": "Tall Seaweed",
-  "item.trailcraft.green_dye": "Green Dye"
+  "item.trailcraft.green_dye": "Green Dye",
+  "block.trailcraft.rooted_zheltozem": "Rooted Yellow Soil",
+  "block.trailcraft.rooted_burozem": "Rooted Brown Soil",
+  "block.trailcraft.rooted_chernozem": "Rooted Black Soil"
 }

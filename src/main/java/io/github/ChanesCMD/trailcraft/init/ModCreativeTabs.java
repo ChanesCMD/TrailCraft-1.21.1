@@ -100,6 +100,9 @@ public class ModCreativeTabs {
                         output.accept(ModItems.SEAWEED);
                         output.accept(ModItems.TALL_SEAWEED);
                         output.accept(ModItems.DRIED_SEAWEED_BLOCK);
+                        output.accept(ModItems.ROOTED_ZELTOZEM);
+                        output.accept(ModItems.ROOTED_BUROZEM);
+                        output.accept(ModItems.ROOTED_CHERNOZEM);
                         output.accept(ModItems.CACTUS);
                         output.accept(ModItems.WHEAT_SEEDS);
                         output.accept(ModItems.WHEAT);
