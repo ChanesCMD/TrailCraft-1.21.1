@@ -10,6 +10,9 @@
             "waterlogged": "false"
           },
           {
+            "frozen": "false"
+          },
+          {
             "snow": "0"
           }
         ]
@@ -28,6 +31,9 @@
           },
           {
             "waterlogged": "false"
+          },
+          {
+            "frozen": "false"
           },
           {
             "snow": "1"
@@ -53,6 +59,9 @@
             "waterlogged": "false"
           },
           {
+            "frozen": "false"
+          },
+          {
             "snow": "2"
           }
         ]
@@ -74,6 +83,9 @@
           },
           {
             "waterlogged": "false"
+          },
+          {
+            "frozen": "false"
           },
           {
             "snow": "3"
@@ -99,6 +111,9 @@
             "waterlogged": "false"
           },
           {
+            "frozen": "false"
+          },
+          {
             "snow": "4"
           }
         ]
@@ -120,6 +135,9 @@
           },
           {
             "waterlogged": "false"
+          },
+          {
+            "frozen": "false"
           },
           {
             "snow": "5"
@@ -145,6 +163,9 @@
             "waterlogged": "false"
           },
           {
+            "frozen": "false"
+          },
+          {
             "snow": "6"
           }
         ]
@@ -166,6 +187,9 @@
           },
           {
             "waterlogged": "false"
+          },
+          {
+            "frozen": "false"
           },
           {
             "snow": "7"
@@ -191,6 +215,9 @@
             "waterlogged": "false"
           },
           {
+            "frozen": "false"
+          },
+          {
             "snow": "8"
           }
         ]
@@ -211,7 +238,268 @@
             "half": "lower"
           },
           {
+            "waterlogged": "false"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "0"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_bottom"
+        },
+        {
+          "model": "trailcraft:block/cattail_ice"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "1"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_bottom_snow"
+        },
+        {
+          "model": "trailcraft:block/cattail_ice"
+        },
+        {
+          "model": "minecraft:block/snow_height2"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "2"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_bottom_snow"
+        },
+        {
+          "model": "trailcraft:block/cattail_ice"
+        },
+        {
+          "model": "minecraft:block/snow_height4"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "3"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_bottom_snow"
+        },
+        {
+          "model": "trailcraft:block/cattail_ice"
+        },
+        {
+          "model": "minecraft:block/snow_height6"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "4"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_bottom_snow"
+        },
+        {
+          "model": "trailcraft:block/cattail_ice"
+        },
+        {
+          "model": "minecraft:block/snow_height8"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "5"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_bottom_snow"
+        },
+        {
+          "model": "trailcraft:block/cattail_ice"
+        },
+        {
+          "model": "minecraft:block/snow_height10"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "6"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_bottom_snow"
+        },
+        {
+          "model": "trailcraft:block/cattail_ice"
+        },
+        {
+          "model": "minecraft:block/snow_height12"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "7"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_bottom_snow"
+        },
+        {
+          "model": "trailcraft:block/cattail_ice"
+        },
+        {
+          "model": "minecraft:block/snow_height14"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "8"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_bottom_snow"
+        },
+        {
+          "model": "trailcraft:block/cattail_ice"
+        },
+        {
+          "model": "minecraft:block/snow_block"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
             "waterlogged": "true"
+          },
+          {
+            "frozen": "false"
           },
           {
             "snow": "0"
@@ -232,6 +520,9 @@
           },
           {
             "waterlogged": "true"
+          },
+          {
+            "frozen": "false"
           },
           {
             "snow": "1"
@@ -257,6 +548,9 @@
             "waterlogged": "true"
           },
           {
+            "frozen": "false"
+          },
+          {
             "snow": "2"
           }
         ]
@@ -278,6 +572,9 @@
           },
           {
             "waterlogged": "true"
+          },
+          {
+            "frozen": "false"
           },
           {
             "snow": "3"
@@ -303,6 +600,9 @@
             "waterlogged": "true"
           },
           {
+            "frozen": "false"
+          },
+          {
             "snow": "4"
           }
         ]
@@ -324,6 +624,9 @@
           },
           {
             "waterlogged": "true"
+          },
+          {
+            "frozen": "false"
           },
           {
             "snow": "5"
@@ -349,6 +652,9 @@
             "waterlogged": "true"
           },
           {
+            "frozen": "false"
+          },
+          {
             "snow": "6"
           }
         ]
@@ -370,6 +676,9 @@
           },
           {
             "waterlogged": "true"
+          },
+          {
+            "frozen": "false"
           },
           {
             "snow": "7"
@@ -395,6 +704,9 @@
             "waterlogged": "true"
           },
           {
+            "frozen": "false"
+          },
+          {
             "snow": "8"
           }
         ]
@@ -412,10 +724,271 @@
       "when": {
         "AND": [
           {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "0"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_bottom"
+        },
+        {
+          "model": "trailcraft:block/cattail_ice"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "1"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_bottom_snow"
+        },
+        {
+          "model": "trailcraft:block/cattail_ice"
+        },
+        {
+          "model": "minecraft:block/snow_height2"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "2"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_bottom_snow"
+        },
+        {
+          "model": "trailcraft:block/cattail_ice"
+        },
+        {
+          "model": "minecraft:block/snow_height4"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "3"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_bottom_snow"
+        },
+        {
+          "model": "trailcraft:block/cattail_ice"
+        },
+        {
+          "model": "minecraft:block/snow_height6"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "4"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_bottom_snow"
+        },
+        {
+          "model": "trailcraft:block/cattail_ice"
+        },
+        {
+          "model": "minecraft:block/snow_height8"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "5"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_bottom_snow"
+        },
+        {
+          "model": "trailcraft:block/cattail_ice"
+        },
+        {
+          "model": "minecraft:block/snow_height10"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "6"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_bottom_snow"
+        },
+        {
+          "model": "trailcraft:block/cattail_ice"
+        },
+        {
+          "model": "minecraft:block/snow_height12"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "7"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_bottom_snow"
+        },
+        {
+          "model": "trailcraft:block/cattail_ice"
+        },
+        {
+          "model": "minecraft:block/snow_height14"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "lower"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "8"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_bottom_snow"
+        },
+        {
+          "model": "trailcraft:block/cattail_ice"
+        },
+        {
+          "model": "minecraft:block/snow_block"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
             "half": "upper"
           },
           {
             "waterlogged": "false"
+          },
+          {
+            "frozen": "false"
           },
           {
             "snow": "0"
@@ -438,6 +1011,9 @@
             "waterlogged": "false"
           },
           {
+            "frozen": "false"
+          },
+          {
             "snow": "1"
           }
         ]
@@ -456,6 +1032,9 @@
           },
           {
             "waterlogged": "false"
+          },
+          {
+            "frozen": "false"
           },
           {
             "snow": "2"
@@ -478,6 +1057,9 @@
             "waterlogged": "false"
           },
           {
+            "frozen": "false"
+          },
+          {
             "snow": "3"
           }
         ]
@@ -496,6 +1078,9 @@
           },
           {
             "waterlogged": "false"
+          },
+          {
+            "frozen": "false"
           },
           {
             "snow": "4"
@@ -518,6 +1103,9 @@
             "waterlogged": "false"
           },
           {
+            "frozen": "false"
+          },
+          {
             "snow": "5"
           }
         ]
@@ -536,6 +1124,9 @@
           },
           {
             "waterlogged": "false"
+          },
+          {
+            "frozen": "false"
           },
           {
             "snow": "6"
@@ -558,6 +1149,9 @@
             "waterlogged": "false"
           },
           {
+            "frozen": "false"
+          },
+          {
             "snow": "7"
           }
         ]
@@ -576,6 +1170,216 @@
           },
           {
             "waterlogged": "false"
+          },
+          {
+            "frozen": "false"
+          },
+          {
+            "snow": "8"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_top_snow"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "0"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_top"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "1"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_top_snow"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "2"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_top_snow"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "3"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_top_snow"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "4"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_top_snow"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "5"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_top_snow"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "6"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_top_snow"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "7"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_top_snow"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "false"
+          },
+          {
+            "frozen": "true"
           },
           {
             "snow": "8"
@@ -598,6 +1402,9 @@
             "waterlogged": "true"
           },
           {
+            "frozen": "false"
+          },
+          {
             "snow": "0"
           }
         ]
@@ -616,6 +1423,9 @@
           },
           {
             "waterlogged": "true"
+          },
+          {
+            "frozen": "false"
           },
           {
             "snow": "1"
@@ -638,6 +1448,9 @@
             "waterlogged": "true"
           },
           {
+            "frozen": "false"
+          },
+          {
             "snow": "2"
           }
         ]
@@ -656,6 +1469,9 @@
           },
           {
             "waterlogged": "true"
+          },
+          {
+            "frozen": "false"
           },
           {
             "snow": "3"
@@ -678,6 +1494,9 @@
             "waterlogged": "true"
           },
           {
+            "frozen": "false"
+          },
+          {
             "snow": "4"
           }
         ]
@@ -696,6 +1515,9 @@
           },
           {
             "waterlogged": "true"
+          },
+          {
+            "frozen": "false"
           },
           {
             "snow": "5"
@@ -718,6 +1540,9 @@
             "waterlogged": "true"
           },
           {
+            "frozen": "false"
+          },
+          {
             "snow": "6"
           }
         ]
@@ -738,6 +1563,9 @@
             "waterlogged": "true"
           },
           {
+            "frozen": "false"
+          },
+          {
             "snow": "7"
           }
         ]
@@ -756,6 +1584,216 @@
           },
           {
             "waterlogged": "true"
+          },
+          {
+            "frozen": "false"
+          },
+          {
+            "snow": "8"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_top_snow"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "0"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_top"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "1"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_top_snow"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "2"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_top_snow"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "3"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_top_snow"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "4"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_top_snow"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "5"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_top_snow"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "6"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_top_snow"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "frozen": "true"
+          },
+          {
+            "snow": "7"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/cattail_top_snow"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "half": "upper"
+          },
+          {
+            "waterlogged": "true"
+          },
+          {
+            "frozen": "true"
           },
           {
             "snow": "8"

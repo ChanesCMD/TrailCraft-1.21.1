@@ -51,11 +51,11 @@ def apply_roots(img, roots):
         r, g, b, a = px[x, y]
         if delta > 12:
             # корень: смешиваем почву с цветом корня из ванильной текстуры
-            mix = 1.0   # корни берём цветом ванильной текстуры целиком
+            mix = 0.45   # корни мягко проступают сквозь почву
             r, g, b = (round(r * (1 - mix) + root[0] * mix), round(g * (1 - mix) + root[1] * mix),
                        round(b * (1 - mix) + root[2] * mix))
         elif delta > 4:
-            mix = 0.6
+            mix = 0.3
             r, g, b = (round(r * (1 - mix) + root[0] * mix), round(g * (1 - mix) + root[1] * mix),
                        round(b * (1 - mix) + root[2] * mix))
         elif delta < -8:

@@ -20,6 +20,9 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.util.RandomSource;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 
@@ -29,16 +32,19 @@ import net.minecraft.world.level.material.Fluids;
  */
 public class CattailBlock extends DoublePlantBlock implements SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    /** Вода вокруг замёрзла: нижний блок рисует ещё и лёд, но сам рогоз остаётся. */
+    public static final BooleanProperty FROZEN = BooleanProperty.create("frozen");
 
     public CattailBlock(Properties properties) {
         super(properties);
-        registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false).setValue(SnowCover.SNOW, 0));
+        registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false).setValue(SnowCover.SNOW, 0)
+                .setValue(FROZEN, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(WATERLOGGED, SnowCover.SNOW);
+        builder.add(WATERLOGGED, SnowCover.SNOW, FROZEN);
     }
 
     @Override
@@ -71,6 +77,23 @@ public class CattailBlock extends DoublePlantBlock implements SimpleWaterloggedB
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context);
         return state == null ? null : state.setValue(WATERLOGGED, context.getLevel().isWaterAt(context.getClickedPos()));
+    }
+
+    @Override
+    public boolean isRandomlyTicking(BlockState state) {
+        return state.getValue(HALF) == DoubleBlockHalf.LOWER && state.getValue(WATERLOGGED);
+    }
+
+    /** Зимой вода в клетке рогоза замерзает и оттаивает: нижний блок показывает лёд. */
+    @Override
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (state.getValue(HALF) != DoubleBlockHalf.LOWER) {
+            return;
+        }
+        boolean freeze = level.getBiome(pos).value().shouldFreeze(level, pos, false);
+        if (state.getValue(FROZEN) != freeze) {
+            level.setBlockAndUpdate(pos, state.setValue(FROZEN, freeze));
+        }
     }
 
     @Override

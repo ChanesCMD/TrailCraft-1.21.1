@@ -157,18 +157,21 @@ def plants():
             parts.append({"when": {"AND": [{"age": str(age)}, {"snow": "0"}]}, "apply": {"model": f"trailcraft:block/{n}"}})
             parts.append({"when": {"AND": [{"age": str(age)}, {"snow": SNOWY}]}, "apply": {"model": snow_model(n)}})
         write(f"{ASSETS}/blockstates/{bush}_bush.json", {"multipart": parts + layer_parts()})
-    # рогоз: два блока и вода в нижнем; снег белит обе половины, слой рисует только нижняя
+    # рогоз: два блока, вода в нижнем и состояние "замёрз" (нижний блок рисует ещё и лёд)
     cattail = []
     for half in ("lower", "upper"):
         for waterlogged in ("false", "true"):
-            for snow in range(9):
-                base = f"trailcraft:block/cattail_{'bottom' if half == 'lower' else 'top'}"
-                model = base if snow == 0 else base + "_snow"
-                key = {"AND": [{"half": half}, {"waterlogged": waterlogged}, {"snow": str(snow)}]}
-                entries = [{"model": model}]
-                if snow > 0 and half == "lower":
-                    entries.append({"model": f"minecraft:block/{LAYERS[snow]}"})
-                cattail.append({"when": key, "apply": entries})
+            for frozen in ("false", "true"):
+                for snow in range(9):
+                    base = f"trailcraft:block/cattail_{'bottom' if half == 'lower' else 'top'}"
+                    model = base if snow == 0 else base + "_snow"
+                    entries = [{"model": model}]
+                    if frozen == "true" and half == "lower":
+                        entries.append({"model": "trailcraft:block/cattail_ice"})
+                    if snow > 0 and half == "lower":
+                        entries.append({"model": f"minecraft:block/{LAYERS[snow]}"})
+                    cond = {"AND": [{"half": half}, {"waterlogged": waterlogged}, {"frozen": frozen}, {"snow": str(snow)}]}
+                    cattail.append({"when": cond, "apply": entries})
     write(f"{ASSETS}/blockstates/cattail.json", {"multipart": cattail})
     # дикий джут: белеют обе половины, слой снега рисует только нижняя
     write(f"{ASSETS}/blockstates/wild_jute.json", {"multipart": [
