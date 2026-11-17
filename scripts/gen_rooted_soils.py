@@ -30,32 +30,43 @@ def write(path, data):
 
 
 def roots():
-    """Разница яркости ванильного rooted_dirt и земли: положительная — светлые корни, отрицательная — тени."""
+    """Пиксели ванильного rooted_dirt: разница яркости с землёй и сам цвет (светлые — корни)."""
     jar = zipfile.ZipFile(find_jar("minecraft_1.21.1_client.jar"))
     rooted = Image.open(io.BytesIO(jar.read("assets/minecraft/textures/block/rooted_dirt.png"))).convert("RGBA")
     dirt = Image.open(io.BytesIO(jar.read("assets/minecraft/textures/block/dirt.png"))).convert("RGBA")
     lum = lambda c: 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]
-    return {(x, y): lum(rooted.getpixel((x, y))) - lum(dirt.getpixel((x, y))) for y in range(16) for x in range(16)}
+    out = {}
+    for y in range(16):
+        for x in range(16):
+            pixel = rooted.getpixel((x, y))
+            out[(x, y)] = (lum(pixel) - lum(dirt.getpixel((x, y))), pixel[:3])
+    return out
 
 
-def apply_roots(img, delta):
-    """Переносит рисунок корней на нашу текстуру: яркость пикселя сдвигается на разницу ванильных текстур."""
+def apply_roots(img, roots):
+    """Светлые корни ванильного rooted_dirt кладём поверх нашей почвы, тени слегка затемняем."""
     out = img.copy()
     px = out.load()
-    for (x, y), d in delta.items():
+    for (x, y), (delta, root) in roots.items():
         r, g, b, a = px[x, y]
-        k = 1.0 + d / 190.0
-        px[x, y] = (min(255, max(0, round(r * k))), min(255, max(0, round(g * k))),
-                    min(255, max(0, round(b * k))), a)
+        if delta > 6:
+            # корень: смешиваем почву с цветом корня из ванильной текстуры
+            mix = min(0.85, 0.35 + delta / 90.0)
+            r, g, b = (round(r * (1 - mix) + root[0] * mix), round(g * (1 - mix) + root[1] * mix),
+                       round(b * (1 - mix) + root[2] * mix))
+        elif delta < -8:
+            k = 1.0 + delta / 260.0
+            r, g, b = (round(r * k), round(g * k), round(b * k))
+        px[x, y] = (max(0, min(255, r)), max(0, min(255, g)), max(0, min(255, b)), a)
     return out
 
 
 def main():
-    delta = roots()
-    print("sredniy sdvig yarkosti:", round(sum(delta.values()) / len(delta), 1))
+    roots_data = roots()
+    print("pixels with roots:", sum(1 for d, _ in roots_data.values() if d > 6))
     for block, soil in SOILS.items():
         soil_img = Image.open(os.path.join(TEX, soil + ".png")).convert("RGBA")
-        apply_roots(soil_img, delta).save(os.path.join(TEX, block + ".png"))
+        apply_roots(soil_img, roots_data).save(os.path.join(TEX, block + ".png"))
         write(os.path.join(ASSETS, "blockstates", block + ".json"),
               {"variants": {"": {"model": f"{NS}:block/{block}"}}})
         write(os.path.join(ASSETS, "models", "block", block + ".json"),

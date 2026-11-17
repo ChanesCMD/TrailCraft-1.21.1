@@ -13,7 +13,8 @@ from PIL import Image
 
 ASSETS = "src/main/resources/assets/trailcraft"
 WHITE = (238, 243, 248)
-MIX = 0.62
+MIX = 0.55
+DESATURATE = 0.85   # доля серого в заснеженной текстуре: стебли и цветы почти не выделяются
 LAYERS = {1: "snow_height2", 2: "snow_height4", 3: "snow_height6", 4: "snow_height8",
           5: "snow_height10", 6: "snow_height12", 7: "snow_height14", 8: "snow_block"}
 SNOWY = "1|2|3|4|5|6|7|8"
@@ -44,8 +45,14 @@ def snow_texture(name):
     for y in range(img.height):
         for x in range(img.width):
             r, g, b, a = px[x, y]
-            if a:
-                px[x, y] = tuple(round(c * (1 - MIX) + w * MIX) for c, w in zip((r, g, b), WHITE)) + (a,)
+            if not a:
+                continue
+            # сначала в серый (почти ч/б, как трава под снегом), потом к белому
+            grey = 0.299 * r + 0.587 * g + 0.114 * b
+            r = r * (1 - DESATURATE) + grey * DESATURATE
+            g = g * (1 - DESATURATE) + grey * DESATURATE
+            b = b * (1 - DESATURATE) + grey * DESATURATE
+            px[x, y] = tuple(round(c * (1 - MIX) + w * MIX) for c, w in zip((r, g, b), WHITE)) + (a,)
     img.save(f"{ASSETS}/textures/block/{name}_snow.png")
     return True
 
