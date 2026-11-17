@@ -1,0 +1,7 @@
+{
+  "parent": "trailcraft:block/cross_tinted_snow",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "tinted": "trailcraft:block/cattail_bottom_snow"
+  }
+}

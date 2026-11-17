@@ -1,7 +1,8 @@
 {
-  "parent": "minecraft:block/cross",
+  "parent": "trailcraft:block/cross_tinted_overlay_snow",
   "render_type": "minecraft:cutout",
   "textures": {
-    "cross": "trailcraft:block/currant_bush_stage0_snow"
+    "tinted": "trailcraft:block/currant_bush_stage0_snow",
+    "overlay": "trailcraft:block/currant_bush_stage0_overlay_snow"
   }
 }

@@ -130,10 +130,18 @@ def pebbles():
 
 
 def plants():
+    # побелевшие копии половин рогоза (blockstate собирается ниже, из них)
+    for half in ("cattail_bottom", "cattail_top"):
+        snow_model(half)
     for name in ["wild_carrot", "wild_potato"]:
         model = f"trailcraft:block/{name}"
         write(f"{ASSETS}/blockstates/{name}.json", {"multipart": [
             {"when": {"snow": "0"}, "apply": {"model": model}},
+            {"when": {"snow": SNOWY}, "apply": {"model": snow_model(name)}}] + layer_parts()})
+    # травы с одним блоком: просо, крапива, подорожник, полынь, водосбор
+    for name in ["millet", "nettle", "plantain", "wormwood", "columbine"]:
+        write(f"{ASSETS}/blockstates/{name}.json", {"multipart": [
+            {"when": {"snow": "0"}, "apply": {"model": f"trailcraft:block/{name}"}},
             {"when": {"snow": SNOWY}, "apply": {"model": snow_model(name)}}] + layer_parts()})
     for bush in ["currant", "cloudberry", "gooseberry", "blackberry"]:
         parts = []
@@ -142,6 +150,19 @@ def plants():
             parts.append({"when": {"AND": [{"age": str(age)}, {"snow": "0"}]}, "apply": {"model": f"trailcraft:block/{n}"}})
             parts.append({"when": {"AND": [{"age": str(age)}, {"snow": SNOWY}]}, "apply": {"model": snow_model(n)}})
         write(f"{ASSETS}/blockstates/{bush}_bush.json", {"multipart": parts + layer_parts()})
+    # рогоз: два блока и вода в нижнем; снег белит обе половины, слой рисует только нижняя
+    cattail = []
+    for half in ("lower", "upper"):
+        for waterlogged in ("false", "true"):
+            for snow in range(9):
+                base = f"trailcraft:block/cattail_{'bottom' if half == 'lower' else 'top'}"
+                model = base if snow == 0 else base + "_snow"
+                key = f"half={half},waterlogged={waterlogged},snow={snow}"
+                entries = [{"model": model}]
+                if snow > 0 and half == "lower":
+                    entries.append({"model": f"minecraft:block/{LAYERS[snow]}"})
+                cattail.append({"when": key, "apply": entries})
+    write(f"{ASSETS}/blockstates/cattail.json", {"multipart": cattail})
     # дикий джут: белеют обе половины, слой снега рисует только нижняя
     write(f"{ASSETS}/blockstates/wild_jute.json", {"multipart": [
         {"when": {"AND": [{"half": "upper"}, {"snow": "0"}]}, "apply": {"model": "trailcraft:block/wild_jute_top"}},

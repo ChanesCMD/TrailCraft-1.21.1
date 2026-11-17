@@ -25,7 +25,11 @@ public final class SnowCover {
 
     /** Может ли снегопад класть снег в этот блок. */
     public static boolean accepts(BlockState state) {
-        if (!state.hasProperty(SNOW) || !state.getFluidState().isEmpty()) {
+        if (!state.hasProperty(SNOW)) {
+            return false;
+        }
+        // вода в блоке не мешает, если блок сам может быть водяным (рогоз): иначе на нём никогда не будет снега
+        if (!state.getFluidState().isEmpty() && !state.hasProperty(BlockStateProperties.WATERLOGGED)) {
             return false;
         }
         return !state.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF)

@@ -1,5 +1,6 @@
 package io.github.ChanesCMD.trailcraft.block;
 
+import io.github.ChanesCMD.trailcraft.block.SnowCover;
 import io.github.ChanesCMD.trailcraft.init.ModBlocks;
 import io.github.ChanesCMD.trailcraft.water.Water;
 import net.minecraft.core.BlockPos;
@@ -11,6 +12,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,18 +32,18 @@ public class CattailBlock extends DoublePlantBlock implements SimpleWaterloggedB
 
     public CattailBlock(Properties properties) {
         super(properties);
-        registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
+        registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false).setValue(SnowCover.SNOW, 0));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(WATERLOGGED);
+        builder.add(WATERLOGGED, SnowCover.SNOW);
     }
 
     @Override
     protected boolean mayPlaceOn(BlockState state, BlockGetter level, BlockPos pos) {
-        return state.is(BlockTags.DIRT) || state.is(ModBlocks.SILT.get());
+        return state.is(BlockTags.DIRT) || state.is(ModBlocks.SILT.get()) || state.is(Blocks.ICE);
     }
 
     @Override
@@ -54,8 +56,10 @@ public class CattailBlock extends DoublePlantBlock implements SimpleWaterloggedB
             // Верхняя половина уже может стоять: при обновлении соседей это не повод ломать нижнюю.
             BlockState above = level.getBlockState(pos.above());
             boolean aboveOk = above.isAir() || (above.is(this) && above.getValue(HALF) == DoubleBlockHalf.UPPER);
-            if (!level.getFluidState(pos).is(FluidTags.WATER)
-                    || !level.getFluidState(pos.above()).isEmpty()
+            // вода могла замёрзнуть — тогда рогоз стоит во льду и не ломается
+            boolean frozen = level.getBlockState(pos).is(Blocks.ICE) || level.getBlockState(pos.below()).is(Blocks.ICE);
+            if ((!frozen && !level.getFluidState(pos).is(FluidTags.WATER))
+                    || (!frozen && !level.getFluidState(pos.above()).isEmpty())
                     || !aboveOk) {
                 return false;
             }
