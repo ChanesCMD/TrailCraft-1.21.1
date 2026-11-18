@@ -22,7 +22,7 @@ ASSETS = os.path.join(ROOT, "src", "main", "resources", "assets", NS)
 TEX = os.path.join(ASSETS, "textures", "block")
 SOILS = {"rooted_zheltozem": "zheltozem", "rooted_burozem": "burozem", "rooted_chernozem": "chernozem"}
 ROOT_ALPHA = 0.9        # насколько плотно ложатся корни
-CONTRAST = 0.72         # 1.0 — как есть, меньше — мягче (тянем к средней яркости)
+CONTRAST = 1.0          # 1.0 — как есть, меньше — мягче (тянем к средней яркости)
 
 
 def write(path, data):
