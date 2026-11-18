@@ -42,10 +42,20 @@ public final class TrueDarkness {
         return base * (1f - 0.35f * level.getMoonBrightness());
     }
 
-    /** Множитель для небесного света: 1 — как есть, 0 — ночью свет неба не даёт ничего. */
-    public static float skyLightFactor(ClientLevel level) {
-        float strength = ClientConfig.nightDarkness() * night(level);
-        return Mth.clamp(1f - strength, 0f, 1f);
+    /** 0…1: сколько света неба отнять сейчас (процент из команды, умноженный на глубину ночи). */
+    public static float strength(ClientLevel level) {
+        return Mth.clamp(ClientConfig.nightDarkness() * night(level), 0f, 1f);
+    }
+
+    /**
+     * Значение, которое подставляется вместо ванильного skyDarken в лайтмап.
+     * В игре свет неба умножается на f * 0.95 + 0.05 — этот остаток 5 % и не даёт ночи стать чёрной.
+     * При 100 % уводим f в минус так, чтобы ровно этот множитель стал нулём: свет неба пропадает,
+     * а свет факелов и лавы считается отдельно и остаётся прежним.
+     */
+    public static float skyDarken(ClientLevel level, float vanilla) {
+        float strength = strength(level);
+        return vanilla - (vanilla * 0.95f + 0.05f) / 0.95f * strength;
     }
 
     private static float smooth(float t) {

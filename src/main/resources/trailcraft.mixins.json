@@ -22,7 +22,7 @@
     "LevelRendererMixin",
     "LeavesBlockClientMixin",
     "SkyColorMixin",
-    "TrueDarknessMixin"
+    "LightTextureMixin"
   ],
   "injectors": {
     "defaultRequire": 1
