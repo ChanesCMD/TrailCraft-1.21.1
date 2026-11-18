@@ -31,15 +31,15 @@ public final class TrueDarkness {
         float base;
         if (time < start || time >= end) {
             base = 0f;
-        } else if (time < start + 1000) {
-            base = smooth((time - start) / 1000f);
-        } else if (time > end - 1000) {
-            base = smooth((end - time) / 1000f);
+        } else if (time < start + 500) {
+            base = smooth((time - start) / 500f);
+        } else if (time > end - 500) {
+            base = smooth((end - time) / 500f);
         } else {
             base = 1f;
         }
-        // полная луна светлее, новолуние — самое тёмное
-        return base * (1f - 0.35f * level.getMoonBrightness());
+        // луна не спасает: ночь в True Darkness тёмная при любой фазе
+        return base;
     }
 
     /** 0…1: сколько света неба отнять сейчас (процент из команды, умноженный на глубину ночи). */
