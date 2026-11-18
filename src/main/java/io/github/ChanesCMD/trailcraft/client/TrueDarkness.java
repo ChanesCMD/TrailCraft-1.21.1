@@ -14,35 +14,55 @@ import net.minecraft.world.level.Level;
 public final class TrueDarkness {
     /** Затемнение в полнолуние и новолуние (доля, а не проценты). */
     private static final float FULL_MOON = 0.80f, NEW_MOON = 0.88f;
+    /** Окна ночи: темнеет уже после захода солнца, светает к восходу. */
+    private static final int RAMP = 2000;
+    /** За тик сила меняется не больше чем на столько: после /time set тьма наезжает плавно. */
+    private static final float STEP = 0.006f;
+    private static float current;
 
-    /** Насколько сейчас глубокая ночь: 0 днём, 1 около полуночи; длина ночи зависит от сезона, глубина — от луны. */
+    /** Насколько сейчас глубокая ночь: 0 днём, 1 в полночь; окна зависят от сезона. */
     public static float night(Level level) {
         if (level == null) {
             return 0f;
         }
         long time = Math.floorMod(level.getDayTime(), 24000L);
+        // солнце садится в 12000 и полностью уходит около 13000; восход — 23000
         int start = switch (Seasons.current()) {
-            case SUMMER -> 12500;
-            case WINTER -> 11500;
-            default -> 12000;
+            case SUMMER -> 13500;
+            case WINTER -> 12500;
+            default -> 13000;
         };
         int end = switch (Seasons.current()) {
-            case SUMMER -> 22500;
-            case WINTER -> 23500;
-            default -> 23000;
+            case SUMMER -> 21500;
+            case WINTER -> 23200;
+            default -> 22500;
         };
-        float base;
         if (time < start || time >= end) {
-            base = 0f;
-        } else if (time < start + 500) {
-            base = smooth((time - start) / 500f);
-        } else if (time > end - 500) {
-            base = smooth((end - time) / 500f);
-        } else {
-            base = 1f;
+            return 0f;
         }
-        // луна не спасает: ночь в True Darkness тёмная при любой фазе
-        return base;
+        float fadeIn = smooth((time - start) / (float) RAMP);
+        float fadeOut = smooth((end - time) / (float) RAMP);
+        return Math.min(fadeIn, fadeOut);
+    }
+
+    /** Тик клиента: плавно подводим текущую тьму к цели (время суток, фаза луны, процент из команды). */
+    public static void tick(ClientLevel level) {
+        if (level == null) {
+            current = 0f;
+            return;
+        }
+        float target = target(level);
+        if (Math.abs(target - current) <= STEP) {
+            current = target;
+        } else {
+            current += Math.signum(target - current) * STEP;
+        }
+    }
+
+    /** Куда тьма должна прийти прямо сейчас. */
+    private static float target(ClientLevel level) {
+        float moon = ClientConfig.moonPhases() ? moonDarkening(level) : 1f;
+        return Mth.clamp(ClientConfig.nightDarkness() * moon, 0f, 1f) * night(level);
     }
 
     /** Полнолуние светлее (80 %), новолуние темнее (88 %), между ними — плавно по фазе луны. */
@@ -51,10 +71,9 @@ public final class TrueDarkness {
         return Mth.lerp(moon, NEW_MOON, FULL_MOON);
     }
 
-    /** 0…1: сколько света неба отнять сейчас (процент из команды, фаза луны и глубина ночи). */
+    /** 0…1: сколько света неба отнять сейчас (уже сглажено по тикам). */
     public static float strength(ClientLevel level) {
-        float moon = ClientConfig.moonPhases() ? moonDarkening(level) : 1f;
-        return Mth.clamp(ClientConfig.nightDarkness() * moon, 0f, 1f) * night(level);
+        return current;
     }
 
     /**

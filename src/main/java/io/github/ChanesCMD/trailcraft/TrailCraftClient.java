@@ -33,6 +33,8 @@ public class TrailCraftClient {
         container.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
         NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.client.event.ClientTickEvent.Post event) ->
                 NightSky.tick(Minecraft.getInstance().level));
+        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.client.event.ClientTickEvent.Post event) ->
+                io.github.ChanesCMD.trailcraft.client.TrueDarkness.tick(Minecraft.getInstance().level));
         // Только запуск из среды разработки (play.bat): у игроков этого свойства нет
         String pidFile = System.getProperty("trailcraft.pidFile");
         if (pidFile != null) {
