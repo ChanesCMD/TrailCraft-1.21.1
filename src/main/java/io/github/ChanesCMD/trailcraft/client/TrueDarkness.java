@@ -12,6 +12,9 @@ import net.minecraft.world.level.Level;
  * 0 — ванильная ночь, 100 — неосвещённые места полностью чёрные.
  */
 public final class TrueDarkness {
+    /** Затемнение в полнолуние и новолуние (доля, а не проценты). */
+    private static final float FULL_MOON = 0.80f, NEW_MOON = 0.88f;
+
     /** Насколько сейчас глубокая ночь: 0 днём, 1 около полуночи; длина ночи зависит от сезона, глубина — от луны. */
     public static float night(Level level) {
         if (level == null) {
@@ -42,9 +45,15 @@ public final class TrueDarkness {
         return base;
     }
 
-    /** 0…1: сколько света неба отнять сейчас (процент из команды, умноженный на глубину ночи). */
+    /** Полнолуние светлее (80 %), новолуние темнее (88 %), между ними — плавно по фазе луны. */
+    public static float moonDarkening(ClientLevel level) {
+        float moon = Mth.clamp(level.getMoonBrightness(), 0f, 1f);   // 1 — полнолуние, 0 — новолуние
+        return Mth.lerp(moon, NEW_MOON, FULL_MOON);
+    }
+
+    /** 0…1: сколько света неба отнять сейчас (процент из команды, фаза луны и глубина ночи). */
     public static float strength(ClientLevel level) {
-        return Mth.clamp(ClientConfig.nightDarkness() * night(level), 0f, 1f);
+        return Mth.clamp(ClientConfig.nightDarkness() * moonDarkening(level), 0f, 1f) * night(level);
     }
 
     /**
