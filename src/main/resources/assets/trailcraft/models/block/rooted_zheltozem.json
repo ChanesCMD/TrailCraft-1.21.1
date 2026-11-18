@@ -1,6 +1,12 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube",
   "textures": {
-    "all": "trailcraft:block/rooted_zheltozem"
+    "particle": "trailcraft:block/zheltozem",
+    "up": "trailcraft:block/zheltozem",
+    "down": "trailcraft:block/zheltozem",
+    "north": "trailcraft:block/rooted_zheltozem",
+    "south": "trailcraft:block/rooted_zheltozem",
+    "east": "trailcraft:block/rooted_zheltozem",
+    "west": "trailcraft:block/rooted_zheltozem"
   }
 }

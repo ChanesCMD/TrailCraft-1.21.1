@@ -67,8 +67,18 @@ def main():
         (soften(merged) if CONTRAST < 1.0 else merged).save(os.path.join(TEX, block + ".png"))
         write(os.path.join(ASSETS, "blockstates", block + ".json"),
               {"variants": {"": {"model": f"{NS}:block/{block}"}}})
-        write(os.path.join(ASSETS, "models", "block", block + ".json"),
-              {"parent": "minecraft:block/cube_all", "textures": {"all": f"{NS}:block/{block}"}})
+        # корни только по бокам: сверху и снизу обычная почва
+        write(os.path.join(ASSETS, "models", "block", block + ".json"), {
+            "parent": "minecraft:block/cube",
+            "textures": {
+                "particle": f"{NS}:block/{soil}",
+                "up": f"{NS}:block/{soil}",
+                "down": f"{NS}:block/{soil}",
+                "north": f"{NS}:block/{block}",
+                "south": f"{NS}:block/{block}",
+                "east": f"{NS}:block/{block}",
+                "west": f"{NS}:block/{block}",
+            }})
         write(os.path.join(ASSETS, "models", "item", block + ".json"), {"parent": f"{NS}:block/{block}"})
 
     lang_ru = {"rooted_zheltozem": "Жёлтозём с корнями", "rooted_burozem": "Бурозём с корнями",
