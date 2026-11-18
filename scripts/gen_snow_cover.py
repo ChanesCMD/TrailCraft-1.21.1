@@ -129,10 +129,16 @@ def pebbles():
         path = f"{ASSETS}/blockstates/{name}.json"
         data = read(path)
         base = data["variants"][""] if "variants" in data else data["multipart"][0]["apply"]
-        parts = [{"when": {"snow": "0"}, "apply": base}]
-        for k in range(1, POKE_LAYERS + 1):
-            lifted = [{**v, "model": "trailcraft:block/" + lift(v["model"].split("/", 1)[1], k)} for v in base]
-            parts.append({"when": {"snow": str(k)}, "apply": lifted})
+        parts = []
+        for k in range(0, POKE_LAYERS + 1):
+            lifted = base if k == 0 else [{**v, "model": "trailcraft:block/" + lift(v["model"].split("/", 1)[1], k)}
+                                          for v in base]
+            for frozen in ("false", "true"):
+                apply = list(lifted)
+                if frozen == "true":
+                    apply.append({"model": "trailcraft:block/ice_sheet"})
+                cond = {"AND": [{"snow": str(k)}, {"frozen": frozen}]}
+                parts.append({"when": cond, "apply": apply})
         write(path, {"multipart": parts + layer_parts()})
 
 

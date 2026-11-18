@@ -2,7 +2,14 @@
   "multipart": [
     {
       "when": {
-        "snow": "0"
+        "AND": [
+          {
+            "snow": "0"
+          },
+          {
+            "frozen": "false"
+          }
+        ]
       },
       "apply": [
         {
@@ -39,7 +46,61 @@
     },
     {
       "when": {
-        "snow": "1"
+        "AND": [
+          {
+            "snow": "0"
+          },
+          {
+            "frozen": "true"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/fallen_branch_a"
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_a",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_a",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_a",
+          "y": 270
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_b"
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_b",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_b",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_b",
+          "y": 270
+        },
+        {
+          "model": "trailcraft:block/ice_sheet"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "snow": "1"
+          },
+          {
+            "frozen": "false"
+          }
+        ]
       },
       "apply": [
         {
@@ -76,7 +137,61 @@
     },
     {
       "when": {
-        "snow": "2"
+        "AND": [
+          {
+            "snow": "1"
+          },
+          {
+            "frozen": "true"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/fallen_branch_a_s1"
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_a_s1",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_a_s1",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_a_s1",
+          "y": 270
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_b_s1"
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_b_s1",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_b_s1",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_b_s1",
+          "y": 270
+        },
+        {
+          "model": "trailcraft:block/ice_sheet"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "snow": "2"
+          },
+          {
+            "frozen": "false"
+          }
+        ]
       },
       "apply": [
         {
@@ -113,7 +228,61 @@
     },
     {
       "when": {
-        "snow": "3"
+        "AND": [
+          {
+            "snow": "2"
+          },
+          {
+            "frozen": "true"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/fallen_branch_a_s2"
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_a_s2",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_a_s2",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_a_s2",
+          "y": 270
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_b_s2"
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_b_s2",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_b_s2",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_b_s2",
+          "y": 270
+        },
+        {
+          "model": "trailcraft:block/ice_sheet"
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "snow": "3"
+          },
+          {
+            "frozen": "false"
+          }
+        ]
       },
       "apply": [
         {
@@ -145,6 +314,53 @@
         {
           "model": "trailcraft:block/fallen_branch_b_s3",
           "y": 270
+        }
+      ]
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "snow": "3"
+          },
+          {
+            "frozen": "true"
+          }
+        ]
+      },
+      "apply": [
+        {
+          "model": "trailcraft:block/fallen_branch_a_s3"
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_a_s3",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_a_s3",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_a_s3",
+          "y": 270
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_b_s3"
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_b_s3",
+          "y": 90
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_b_s3",
+          "y": 180
+        },
+        {
+          "model": "trailcraft:block/fallen_branch_b_s3",
+          "y": 270
+        },
+        {
+          "model": "trailcraft:block/ice_sheet"
         }
       ]
     },

@@ -23,6 +23,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
@@ -42,7 +43,7 @@ public class PebbleBlock extends BushBlock implements SimpleWaterloggedBlock {
 
     public PebbleBlock(BlockBehaviour.Properties properties) {
         super(properties);
-        registerDefaultState(stateDefinition.any().setValue(WATERLOGGED, false));
+        registerDefaultState(stateDefinition.any().setValue(WATERLOGGED, false).setValue(ShoreIce.FROZEN, false));
     }
 
     @Override
@@ -52,23 +53,38 @@ public class PebbleBlock extends BushBlock implements SimpleWaterloggedBlock {
 
     @Override
     protected boolean isRandomlyTicking(BlockState state) {
-        return SnowCover.has(state);
+        return SnowCover.has(state) || state.getValue(WATERLOGGED);
     }
 
     @Override
     protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, net.minecraft.util.RandomSource random) {
+        // зимой вода в клетке замерзает: камешек стоит во льду (как и рогоз)
+        if (state.getValue(WATERLOGGED)) {
+            boolean freeze = ShoreIce.shouldFreeze(level, pos);
+            if (state.getValue(ShoreIce.FROZEN) != freeze) {
+                level.setBlockAndUpdate(pos, state.setValue(ShoreIce.FROZEN, freeze));
+                return;
+            }
+        }
         SnowCover.melt(state, level, pos, random);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(WATERLOGGED, SnowCover.SNOW);
+        builder.add(WATERLOGGED, SnowCover.SNOW, ShoreIce.FROZEN);
     }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         FluidState fluid = context.getLevel().getFluidState(context.getClickedPos());
         return defaultBlockState().setValue(WATERLOGGED, fluid.getType() == Fluids.WATER);
+    }
+
+    /** Замёрзший камешек держит игрока: по льду можно ходить. */
+    @Override
+    protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        VoxelShape shape = super.getCollisionShape(state, level, pos, context);
+        return state.getValue(ShoreIce.FROZEN) ? Shapes.or(shape, ShoreIce.SHEET) : shape;
     }
 
     @Override
