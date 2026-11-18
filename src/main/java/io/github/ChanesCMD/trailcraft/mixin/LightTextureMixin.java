@@ -7,7 +7,9 @@ import net.minecraft.client.renderer.LightTexture;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import net.minecraft.util.Mth;
+import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -25,6 +27,16 @@ public abstract class LightTextureMixin {
      * Ночью возвращаем значение без подъёма — неосвещённое становится по-настоящему тёмным,
      * а яркие клетки (факелы, лава) почти не меняются: у них notGamma и так ~1.
      */
+    /** Лайтмап подмешивает 4 % серого «фона» — из-за него ночью видно силуэты. Ночью этот фон гасим. */
+    @ModifyConstant(method = "updateLightTexture", constant = @Constant(floatValue = 0.04F))
+    private float trailcraft$ambientFloor(float original) {
+        ClientLevel level = Minecraft.getInstance().level;
+        if (level == null) {
+            return original;
+        }
+        return original * (1f - TrueDarkness.strength(level));
+    }
+
     @Inject(method = "notGamma", at = @At("RETURN"), cancellable = true)
     private void trailcraft$notGamma(float value, CallbackInfoReturnable<Float> cir) {
         ClientLevel level = Minecraft.getInstance().level;
