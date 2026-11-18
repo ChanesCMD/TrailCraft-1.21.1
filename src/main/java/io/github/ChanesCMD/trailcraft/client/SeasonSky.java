@@ -13,7 +13,7 @@ public final class SeasonSky {
         double green = color.y * tint[1];
         double blue = color.z * tint[2];
         // ночью небо ровно чёрное: никакого градиента и оттенков (иначе на тёмном фоне видны ступеньки)
-        float night = NightDarkness.factor(level);
+        float night = TrueDarkness.night(level);
         if (night > 0f) {
             double k = 1.0 - night;
             red *= k;

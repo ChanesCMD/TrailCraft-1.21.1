@@ -152,10 +152,10 @@ public final class ClientConfig {
             .comment("Show the last death point on the fullscreen map when it is known.")
             .define("mapDeathPoint", true);
 
-    /** Тестовая настройка тёмной ночи: 0 — выключено, 100 — максимальное затемнение. */
+    /** Тёмная ночь как в True Darkness: 0 — ванильная ночь, 100 — неосвещённые места полностью чёрные. */
     public static final ModConfigSpec.IntValue NIGHT_DARKNESS = BUILDER
             .comment("Test setting: extra night darkness in percent (0 = off).")
-            .defineInRange("nightDarkness", 35, 0, 100);
+            .defineInRange("nightDarkness", 100, 0, 100);
 
     /** Погода частицами (client/weather/) вместо ванильной текстуры дождя и снега. */
     public static final ModConfigSpec.BooleanValue WEATHER_PARTICLES = BUILDER
