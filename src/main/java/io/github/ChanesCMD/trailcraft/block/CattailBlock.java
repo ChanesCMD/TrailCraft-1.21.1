@@ -90,7 +90,8 @@ public class CattailBlock extends DoublePlantBlock implements SimpleWaterloggedB
         if (state.getValue(HALF) != DoubleBlockHalf.LOWER) {
             return;
         }
-        boolean freeze = level.getBiome(pos).value().shouldFreeze(level, pos, false);
+        // лёд появляется там же, где ляжет снег: по осадкам биома (зимой они снежные)
+        boolean freeze = level.getBiome(pos).value().getPrecipitationAt(pos) == Biome.Precipitation.SNOW;
         if (state.getValue(FROZEN) != freeze) {
             level.setBlockAndUpdate(pos, state.setValue(FROZEN, freeze));
         }
