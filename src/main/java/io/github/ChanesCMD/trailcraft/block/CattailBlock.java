@@ -14,6 +14,9 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoublePlantBlock;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -34,6 +37,8 @@ public class CattailBlock extends DoublePlantBlock implements SimpleWaterloggedB
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     /** Вода вокруг замёрзла: нижний блок рисует ещё и лёд, но сам рогоз остаётся. */
     public static final BooleanProperty FROZEN = BooleanProperty.create("frozen");
+    /** Верхние 2 пикселя — по ним ходят, когда рогоз замёрз (как по льду). */
+    private static final VoxelShape ICE_SHEET = Shapes.box(0.0, 0.875, 0.0, 1.0, 1.0, 1.0);
 
     public CattailBlock(Properties properties) {
         super(properties);
@@ -71,6 +76,15 @@ public class CattailBlock extends DoublePlantBlock implements SimpleWaterloggedB
             }
         }
         return super.canSurvive(state, level, pos);
+    }
+
+    /** Замёрзший нижний блок держит игрока: сквозь лёд не провалиться. */
+    @Override
+    protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        if (state.getValue(FROZEN) && state.getValue(HALF) == DoubleBlockHalf.LOWER) {
+            return ICE_SHEET;
+        }
+        return Shapes.empty();
     }
 
     @Override
