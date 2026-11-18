@@ -53,7 +53,8 @@ public final class TrueDarkness {
 
     /** 0…1: сколько света неба отнять сейчас (процент из команды, фаза луны и глубина ночи). */
     public static float strength(ClientLevel level) {
-        return Mth.clamp(ClientConfig.nightDarkness() * moonDarkening(level), 0f, 1f) * night(level);
+        float moon = ClientConfig.moonPhases() ? moonDarkening(level) : 1f;
+        return Mth.clamp(ClientConfig.nightDarkness() * moon, 0f, 1f) * night(level);
     }
 
     /**

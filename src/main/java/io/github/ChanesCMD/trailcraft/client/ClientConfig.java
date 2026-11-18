@@ -152,6 +152,11 @@ public final class ClientConfig {
             .comment("Show the last death point on the fullscreen map when it is known.")
             .define("mapDeathPoint", true);
 
+    /** Учитывать фазу луны: в полнолуние ночь светлее (80 %), в новолуние темнее (88 %). */
+    public static final ModConfigSpec.BooleanValue MOON_PHASES = BUILDER
+            .comment("Night darkness depends on the moon phase (full moon is lighter).")
+            .define("moonPhases", true);
+
     /** Тёмная ночь как в True Darkness: 0 — ванильная ночь, 100 — неосвещённые места полностью чёрные. */
     public static final ModConfigSpec.IntValue NIGHT_DARKNESS = BUILDER
             .comment("Test setting: extra night darkness in percent (0 = off).")
@@ -243,6 +248,10 @@ public final class ClientConfig {
 
     public static boolean mapDeathPoint() {
         return !SPEC.isLoaded() || MAP_DEATH_POINT.get();
+    }
+
+    public static boolean moonPhases() {
+        return !SPEC.isLoaded() || MOON_PHASES.get();
     }
 
     /** 0…1, тестовая сила тёмной ночи. */
