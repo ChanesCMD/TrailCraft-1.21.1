@@ -33,9 +33,9 @@ public final class TrueDarkness {
             default -> 13000;
         };
         int end = switch (Seasons.current()) {
-            case SUMMER -> 21500;
-            case WINTER -> 23200;
-            default -> 22500;
+            case SUMMER -> 21900;
+            case WINTER -> 23600;
+            default -> 22900;
         };
         if (time < start || time >= end) {
             return 0f;
