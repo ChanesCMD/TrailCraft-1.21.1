@@ -21,7 +21,7 @@ NS = "trailcraft"
 ASSETS = os.path.join(ROOT, "src", "main", "resources", "assets", NS)
 TEX = os.path.join(ASSETS, "textures", "block")
 SOILS = {"rooted_zheltozem": "zheltozem", "rooted_burozem": "burozem", "rooted_chernozem": "chernozem"}
-ROOT_ALPHA = 0.9        # насколько плотно ложатся корни
+ROOT_ALPHA = 1.0        # корни ложатся как есть
 CONTRAST = 1.0          # 1.0 — как есть, меньше — мягче (тянем к средней яркости)
 
 
@@ -64,7 +64,7 @@ def main():
         base = Image.open(os.path.join(TEX, soil + ".png")).convert("RGBA")
         merged = base.copy()
         merged.alpha_composite(roots)
-        soften(merged).save(os.path.join(TEX, block + ".png"))
+        (soften(merged) if CONTRAST < 1.0 else merged).save(os.path.join(TEX, block + ".png"))
         write(os.path.join(ASSETS, "blockstates", block + ".json"),
               {"variants": {"": {"model": f"{NS}:block/{block}"}}})
         write(os.path.join(ASSETS, "models", "block", block + ".json"),
