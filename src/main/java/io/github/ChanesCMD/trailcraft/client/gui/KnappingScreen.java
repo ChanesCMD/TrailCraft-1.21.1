@@ -192,7 +192,7 @@ public class KnappingScreen extends Screen {
                 int py = y0 + y * CELL;
                 if (stone[y][x]) {
                     // кремень: серо-коричневый, с «щербинками»
-                    int shade = 0xFF9A9AA0 + (((x * 31 + y * 17) % 5) == 0 ? 0x000F0F12 : 0);
+                    int shade = ((x * 31 + y * 17) % 5) == 0 ? 0xFF8C8C93 : 0xFF9A9AA0;
                     g.fill(px, py, px + CELL, py + CELL, shade);
                 } else if (shape[y][x]) {
                     // след контура
@@ -230,7 +230,6 @@ public class KnappingScreen extends Screen {
         int len = BOARD;
         int ax = (int) Math.round(cx - px * len / 2), ay = (int) Math.round(cy - py * len / 2);
         int bx = (int) Math.round(cx + px * len / 2), by = (int) Math.round(cy + py * len / 2);
-        g.fill(ax, ay - 1, bx, by + 1, 0x0);
         drawLine(g, ax, ay, bx, by, flash > 0 ? 0xFFFFE28A : 0xFFE8E8E8);
 
         g.drawString(font, Component.translatable("gui.trailcraft.knapping.angle", Math.round(angle % 360)),
@@ -357,9 +356,10 @@ public class KnappingScreen extends Screen {
                 }
             }
         }
-        if (extra == 0) {
+        // чуть-чуть лишнего кремня осталось — головка выйдет плохого качества
+        if (extra <= 2) {
             finished = true;
-            poor = missing > 0;
+            poor = extra > 0 || missing > 0;
         }
     }
 
