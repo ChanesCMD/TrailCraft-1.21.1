@@ -1403,7 +1403,7 @@
   "gui.trailcraft.knapping": "Flint knapping",
   "gui.trailcraft.knapping.head": "Head: ",
   "gui.trailcraft.knapping.angle": "Strip: %s°",
-  "gui.trailcraft.knapping.keys": "Q/E rotate the strip, Space chips",
+  "gui.trailcraft.knapping.keys": "Move the strip with the mouse, Space chips along it",
   "gui.trailcraft.knapping.good": "Done!",
   "gui.trailcraft.knapping.poor": "Done, but poor quality",
   "gui.trailcraft.knapping.cracking": "The flint is cracking - a bit more and it is ruined",

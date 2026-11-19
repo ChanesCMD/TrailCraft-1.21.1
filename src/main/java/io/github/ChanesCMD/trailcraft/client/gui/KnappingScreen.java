@@ -9,19 +9,17 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 /**
  * Миниигра оббивки кремня: на плите лежит кусок кремня, поверх — контур головки.
- * Полоску (линию откола) крутят на Q и E, пробел откалывает крайний слой кремня вдоль полоски.
- * Отколол лишнее — кремень испорчен; оставил много лишнего — игра не заканчивается;
+ * Полоска откола идёт за курсором и режет кремень ровно по себе: всё, что осталось по ту сторону
+ * маленькой стрелки, откалывается. Отколол лишнее — кремень испорчен; оставил много лишнего — игра не заканчивается;
  * срезал почти всё, но не идеально — головка плохого качества.
  */
 public class KnappingScreen extends Screen {
-    private static final int GRID = 16;
-    private static final int CELL = 7;
+    private static final int GRID = 32;         // клеток на плите (вчетверо больше прежнего)
+    private static final int CELL = 6;
     private static final int BOARD = GRID * CELL;
-    /** Сколько клеток контура можно срезать, прежде чем кремень считается испорченным. */
-    private static final int MAX_BLUNDER = 8;
+    private static final int MAX_BLUNDER = 10;
 
     private static final String[][] SHAPES = {
-            // PICKAXE
             {"................",
              "......######....",
              "....##......##..",
@@ -38,7 +36,6 @@ public class KnappingScreen extends Screen {
              "................",
              "................",
              "................"},
-            // AXE
             {"................",
              ".....#####......",
              "....#######.....",
@@ -55,7 +52,6 @@ public class KnappingScreen extends Screen {
              "................",
              "................",
              "................"},
-            // SHOVEL
             {"................",
              "......####......",
              "......####......",
@@ -72,7 +68,6 @@ public class KnappingScreen extends Screen {
              "................",
              "................",
              "................"},
-            // HOE
             {"................",
              "...##########...",
              "...##......##...",
@@ -89,7 +84,6 @@ public class KnappingScreen extends Screen {
              "................",
              "................",
              "................"},
-            // KNIFE
             {"................",
              "....##..........",
              "...####.........",
@@ -106,7 +100,6 @@ public class KnappingScreen extends Screen {
              "................",
              "................",
              "................"},
-            // SPEAR
             {"................",
              ".......##.......",
              "......####......",
@@ -126,32 +119,30 @@ public class KnappingScreen extends Screen {
     };
 
     private final int tool;
-    private final int head;
     private final boolean[][] stone = new boolean[GRID][GRID];
     private final boolean[][] shape = new boolean[GRID][GRID];
-    private float angle = 35f;
     private int blunder;
     private boolean finished;
     private boolean poor;
-    private float flash;
-    private int chips;
+    private int flash;
+    /** Курсор на плите в клетках. */
+    private double aimX = GRID / 2.0, aimY = -2;
 
     public KnappingScreen(int tool) {
         super(Component.translatable("gui.trailcraft.knapping"));
         this.tool = tool;
-        this.head = 0;
         String[] art = SHAPES[Math.min(tool, SHAPES.length - 1)];
         for (int y = 0; y < GRID; y++) {
             for (int x = 0; x < GRID; x++) {
-                shape[y][x] = art[y].charAt(x) == '#';
+                shape[y][x] = art[y / 2].charAt(x / 2) == '#';
             }
         }
-        // кусок кремня — скруглённый брусок на всю плиту
+        double c = (GRID - 1) / 2.0;
+        double r = GRID / 2.0 - 0.5;
         for (int y = 0; y < GRID; y++) {
             for (int x = 0; x < GRID; x++) {
-                float dx = (x - (GRID - 1) / 2f) / (GRID / 2f - 0.5f);
-                float dy = (y - (GRID - 1) / 2f) / (GRID / 2f - 0.5f);
-                stone[y][x] = dx * dx + dy * dy <= 0.92f;
+                double dx = (x - c) / r, dy = (y - c) / r;
+                stone[y][x] = dx * dx + dy * dy <= 0.92;
             }
         }
     }
@@ -166,23 +157,35 @@ public class KnappingScreen extends Screen {
     }
 
     private int left() {
-        return (width - BOARD) / 2 - 46;
+        return (width - BOARD) / 2 - 60;
     }
 
     private int top() {
-        return (height - BOARD) / 2 - 6;
+        return (height - BOARD) / 2 - 10;
     }
 
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
         super.render(g, mouseX, mouseY, partialTick);
         int x0 = left(), y0 = top();
-        UiDraw.panel(g, x0 - 14, y0 - 26, BOARD + 28, BOARD + 76);
-        g.drawString(font, title, x0 - 4, y0 - 19, UiDraw.LABEL, false);
-        g.drawString(font, Component.translatable("gui.trailcraft.knapping.head").append(FlintItem.head(tool).getHoverName()),
-                x0 - 4, y0 - 8, UiDraw.GREY, false);
+        aimX = (mouseX - x0) / (double) CELL;
+        aimY = (mouseY - y0) / (double) CELL;
+        double cx = (GRID - 1) / 2.0, cy = (GRID - 1) / 2.0;
+        double dx = aimX - cx, dy = aimY - cy;
+        double len = Math.hypot(dx, dy);
+        if (len < 0.8) {
+            dx = 0;
+            dy = -1;
+            len = 1;
+        }
+        double nx = dx / len, ny = dy / len;          // куда откалываем
+        double tx = -ny, ty = nx;                     // вдоль полоски
 
-        // плита-подложка
+        UiDraw.panel(g, x0 - 16, y0 - 30, BOARD + 32, BOARD + 84);
+        g.drawString(font, title, x0 - 6, y0 - 23, UiDraw.LABEL, false);
+        g.drawString(font, Component.translatable("gui.trailcraft.knapping.head").append(FlintItem.head(tool).getHoverName()),
+                x0 - 6, y0 - 12, UiDraw.GREY, false);
+
         g.fill(x0, y0, x0 + BOARD, y0 + BOARD, 0xFF2B2B2B);
         UiDraw.frame(g, x0 - 1, y0 - 1, BOARD + 2, BOARD + 2, 0xFF1A1A1A, 0xFF4A4A4A, 0xFF1A1A1A);
 
@@ -191,12 +194,10 @@ public class KnappingScreen extends Screen {
                 int px = x0 + x * CELL;
                 int py = y0 + y * CELL;
                 if (stone[y][x]) {
-                    // кремень: серо-коричневый, с «щербинками»
-                    int shade = ((x * 31 + y * 17) % 5) == 0 ? 0xFF8C8C93 : 0xFF9A9AA0;
+                    int shade = ((x * 31 + y * 17) % 7) == 0 ? 0xFF8A8A91 : 0xFF9A9AA0;
                     g.fill(px, py, px + CELL, py + CELL, shade);
                 } else if (shape[y][x]) {
-                    // след контура
-                    g.fill(px, py, px + CELL, py + CELL, 0x30C8B080);
+                    g.fill(px, py, px + CELL, py + CELL, 0x28C8B080);
                 }
             }
         }
@@ -206,8 +207,7 @@ public class KnappingScreen extends Screen {
                 if (!shape[y][x]) {
                     continue;
                 }
-                int px = x0 + x * CELL;
-                int py = y0 + y * CELL;
+                int px = x0 + x * CELL, py = y0 + y * CELL;
                 if (y == 0 || !shape[y - 1][x]) {
                     g.fill(px, py, px + CELL, py + 1, 0xFFD8A45A);
                 }
@@ -222,27 +222,27 @@ public class KnappingScreen extends Screen {
                 }
             }
         }
-        // полоска откола
-        double rad = Math.toRadians(angle);
-        double cx = x0 + BOARD / 2.0, cy = y0 + BOARD / 2.0;
-        double nx = Math.cos(rad), ny = Math.sin(rad);
-        double px = -ny, py = nx;
-        int len = BOARD;
-        int ax = (int) Math.round(cx - px * len / 2), ay = (int) Math.round(cy - py * len / 2);
-        int bx = (int) Math.round(cx + px * len / 2), by = (int) Math.round(cy + py * len / 2);
-        drawLine(g, ax, ay, bx, by, flash > 0 ? 0xFFFFE28A : 0xFFE8E8E8);
+        // полоска откола через курсор, поперёк направления
+        double mx = x0 + aimX * CELL, my = y0 + aimY * CELL;
+        int lx = (int) Math.round(mx + tx * BOARD), ly = (int) Math.round(my + ty * BOARD);
+        int rx = (int) Math.round(mx - tx * BOARD), ry = (int) Math.round(my - ty * BOARD);
+        drawLine(g, lx, ly, rx, ry, flash > 0 ? 0xFFFFE08A : 0xFFF2F2F2);
+        // маленькая стрелка снаружи: в эту сторону откалывается
+        int ax = (int) Math.round(mx + nx * 9), ay = (int) Math.round(my + ny * 9);
+        int bx = (int) Math.round(mx + nx * 17), by = (int) Math.round(my + ny * 17);
+        drawLine(g, ax, ay, bx, by, 0xFFE8C070);
+        drawLine(g, bx, by, bx - (int) Math.round(nx * 4 - tx * 3), by - (int) Math.round(ny * 4 - ty * 3), 0xFFE8C070);
+        drawLine(g, bx, by, bx - (int) Math.round(nx * 4 + tx * 3), by - (int) Math.round(ny * 4 + ty * 3), 0xFFE8C070);
 
-        g.drawString(font, Component.translatable("gui.trailcraft.knapping.angle", Math.round(angle % 360)),
-                x0 - 4, y0 + BOARD + 6, UiDraw.GREY, false);
         g.drawString(font, Component.translatable("gui.trailcraft.knapping.keys"),
-                x0 - 4, y0 + BOARD + 18, 0xFF707070, false);
+                x0 - 6, y0 + BOARD + 6, 0xFF707070, false);
         if (finished) {
             Component text = Component.translatable(poor
                     ? "gui.trailcraft.knapping.poor" : "gui.trailcraft.knapping.good");
-            g.drawString(font, text, x0 - 4, y0 + BOARD + 32, poor ? 0xFFD8A45A : 0xFF7BC67B, false);
+            g.drawString(font, text, x0 - 6, y0 + BOARD + 20, poor ? 0xFFD8A45A : 0xFF7BC67B, false);
         } else if (blunder > MAX_BLUNDER / 2) {
             g.drawString(font, Component.translatable("gui.trailcraft.knapping.cracking"),
-                    x0 - 4, y0 + BOARD + 32, 0xFFC06050, false);
+                    x0 - 6, y0 + BOARD + 20, 0xFFC06050, false);
         }
     }
 
@@ -251,7 +251,7 @@ public class KnappingScreen extends Screen {
         int sx = x1 < x2 ? 1 : -1, sy = y1 < y2 ? 1 : -1;
         int err = dx - dy;
         int x = x1, y = y1;
-        for (int i = 0; i < 600; i++) {
+        for (int i = 0; i < 2000; i++) {
             g.fill(x, y, x + 1, y + 1, color);
             if (x == x2 && y == y2) {
                 return;
@@ -270,15 +270,6 @@ public class KnappingScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        // Q и E — вращать полоску
-        if (keyCode == 81) {
-            angle = (angle - 7.5f + 360f) % 360f;
-            return true;
-        }
-        if (keyCode == 69) {
-            angle = (angle + 7.5f) % 360f;
-            return true;
-        }
         if (keyCode == 32) {
             if (finished) {
                 sendResult();
@@ -294,27 +285,33 @@ public class KnappingScreen extends Screen {
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
-    /** Отколоть крайний слой кремня со стороны, куда смотрит полоска. */
-    private void chip() {
-        double rad = Math.toRadians(angle);
-        double nx = Math.cos(rad), ny = Math.sin(rad);
-        double max = Double.NEGATIVE_INFINITY;
-        for (int y = 0; y < GRID; y++) {
-            for (int x = 0; x < GRID; x++) {
-                if (stone[y][x]) {
-                    max = Math.max(max, x * nx + y * ny);
-                }
-            }
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (finished) {
+            sendResult();
+            return true;
         }
-        if (max == Double.NEGATIVE_INFINITY) {
-            check();
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    /** Отколоть всё, что осталось по ту сторону полоски (за стрелкой). */
+    private void chip() {
+        double cx = (GRID - 1) / 2.0, cy = (GRID - 1) / 2.0;
+        double dx = aimX - cx, dy = aimY - cy;
+        double len = Math.hypot(dx, dy);
+        if (len < 0.8) {
             return;
         }
+        double nx = dx / len, ny = dy / len;
+        double line = aimX * nx + aimY * ny;
         boolean cutShape = false;
         int removed = 0;
         for (int y = 0; y < GRID; y++) {
             for (int x = 0; x < GRID; x++) {
-                if (stone[y][x] && x * nx + y * ny > max - 1.35) {
+                if (!stone[y][x]) {
+                    continue;
+                }
+                if ((x + 0.5) * nx + (y + 0.5) * ny > line) {
                     stone[y][x] = false;
                     removed++;
                     if (shape[y][x]) {
@@ -323,8 +320,7 @@ public class KnappingScreen extends Screen {
                 }
             }
         }
-        chips++;
-        flash = 6f;
+        flash = 4;
         if (removed == 0) {
             blunder++;
         }
@@ -332,9 +328,6 @@ public class KnappingScreen extends Screen {
             blunder += 2;
         }
         if (blunder > MAX_BLUNDER) {
-            finished = true;
-            poor = false;
-            // слишком много отколото — провал
             PacketDistributor.sendToServer(new FlintItem.KnapPayload(tool, FlintItem.KNAP_FAIL));
             onClose();
             return;
@@ -342,10 +335,9 @@ public class KnappingScreen extends Screen {
         check();
     }
 
-    /** Пора заканчивать? Лишнего кремня не осталось — считаем качество. */
+    /** Лишнего кремня не осталось — считаем качество. */
     private void check() {
-        int extra = 0;
-        int missing = 0;
+        int extra = 0, missing = 0;
         for (int y = 0; y < GRID; y++) {
             for (int x = 0; x < GRID; x++) {
                 if (stone[y][x] && !shape[y][x]) {
@@ -356,8 +348,7 @@ public class KnappingScreen extends Screen {
                 }
             }
         }
-        // чуть-чуть лишнего кремня осталось — головка выйдет плохого качества
-        if (extra <= 2) {
+        if (extra <= 6) {
             finished = true;
             poor = extra > 0 || missing > 0;
         }
@@ -366,17 +357,8 @@ public class KnappingScreen extends Screen {
     @Override
     public void tick() {
         if (flash > 0) {
-            flash -= 1f;
+            flash--;
         }
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (finished) {
-            sendResult();
-            return true;
-        }
-        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     private void sendResult() {
@@ -385,10 +367,5 @@ public class KnappingScreen extends Screen {
         }
         PacketDistributor.sendToServer(new FlintItem.KnapPayload(tool, poor ? FlintItem.KNAP_POOR : FlintItem.KNAP_GOOD));
         onClose();
-    }
-
-    @Override
-    public void onClose() {
-        super.onClose();
     }
 }

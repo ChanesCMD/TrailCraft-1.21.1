@@ -22,7 +22,7 @@
           8
         ],
         "axis": "y",
-        "angle": 30,
+        "angle": 45,
         "rescale": true
       },
       "shade": false,
@@ -67,7 +67,7 @@
           8
         ],
         "axis": "y",
-        "angle": -30,
+        "angle": -45,
         "rescale": true
       },
       "shade": false,
@@ -112,7 +112,7 @@
           8
         ],
         "axis": "y",
-        "angle": 30,
+        "angle": 45,
         "rescale": true
       },
       "shade": false,
@@ -155,7 +155,7 @@
           8
         ],
         "axis": "y",
-        "angle": -30,
+        "angle": -45,
         "rescale": true
       },
       "shade": false,
