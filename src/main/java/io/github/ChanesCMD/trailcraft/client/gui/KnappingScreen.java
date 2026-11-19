@@ -130,6 +130,8 @@ public class KnappingScreen extends Screen {
     private double aimX = GRID / 2.0, aimY = -2;
     /** Угол полоски в градусах: Q/E. */
     private float angle = 90f;
+    /** Малое обтачивание: полоска короткая (около 3 клеток) и шаг поворота вдвое меньше. */
+    private boolean small;
 
     public KnappingScreen(int tool) {
         super(Component.translatable("gui.trailcraft.knapping"));
@@ -218,10 +220,12 @@ public class KnappingScreen extends Screen {
                 }
             }
         }
-        // полоска откола через курсор, поперёк направления
+        // полоска откола через курсор, поперёк направления; в малом режиме она короткая
+        small = hasShiftDown();
+        double half = (small ? 1.6 : BOARD / (double) CELL) * CELL;
         double mx = x0 + aimX * CELL, my = y0 + aimY * CELL;
-        int lx = (int) Math.round(mx + tx * BOARD), ly = (int) Math.round(my + ty * BOARD);
-        int rx = (int) Math.round(mx - tx * BOARD), ry = (int) Math.round(my - ty * BOARD);
+        int lx = (int) Math.round(mx + tx * half), ly = (int) Math.round(my + ty * half);
+        int rx = (int) Math.round(mx - tx * half), ry = (int) Math.round(my - ty * half);
         drawLine(g, lx, ly, rx, ry, flash > 0 ? 0xFFFFE08A : 0xFFF2F2F2);
         // маленькая стрелка снаружи: в эту сторону откалывается
         int ax = (int) Math.round(mx + nx * 9), ay = (int) Math.round(my + ny * 9);
@@ -230,8 +234,10 @@ public class KnappingScreen extends Screen {
         drawLine(g, bx, by, bx - (int) Math.round(nx * 4 - tx * 3), by - (int) Math.round(ny * 4 - ty * 3), 0xFFE8C070);
         drawLine(g, bx, by, bx - (int) Math.round(nx * 4 + tx * 3), by - (int) Math.round(ny * 4 + ty * 3), 0xFFE8C070);
 
-        g.drawString(font, Component.translatable("gui.trailcraft.knapping.angle", Math.round((angle % 360 + 360) % 360)),
-                x0 - 6, y0 + BOARD + 4, UiDraw.GREY, false);
+        g.drawString(font, Component.translatable("gui.trailcraft.knapping.angle", Math.round((angle % 360 + 360) % 360))
+                        .append("  ").append(Component.translatable(small
+                                ? "gui.trailcraft.knapping.small" : "gui.trailcraft.knapping.full")),
+                x0 - 6, y0 + BOARD + 4, small ? 0xFFD8A45A : UiDraw.GREY, false);
         g.drawString(font, Component.translatable("gui.trailcraft.knapping.keys"),
                 x0 - 6, y0 + BOARD + 14, 0xFF707070, false);
         if (finished) {
@@ -268,12 +274,13 @@ public class KnappingScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        float step = small ? 3.75f : 7.5f;
         if (keyCode == 81) {                 // Q
-            angle = (angle - 7.5f + 360f) % 360f;
+            angle = (angle - step + 360f) % 360f;
             return true;
         }
         if (keyCode == 69) {                 // E
-            angle = (angle + 7.5f) % 360f;
+            angle = (angle + step) % 360f;
             return true;
         }
         if (keyCode == 32) {
@@ -305,11 +312,17 @@ public class KnappingScreen extends Screen {
         double rad = Math.toRadians(angle);
         double nx = Math.cos(rad), ny = Math.sin(rad);
         double line = (aimX + 0.5) * nx + (aimY + 0.5) * ny;
+        double tx = -ny, ty = nx;
+        double along = (aimX + 0.5) * tx + (aimY + 0.5) * ty;
+        double limit = small ? 1.6 : 1.0e9;
         boolean cutShape = false;
         int removed = 0;
         for (int y = 0; y < GRID; y++) {
             for (int x = 0; x < GRID; x++) {
                 if (!stone[y][x]) {
+                    continue;
+                }
+                if (small && Math.abs((x + 0.5) * tx + (y + 0.5) * ty - along) > limit) {
                     continue;
                 }
                 if ((x + 0.5) * nx + (y + 0.5) * ny > line) {

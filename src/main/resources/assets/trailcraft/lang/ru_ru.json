@@ -1408,5 +1408,7 @@
   "gui.trailcraft.knapping.poor": "Готово, но качество плохое",
   "gui.trailcraft.knapping.cracking": "Кремень трещит, ещё немного — и испортится",
   "tooltip.trailcraft.poor_quality": "Плохое качество",
-  "message.trailcraft.knap_fail": "Кремень испорчен"
+  "message.trailcraft.knap_fail": "Кремень испорчен",
+  "gui.trailcraft.knapping.small": "малое обтачивание",
+  "gui.trailcraft.knapping.full": "полный скол"
 }

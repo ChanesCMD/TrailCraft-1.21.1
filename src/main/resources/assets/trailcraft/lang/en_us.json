@@ -1408,5 +1408,7 @@
   "gui.trailcraft.knapping.poor": "Done, but poor quality",
   "gui.trailcraft.knapping.cracking": "The flint is cracking - a bit more and it is ruined",
   "tooltip.trailcraft.poor_quality": "Poor quality",
-  "message.trailcraft.knap_fail": "The flint is ruined"
+  "message.trailcraft.knap_fail": "The flint is ruined",
+  "gui.trailcraft.knapping.small": "fine chipping",
+  "gui.trailcraft.knapping.full": "full chip"
 }
