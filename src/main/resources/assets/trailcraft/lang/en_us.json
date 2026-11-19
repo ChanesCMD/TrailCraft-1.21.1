@@ -1399,5 +1399,14 @@
   "item.trailcraft.green_dye": "Green Dye",
   "block.trailcraft.rooted_zheltozem": "Rooted Yellow Soil",
   "block.trailcraft.rooted_burozem": "Rooted Brown Soil",
-  "block.trailcraft.rooted_chernozem": "Rooted Black Soil"
+  "block.trailcraft.rooted_chernozem": "Rooted Black Soil",
+  "gui.trailcraft.knapping": "Flint knapping",
+  "gui.trailcraft.knapping.head": "Head: ",
+  "gui.trailcraft.knapping.angle": "Strip: %s°",
+  "gui.trailcraft.knapping.keys": "Q/E rotate the strip, Space chips",
+  "gui.trailcraft.knapping.good": "Done!",
+  "gui.trailcraft.knapping.poor": "Done, but poor quality",
+  "gui.trailcraft.knapping.cracking": "The flint is cracking - a bit more and it is ruined",
+  "tooltip.trailcraft.poor_quality": "Poor quality",
+  "message.trailcraft.knap_fail": "The flint is ruined"
 }

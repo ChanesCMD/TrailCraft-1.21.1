@@ -7,7 +7,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 /** Окно оббивки кремня: плитки с кремнёвыми головками (ModSmelting.FLINT_TOOLS), клик — оббить. Как ClayMoldScreen. */
 public class FlintKnappingScreen extends Screen {
@@ -70,8 +69,7 @@ public class FlintKnappingScreen extends Screen {
         for (int i = 0; i < count(); i++) {
             int x = tileX(i), y = tileY(i);
             if (mouseX >= x && mouseX < x + TILE && mouseY >= y && mouseY < y + TILE) {
-                PacketDistributor.sendToServer(new FlintItem.KnapPayload(i));
-                onClose();
+                KnappingScreen.open(i);
                 return true;
             }
         }

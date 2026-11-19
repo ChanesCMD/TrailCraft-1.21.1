@@ -55,5 +55,10 @@ public final class ModComponents {
             COMPONENTS.registerComponentType("cast", builder -> builder.persistent(Metal.CODEC)
                     .networkSynchronized(Metal.STREAM_CODEC));
 
+    /** Головка оббита плохо (1): инструмент из неё выходит уже потрёпанным. */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> QUALITY =
+            COMPONENTS.registerComponentType("quality", builder -> builder.persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.VAR_INT));
+
     private ModComponents() {}
 }

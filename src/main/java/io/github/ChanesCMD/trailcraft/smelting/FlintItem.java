@@ -35,6 +35,9 @@ import java.util.List;
  * кремень. Головка над веткой или обработанной палкой — инструмент (рецепты — scripts/gen_casting.py).
  */
 public class FlintItem extends BlockItem {
+    /** Итог оббивки в пакете с клиента. */
+    public static final int KNAP_GOOD = 0, KNAP_POOR = 1, KNAP_FAIL = 2;
+
     public FlintItem(Block pebble, Item.Properties properties) {
         super(pebble, properties);
     }
@@ -62,13 +65,23 @@ public class FlintItem extends BlockItem {
         return new ItemStack(ModSmelting.HEADS.get("flint_" + ModSmelting.FLINT_TOOLS.get(tool).id).get());
     }
 
-    /** Сервер: заменить кремень в правой руке головкой. */
-    static void knap(ServerPlayer player, int tool) {
+    /** Сервер: заменить кремень в правой руке головкой (или выбросить испорченный кремень). */
+    static void knap(ServerPlayer player, int tool, int quality) {
         ItemStack held = player.getMainHandItem();
         if (!(held.getItem() instanceof FlintItem)) {
             return;
         }
+        if (quality == KNAP_FAIL) {
+            held.shrink(1);
+            player.level().playSound(null, player.blockPosition(), SoundEvents.GLASS_BREAK, SoundSource.PLAYERS, 0.7f, 1.5f);
+            player.displayClientMessage(Component.translatable("message.trailcraft.knap_fail")
+                    .withStyle(ChatFormatting.RED), true);
+            return;
+        }
         ItemStack result = head(tool);
+        if (quality == KNAP_POOR) {
+            result.set(io.github.ChanesCMD.trailcraft.init.ModComponents.QUALITY.get(), 1);
+        }
         if (held.getCount() == 1) {
             player.setItemInHand(InteractionHand.MAIN_HAND, result);
         } else {
@@ -81,10 +94,11 @@ public class FlintItem extends BlockItem {
     }
 
     /** Клиент → сервер: оббить головку (номер в ModSmelting.FLINT_TOOLS). */
-    public record KnapPayload(int tool) implements CustomPacketPayload {
+    public record KnapPayload(int tool, int quality) implements CustomPacketPayload {
         public static final Type<KnapPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "flint_knap"));
         public static final StreamCodec<ByteBuf, KnapPayload> STREAM_CODEC =
-                StreamCodec.composite(ByteBufCodecs.VAR_INT, KnapPayload::tool, KnapPayload::new);
+                StreamCodec.composite(ByteBufCodecs.VAR_INT, KnapPayload::tool,
+                        ByteBufCodecs.VAR_INT, KnapPayload::quality, KnapPayload::new);
 
         @Override
         public Type<? extends CustomPacketPayload> type() {
@@ -100,7 +114,7 @@ public class FlintItem extends BlockItem {
                     (payload, context) -> context.enqueueWork(() -> {
                         if (context.player() instanceof ServerPlayer player && payload.tool() >= 0
                                 && payload.tool() < ModSmelting.FLINT_TOOLS.size()) {
-                            knap(player, payload.tool());
+                            knap(player, payload.tool(), payload.quality());
                         }
                     }));
         }

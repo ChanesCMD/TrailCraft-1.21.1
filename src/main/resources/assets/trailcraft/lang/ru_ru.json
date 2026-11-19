@@ -1399,5 +1399,14 @@
   "item.trailcraft.green_dye": "Зелёный краситель",
   "block.trailcraft.rooted_zheltozem": "Жёлтозём с корнями",
   "block.trailcraft.rooted_burozem": "Бурозём с корнями",
-  "block.trailcraft.rooted_chernozem": "Чернозём с корнями"
+  "block.trailcraft.rooted_chernozem": "Чернозём с корнями",
+  "gui.trailcraft.knapping": "Оббивка кремня",
+  "gui.trailcraft.knapping.head": "Головка: ",
+  "gui.trailcraft.knapping.angle": "Полоска: %s°",
+  "gui.trailcraft.knapping.keys": "Q/E — крутить полоску, пробел — отколоть",
+  "gui.trailcraft.knapping.good": "Готово!",
+  "gui.trailcraft.knapping.poor": "Готово, но качество плохое",
+  "gui.trailcraft.knapping.cracking": "Кремень трещит, ещё немного — и испортится",
+  "tooltip.trailcraft.poor_quality": "Плохое качество",
+  "message.trailcraft.knap_fail": "Кремень испорчен"
 }
