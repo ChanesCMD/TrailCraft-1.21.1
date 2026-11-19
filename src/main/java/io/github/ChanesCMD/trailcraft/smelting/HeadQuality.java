@@ -7,11 +7,22 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 /** Инструмент из плохо оббитой головки выходит уже потрёпанным (на 40 % прочности меньше). */
 @EventBusSubscriber(modid = TrailCraft.MODID, bus = EventBusSubscriber.Bus.GAME)
 public final class HeadQuality {
+    @SubscribeEvent
+    public static void tooltip(ItemTooltipEvent event) {
+        if (event.getItemStack().getOrDefault(ModComponents.QUALITY.get(), 0) > 0) {
+            event.getToolTip().add(Component.translatable("tooltip.trailcraft.poor_quality")
+                    .withStyle(ChatFormatting.RED));
+        }
+    }
+
     @SubscribeEvent
     public static void crafted(PlayerEvent.ItemCraftedEvent event) {
         ItemStack result = event.getCrafting();

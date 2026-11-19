@@ -125,8 +125,11 @@ public class KnappingScreen extends Screen {
     private boolean finished;
     private boolean poor;
     private int flash;
+    private boolean sent;
     /** Курсор на плите в клетках. */
     private double aimX = GRID / 2.0, aimY = -2;
+    /** Угол полоски в градусах: Q/E. */
+    private float angle = 90f;
 
     public KnappingScreen(int tool) {
         super(Component.translatable("gui.trailcraft.knapping"));
@@ -170,16 +173,9 @@ public class KnappingScreen extends Screen {
         int x0 = left(), y0 = top();
         aimX = (mouseX - x0) / (double) CELL;
         aimY = (mouseY - y0) / (double) CELL;
-        double cx = (GRID - 1) / 2.0, cy = (GRID - 1) / 2.0;
-        double dx = aimX - cx, dy = aimY - cy;
-        double len = Math.hypot(dx, dy);
-        if (len < 0.8) {
-            dx = 0;
-            dy = -1;
-            len = 1;
-        }
-        double nx = dx / len, ny = dy / len;          // куда откалываем
-        double tx = -ny, ty = nx;                     // вдоль полоски
+        double rad = Math.toRadians(angle);
+        double nx = Math.cos(rad), ny = Math.sin(rad);   // сторона, которая откалывается
+        double tx = -ny, ty = nx;                        // вдоль полоски
 
         UiDraw.panel(g, x0 - 16, y0 - 30, BOARD + 32, BOARD + 84);
         g.drawString(font, title, x0 - 6, y0 - 23, UiDraw.LABEL, false);
@@ -234,8 +230,10 @@ public class KnappingScreen extends Screen {
         drawLine(g, bx, by, bx - (int) Math.round(nx * 4 - tx * 3), by - (int) Math.round(ny * 4 - ty * 3), 0xFFE8C070);
         drawLine(g, bx, by, bx - (int) Math.round(nx * 4 + tx * 3), by - (int) Math.round(ny * 4 + ty * 3), 0xFFE8C070);
 
+        g.drawString(font, Component.translatable("gui.trailcraft.knapping.angle", Math.round((angle % 360 + 360) % 360)),
+                x0 - 6, y0 + BOARD + 4, UiDraw.GREY, false);
         g.drawString(font, Component.translatable("gui.trailcraft.knapping.keys"),
-                x0 - 6, y0 + BOARD + 6, 0xFF707070, false);
+                x0 - 6, y0 + BOARD + 14, 0xFF707070, false);
         if (finished) {
             Component text = Component.translatable(poor
                     ? "gui.trailcraft.knapping.poor" : "gui.trailcraft.knapping.good");
@@ -270,6 +268,14 @@ public class KnappingScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == 81) {                 // Q
+            angle = (angle - 7.5f + 360f) % 360f;
+            return true;
+        }
+        if (keyCode == 69) {                 // E
+            angle = (angle + 7.5f) % 360f;
+            return true;
+        }
         if (keyCode == 32) {
             if (finished) {
                 sendResult();
@@ -296,14 +302,9 @@ public class KnappingScreen extends Screen {
 
     /** Отколоть всё, что осталось по ту сторону полоски (за стрелкой). */
     private void chip() {
-        double cx = (GRID - 1) / 2.0, cy = (GRID - 1) / 2.0;
-        double dx = aimX - cx, dy = aimY - cy;
-        double len = Math.hypot(dx, dy);
-        if (len < 0.8) {
-            return;
-        }
-        double nx = dx / len, ny = dy / len;
-        double line = aimX * nx + aimY * ny;
+        double rad = Math.toRadians(angle);
+        double nx = Math.cos(rad), ny = Math.sin(rad);
+        double line = (aimX + 0.5) * nx + (aimY + 0.5) * ny;
         boolean cutShape = false;
         int removed = 0;
         for (int y = 0; y < GRID; y++) {
@@ -362,10 +363,21 @@ public class KnappingScreen extends Screen {
     }
 
     private void sendResult() {
-        if (!finished) {
+        if (!finished || sent) {
             return;
         }
+        sent = true;
         PacketDistributor.sendToServer(new FlintItem.KnapPayload(tool, poor ? FlintItem.KNAP_POOR : FlintItem.KNAP_GOOD));
-        onClose();
+        super.onClose();
+    }
+
+    /** Закрыли окно (Esc или крестик) с готовым результатом — головку всё равно отдаём. */
+    @Override
+    public void onClose() {
+        if (finished && !sent) {
+            sendResult();
+            return;
+        }
+        super.onClose();
     }
 }
