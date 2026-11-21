@@ -101,6 +101,14 @@ public class KnappingScreen extends Screen {
                 stone[i][2] = false;
             }
         }
+        // контур головки всегда лежит на кремне: иначе «недостающие» клетки считались бы с самого начала
+        for (int y = 0; y < GRID; y++) {
+            for (int x = 0; x < GRID; x++) {
+                if (shape[y][x]) {
+                    stone[y][x] = true;
+                }
+            }
+        }
     }
 
     public static void open(int tool) {
