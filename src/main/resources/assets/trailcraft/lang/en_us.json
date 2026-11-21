@@ -1403,7 +1403,6 @@
   "gui.trailcraft.knapping": "Flint knapping",
   "gui.trailcraft.knapping.head": "Head: ",
   "gui.trailcraft.knapping.angle": "Strip: %s°",
-  "gui.trailcraft.knapping.keys": "Q/E rotate the strip, Space chips",
   "gui.trailcraft.knapping.good": "Done!",
   "gui.trailcraft.knapping.poor": "Done, but poor quality",
   "gui.trailcraft.knapping.cracking": "The flint is cracking - a bit more and it is ruined",
@@ -1411,5 +1410,5 @@
   "message.trailcraft.knap_fail": "The flint is ruined",
   "gui.trailcraft.knapping.small": "fine chipping",
   "gui.trailcraft.knapping.full": "full chip",
-  "gui.trailcraft.knapping.blocked": "Flint on both sides - fine chipping is not possible here"
+  "gui.trailcraft.knapping.no_chips": "Mouse moves the strip, Q/E rotates, Space chips, Shift - fine chip"
 }

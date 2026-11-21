@@ -1403,7 +1403,6 @@
   "gui.trailcraft.knapping": "Оббивка кремня",
   "gui.trailcraft.knapping.head": "Головка: ",
   "gui.trailcraft.knapping.angle": "Полоска: %s°",
-  "gui.trailcraft.knapping.keys": "Q/E — крутить полоску, пробел — отколоть",
   "gui.trailcraft.knapping.good": "Готово!",
   "gui.trailcraft.knapping.poor": "Готово, но качество плохое",
   "gui.trailcraft.knapping.cracking": "Кремень трещит, ещё немного — и испортится",
@@ -1411,5 +1410,5 @@
   "message.trailcraft.knap_fail": "Кремень испорчен",
   "gui.trailcraft.knapping.small": "малое обтачивание",
   "gui.trailcraft.knapping.full": "полный скол",
-  "gui.trailcraft.knapping.blocked": "Кремень с двух сторон — тут малый скол не сделать"
+  "gui.trailcraft.knapping.no_chips": "Мышь — положение полоски, Q/E — поворот, пробел — скол, Shift — малый скол"
 }
