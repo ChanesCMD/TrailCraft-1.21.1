@@ -1410,5 +1410,6 @@
   "tooltip.trailcraft.poor_quality": "Плохое качество",
   "message.trailcraft.knap_fail": "Кремень испорчен",
   "gui.trailcraft.knapping.small": "малое обтачивание",
-  "gui.trailcraft.knapping.full": "полный скол"
+  "gui.trailcraft.knapping.full": "полный скол",
+  "gui.trailcraft.knapping.blocked": "Кремень с двух сторон — тут малый скол не сделать"
 }

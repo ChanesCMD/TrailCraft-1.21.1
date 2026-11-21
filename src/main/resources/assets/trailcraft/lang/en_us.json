@@ -1410,5 +1410,6 @@
   "tooltip.trailcraft.poor_quality": "Poor quality",
   "message.trailcraft.knap_fail": "The flint is ruined",
   "gui.trailcraft.knapping.small": "fine chipping",
-  "gui.trailcraft.knapping.full": "full chip"
+  "gui.trailcraft.knapping.full": "full chip",
+  "gui.trailcraft.knapping.blocked": "Flint on both sides - fine chipping is not possible here"
 }

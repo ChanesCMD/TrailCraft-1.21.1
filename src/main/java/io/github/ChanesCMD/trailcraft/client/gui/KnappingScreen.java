@@ -126,6 +126,8 @@ public class KnappingScreen extends Screen {
     private boolean poor;
     private int flash;
     private boolean sent;
+    /** Сколько тиков показывать, что малый скол здесь невозможен. */
+    private int blocked;
     /** Курсор на плите в клетках. */
     private double aimX = GRID / 2.0, aimY = -2;
     /** Угол полоски в градусах: Q/E. */
@@ -244,6 +246,9 @@ public class KnappingScreen extends Screen {
             Component text = Component.translatable(poor
                     ? "gui.trailcraft.knapping.poor" : "gui.trailcraft.knapping.good");
             g.drawString(font, text, x0 - 6, y0 + BOARD + 20, poor ? 0xFFD8A45A : 0xFF7BC67B, false);
+        } else if (blocked > 0) {
+            g.drawString(font, Component.translatable("gui.trailcraft.knapping.blocked"),
+                    x0 - 6, y0 + BOARD + 20, 0xFFC06050, false);
         } else if (blunder > MAX_BLUNDER / 2) {
             g.drawString(font, Component.translatable("gui.trailcraft.knapping.cracking"),
                     x0 - 6, y0 + BOARD + 20, 0xFFC06050, false);
@@ -307,6 +312,25 @@ public class KnappingScreen extends Screen {
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
+    /** Есть ли кремень прямо за концом полоски (слева или справа). */
+    private boolean stoneAt(double gx, double gy) {
+        int x = (int) Math.floor(gx), y = (int) Math.floor(gy);
+        return x >= 0 && y >= 0 && x < GRID && y < GRID && stone[y][x];
+    }
+
+    /**
+     * Малый скол можно делать, только если кремень остаётся с одной стороны от полоски:
+     * если он торчит за обоими её концами, скол выгрыз бы середину.
+     */
+    private boolean fineChipAllowed(double tx, double ty) {
+        double ax = (aimX + 0.5) * tx + (aimY + 0.5) * ty;
+        double leftX = (aimX + 0.5) - tx * (1.6 + 0.7);
+        double leftY = (aimY + 0.5) - ty * (1.6 + 0.7);
+        double rightX = (aimX + 0.5) + tx * (1.6 + 0.7);
+        double rightY = (aimY + 0.5) + ty * (1.6 + 0.7);
+        return !(stoneAt(leftX, leftY) && stoneAt(rightX, rightY));
+    }
+
     /** Отколоть всё, что осталось по ту сторону полоски (за стрелкой). */
     private void chip() {
         double rad = Math.toRadians(angle);
@@ -315,6 +339,11 @@ public class KnappingScreen extends Screen {
         double tx = -ny, ty = nx;
         double along = (aimX + 0.5) * tx + (aimY + 0.5) * ty;
         double limit = small ? 1.6 : 1.0e9;
+        if (small && !fineChipAllowed(tx, ty)) {
+            flash = 4;
+            this.blocked = 6;
+            return;
+        }
         boolean cutShape = false;
         int removed = 0;
         for (int y = 0; y < GRID; y++) {
@@ -372,6 +401,9 @@ public class KnappingScreen extends Screen {
     public void tick() {
         if (flash > 0) {
             flash--;
+        }
+        if (blocked > 0) {
+            blocked--;
         }
     }
 
