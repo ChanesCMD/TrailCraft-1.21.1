@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "trailcraft:block/wall_torch",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "trailcraft:block/wall_torch",
+      "y": 0
+    },
+    "facing=south": {
+      "model": "trailcraft:block/wall_torch",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "trailcraft:block/wall_torch",
+      "y": 180
+    }
+  }
+}

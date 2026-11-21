@@ -1,5 +1,6 @@
 {
   "parent": "minecraft:block/torch",
+  "render_type": "minecraft:cutout",
   "textures": {
     "particle": "trailcraft:block/torch",
     "torch": "trailcraft:block/torch"

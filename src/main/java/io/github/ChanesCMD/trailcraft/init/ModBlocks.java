@@ -357,6 +357,14 @@ public class ModBlocks {
                     .noCollission().instabreak().lightLevel(state -> 10)
                     .sound(net.minecraft.world.level.block.SoundType.WOOD));
 
+    /** Настенный вариант нашего факела (предмет один — вешается на стену сам). */
+    public static final DeferredBlock<Block> WALL_TORCH = BLOCKS.registerBlock("wall_torch",
+            io.github.ChanesCMD.trailcraft.block.TrailWallTorchBlock::new,
+            net.minecraft.world.level.block.state.BlockBehaviour.Properties.of()
+                    .mapColor(net.minecraft.world.level.material.MapColor.WOOD)
+                    .noCollission().instabreak().lightLevel(state -> 10)
+                    .sound(net.minecraft.world.level.block.SoundType.WOOD));
+
     /** Корнистые зёмы: почва с корнями (наложение как у ванильного rooted_dirt), растут под деревьями азалии. */
     public static final DeferredBlock<Block> ROOTED_ZELTOZEM = BLOCKS.registerSimpleBlock("rooted_zheltozem",
             BlockBehaviour.Properties.ofFullCopy(Blocks.ROOTED_DIRT));
