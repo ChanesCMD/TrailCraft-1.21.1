@@ -1410,5 +1410,6 @@
   "message.trailcraft.knap_fail": "The flint is ruined",
   "gui.trailcraft.knapping.small": "fine chipping",
   "gui.trailcraft.knapping.full": "full chip",
-  "gui.trailcraft.knapping.no_chips": "Mouse moves the strip, Q/E rotates, Space chips, Shift - fine chip"
+  "gui.trailcraft.knapping.no_chips": "Mouse moves the strip, Q/E rotates, Space chips, Shift - fine chip",
+  "block.trailcraft.torch": "Torch"
 }

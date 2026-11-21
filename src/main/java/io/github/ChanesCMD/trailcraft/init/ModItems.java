@@ -238,6 +238,8 @@ public class ModItems {
     public static final DeferredItem<Item> DRIED_SEAWEED = ITEMS.registerItem("dried_seaweed",
             props -> new Item(props.food(new FoodProperties.Builder().nutrition(1).saturationModifier(0.3f).fast().build())));
     public static final DeferredItem<BlockItem> DRIED_SEAWEED_BLOCK = ITEMS.registerSimpleBlockItem("dried_seaweed_block", ModBlocks.DRIED_SEAWEED_BLOCK);
+    public static final DeferredItem<BlockItem> TORCH = ITEMS.registerSimpleBlockItem("torch", ModBlocks.TORCH);
+
     public static final DeferredItem<BlockItem> ROOTED_ZELTOZEM = ITEMS.registerSimpleBlockItem("rooted_zheltozem", ModBlocks.ROOTED_ZELTOZEM);
     public static final DeferredItem<BlockItem> ROOTED_BUROZEM = ITEMS.registerSimpleBlockItem("rooted_burozem", ModBlocks.ROOTED_BUROZEM);
     public static final DeferredItem<BlockItem> ROOTED_CHERNOZEM = ITEMS.registerSimpleBlockItem("rooted_chernozem", ModBlocks.ROOTED_CHERNOZEM);

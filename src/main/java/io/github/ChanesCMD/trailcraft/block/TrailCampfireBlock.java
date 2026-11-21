@@ -147,6 +147,20 @@ public class TrailCampfireBlock extends BaseEntityBlock {
             }
             return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
+        // палка в горящем костре — наш факел (слабее обычного)
+        if (stack.is(net.minecraft.world.item.Items.STICK) && state.getValue(LIT)) {
+            if (!level.isClientSide) {
+                if (!player.getAbilities().instabuild) {
+                    stack.shrink(1);
+                }
+                ItemStack torch = new ItemStack(ModBlocks.TORCH.get());
+                if (!player.getInventory().add(torch)) {
+                    player.drop(torch, false);
+                }
+                level.playSound(null, pos, SoundEvents.FIRE_AMBIENT, SoundSource.BLOCKS, 0.8f, 1.2f);
+            }
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+        }
         if (stack.is(ItemTags.SHOVELS) && (state.getValue(LIT) || logs == 0)) {
             if (!level.isClientSide) {
                 if (state.getValue(LIT)) {

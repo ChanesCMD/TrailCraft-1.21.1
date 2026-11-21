@@ -229,15 +229,6 @@ public class KnappingScreen extends Screen {
         g.fill(x0, y0, x0 + BOARD, y0 + BOARD, 0xFF232323);
         UiDraw.frame(g, x0 - 1, y0 - 1, BOARD + 2, BOARD + 2, 0xFF191919, 0xFF565656, 0xFF191919);
 
-        // факел из костра: палка с огоньком в левом верхнем углу плиты
-        double flicker = 0.86 + 0.14 * Math.sin(System.currentTimeMillis() / 90.0);
-        int torchPx = x0 + 3 * CELL, torchPy = y0 + 2 * CELL;
-        g.fill(torchPx + 2, torchPy + 3, torchPx + 4, torchPy + 12, 0xFF6A4A2A);
-        g.fill(torchPx + 2, torchPy + 12, torchPx + 4, torchPy + 14, 0xFF4A3320);
-        g.fill(torchPx + 1, torchPy - 2, torchPx + 5, torchPy + 3, 0xFFE8A03A);
-        g.fill(torchPx + 2, torchPy - 5, torchPx + 4, torchPy - 1, 0xFFF0C060);
-        g.fill(torchPx + 2, torchPy - 7, torchPx + 4, torchPy - 4, 0xF0FFF0B0);
-
         boolean pulse = (System.currentTimeMillis() / 200L) % 2 == 0;
         for (int y = 0; y < GRID; y++) {
             for (int x = 0; x < GRID; x++) {
@@ -266,13 +257,6 @@ public class KnappingScreen extends Screen {
                     }
                 } else if (shape[y][x]) {
                     g.fill(px, py, px + CELL, py + CELL, 0x26C8B080);
-                }
-                // свет факела: чем ближе, тем теплее и ярче
-                double dist = Math.hypot(x - 3.5, y - 2.5);
-                double light = Math.max(0.0, 0.55 - dist * 0.028) * flicker;
-                if (light > 0.02) {
-                    int alpha = (int) (light * 255);
-                    g.fill(px, py, px + CELL, py + CELL, alpha << 24 | 0xFFA050);
                 }
             }
         }

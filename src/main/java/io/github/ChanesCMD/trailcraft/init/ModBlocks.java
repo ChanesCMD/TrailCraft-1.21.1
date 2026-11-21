@@ -349,6 +349,14 @@ public class ModBlocks {
             BLOCKS.registerBlock("tall_seaweed_plant", TallSeaweedPlantBlock::new,
                     BlockBehaviour.Properties.of().mapColor(MapColor.WATER).replaceable().noCollission().instabreak()
                             .sound(SoundType.WET_GRASS).pushReaction(PushReaction.DESTROY));
+    /** Наш факел: горит слабее ванильного, получается из палки в костре. */
+    public static final DeferredBlock<Block> TORCH = BLOCKS.registerBlock("torch",
+            io.github.ChanesCMD.trailcraft.block.TrailTorchBlock::new,
+            net.minecraft.world.level.block.state.BlockBehaviour.Properties.of()
+                    .mapColor(net.minecraft.world.level.material.MapColor.WOOD)
+                    .noCollission().instabreak().lightLevel(state -> 10)
+                    .sound(net.minecraft.world.level.block.SoundType.WOOD));
+
     /** Корнистые зёмы: почва с корнями (наложение как у ванильного rooted_dirt), растут под деревьями азалии. */
     public static final DeferredBlock<Block> ROOTED_ZELTOZEM = BLOCKS.registerSimpleBlock("rooted_zheltozem",
             BlockBehaviour.Properties.ofFullCopy(Blocks.ROOTED_DIRT));
