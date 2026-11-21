@@ -80,11 +80,26 @@ public class KnappingScreen extends Screen {
                 stone[y][x] = x >= 1 && y >= 1 && x < GRID - 1 && y < GRID - 1;
             }
         }
-        for (int i = 0; i < 3; i++) {
-            stone[1 + i][1] = false;
-            stone[1][1 + i] = false;
-            stone[GRID - 2 - i][GRID - 2] = false;
-            stone[GRID - 2][GRID - 2 - i] = false;
+        // края неровные: выбиваем случайные клетки по периметру
+        for (int i = 1; i < GRID - 1; i++) {
+            if (hash(i * 37, 11) < 0.42) {
+                stone[1][i] = false;
+            }
+            if (hash(i * 53, 29) < 0.42) {
+                stone[GRID - 2][i] = false;
+            }
+            if (hash(7, i * 61) < 0.42) {
+                stone[i][1] = false;
+            }
+            if (hash(41, i * 19) < 0.42) {
+                stone[i][GRID - 2] = false;
+            }
+            if (hash(i * 23, 71) < 0.22) {
+                stone[2][i] = false;
+            }
+            if (hash(83, i * 31) < 0.22) {
+                stone[i][2] = false;
+            }
         }
     }
 
@@ -129,11 +144,12 @@ public class KnappingScreen extends Screen {
     }
 
     private int left() {
-        return (width - BOARD) / 2 - 62;
+        return (width - BOARD) / 2;
     }
 
     private int top() {
-        return (height - BOARD) / 2 - 12;
+        // панель выше и ниже плиты, центрируем всю панель целиком
+        return (height - (BOARD + 92)) / 2 + 34;
     }
 
     private boolean exposed(int x, int y) {
@@ -213,6 +229,15 @@ public class KnappingScreen extends Screen {
         g.fill(x0, y0, x0 + BOARD, y0 + BOARD, 0xFF232323);
         UiDraw.frame(g, x0 - 1, y0 - 1, BOARD + 2, BOARD + 2, 0xFF191919, 0xFF565656, 0xFF191919);
 
+        // факел из костра: палка с огоньком в левом верхнем углу плиты
+        double flicker = 0.86 + 0.14 * Math.sin(System.currentTimeMillis() / 90.0);
+        int torchPx = x0 + 3 * CELL, torchPy = y0 + 2 * CELL;
+        g.fill(torchPx + 2, torchPy + 3, torchPx + 4, torchPy + 12, 0xFF6A4A2A);
+        g.fill(torchPx + 2, torchPy + 12, torchPx + 4, torchPy + 14, 0xFF4A3320);
+        g.fill(torchPx + 1, torchPy - 2, torchPx + 5, torchPy + 3, 0xFFE8A03A);
+        g.fill(torchPx + 2, torchPy - 5, torchPx + 4, torchPy - 1, 0xFFF0C060);
+        g.fill(torchPx + 2, torchPy - 7, torchPx + 4, torchPy - 4, 0xF0FFF0B0);
+
         boolean pulse = (System.currentTimeMillis() / 200L) % 2 == 0;
         for (int y = 0; y < GRID; y++) {
             for (int x = 0; x < GRID; x++) {
@@ -241,6 +266,13 @@ public class KnappingScreen extends Screen {
                     }
                 } else if (shape[y][x]) {
                     g.fill(px, py, px + CELL, py + CELL, 0x26C8B080);
+                }
+                // свет факела: чем ближе, тем теплее и ярче
+                double dist = Math.hypot(x - 3.5, y - 2.5);
+                double light = Math.max(0.0, 0.55 - dist * 0.028) * flicker;
+                if (light > 0.02) {
+                    int alpha = (int) (light * 255);
+                    g.fill(px, py, px + CELL, py + CELL, alpha << 24 | 0xFFA050);
                 }
             }
         }
