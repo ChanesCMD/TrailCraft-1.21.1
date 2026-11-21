@@ -416,7 +416,7 @@ public class KnappingScreen extends Screen {
             blunder += 2;
         }
         // срубил контур — кремень испорчен сразу: половину головки снести и «доиграть» нельзя
-        if (cutShapeCells > 3 || countMissing() > 4 || blunder > MAX_BLUNDER) {
+        if (cutShapeCells > 4 || countMissing() > 12 || blunder > MAX_BLUNDER) {
             PacketDistributor.sendToServer(new FlintItem.KnapPayload(tool, FlintItem.KNAP_FAIL));
             sent = true;
             super.onClose();
