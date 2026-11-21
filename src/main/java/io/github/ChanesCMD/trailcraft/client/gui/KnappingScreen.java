@@ -74,13 +74,17 @@ public class KnappingScreen extends Screen {
         super(Component.translatable("gui.trailcraft.knapping"));
         this.tool = tool;
         buildShape();
-        double c = (GRID - 1) / 2.0;
-        double r = GRID / 2.0 - 1.0;
+        // заготовка — прямоугольная плита кремня, углы слегка сколоты
         for (int y = 0; y < GRID; y++) {
             for (int x = 0; x < GRID; x++) {
-                double dx = (x - c) / r, dy = (y - c) / r;
-                stone[y][x] = dx * dx + dy * dy <= 1.0;
+                stone[y][x] = x >= 1 && y >= 1 && x < GRID - 1 && y < GRID - 1;
             }
+        }
+        for (int i = 0; i < 3; i++) {
+            stone[1 + i][1] = false;
+            stone[1][1 + i] = false;
+            stone[GRID - 2 - i][GRID - 2] = false;
+            stone[GRID - 2][GRID - 2 - i] = false;
         }
     }
 
@@ -232,12 +236,8 @@ public class KnappingScreen extends Screen {
                     int gg = (int) Math.min(255, 94 * shade);
                     int b = (int) Math.min(255, 88 * shade);
                     g.fill(px, py, px + CELL, py + CELL, 0xFF000000 | r << 16 | gg << 8 | b);
-                    if (!rim && hash(x * 13, y * 17) > 0.88) {
-                        g.fill(px + 1, py + 1, px + CELL - 2, py + 2, 0x38FFFFFF);
-                    }
                     if (doomed[y][x]) {
                         g.fill(px, py, px + CELL, py + CELL, pulse ? 0x99C4442F : 0x80A03A28);
-                        g.fill(px, py, px + CELL, py + 1, 0xFFF0C070);
                     }
                 } else if (shape[y][x]) {
                     g.fill(px, py, px + CELL, py + CELL, 0x26C8B080);
@@ -363,6 +363,7 @@ public class KnappingScreen extends Screen {
         double nx = Math.cos(rad), ny = Math.sin(rad);
         boolean cutShape = false;
         int removed = 0;
+        int cutShapeCells = 0;
         int sx = 0, sy = 0;
         for (int y = 0; y < GRID; y++) {
             for (int x = 0; x < GRID; x++) {
@@ -375,6 +376,7 @@ public class KnappingScreen extends Screen {
                 sy += y;
                 if (shape[y][x]) {
                     cutShape = true;
+                    cutShapeCells++;
                 }
             }
         }
@@ -389,13 +391,27 @@ public class KnappingScreen extends Screen {
         if (cutShape) {
             blunder += 2;
         }
-        if (blunder > MAX_BLUNDER) {
+        // срубил контур — кремень испорчен сразу: половину головки снести и «доиграть» нельзя
+        if (cutShapeCells > 3 || countMissing() > 4 || blunder > MAX_BLUNDER) {
             PacketDistributor.sendToServer(new FlintItem.KnapPayload(tool, FlintItem.KNAP_FAIL));
             sent = true;
             super.onClose();
             return;
         }
         check();
+    }
+
+    /** Сколько клеток контура уже снесено. */
+    private int countMissing() {
+        int missing = 0;
+        for (int y = 0; y < GRID; y++) {
+            for (int x = 0; x < GRID; x++) {
+                if (shape[y][x] && !stone[y][x]) {
+                    missing++;
+                }
+            }
+        }
+        return missing;
     }
 
     private void spawnChips(double x, double y, double nx, double ny, int count) {
