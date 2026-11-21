@@ -4,47 +4,52 @@ import io.github.ChanesCMD.trailcraft.smelting.FlintItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Миниигра оббивки кремня: на плите лежит кусок кремня, поверх — контур головки.
- * Полоска откола (её положение — мышь, поворот — Q/E) режет кремень ровно по себе, стрелка показывает сторону скола.
- * Клетки, которые отколются, подсвечиваются заранее. Малый скол (Shift) снимает только поверхностный слой
- * в пределах короткой полоски — им подчищают край, не выгрызая середину.
+ * Миниигра оббивки кремня. На плите лежит кусок кремня, поверх — контур головки из инвентаря.
+ * Полоску откола двигают мышью и крутят на Q/E, пробел скалывает подсвеченные клетки,
+ * Shift — малый скол (только поверхностный слой). Отколол лишнее — кремень испорчен;
+ * оставил много лишнего — игра не заканчивается; снял почти всё, но не идеально — головка плохого качества.
  */
 public class KnappingScreen extends Screen {
     private static final int GRID = 32;
     private static final int CELL = 6;
     private static final int BOARD = GRID * CELL;
     private static final int MAX_BLUNDER = 10;
-    /** Полудлина полоски малого скола в клетках. */
     private static final double FINE = 1.6;
 
-    private static final String[][] SHAPES = {
-            {"................", "......######....", "....##......##..", "...##........##.", "..##..........##",
-             "..##..........##", "..##..........##", "...##........##.", "....##......##..", "......######....",
+    /** Контуры головок — из текстур предметов (16x16), растягиваются на сетку. */
+    private static final String[][] HEADS = {
+            {"................", "................", "................", "................", "................",
+             "................", "......###.......", ".....#####......", "......#####.....", "........##......",
              "................", "................", "................", "................", "................",
              "................"},
-            {"................", ".....#####......", "....#######.....", "...#########....", "...#########....",
-             "...#########....", "...########.....", "....#######.....", ".....#####......", "......###.......",
-             ".......#........", "................", "................", "................", "................",
-             "................"},
-            {"................", "......####......", "......####......", "......####......", "......####......",
-             "......####......", "......####......", "......####......", "......####......", ".......##.......",
-             ".......##.......", "................", "................", "................", "................",
-             "................"},
-            {"................", "...##########...", "...##......##...", "...........##...", "...........##...",
-             "...........##...", "...........##...", "...........##...", "................", "................",
+            {"................", "................", "................", "................", "................",
+             "................", ".......###......", "......####......", "......####......", "......###.......",
              "................", "................", "................", "................", "................",
              "................"},
-            {"................", "....##..........", "...####.........", "...#####........", "...######.......",
-             "....######......", "....######......", ".....#####......", ".....####.......", "......##........",
+            {"................", "................", "................", "................", "................",
+             "......###.......", ".....#####......", ".....######.....", "......####......", "........#.......",
              "................", "................", "................", "................", "................",
              "................"},
-            {"................", ".......##.......", "......####......", "......####......", ".......##.......",
-             ".......##.......", ".......##.......", ".......##.......", ".......##.......", ".......##.......",
-             ".......##.......", ".......##.......", "................", "................", "................",
+            {"................", "................", "................", "................", "......##........",
+             ".....####.......", "....######......", "....#######.....", ".....#######....", ".........###....",
+             ".........##.....", "................", "................", "................", "................",
+             "................"},
+            {"................", "................", "................", "................", "................",
+             ".........###....", ".......####.....", "......####......", ".....####.......", "....####........",
+             "....##..........", "................", "................", "................", "................",
+             "................"},
+            {"................", "................", "................", "..........##....", "........####....",
+             "......#####.....", ".....######.....", ".....#####......", ".....#####......", "....#####.......",
+             "...###..........", "...##...........", "................", "................", "................",
              "................"},
     };
 
@@ -52,30 +57,29 @@ public class KnappingScreen extends Screen {
     private final boolean[][] stone = new boolean[GRID][GRID];
     private final boolean[][] shape = new boolean[GRID][GRID];
     private final boolean[][] doomed = new boolean[GRID][GRID];
+    private final List<Chip> chips = new ArrayList<>();
     private int blunder;
     private boolean finished;
     private boolean poor;
     private boolean sent;
     private int flash;
+    private int shake;
     private double aimX = GRID / 2.0, aimY = -2;
     private float angle = 90f;
     private boolean small;
 
+    private record Chip(double x, double y, double vx, double vy, int life, int size, int color) {}
+
     public KnappingScreen(int tool) {
         super(Component.translatable("gui.trailcraft.knapping"));
         this.tool = tool;
-        String[] art = SHAPES[Math.min(tool, SHAPES.length - 1)];
-        for (int y = 0; y < GRID; y++) {
-            for (int x = 0; x < GRID; x++) {
-                shape[y][x] = art[y / 2].charAt(x / 2) == '#';
-            }
-        }
+        buildShape();
         double c = (GRID - 1) / 2.0;
-        double r = GRID / 2.0 - 0.5;
+        double r = GRID / 2.0 - 1.0;
         for (int y = 0; y < GRID; y++) {
             for (int x = 0; x < GRID; x++) {
                 double dx = (x - c) / r, dy = (y - c) / r;
-                stone[y][x] = dx * dx + dy * dy <= 0.92;
+                stone[y][x] = dx * dx + dy * dy <= 1.0;
             }
         }
     }
@@ -84,26 +88,70 @@ public class KnappingScreen extends Screen {
         Minecraft.getInstance().setScreen(new KnappingScreen(tool));
     }
 
+    /** Контур головки берём из текстуры предмета: обрезаем по краям и растягиваем почти на всю сетку. */
+    private void buildShape() {
+        String[] art = HEADS[Math.min(tool, HEADS.length - 1)];
+        int x0 = 16, y0 = 16, x1 = -1, y1 = -1;
+        for (int y = 0; y < 16; y++) {
+            for (int x = 0; x < 16; x++) {
+                if (art[y].charAt(x) == '#') {
+                    x0 = Math.min(x0, x);
+                    x1 = Math.max(x1, x);
+                    y0 = Math.min(y0, y);
+                    y1 = Math.max(y1, y);
+                }
+            }
+        }
+        if (x1 < 0) {
+            return;
+        }
+        int bw = x1 - x0 + 1, bh = y1 - y0 + 1;
+        int span = GRID - 4;
+        double scale = Math.min(span / (double) bw, span / (double) bh);
+        int w = (int) Math.round(bw * scale), h = (int) Math.round(bh * scale);
+        int ox = (GRID - w) / 2, oy = (GRID - h) / 2;
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
+                int sx = x0 + Math.min(bw - 1, (int) (x / scale));
+                int sy = y0 + Math.min(bh - 1, (int) (y / scale));
+                shape[oy + y][ox + x] = art[sy].charAt(sx) == '#';
+            }
+        }
+    }
+
     @Override
     public boolean isPauseScreen() {
         return false;
     }
 
     private int left() {
-        return (width - BOARD) / 2 - 60;
+        return (width - BOARD) / 2 - 62;
     }
 
     private int top() {
-        return (height - BOARD) / 2 - 10;
+        return (height - BOARD) / 2 - 12;
     }
 
-    /** Сосед пустой (или за краем плиты) — клетка на поверхности кремня. */
     private boolean exposed(int x, int y) {
         return x == 0 || y == 0 || x == GRID - 1 || y == GRID - 1
                 || !stone[y][x - 1] || !stone[y][x + 1] || !stone[y - 1][x] || !stone[y + 1][x];
     }
 
-    /** Считает, что отколется при текущем положении полоски и режиме. */
+    private static double noise(double x, double y) {
+        int xi = (int) Math.floor(x), yi = (int) Math.floor(y);
+        double fx = x - xi, fy = y - yi;
+        double n00 = hash(xi, yi), n10 = hash(xi + 1, yi), n01 = hash(xi, yi + 1), n11 = hash(xi + 1, yi + 1);
+        double sx = fx * fx * (3 - 2 * fx), sy = fy * fy * (3 - 2 * fy);
+        double a = n00 + (n10 - n00) * sx, b = n01 + (n11 - n01) * sx;
+        return a + (b - a) * sy;
+    }
+
+    private static double hash(int x, int y) {
+        int h = x * 374761393 + y * 668265263;
+        h = (h ^ (h >>> 13)) * 1274126177;
+        return ((h ^ (h >>> 16)) & 0xFFFFFF) / (double) 0xFFFFFF;
+    }
+
     private void collectDoomed() {
         for (int y = 0; y < GRID; y++) {
             for (int x = 0; x < GRID; x++) {
@@ -114,8 +162,8 @@ public class KnappingScreen extends Screen {
             return;
         }
         double rad = Math.toRadians(angle);
-        double nx = Math.cos(rad), ny = Math.sin(rad);       // сторона скола
-        double tx = -ny, ty = nx;                            // вдоль полоски
+        double nx = Math.cos(rad), ny = Math.sin(rad);
+        double tx = -ny, ty = nx;
         double line = (aimX + 0.5) * nx + (aimY + 0.5) * ny;
         double along = (aimX + 0.5) * tx + (aimY + 0.5) * ty;
         for (int y = 0; y < GRID; y++) {
@@ -125,12 +173,11 @@ public class KnappingScreen extends Screen {
                 }
                 double px = x + 0.5, py = y + 0.5;
                 if (px * nx + py * ny <= line) {
-                    continue;                                     // перед полоской — остаётся
+                    continue;
                 }
                 if (small && Math.abs(px * tx + py * ty - along) > FINE) {
-                    continue;                                     // вне короткой полоски
+                    continue;
                 }
-                // малый скол снимает только то, что лежит на поверхности — середину не выгрызть
                 if (small && !exposed(x, y)) {
                     continue;
                 }
@@ -142,86 +189,113 @@ public class KnappingScreen extends Screen {
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
         super.render(g, mouseX, mouseY, partialTick);
-        int x0 = left(), y0 = top();
-        aimX = (mouseX - x0) / (double) CELL;
-        aimY = (mouseY - y0) / (double) CELL;
+        aimX = (mouseX - left()) / (double) CELL;
+        aimY = (mouseY - top()) / (double) CELL;
         small = hasShiftDown();
         collectDoomed();
 
         double rad = Math.toRadians(angle);
         double nx = Math.cos(rad), ny = Math.sin(rad);
         double tx = -ny, ty = nx;
+        int shakeX = shake > 0 ? (int) Math.round((Math.random() - 0.5) * 2) : 0;
+        int shakeY = shake > 0 ? (int) Math.round((Math.random() - 0.5) * 2) : 0;
+        int x0 = left() + shakeX, y0 = top() + shakeY;
 
-        UiDraw.panel(g, x0 - 16, y0 - 30, BOARD + 32, BOARD + 84);
-        g.drawString(font, title, x0 - 6, y0 - 23, UiDraw.LABEL, false);
-        g.drawString(font, Component.translatable("gui.trailcraft.knapping.head").append(FlintItem.head(tool).getHoverName()),
-                x0 - 6, y0 - 12, UiDraw.GREY, false);
+        UiDraw.panel(g, x0 - 18, y0 - 34, BOARD + 36, BOARD + 92);
+        g.fill(x0 - 18, y0 - 34, x0 + BOARD + 18, y0 - 18, 0x30F0F0F0);
+        g.drawString(font, title, x0 - 10, y0 - 29, UiDraw.LABEL, false);
+        g.renderItem(FlintItem.head(tool), x0 + BOARD - 10, y0 - 33);
 
-        g.fill(x0, y0, x0 + BOARD, y0 + BOARD, 0xFF2B2B2B);
-        UiDraw.frame(g, x0 - 1, y0 - 1, BOARD + 2, BOARD + 2, 0xFF1A1A1A, 0xFF4A4A4A, 0xFF1A1A1A);
+        g.fill(x0, y0, x0 + BOARD, y0 + BOARD, 0xFF232323);
+        UiDraw.frame(g, x0 - 1, y0 - 1, BOARD + 2, BOARD + 2, 0xFF191919, 0xFF565656, 0xFF191919);
 
-        boolean pulse = (System.currentTimeMillis() / 220L) % 2 == 0;
+        boolean pulse = (System.currentTimeMillis() / 200L) % 2 == 0;
         for (int y = 0; y < GRID; y++) {
             for (int x = 0; x < GRID; x++) {
                 int px = x0 + x * CELL, py = y0 + y * CELL;
                 if (stone[y][x]) {
-                    int shade = ((x * 31 + y * 17) % 7) == 0 ? 0xFF8A8A91 : 0xFF9A9AA0;
-                    g.fill(px, py, px + CELL, py + CELL, shade);
+                    double n = noise(x * 0.55, y * 0.55);
+                    double jitter = hash(x * 7 + 3, y * 11 + 5) * 0.12 - 0.06;
+                    double shade = 0.72 + n * 0.45 + jitter;
+                    boolean rim = x == 0 || y == 0 || x == GRID - 1 || y == GRID - 1
+                            || !stone[y][x - 1] || !stone[y][x + 1] || !stone[y - 1][x] || !stone[y + 1][x];
+                    if (rim) {
+                        shade *= 0.82;
+                    }
+                    if (n > 0.78) {
+                        shade *= 1.12;
+                    }
+                    if (n < 0.18) {
+                        shade *= 0.7;
+                    }
+                    int r = (int) Math.min(255, 96 * shade);
+                    int gg = (int) Math.min(255, 94 * shade);
+                    int b = (int) Math.min(255, 88 * shade);
+                    g.fill(px, py, px + CELL, py + CELL, 0xFF000000 | r << 16 | gg << 8 | b);
+                    if (!rim && hash(x * 13, y * 17) > 0.88) {
+                        g.fill(px + 1, py + 1, px + CELL - 2, py + 2, 0x38FFFFFF);
+                    }
                     if (doomed[y][x]) {
-                        // что отколется — красная подсветка и рамка
-                        g.fill(px, py, px + CELL, py + CELL, pulse ? 0xB0C24A38 : 0x90A04030);
+                        g.fill(px, py, px + CELL, py + CELL, pulse ? 0x99C4442F : 0x80A03A28);
+                        g.fill(px, py, px + CELL, py + 1, 0xFFF0C070);
                     }
                 } else if (shape[y][x]) {
-                    g.fill(px, py, px + CELL, py + CELL, 0x28C8B080);
+                    g.fill(px, py, px + CELL, py + CELL, 0x26C8B080);
                 }
             }
         }
-        // контур головки
         for (int y = 0; y < GRID; y++) {
             for (int x = 0; x < GRID; x++) {
                 if (!shape[y][x]) {
                     continue;
                 }
                 int px = x0 + x * CELL, py = y0 + y * CELL;
+                int c = finished ? 0xFF7BC67B : 0xFFD8A45A;
                 if (y == 0 || !shape[y - 1][x]) {
-                    g.fill(px, py, px + CELL, py + 1, 0xFFD8A45A);
+                    g.fill(px, py, px + CELL, py + 1, c);
                 }
                 if (y == GRID - 1 || !shape[y + 1][x]) {
-                    g.fill(px, py + CELL - 1, px + CELL, py + CELL, 0xFFD8A45A);
+                    g.fill(px, py + CELL - 1, px + CELL, py + CELL, c);
                 }
                 if (x == 0 || !shape[y][x - 1]) {
-                    g.fill(px, py, px + 1, py + CELL, 0xFFD8A45A);
+                    g.fill(px, py, px + 1, py + CELL, c);
                 }
                 if (x == GRID - 1 || !shape[y][x + 1]) {
-                    g.fill(px + CELL - 1, py, px + CELL, py + CELL, 0xFFD8A45A);
+                    g.fill(px + CELL - 1, py, px + CELL, py + CELL, c);
                 }
             }
         }
-        // полоска и стрелка
         double half = (small ? FINE : GRID / 2.0) * CELL;
         double mx = x0 + aimX * CELL, my = y0 + aimY * CELL;
-        drawLine(g, (int) Math.round(mx + tx * half), (int) Math.round(my + ty * half),
-                (int) Math.round(mx - tx * half), (int) Math.round(my - ty * half),
-                flash > 0 ? 0xFFFFE08A : 0xFFF2F2F2);
+        int lx = (int) Math.round(mx + tx * half), ly = (int) Math.round(my + ty * half);
+        int rx = (int) Math.round(mx - tx * half), ry = (int) Math.round(my - ty * half);
+        drawLine(g, lx + 1, ly + 1, rx + 1, ry + 1, 0x40000000);
+        drawLine(g, lx, ly, rx, ry, flash > 0 ? 0xFFFFE08A : 0xFFF2F2F2);
         int ax = (int) Math.round(mx + nx * 9), ay = (int) Math.round(my + ny * 9);
-        int bx = (int) Math.round(mx + nx * 17), by = (int) Math.round(my + ny * 17);
+        int bx = (int) Math.round(mx + nx * 18), by = (int) Math.round(my + ny * 18);
         drawLine(g, ax, ay, bx, by, 0xFFE8C070);
         drawLine(g, bx, by, bx - (int) Math.round(nx * 4 - tx * 3), by - (int) Math.round(ny * 4 - ty * 3), 0xFFE8C070);
         drawLine(g, bx, by, bx - (int) Math.round(nx * 4 + tx * 3), by - (int) Math.round(ny * 4 + ty * 3), 0xFFE8C070);
 
+        for (Chip chip : chips) {
+            int px = (int) Math.round(x0 + chip.x() * CELL), py = (int) Math.round(y0 + chip.y() * CELL);
+            int alpha = Math.min(255, chip.life() * 26);
+            g.fill(px, py, px + chip.size(), py + chip.size(), (alpha << 24) | (chip.color() & 0xFFFFFF));
+        }
+
         g.drawString(font, Component.translatable("gui.trailcraft.knapping.angle", Math.round((angle % 360 + 360) % 360))
                         .append("  ").append(Component.translatable(small
                                 ? "gui.trailcraft.knapping.small" : "gui.trailcraft.knapping.full")),
-                x0 - 6, y0 + BOARD + 4, small ? 0xFFD8A45A : UiDraw.GREY, false);
+                x0 - 10, y0 + BOARD + 5, small ? 0xFFD8A45A : UiDraw.GREY, false);
         g.drawString(font, Component.translatable("gui.trailcraft.knapping.no_chips"),
-                x0 - 6, y0 + BOARD + 14, 0xFF707070, false);
+                x0 - 10, y0 + BOARD + 16, 0xFF707070, false);
         if (finished) {
             Component text = Component.translatable(poor
                     ? "gui.trailcraft.knapping.poor" : "gui.trailcraft.knapping.good");
-            g.drawString(font, text, x0 - 6, y0 + BOARD + 26, poor ? 0xFFD8A45A : 0xFF7BC67B, false);
+            g.drawString(font, text, x0 - 10, y0 + BOARD + 30, poor ? 0xFFD8A45A : 0xFF7BC67B, false);
         } else if (blunder > MAX_BLUNDER / 2) {
             g.drawString(font, Component.translatable("gui.trailcraft.knapping.cracking"),
-                    x0 - 6, y0 + BOARD + 26, 0xFFC06050, false);
+                    x0 - 10, y0 + BOARD + 30, 0xFFC06050, false);
         }
     }
 
@@ -282,12 +356,14 @@ public class KnappingScreen extends Screen {
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
-    /** Отколоть подсвеченные клетки (ровно то, что показано). */
     private void chip() {
         small = hasShiftDown();
         collectDoomed();
+        double rad = Math.toRadians(angle);
+        double nx = Math.cos(rad), ny = Math.sin(rad);
         boolean cutShape = false;
         int removed = 0;
+        int sx = 0, sy = 0;
         for (int y = 0; y < GRID; y++) {
             for (int x = 0; x < GRID; x++) {
                 if (!doomed[y][x]) {
@@ -295,15 +371,21 @@ public class KnappingScreen extends Screen {
                 }
                 stone[y][x] = false;
                 removed++;
+                sx += x;
+                sy += y;
                 if (shape[y][x]) {
                     cutShape = true;
                 }
             }
         }
-        flash = 4;
         if (removed == 0) {
-            return;              // нечего откалывать — не наказываем
+            flash = 2;
+            return;
         }
+        spawnChips(sx / (double) removed, sy / (double) removed, nx, ny, Math.min(10, 2 + removed));
+        flash = 4;
+        shake = cutShape ? 5 : 2;
+        playSound(cutShape ? 0.6f : 1.0f);
         if (cutShape) {
             blunder += 2;
         }
@@ -314,6 +396,18 @@ public class KnappingScreen extends Screen {
             return;
         }
         check();
+    }
+
+    private void spawnChips(double x, double y, double nx, double ny, int count) {
+        for (int i = 0; i < count && chips.size() < 120; i++) {
+            chips.add(new Chip(x + (Math.random() - 0.5), y + (Math.random() - 0.5),
+                    nx * 0.16 + (Math.random() - 0.5) * 0.06, ny * 0.16 + (Math.random() - 0.5) * 0.06 + 0.02,
+                    8 + (int) (Math.random() * 5), 1 + (int) (Math.random() * 2), 0xB8B4AC));
+        }
+    }
+
+    private void playSound(float pitch) {
+        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.STONE_HIT, pitch, 0.7f));
     }
 
     private void check() {
@@ -331,6 +425,8 @@ public class KnappingScreen extends Screen {
         if (extra <= 6) {
             finished = true;
             poor = extra > 0 || missing > 0;
+            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(
+                    SoundEvents.STONE_BUTTON_CLICK_ON, poor ? 1.0f : 1.4f, 0.6f));
         }
     }
 
@@ -339,6 +435,19 @@ public class KnappingScreen extends Screen {
         if (flash > 0) {
             flash--;
         }
+        if (shake > 0) {
+            shake--;
+        }
+        List<Chip> alive = new ArrayList<>();
+        for (Chip chip : chips) {
+            Chip moved = new Chip(chip.x() + chip.vx(), chip.y() + chip.vy(), chip.vx(), chip.vy() + 0.02,
+                    chip.life() - 1, chip.size(), chip.color());
+            if (moved.life() > 0) {
+                alive.add(moved);
+            }
+        }
+        chips.clear();
+        chips.addAll(alive);
     }
 
     private void sendResult() {
