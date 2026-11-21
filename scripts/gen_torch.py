@@ -40,6 +40,7 @@ def main():
           {"variants": {"": {"model": "trailcraft:block/torch"}}})
     write(os.path.join(ASSETS, "models", "block", "torch.json"),
           {"parent": "minecraft:block/torch",
+           "render_type": "minecraft:cutout",
            "textures": {"particle": "trailcraft:block/torch", "torch": "trailcraft:block/torch"}})
     write(os.path.join(ASSETS, "models", "item", "torch.json"),
           {"parent": "minecraft:item/generated",
