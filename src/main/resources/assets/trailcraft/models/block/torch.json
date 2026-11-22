@@ -69,6 +69,24 @@
             16
           ],
           "texture": "#torch"
+        },
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#torch"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#torch"
         }
       }
     },
@@ -95,6 +113,24 @@
           "texture": "#torch"
         },
         "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#torch"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#torch"
+        },
+        "east": {
           "uv": [
             0,
             0,
