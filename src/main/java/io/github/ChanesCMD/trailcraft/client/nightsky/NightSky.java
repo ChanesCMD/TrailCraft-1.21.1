@@ -180,7 +180,11 @@ public final class NightSky {
         RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableCull();
+
+        // луна и планеты поверх звёзд
+        SkyBodies.render(matrix, partialTick, level, brightness);
     }
+
 
     private static void addQuad(BufferBuilder bb, Matrix4f matrix, Vector3f center, Vector3f t1, Vector3f t2,
                                 float w, float h, float alpha, float r, float g, float b) {

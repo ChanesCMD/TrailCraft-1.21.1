@@ -33,8 +33,8 @@ def write(path, data):
 
 
 def hanging_roots():
-    jar = zipfile.ZipFile(find_jar("minecraft_1.21.1_client.jar"))
-    img = Image.open(io.BytesIO(jar.read("assets/minecraft/textures/block/hanging_roots.png"))).convert("RGBA")
+    """Оверлей корней из assets/trailcraft/textures/block/root_overlay.png (наложение как есть)."""
+    img = Image.open(os.path.join(TEX, "root_overlay.png")).convert("RGBA")
     px = img.load()
     for y in range(img.height):
         for x in range(img.width):
