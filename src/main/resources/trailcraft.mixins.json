@@ -16,7 +16,8 @@
     "ServerLevelMixin",
     "SmartBlockEntityMixin",
     "SnowLayerBlockMixin",
-    "TreeFertilizerItemMixin"
+    "TreeFertilizerItemMixin",
+    "TrunkPlacerMixin"
   ],
   "client": [
     "LevelRendererMixin",

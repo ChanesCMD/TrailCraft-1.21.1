@@ -1,6 +1,7 @@
 package io.github.ChanesCMD.trailcraft.init;
 
 import io.github.ChanesCMD.trailcraft.TrailCraft;
+import io.github.ChanesCMD.trailcraft.worldgen.BiomeSoilProvider;
 import io.github.ChanesCMD.trailcraft.worldgen.CocoaPodFeature;
 import io.github.ChanesCMD.trailcraft.worldgen.FallenBranchFeature;
 import io.github.ChanesCMD.trailcraft.worldgen.LoosePebbleFeature;
@@ -12,6 +13,7 @@ import io.github.ChanesCMD.trailcraft.worldgen.TrailTreeFeature;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -42,6 +44,12 @@ public final class ModFeatures {
 
     public static final DeferredHolder<Feature<?>, Feature<TrailTreeConfig>> TRAIL_TREE =
             FEATURES.register("trail_tree", TrailTreeFeature::new);
+
+    /** Провайдеры блоков для генерации: земля под азалией — по почве биома (worldgen/BiomeSoilProvider). */
+    public static final DeferredRegister<BlockStateProviderType<?>> STATE_PROVIDERS =
+            DeferredRegister.create(Registries.BLOCK_STATE_PROVIDER_TYPE, TrailCraft.MODID);
+    public static final DeferredHolder<BlockStateProviderType<?>, BlockStateProviderType<BiomeSoilProvider>> BIOME_SOIL =
+            STATE_PROVIDERS.register("biome_soil", () -> new BlockStateProviderType<>(BiomeSoilProvider.CODEC));
 
     private ModFeatures() {}
 }

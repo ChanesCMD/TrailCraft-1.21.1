@@ -3,27 +3,7 @@
   "config": {
     "decorators": [],
     "dirt_provider": {
-      "type": "minecraft:weighted_state_provider",
-      "entries": [
-        {
-          "data": {
-            "Name": "trailcraft:rooted_zheltozem"
-          },
-          "weight": 1
-        },
-        {
-          "data": {
-            "Name": "trailcraft:rooted_burozem"
-          },
-          "weight": 1
-        },
-        {
-          "data": {
-            "Name": "trailcraft:rooted_chernozem"
-          },
-          "weight": 1
-        }
-      ]
+      "type": "trailcraft:biome_soil"
     },
     "foliage_placer": {
       "type": "minecraft:random_spread_foliage_placer",

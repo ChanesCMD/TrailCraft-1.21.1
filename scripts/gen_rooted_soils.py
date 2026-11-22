@@ -115,13 +115,12 @@ def main():
     json.dump(tag, open(dirt, "w", encoding="utf-8", newline="\n"), ensure_ascii=False, indent=2)
     open(dirt, "a", encoding="utf-8", newline="\n").write("\n")
 
-    # дерево азалии: ствол амадзу, земля под ним — корнистые зёмы
+    # дерево азалии: ствол амадзу, земля под ним — корнистый зём почвы биома (worldgen/BiomeSoilProvider)
     jar = zipfile.ZipFile(find_jar("minecraft_1.21.1_client.jar"))
     tree = json.loads(jar.read("data/minecraft/worldgen/configured_feature/azalea_tree.json"))
     tree["config"]["trunk_provider"] = {"type": "minecraft:simple_state_provider",
                                         "state": {"Name": f"{NS}:amadzu_log", "Properties": {"axis": "y"}}}
-    tree["config"]["dirt_provider"] = {"type": "minecraft:weighted_state_provider", "entries": [
-        {"data": {"Name": f"{NS}:{block}"}, "weight": 1} for block in SOILS]}
+    tree["config"]["dirt_provider"] = {"type": f"{NS}:biome_soil"}
     write(os.path.join(ROOT, "src", "main", "resources", "data", "minecraft", "worldgen",
                        "configured_feature", "azalea_tree.json"), tree)
     print("ok")
