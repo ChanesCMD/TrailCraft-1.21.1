@@ -354,7 +354,7 @@ public class ModBlocks {
             io.github.ChanesCMD.trailcraft.block.TrailTorchBlock::new,
             net.minecraft.world.level.block.state.BlockBehaviour.Properties.of()
                     .mapColor(net.minecraft.world.level.material.MapColor.WOOD)
-                    .noCollission().instabreak().lightLevel(state -> 10)
+                    .noCollission().instabreak().lightLevel(state -> 11)
                     .sound(net.minecraft.world.level.block.SoundType.WOOD));
 
     /** Настенный вариант нашего факела (предмет один — вешается на стену сам). */
@@ -362,7 +362,7 @@ public class ModBlocks {
             io.github.ChanesCMD.trailcraft.block.TrailWallTorchBlock::new,
             net.minecraft.world.level.block.state.BlockBehaviour.Properties.of()
                     .mapColor(net.minecraft.world.level.material.MapColor.WOOD)
-                    .noCollission().instabreak().lightLevel(state -> 10)
+                    .noCollission().instabreak().lightLevel(state -> 11)
                     .sound(net.minecraft.world.level.block.SoundType.WOOD));
 
     /** Корнистые зёмы: почва с корнями (наложение как у ванильного rooted_dirt), растут под деревьями азалии. */
