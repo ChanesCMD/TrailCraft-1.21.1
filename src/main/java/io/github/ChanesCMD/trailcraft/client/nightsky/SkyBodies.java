@@ -70,6 +70,8 @@ public final class SkyBodies {
             drawBody(matrix, body.texture(), 0.0F, 0.0F, 1.0F, 1.0F,
                     body.size(), angle, body.tilt(), brightness);
         }
+        // государства рендера возвращаем: иначе после планет мир рисовался без записи глубины
+        RenderSystem.depthMask(true);
         RenderSystem.enableCull();
         RenderSystem.defaultBlendFunc();
     }

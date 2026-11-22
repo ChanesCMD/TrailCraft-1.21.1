@@ -225,6 +225,30 @@ tasks.register('checkDevRuntime') {
 
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.
+// текущий билд: коммит и время сборки, чтобы игрок мог проверить свежесть сборки (/trailcraft build)
+var generateBuildInfo = tasks.register("generateBuildInfo") {
+    var outFile = layout.buildDirectory.file("generated/buildinfo/trailcraft_build.properties")
+    var dir = projectDir
+    outputs.file(outFile)
+    outputs.upToDateWhen { false }   // пересобираем всегда: коммит и время меняются
+    doLast {
+        var file = outFile.get().asFile
+        file.parentFile.mkdirs()
+        var commit = "unknown"
+        try {
+            commit = ["git", "rev-parse", "--short", "HEAD"].execute(null, dir).text.trim()
+        } catch (Exception ignored) {
+        }
+        var stamp = new Date().format("yyyy-MM-dd HH:mm:ss")
+        file.text = "commit=" + commit + "\nbuilt=" + stamp + "\n"
+    }
+}
+
+tasks.named("processResources") {
+    dependsOn(generateBuildInfo)
+    from(layout.buildDirectory.dir("generated/buildinfo"))
+}
+
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
     var replaceProperties = [
             minecraft_version      : minecraft_version,

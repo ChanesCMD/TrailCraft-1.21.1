@@ -1412,5 +1412,6 @@
   "gui.trailcraft.knapping.full": "полный скол",
   "gui.trailcraft.knapping.no_chips": "Мышь — положение полоски, Q/E — поворот, пробел — скол, Shift — малый скол",
   "block.trailcraft.torch": "Факел",
-  "block.trailcraft.wall_torch": "Настенный факел"
+  "block.trailcraft.wall_torch": "Настенный факел",
+  "commands.trailcraft.build": "Сборка TrailCraft: %s"
 }
