@@ -36,13 +36,13 @@ public final class SkyBodies {
 
     /** Скорости — оборотов в сутки; луна медленнее всех планет. */
     private static final Body[] PLANETS = {
-            planet("mercury", 1.2F, 1.6, 0.4, 18),
-            planet("venus", 1.4F, 1.2, 2.1, 9),
-            planet("mars", 1.3F, 0.9, 3.4, 6),
-            planet("jupiter", 1.9F, 0.6, 4.7, 14),
-            planet("saturn", 1.8F, 0.45, 5.6, 22),
-            planet("uranus", 1.5F, 0.3, 1.1, 27),
-            planet("neptune", 1.5F, 0.2, 2.8, 31),
+            planet("mercury", 1.2F, 0.08, 0.4, 18),
+            planet("venus", 1.4F, 0.06, 2.1, 9),
+            planet("mars", 1.3F, 0.045, 3.4, 6),
+            planet("jupiter", 1.9F, 0.03, 4.7, 14),
+            planet("saturn", 1.8F, 0.022, 5.6, 22),
+            planet("uranus", 1.5F, 0.015, 1.1, 27),
+            planet("neptune", 1.5F, 0.01, 2.8, 31),
     };
 
     private SkyBodies() {}
@@ -63,23 +63,21 @@ public final class SkyBodies {
         int phase = level.getMoonPhase() & 7;
         int u = phase % 4, v = phase / 4;
         drawBody(matrix, MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F,
-                MOON_SIZE, day * 1.0, -2.2, 23.0, brightness);
+                MOON_SIZE, day * 0.06 + 4.2, 23.0, brightness);
         for (Body body : PLANETS) {
-            double angle = day * body.speed() * Math.PI * 2.0 + body.phase();
+            double angle = body.phase() + day * body.speed() * Math.PI * 2.0;
             drawBody(matrix, body.texture(), 0.0F, 0.0F, 1.0F, 1.0F,
-                    body.size(), angle / (Math.PI * 2.0), 0.0, body.tilt(), brightness);
+                    body.size(), angle, body.tilt(), brightness);
         }
     }
 
     private static void drawBody(Matrix4f matrix, ResourceLocation texture, float u0, float v0,
-                                 float uw, float vh, float size, double turns, double phase, double tiltDeg,
-                                 float alpha) {
-        double angle = turns * Math.PI * 2.0 + phase;
+                                 float uw, float vh, float size, double angle, double tiltDeg, float alpha) {
         double tilt = Math.toRadians(tiltDeg);
         Vector3f pos = new Vector3f(
                 (float) (Math.cos(angle) * RADIUS),
-                (float) (Math.sin(angle) * Math.sin(tilt) * RADIUS),
-                (float) (Math.sin(angle) * Math.cos(tilt) * RADIUS));
+                (float) (Math.sin(angle) * Math.cos(tilt) * RADIUS),
+                (float) (Math.sin(angle) * Math.sin(tilt) * RADIUS));
         Vector3f up = new Vector3f(0.0F, 1.0F, 0.0F);
         Vector3f tangent = new Vector3f(up).cross(pos);
         if (tangent.lengthSquared() < 1.0E-4F) {
