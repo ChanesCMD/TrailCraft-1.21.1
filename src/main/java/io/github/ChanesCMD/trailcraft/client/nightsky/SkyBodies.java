@@ -25,11 +25,8 @@ public final class SkyBodies {
 
     private record Body(ResourceLocation texture, float size, double speed, double phase, double tilt, float dim) {}
 
-    /** Ширины ореолов в пикселях (из 8): убывающие — 3/5/7 и 2/4/6, растущие — 8/6/4 и 7/5/3. */
-    private static final int[] BIG_WANING = {0, 3, 5, 7, 0, 0, 0, 0};
-    private static final int[] SMALL_WANING = {0, 2, 4, 6, 0, 0, 0, 0};
-    private static final int[] BIG_WAXING = {0, 0, 0, 0, 0, 8, 6, 4};
-    private static final int[] SMALL_WAXING = {0, 0, 0, 0, 0, 7, 5, 3};
+    /** Ширина светлой части каждой фазы в пикселях клетки (измерена по текстуре). */
+    private static final int[] LIT_W = {7, 5, 3, 1, 0, 1, 3, 5};
 
     private static final ResourceLocation MOON =
             ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "textures/environment/moon_phases_06.png");
@@ -83,14 +80,11 @@ public final class SkyBodies {
         float green = 0.94F + 0.06F * night;
         float blue = 1.0F;
         begin();
-        // ореолы: светлые прямоугольники цвета луны, ширина как у фаз, высота во всю клетку
-        int big = Math.max(BIG_WANING[phase], BIG_WAXING[phase]);
-        int small = Math.max(SMALL_WANING[phase], SMALL_WAXING[phase]);
-        if (big > 0) {
-            halo(matrix, angle, MOON_SIZE * (big / 8.0F), MOON_SIZE, 0.90F, 0.94F, 1.0F, alpha * 0.33F);
-        }
-        if (small > 0) {
-            halo(matrix, angle, MOON_SIZE * (small / 8.0F), MOON_SIZE, 0.90F, 0.94F, 1.0F, alpha * 0.66F);
+        // ореолы: прямоугольники цвета луны, выступающие на 1 и 2 пикселя с каждой стороны
+        int lit = LIT_W[phase];
+        if (lit > 0) {
+            halo(matrix, angle, MOON_SIZE * ((lit + 4) / 8.0F), MOON_SIZE, 0.90F, 0.94F, 1.0F, alpha * 0.33F);
+            halo(matrix, angle, MOON_SIZE * ((lit + 2) / 8.0F), MOON_SIZE, 0.90F, 0.94F, 1.0F, alpha * 0.66F);
         }
         drawBody(matrix, MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, 23.0, red, green, blue, alpha);
         end();
