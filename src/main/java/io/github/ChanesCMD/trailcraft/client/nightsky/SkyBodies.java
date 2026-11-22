@@ -23,25 +23,28 @@ public final class SkyBodies {
     private static final float RADIUS = 90.0F;
     private static final float MOON_SIZE = 2.6F;
 
-    private record Body(ResourceLocation texture, float size, double speed, double phase, double tilt) {}
+    private record Body(ResourceLocation texture, float size, double speed, double phase, double tilt, float dim) {}
 
     private static final ResourceLocation MOON =
             ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "textures/environment/moon_phases_06.png");
 
-    private static Body planet(String name, float size, double speed, double phase, double tilt) {
+    private static Body planet(String name, float size, double speed, double phase, double tilt, float dim) {
         return new Body(ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID,
-                "textures/environment/planet_" + name + ".png"), size, speed, phase, tilt);
+                "textures/environment/planet_" + name + ".png"), size, speed, phase, tilt, dim);
     }
 
-    /** Размеры планет уменьшены вдвое (по площади — вчетверо). */
+    /**
+     * Размеры планет уменьшены вдвое, последнее число — яркость по реальному расстоянию от Земли:
+     * чем дальше, тем тусклее (Венера 0,41 а.е., Нептун 30 а.е.).
+     */
     private static final Body[] PLANETS = {
-            planet("mercury", 0.6F, 0.08, 0.4, 18),
-            planet("venus", 0.7F, 0.06, 2.1, 9),
-            planet("mars", 0.65F, 0.045, 3.4, 6),
-            planet("jupiter", 0.95F, 0.03, 4.7, 14),
-            planet("saturn", 0.9F, 0.022, 5.6, 22),
-            planet("uranus", 0.75F, 0.015, 1.1, 27),
-            planet("neptune", 0.75F, 0.01, 2.8, 31),
+            planet("mercury", 0.6F, 0.08, 0.4, 18, 0.95F),
+            planet("venus", 0.7F, 0.06, 2.1, 9, 1.0F),
+            planet("mars", 0.65F, 0.045, 3.4, 6, 0.82F),
+            planet("jupiter", 0.95F, 0.03, 4.7, 14, 0.6F),
+            planet("saturn", 0.9F, 0.022, 5.6, 22, 0.5F),
+            planet("uranus", 0.75F, 0.015, 1.1, 27, 0.36F),
+            planet("neptune", 0.75F, 0.01, 2.8, 31, 0.28F),
     };
 
     private SkyBodies() {}
@@ -65,8 +68,8 @@ public final class SkyBodies {
         double day = (level.getDayTime() + partialTick) / 24000.0;
         int phase = level.getMoonPhase() & 7;
         int u = phase % 4, v = phase / 4;
-        // противостоит солнцу, но медленно смещается по орбите — иногда видна и днём
-        double angle = Math.PI + day * 0.06 * Math.PI * 2.0;
+        // полнолуние — напротив солнца (вся ночь), новолуние — рядом с солнцем (день), серпы — утро и вечер
+        double angle = Math.PI + (level.getMoonPhase() & 7) * (Math.PI / 4.0);
         float dim = 0.55F + 0.45F * Math.min(1.0F, nightBrightness * 1.6F);
         begin();
         drawBody(matrix, MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, 23.0, dim, 1.0F);
@@ -85,7 +88,7 @@ public final class SkyBodies {
         for (Body body : PLANETS) {
             double angle = body.phase() + day * body.speed() * Math.PI * 2.0;
             drawBody(matrix, body.texture(), 0.0F, 0.0F, 1.0F, 1.0F,
-                    body.size(), angle, body.tilt(), dim, 1.0F);
+                    body.size(), angle, body.tilt(), dim * body.dim(), 1.0F);
         }
         end();
     }
