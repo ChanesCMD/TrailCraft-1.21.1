@@ -117,6 +117,11 @@ public final class NightSky {
             return;
         }
         float brightness = level.getStarBrightness(partialTick) * (1.0F - level.getRainLevel(partialTick));
+        PoseStack sky = new PoseStack();
+        sky.last().pose().set(pose.last().pose());
+        Matrix4f moonMatrix = sky.last().pose();
+        // луна видна и днём — рисуем её до всех проверок на ночь
+        SkyBodies.renderMoon(moonMatrix, partialTick, level, brightness);
         if (brightness < MIN_BRIGHTNESS) {
             meteors.clear();
             return;
@@ -124,8 +129,6 @@ public final class NightSky {
         if (stars == null) {
             buildStars();
         }
-        PoseStack sky = new PoseStack();
-        sky.last().pose().set(pose.last().pose());
 
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.enableBlend();
@@ -175,8 +178,8 @@ public final class NightSky {
             draw(streaks);
         }
 
-        // луна и планеты — всегда, не только когда летит комета
-        SkyBodies.render(matrix, partialTick, level, brightness);
+        // планеты — ночью, каждая на своей орбите
+        SkyBodies.renderPlanets(matrix, partialTick, level, brightness);
 
         // состояния рендера возвращаем в любом случае: иначе отключается cull и трава двоится
         RenderSystem.depthMask(true);
