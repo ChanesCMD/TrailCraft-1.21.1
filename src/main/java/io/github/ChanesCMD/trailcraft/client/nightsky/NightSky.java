@@ -156,35 +156,33 @@ public final class NightSky {
         draw(bb);
 
         long now = System.currentTimeMillis();
-        Iterator<Meteor> it = meteors.iterator();
-        if (meteors.isEmpty()) {
-            RenderSystem.depthMask(true);
-            RenderSystem.defaultBlendFunc();
-            return;
-        }
-        BufferBuilder streaks = tess.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        while (it.hasNext()) {
-            Meteor meteor = it.next();
-            float progress = (now - meteor.bornAtMs()) / (float) meteor.lifeMs();
-            if (progress >= 1.0F) {
-                it.remove();
-                continue;
+        if (!meteors.isEmpty()) {
+            BufferBuilder streaks = tess.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+            Iterator<Meteor> it = meteors.iterator();
+            while (it.hasNext()) {
+                Meteor meteor = it.next();
+                float progress = (now - meteor.bornAtMs()) / (float) meteor.lifeMs();
+                if (progress >= 1.0F) {
+                    it.remove();
+                    continue;
+                }
+                Vector3f head = new Vector3f(meteor.start()).fma(progress * 70.0F, meteor.travel());
+                Vector3f tail = new Vector3f(meteor.start()).fma(Math.max(0.0F, progress - 0.30F) * 70.0F, meteor.travel());
+                tangent.set(meteor.travel()).cross(meteor.start()).normalize();
+                float a = brightness * (1.0F - progress) * 0.9F;
+                addStreak(streaks, matrix, tail, head, tangent, meteor.size(), a);
             }
-            Vector3f head = new Vector3f(meteor.start()).fma(progress * 70.0F, meteor.travel());
-            Vector3f tail = new Vector3f(meteor.start()).fma(Math.max(0.0F, progress - 0.30F) * 70.0F, meteor.travel());
-            tangent.set(meteor.travel()).cross(meteor.start()).normalize();
-            float a = brightness * (1.0F - progress) * 0.9F;
-            addStreak(streaks, matrix, tail, head, tangent, meteor.size(), a);
+            draw(streaks);
         }
-        draw(streaks);
+
+        // луна и планеты — всегда, не только когда летит комета
+        SkyBodies.render(matrix, partialTick, level, brightness);
+
+        // состояния рендера возвращаем в любом случае: иначе отключается cull и трава двоится
         RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableCull();
-
-        // луна и планеты поверх звёзд
-        SkyBodies.render(matrix, partialTick, level, brightness);
     }
-
 
     private static void addQuad(BufferBuilder bb, Matrix4f matrix, Vector3f center, Vector3f t1, Vector3f t2,
                                 float w, float h, float alpha, float r, float g, float b) {
