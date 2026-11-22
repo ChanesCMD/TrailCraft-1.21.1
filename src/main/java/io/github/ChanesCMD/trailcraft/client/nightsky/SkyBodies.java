@@ -77,7 +77,13 @@ public final class SkyBodies {
         float green = 0.94F + 0.06F * night;
         float blue = 1.0F;
         begin();
-        drawBody(matrix, MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, 23.0, red, green, blue, alpha);
+        // мягкие края: несколько копий луны чуть крупнее и прозрачнее — силуэт фазы не искажается
+        drawBody(matrix, MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE * 1.55F, angle, 23.0,
+                red, green, blue, alpha * 0.16F);
+        drawBody(matrix, MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE * 1.28F, angle, 23.0,
+                red, green, blue, alpha * 0.32F);
+        drawBody(matrix, MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, 23.0,
+                red, green, blue, alpha);
         end();
     }
 
