@@ -89,11 +89,12 @@ public final class SkyBodies {
         if (litMin >= 0) {
             int grow = GROW[phase];
             if (grow > 0) {
-                haloRange(matrix, angle, litMin, litMax + 1, 0.90F, 0.94F, 1.0F, alpha * 0.66F);
-                haloRange(matrix, angle, litMin, litMax + 2, 0.90F, 0.94F, 1.0F, alpha * 0.33F);
+                // два отдельных шага, без наложения: сначала ближний, потом дальний
+                haloRange(matrix, angle, litMax, litMax + 1, 0.90F, 0.94F, 1.0F, alpha * 0.66F);
+                haloRange(matrix, angle, litMax + 1, litMax + 2, 0.90F, 0.94F, 1.0F, alpha * 0.33F);
             } else if (grow < 0) {
-                haloRange(matrix, angle, litMin - 1, litMax, 0.90F, 0.94F, 1.0F, alpha * 0.66F);
-                haloRange(matrix, angle, litMin - 2, litMax, 0.90F, 0.94F, 1.0F, alpha * 0.33F);
+                haloRange(matrix, angle, litMin - 1, litMin, 0.90F, 0.94F, 1.0F, alpha * 0.66F);
+                haloRange(matrix, angle, litMin - 2, litMin - 1, 0.90F, 0.94F, 1.0F, alpha * 0.33F);
             }
         }
         drawBody(matrix, MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, 23.0, red, green, blue, alpha);
