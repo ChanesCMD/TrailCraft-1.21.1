@@ -20,7 +20,8 @@ import org.joml.Vector3f;
  * Ванильную луну заменяет прозрачная текстура (assets/minecraft/.../moon_phases.png).
  */
 public final class SkyBodies {
-    private static final float RADIUS = 100.0F;
+    /** Чуть ближе небесного купола (100), иначе тела мерцают в z-fighting с ним. */
+    private static final float RADIUS = 90.0F;
     /** Размер спрайта планеты в единицах неба (ванильная звезда ~0,25). */
     private static final float MOON_SIZE = 2.6F;
 
@@ -69,6 +70,8 @@ public final class SkyBodies {
             drawBody(matrix, body.texture(), 0.0F, 0.0F, 1.0F, 1.0F,
                     body.size(), angle, body.tilt(), brightness);
         }
+        RenderSystem.enableCull();
+        RenderSystem.defaultBlendFunc();
     }
 
     private static void drawBody(Matrix4f matrix, ResourceLocation texture, float u0, float v0,
