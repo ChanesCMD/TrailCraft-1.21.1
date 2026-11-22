@@ -83,19 +83,10 @@ public final class SkyBodies {
         float green = 0.94F + 0.06F * night;
         float blue = 1.0F;
         begin();
-        // ореолы: прямоугольники цвета луны, торчащие со стороны роста на 1 и 2 пикселя
-        int litMin = LIT_MIN[phase];
-        int litMax = LIT_MAX[phase];
-        if (litMin >= 0) {
-            int grow = GROW[phase];
-            if (grow > 0) {
-                // у убывающей каждый ореол шире на пиксель: ближний 2 px, дальний 2 px
-                haloRange(matrix, angle, litMax, litMax + 2, 0.90F, 0.94F, 1.0F, alpha * 0.66F);
-                haloRange(matrix, angle, litMax + 2, litMax + 3, 0.90F, 0.94F, 1.0F, alpha * 0.33F);
-            } else if (grow < 0) {
-                haloRange(matrix, angle, litMin - 1, litMin, 0.90F, 0.94F, 1.0F, alpha * 0.66F);
-                haloRange(matrix, angle, litMin - 2, litMin - 1, 0.90F, 0.94F, 1.0F, alpha * 0.33F);
-            }
+        // ореолы: чуть светлее луны, чуть больше её размеров и выступают со всех сторон
+        if (phase != 4) {
+            halo(matrix, angle, MOON_SIZE * 1.10F, MOON_SIZE * 1.10F, 0.95F, 0.97F, 1.0F, alpha * 0.33F);
+            halo(matrix, angle, MOON_SIZE * 1.05F, MOON_SIZE * 1.05F, 0.95F, 0.97F, 1.0F, alpha * 0.66F);
         }
         drawBody(matrix, MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, 23.0, red, green, blue, alpha);
         end();
