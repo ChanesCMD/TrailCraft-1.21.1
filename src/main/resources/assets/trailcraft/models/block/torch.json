@@ -2,7 +2,8 @@
   "ambientocclusion": false,
   "render_type": "minecraft:cutout",
   "textures": {
-    "particle": "trailcraft:block/torch"
+    "particle": "trailcraft:block/torch",
+    "torch": "trailcraft:block/torch"
   },
   "elements": [
     {
