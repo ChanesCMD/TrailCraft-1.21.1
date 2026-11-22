@@ -22,7 +22,7 @@ import org.joml.Vector3f;
 public final class SkyBodies {
     private static final float RADIUS = 100.0F;
     /** Размер спрайта планеты в единицах неба (ванильная звезда ~0,25). */
-    private static final float MOON_SIZE = 2.2F;
+    private static final float MOON_SIZE = 2.6F;
 
     private record Body(ResourceLocation texture, float size, double speed, double phase, double tilt) {}
 
@@ -36,13 +36,13 @@ public final class SkyBodies {
 
     /** Скорости — оборотов в сутки; луна медленнее всех планет. */
     private static final Body[] PLANETS = {
-            planet("mercury", 0.9F, 1.6, 0.4, 18),
-            planet("venus", 1.1F, 1.2, 2.1, 9),
-            planet("mars", 1.0F, 0.9, 3.4, 6),
-            planet("jupiter", 1.5F, 0.6, 4.7, 14),
-            planet("saturn", 1.4F, 0.45, 5.6, 22),
-            planet("uranus", 1.2F, 0.3, 1.1, 27),
-            planet("neptune", 1.2F, 0.2, 2.8, 31),
+            planet("mercury", 1.2F, 1.6, 0.4, 18),
+            planet("venus", 1.4F, 1.2, 2.1, 9),
+            planet("mars", 1.3F, 0.9, 3.4, 6),
+            planet("jupiter", 1.9F, 0.6, 4.7, 14),
+            planet("saturn", 1.8F, 0.45, 5.6, 22),
+            planet("uranus", 1.5F, 0.3, 1.1, 27),
+            planet("neptune", 1.5F, 0.2, 2.8, 31),
     };
 
     private SkyBodies() {}
@@ -78,7 +78,7 @@ public final class SkyBodies {
         double tilt = Math.toRadians(tiltDeg);
         Vector3f pos = new Vector3f(
                 (float) (Math.cos(angle) * RADIUS),
-                (float) (-Math.sin(angle) * Math.sin(tilt) * RADIUS),
+                (float) (Math.sin(angle) * Math.sin(tilt) * RADIUS),
                 (float) (Math.sin(angle) * Math.cos(tilt) * RADIUS));
         Vector3f up = new Vector3f(0.0F, 1.0F, 0.0F);
         Vector3f tangent = new Vector3f(up).cross(pos);
