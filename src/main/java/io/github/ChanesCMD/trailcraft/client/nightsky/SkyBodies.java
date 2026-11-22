@@ -21,7 +21,7 @@ import org.joml.Vector3f;
 public final class SkyBodies {
     /** Чуть ближе небесного купола (100), иначе тела мерцают в z-fighting с ним. */
     private static final float RADIUS = 90.0F;
-    private static final float MOON_SIZE = 2.6F;
+    private static final float MOON_SIZE = 3.0F;
 
     private record Body(ResourceLocation texture, float size, double speed, double phase, double tilt, float dim) {}
 
@@ -70,9 +70,14 @@ public final class SkyBodies {
         int u = phase % 4, v = phase / 4;
         // полнолуние — напротив солнца (вся ночь), новолуние — рядом с солнцем (день), серпы — утро и вечер
         double angle = Math.PI + (level.getMoonPhase() & 7) * (Math.PI / 4.0);
-        float dim = 0.55F + 0.45F * Math.min(1.0F, nightBrightness * 1.6F);
+        // днём луна бледная и голубоватая, ночью — яркая и почти непрозрачная
+        float night = Math.min(1.0F, nightBrightness * 1.6F);
+        float alpha = 0.5F + 0.5F * night;
+        float red = 0.90F + 0.10F * night;
+        float green = 0.94F + 0.06F * night;
+        float blue = 1.0F;
         begin();
-        drawBody(matrix, MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, 23.0, dim, 1.0F);
+        drawBody(matrix, MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, 23.0, red, green, blue, alpha);
         end();
     }
 
@@ -82,20 +87,19 @@ public final class SkyBodies {
             return;
         }
         double day = (level.getDayTime() + partialTick) / 24000.0;
-        // цвет тускнеет к сумеркам, но спрайт остаётся непрозрачным — планеты не просвечивают друг сквозь друга
-        float dim = Math.min(1.0F, 0.35F + brightness * 0.65F);
         begin();
         for (Body body : PLANETS) {
             double angle = body.phase() + day * body.speed() * Math.PI * 2.0;
+            float dim = Math.min(1.0F, 0.35F + brightness * 0.65F) * body.dim();
             drawBody(matrix, body.texture(), 0.0F, 0.0F, 1.0F, 1.0F,
-                    body.size(), angle, body.tilt(), dim * body.dim(), 1.0F);
+                    body.size(), angle, body.tilt(), dim, dim, dim, 1.0F);
         }
         end();
     }
 
     private static void drawBody(Matrix4f matrix, ResourceLocation texture, float u0, float v0,
                                  float uw, float vh, float size, double angle, double tiltDeg,
-                                 float tint, float alpha) {
+                                 float red, float green, float blue, float alpha) {
         double tilt = Math.toRadians(tiltDeg);
         Vector3f pos = new Vector3f(
                 (float) (Math.cos(angle) * RADIUS),
@@ -115,13 +119,13 @@ public final class SkyBodies {
         Tesselator tess = Tesselator.getInstance();
         BufferBuilder bb = tess.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
         bb.addVertex(matrix, pos.x - tangent.x - bitangent.x, pos.y - tangent.y - bitangent.y, pos.z - tangent.z - bitangent.z)
-                .setUv(u0, v0 + vh).setColor(tint, tint, tint, alpha);
+                .setUv(u0, v0 + vh).setColor(red, green, blue, alpha);
         bb.addVertex(matrix, pos.x + tangent.x - bitangent.x, pos.y + tangent.y - bitangent.y, pos.z + tangent.z - bitangent.z)
-                .setUv(u0 + uw, v0 + vh).setColor(tint, tint, tint, alpha);
+                .setUv(u0 + uw, v0 + vh).setColor(red, green, blue, alpha);
         bb.addVertex(matrix, pos.x + tangent.x + bitangent.x, pos.y + tangent.y + bitangent.y, pos.z + tangent.z + bitangent.z)
-                .setUv(u0 + uw, v0).setColor(tint, tint, tint, alpha);
+                .setUv(u0 + uw, v0).setColor(red, green, blue, alpha);
         bb.addVertex(matrix, pos.x - tangent.x + bitangent.x, pos.y - tangent.y + bitangent.y, pos.z - tangent.z + bitangent.z)
-                .setUv(u0, v0).setColor(tint, tint, tint, alpha);
+                .setUv(u0, v0).setColor(red, green, blue, alpha);
         MeshData mesh = bb.build();
         if (mesh != null) {
             BufferUploader.drawWithShader(mesh);
