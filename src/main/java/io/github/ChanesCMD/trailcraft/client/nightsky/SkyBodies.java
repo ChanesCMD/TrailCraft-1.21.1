@@ -91,7 +91,7 @@ public final class SkyBodies {
             if (grow > 0) {
                 // у убывающей каждый ореол шире на пиксель: ближний 2 px, дальний 2 px
                 haloRange(matrix, angle, litMax, litMax + 2, 0.90F, 0.94F, 1.0F, alpha * 0.66F);
-                haloRange(matrix, angle, litMax + 2, litMax + 4, 0.90F, 0.94F, 1.0F, alpha * 0.33F);
+                haloRange(matrix, angle, litMax + 2, litMax + 3, 0.90F, 0.94F, 1.0F, alpha * 0.33F);
             } else if (grow < 0) {
                 haloRange(matrix, angle, litMin - 1, litMin, 0.90F, 0.94F, 1.0F, alpha * 0.66F);
                 haloRange(matrix, angle, litMin - 2, litMin - 1, 0.90F, 0.94F, 1.0F, alpha * 0.33F);
