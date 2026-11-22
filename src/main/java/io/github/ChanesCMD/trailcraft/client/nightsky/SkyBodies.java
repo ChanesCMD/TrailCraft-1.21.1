@@ -53,7 +53,7 @@ public final class SkyBodies {
             return;
         }
         double day = (level.getDayTime() + partialTick) / 24000.0;
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.depthMask(false);

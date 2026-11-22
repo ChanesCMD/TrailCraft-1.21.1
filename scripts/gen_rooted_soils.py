@@ -64,6 +64,17 @@ def main():
         base = Image.open(os.path.join(TEX, soil + ".png")).convert("RGBA")
         merged = base.copy()
         merged.alpha_composite(roots)
+        # слегка контрастные корни: на светлой почве притемняем, на тёмной подсвечиваем
+        shift = {"zheltozem": 0.82, "burozem": 1.0, "chernozem": 1.22}.get(soil, 1.0)
+        if shift != 1.0:
+            px = merged.load()
+            root_px = roots.load()
+            for y in range(16):
+                for x in range(16):
+                    if root_px[x, y][3]:
+                        r, g, b, a = px[x, y]
+                        px[x, y] = (min(255, round(r * shift)), min(255, round(g * shift)),
+                                    min(255, round(b * shift)), a)
         (soften(merged) if CONTRAST < 1.0 else merged).save(os.path.join(TEX, block + ".png"))
         write(os.path.join(ASSETS, "blockstates", block + ".json"),
               {"variants": {"": {"model": f"{NS}:block/{block}"}}})
