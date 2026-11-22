@@ -83,10 +83,16 @@ public final class SkyBodies {
         float green = 0.94F + 0.06F * night;
         float blue = 1.0F;
         begin();
-        // ореолы: чуть светлее луны, чуть больше её размеров и выступают со всех сторон
+        // ореолы: по форме светлой части фазы, чуть крупнее её (вылезают со всех сторон) и светлее
         if (phase != 4) {
-            halo(matrix, angle, MOON_SIZE * 1.10F, MOON_SIZE * 1.10F, 0.95F, 0.97F, 1.0F, alpha * 0.33F);
-            halo(matrix, angle, MOON_SIZE * 1.05F, MOON_SIZE * 1.05F, 0.95F, 0.97F, 1.0F, alpha * 0.66F);
+            int litMin = LIT_MIN[phase];
+            int litMax = LIT_MAX[phase];
+            float litW = litMax - litMin + 1;
+            float center = (litMin + litMax + 1) / 2.0F;
+            haloRange(matrix, angle, center - litW * 1.10F / 2, center + litW * 1.10F / 2,
+                    MOON_SIZE * 1.10F, 0.95F, 0.97F, 1.0F, alpha * 0.33F);
+            haloRange(matrix, angle, center - litW * 1.05F / 2, center + litW * 1.05F / 2,
+                    MOON_SIZE * 1.05F, 0.95F, 0.97F, 1.0F, alpha * 0.66F);
         }
         drawBody(matrix, MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, 23.0, red, green, blue, alpha);
         end();
@@ -113,7 +119,7 @@ public final class SkyBodies {
      * Ореол по диапазону пикселей клетки (0..8 включительно): рисуется прямоугольником той же высоты,
      * что и луна, с того же места, но шире — торчит только в сторону роста.
      */
-    private static void haloRange(Matrix4f matrix, double angle, int fromPx, int toPx,
+    private static void haloRange(Matrix4f matrix, double angle, float fromPx, float toPx, float halfH,
                                   float red, float green, float blue, float alpha) {
         double tilt = Math.toRadians(23.0);
         Vector3f pos = new Vector3f(
@@ -134,10 +140,10 @@ public final class SkyBodies {
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         Tesselator tess = Tesselator.getInstance();
         BufferBuilder bb = tess.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        Vector3f p1 = new Vector3f(pos).fma(a, tangent).fma(-MOON_SIZE, bitangent);
-        Vector3f p2 = new Vector3f(pos).fma(b, tangent).fma(-MOON_SIZE, bitangent);
-        Vector3f p3 = new Vector3f(pos).fma(b, tangent).fma(MOON_SIZE, bitangent);
-        Vector3f p4 = new Vector3f(pos).fma(a, tangent).fma(MOON_SIZE, bitangent);
+        Vector3f p1 = new Vector3f(pos).fma(a, tangent).fma(-halfH, bitangent);
+        Vector3f p2 = new Vector3f(pos).fma(b, tangent).fma(-halfH, bitangent);
+        Vector3f p3 = new Vector3f(pos).fma(b, tangent).fma(halfH, bitangent);
+        Vector3f p4 = new Vector3f(pos).fma(a, tangent).fma(halfH, bitangent);
         bb.addVertex(matrix, p1.x, p1.y, p1.z).setColor(red, green, blue, alpha);
         bb.addVertex(matrix, p2.x, p2.y, p2.z).setColor(red, green, blue, alpha);
         bb.addVertex(matrix, p3.x, p3.y, p3.z).setColor(red, green, blue, alpha);
