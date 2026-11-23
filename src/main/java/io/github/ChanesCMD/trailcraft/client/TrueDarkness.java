@@ -1,6 +1,7 @@
 package io.github.ChanesCMD.trailcraft.client;
 
 import io.github.ChanesCMD.trailcraft.calendar.Calendar;
+import io.github.ChanesCMD.trailcraft.client.nightsky.RealMoon;
 import io.github.ChanesCMD.trailcraft.season.Seasons;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.util.Mth;
@@ -67,7 +68,8 @@ public final class TrueDarkness {
 
     /** Полнолуние светлее (80 %), новолуние темнее (88 %), между ними — плавно по фазе луны. */
     public static float moonDarkening(ClientLevel level) {
-        float moon = Mth.clamp(level.getMoonBrightness(), 0f, 1f);   // 1 — полнолуние, 0 — новолуние
+        // В реальное полнолуние ночь светлее, как от полной луны, даже если игровая фаза другая.
+        float moon = RealMoon.isFullMoonDay() ? 1f : Mth.clamp(level.getMoonBrightness(), 0f, 1f);
         return Mth.lerp(moon, NEW_MOON, FULL_MOON);
     }
 

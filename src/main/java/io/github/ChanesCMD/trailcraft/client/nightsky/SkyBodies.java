@@ -33,6 +33,9 @@ public final class SkyBodies {
 
     private static final ResourceLocation MOON =
             ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "textures/environment/moon_phases_06.png");
+    /** Полная сырная луна: рисуется только в реальное полнолуние (RealMoon). */
+    private static final ResourceLocation CHEESE_MOON =
+            ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "textures/environment/moon_cheese.png");
 
     private static Body planet(String name, float size, double speed, double phase, double tilt, float dim) {
         return new Body(ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID,
@@ -71,11 +74,12 @@ public final class SkyBodies {
 
     /** Луна: видна всегда (и днём), цвет приглушается в светлое время, но спрайт не прозрачный. */
     public static void renderMoon(Matrix4f matrix, float partialTick, ClientLevel level, float nightBrightness) {
-        double day = (level.getDayTime() + partialTick) / 24000.0;
-        int phase = level.getMoonPhase() & 7;
+        // В реальное полнолуние — полная сырная луна (RealMoon), в остальные дни — обычные фазы.
+        boolean cheese = RealMoon.isFullMoonDay();
+        int phase = cheese ? 0 : level.getMoonPhase() & 7;
         int u = phase % 4, v = phase / 4;
         // полнолуние — напротив солнца (вся ночь), новолуние — рядом с солнцем (день), серпы — утро и вечер
-        double angle = Math.PI + (level.getMoonPhase() & 7) * (Math.PI / 4.0);
+        double angle = Math.PI + phase * (Math.PI / 4.0);
         // днём луна бледная и голубоватая, ночью — яркая и почти непрозрачная
         float night = Math.min(1.0F, nightBrightness * 1.6F);
         float alpha = 0.5F + 0.5F * night;
@@ -97,7 +101,10 @@ public final class SkyBodies {
                 haloRange(matrix, angle, litMin - 2, litMin - 1, 0.90F, 0.94F, 1.0F, alpha * 0.33F);
             }
         }
-        drawBody(matrix, MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, 23.0, red, green, blue, alpha);
+        drawBody(matrix, cheese ? CHEESE_MOON : MOON,
+                cheese ? 0.0F : u * 0.25F, cheese ? 0.0F : v * 0.5F,
+                cheese ? 1.0F : 0.25F, cheese ? 1.0F : 0.5F,
+                MOON_SIZE, angle, 23.0, red, green, blue, alpha);
         end();
     }
 
