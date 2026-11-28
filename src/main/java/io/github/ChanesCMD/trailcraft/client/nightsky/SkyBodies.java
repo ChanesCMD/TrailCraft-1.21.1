@@ -8,9 +8,11 @@ import com.mojang.blaze3d.vertex.MeshData;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import io.github.ChanesCMD.trailcraft.TrailCraft;
+import io.github.ChanesCMD.trailcraft.calendar.Calendar;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -90,6 +92,12 @@ public final class SkyBodies {
         // и немного сдвигает восход/закат (до ±1,5 ч), чтобы иногда её было видно и днём.
         double phaseOffset = Math.toRadians(22.5 * Math.sin(phase * Math.PI / 4.0));
         double angle = Math.PI + phaseOffset;
+        // Наклон спрайта случайный на каждую игровую ночь, но не больше ±22,5°: кот остаётся сверху.
+        long calendarDay = Math.floorDiv(level.getDayTime() + Calendar.MIDNIGHT_OFFSET, Calendar.TICKS_PER_DAY);
+        long seed = calendarDay * 0x9E3779B97F4A7C15L
+                + phase * 0xBF58476D1CE4E5B9L
+                + (watermelon ? 3L : cheese ? 5L : 7L);
+        float roll = (RandomSource.create(seed).nextFloat() * 2.0F - 1.0F) * 22.5F;
         // днём луна бледная и голубоватая, ночью — яркая и почти непрозрачная
         float night = Math.min(1.0F, nightBrightness * 1.6F);
         float alpha = 0.5F + 0.5F * night;
@@ -105,24 +113,24 @@ public final class SkyBodies {
                 int grow = GROW[phase];
                 if (grow > 0) {
                     // у убывающей каждый ореол шире на пиксель: ближний 2 px, дальний 2 px
-                    haloRange(matrix, angle, litMax, litMax + 2, 0.90F, 0.94F, 1.0F, alpha * 0.66F);
-                    haloRange(matrix, angle, litMax + 2, litMax + 3, 0.90F, 0.94F, 1.0F, alpha * 0.33F);
+                    haloRange(matrix, angle, litMax, litMax + 2, roll, 0.90F, 0.94F, 1.0F, alpha * 0.66F);
+                    haloRange(matrix, angle, litMax + 2, litMax + 3, roll, 0.90F, 0.94F, 1.0F, alpha * 0.33F);
                 } else if (grow < 0) {
-                    haloRange(matrix, angle, litMin - 1, litMin, 0.90F, 0.94F, 1.0F, alpha * 0.66F);
-                    haloRange(matrix, angle, litMin - 2, litMin - 1, 0.90F, 0.94F, 1.0F, alpha * 0.33F);
+                    haloRange(matrix, angle, litMin - 1, litMin, roll, 0.90F, 0.94F, 1.0F, alpha * 0.66F);
+                    haloRange(matrix, angle, litMin - 2, litMin - 1, roll, 0.90F, 0.94F, 1.0F, alpha * 0.33F);
                 }
             }
         }
         if (cheese) {
-            drawBody(matrix, CHEESE_MOON, 0.0F, 0.0F, 1.0F, 1.0F, MOON_SIZE, angle, 0.0, red, green, blue, alpha);
+            drawBody(matrix, CHEESE_MOON, 0.0F, 0.0F, 1.0F, 1.0F, MOON_SIZE, angle, 0.0, roll, red, green, blue, alpha);
         } else if (watermelon) {
             if (phase == 0) {
-                drawBody(matrix, WATERMELON_FULL, 0.0F, 0.0F, 1.0F, 1.0F, WATERMELON_FULL_SIZE, angle, 0.0, red, green, blue, alpha);
+                drawBody(matrix, WATERMELON_FULL, 0.0F, 0.0F, 1.0F, 1.0F, WATERMELON_FULL_SIZE, angle, 0.0, roll, red, green, blue, alpha);
             } else {
-                drawBody(matrix, WATERMELON_MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, 0.0, red, green, blue, alpha);
+                drawBody(matrix, WATERMELON_MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, 0.0, roll, red, green, blue, alpha);
             }
         } else {
-            drawBody(matrix, MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, 0.0, red, green, blue, alpha);
+            drawBody(matrix, MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, 0.0, roll, red, green, blue, alpha);
         }
         end();
     }
@@ -138,7 +146,7 @@ public final class SkyBodies {
             double angle = body.phase() + day * body.speed() * Math.PI * 2.0;
             float dim = Math.min(1.0F, 0.35F + brightness * 0.65F) * body.dim();
             drawBody(matrix, body.texture(), 0.0F, 0.0F, 1.0F, 1.0F,
-                    body.size(), angle, body.tilt(), dim, dim, dim, 1.0F);
+                    body.size(), angle, body.tilt(), 0.0F, dim, dim, dim, 1.0F);
         }
         end();
     }
@@ -148,14 +156,14 @@ public final class SkyBodies {
      * Ореол по диапазону пикселей клетки (0..8 включительно): рисуется прямоугольником той же высоты,
      * что и луна, с того же места, но шире — торчит только в сторону роста.
      */
-    private static void haloRange(Matrix4f matrix, double angle, int fromPx, int toPx,
+    private static void haloRange(Matrix4f matrix, double angle, int fromPx, int toPx, float roll,
                                   float red, float green, float blue, float alpha) {
         Vector3f pos = new Vector3f(
                 (float) (Math.cos(angle) * RADIUS),
                 (float) (Math.sin(angle) * RADIUS), 0.0F);
         Vector3f right = new Vector3f();
         Vector3f up = new Vector3f();
-        billboardBasis(matrix, pos, right, up);
+        billboardBasis(matrix, pos, right, up, roll);
         float px = MOON_SIZE / 4.0F;                   // 4 пикселя от центра до края спрайта
         float a = (fromPx - 4.0F) * px;
         float b = (toPx - 4.0F) * px;
@@ -211,7 +219,7 @@ public final class SkyBodies {
     }
 
     private static void drawBody(Matrix4f matrix, ResourceLocation texture, float u0, float v0,
-                                 float uw, float vh, float size, double angle, double tiltDeg,
+                                 float uw, float vh, float size, double angle, double tiltDeg, float roll,
                                  float red, float green, float blue, float alpha) {
         double tilt = Math.toRadians(tiltDeg);
         Vector3f pos = new Vector3f(
@@ -220,7 +228,7 @@ public final class SkyBodies {
                 (float) (Math.sin(angle) * Math.sin(tilt) * RADIUS));
         Vector3f right = new Vector3f();
         Vector3f up = new Vector3f();
-        billboardBasis(matrix, pos, right, up);
+        billboardBasis(matrix, pos, right, up, roll);
         right.mul(size);
         up.mul(size);
 
@@ -242,7 +250,7 @@ public final class SkyBodies {
     }
 
     /** Ориентация спрайта к камере: верх текстуры — верх экрана, без переворота. */
-    private static void billboardBasis(Matrix4f matrix, Vector3f pos, Vector3f right, Vector3f up) {
+    private static void billboardBasis(Matrix4f matrix, Vector3f pos, Vector3f right, Vector3f up, float rollDeg) {
         Matrix4f inv = new Matrix4f(matrix).transpose();
         Vector3f camRight = new Vector3f(1.0F, 0.0F, 0.0F);
         Vector3f camUp = new Vector3f(0.0F, 1.0F, 0.0F);
@@ -259,5 +267,14 @@ public final class SkyBodies {
         }
         right.normalize();
         up.normalize();
+        if (rollDeg != 0.0F) {
+            double roll = Math.toRadians(rollDeg);
+            float c = (float) Math.cos(roll);
+            float s = (float) Math.sin(roll);
+            Vector3f rr = new Vector3f(right).mul(c).fma(s, up);
+            Vector3f uu = new Vector3f(up).mul(c).fma(-s, right);
+            right.set(rr);
+            up.set(uu);
+        }
     }
 }

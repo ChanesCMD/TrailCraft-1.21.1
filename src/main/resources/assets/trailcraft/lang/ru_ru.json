@@ -498,6 +498,7 @@
   "season.trailcraft.winter": "Зима",
   "commands.trailcraft.calendar": "Год %s, %s, день %s из %s, время %s",
   "commands.trailcraft.calendar.settings": "Сезон: %s дней, сутки: %s мин.",
+  "commands.trailcraft.calendar.set": "Календарь: %s год, %s, день %s",
   "item.trailcraft.amethyst_knife": "Аметистовый нож",
   "item.trailcraft.amethyst_spear": "Аметистовое копьё",
   "item.trailcraft.bone_knife": "Костяной нож",
