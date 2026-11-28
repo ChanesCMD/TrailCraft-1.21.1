@@ -69,7 +69,7 @@ def main():
 
     full = Image.new("RGBA", (FULL, FULL), (0, 0, 0, 0))
     full.alpha_composite(melon, ((FULL - MELON) // 2, (FULL - MELON) // 2))
-    full.alpha_composite(cat, ((FULL - cat.width) // 2, 5))
+    full.alpha_composite(cat, ((FULL - cat.width) // 2, 6))
 
     sheet = Image.new("RGBA", (CELL * 4, CELL * 2), (0, 0, 0, 0))
     for i, cell in enumerate(cells):
