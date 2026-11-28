@@ -137,16 +137,22 @@ public final class SkyBodies {
 
     /** Планеты: только ночью, каждая на своей орбите. */
     public static void renderPlanets(Matrix4f matrix, float partialTick, ClientLevel level, float brightness) {
-        if (brightness <= 0.02F) {
+        // Планеты не видны днём и вскоре после восхода: смотрим на солнце, а не только на яркость звёзд.
+        if (brightness <= 0.02F || Math.sin(level.getSunAngle(partialTick)) > -0.05F) {
             return;
         }
         double day = (level.getDayTime() + partialTick) / 24000.0;
         begin();
         for (Body body : PLANETS) {
+            float visibility = Math.max(0.0F, Math.min(1.0F, (brightness - 0.15F) / 0.35F));
+            if (visibility <= 0.01F) {
+                continue;
+            }
             double angle = body.phase() + day * body.speed() * Math.PI * 2.0;
-            float dim = Math.min(1.0F, 0.35F + brightness * 0.65F) * body.dim();
+            // Цвет не затемняем (иначе планеты чёрные) — плавно проявляем прозрачностью.
+            float alpha = visibility * (0.6F + 0.4F * body.dim());
             drawBody(matrix, body.texture(), 0.0F, 0.0F, 1.0F, 1.0F,
-                    body.size(), angle, body.tilt(), 0.0F, dim, dim, dim, 1.0F);
+                    body.size(), angle, body.tilt(), 0.0F, 1.0F, 1.0F, 1.0F, alpha);
         }
         end();
     }
