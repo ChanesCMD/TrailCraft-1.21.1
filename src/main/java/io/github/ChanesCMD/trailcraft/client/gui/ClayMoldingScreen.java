@@ -280,9 +280,8 @@ public class ClayMoldingScreen extends Screen {
                 check();
             }
         } else if (button == 1) {
-            if (!stroke[y][x] && layers[y][x] > 0) {
+            if (layers[y][x] > 0) {
                 layers[y][x]--;
-                stroke[y][x] = true;
                 play(SoundEvents.MUD_BREAK, 1.5f);
                 check();
             }
