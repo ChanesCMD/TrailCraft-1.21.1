@@ -86,8 +86,10 @@ public final class SkyBodies {
         boolean cheese = !watermelon && RealMoon.isFullMoonDay();
         int phase = cheese ? 0 : level.getMoonPhase() & 7;
         int u = phase % 4, v = phase / 4;
-        // полнолуние — напротив солнца (вся ночь), новолуние — рядом с солнцем (день), серпы — утро и вечер
-        double angle = Math.PI + phase * (Math.PI / 4.0);
+        // Луна всегда идёт по небесному экватору с востока на запад; фаза только меняет текстуру
+        // и немного сдвигает восход/закат (до ±1,5 ч), чтобы иногда её было видно и днём.
+        double phaseOffset = Math.toRadians(22.5 * Math.sin(phase * Math.PI / 4.0));
+        double angle = Math.PI + phaseOffset;
         // днём луна бледная и голубоватая, ночью — яркая и почти непрозрачная
         float night = Math.min(1.0F, nightBrightness * 1.6F);
         float alpha = 0.5F + 0.5F * night;
@@ -112,15 +114,15 @@ public final class SkyBodies {
             }
         }
         if (cheese) {
-            drawBody(matrix, CHEESE_MOON, 0.0F, 0.0F, 1.0F, 1.0F, MOON_SIZE, angle, 23.0, red, green, blue, alpha);
+            drawBody(matrix, CHEESE_MOON, 0.0F, 0.0F, 1.0F, 1.0F, MOON_SIZE, angle, 0.0, red, green, blue, alpha);
         } else if (watermelon) {
             if (phase == 0) {
-                drawBody(matrix, WATERMELON_FULL, 0.0F, 0.0F, 1.0F, 1.0F, WATERMELON_FULL_SIZE, angle, 23.0, red, green, blue, alpha);
+                drawBody(matrix, WATERMELON_FULL, 0.0F, 0.0F, 1.0F, 1.0F, WATERMELON_FULL_SIZE, angle, 0.0, red, green, blue, alpha);
             } else {
-                drawBody(matrix, WATERMELON_MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, 23.0, red, green, blue, alpha);
+                drawBody(matrix, WATERMELON_MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, 0.0, red, green, blue, alpha);
             }
         } else {
-            drawBody(matrix, MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, 23.0, red, green, blue, alpha);
+            drawBody(matrix, MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, 0.0, red, green, blue, alpha);
         }
         end();
     }
@@ -148,29 +150,23 @@ public final class SkyBodies {
      */
     private static void haloRange(Matrix4f matrix, double angle, int fromPx, int toPx,
                                   float red, float green, float blue, float alpha) {
-        double tilt = Math.toRadians(23.0);
         Vector3f pos = new Vector3f(
                 (float) (Math.cos(angle) * RADIUS),
-                (float) (Math.sin(angle) * Math.cos(tilt) * RADIUS),
-                (float) (Math.sin(angle) * Math.sin(tilt) * RADIUS));
-        Vector3f up = new Vector3f(0.0F, 1.0F, 0.0F);
-        Vector3f tangent = new Vector3f(up).cross(pos);
-        if (tangent.lengthSquared() < 1.0E-4F) {
-            tangent.set(1.0F, 0.0F, 0.0F);
-        }
-        tangent.normalize();
-        Vector3f bitangent = new Vector3f(pos).cross(tangent).normalize();
+                (float) (Math.sin(angle) * RADIUS), 0.0F);
+        Vector3f right = new Vector3f();
+        Vector3f up = new Vector3f();
+        billboardBasis(matrix, pos, right, up);
         float px = MOON_SIZE / 4.0F;                   // 4 пикселя от центра до края спрайта
         float a = (fromPx - 4.0F) * px;
         float b = (toPx - 4.0F) * px;
-        tangent.mul(1.0F);
+        up.mul(MOON_SIZE);
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         Tesselator tess = Tesselator.getInstance();
         BufferBuilder bb = tess.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        Vector3f p1 = new Vector3f(pos).fma(a, tangent).fma(-MOON_SIZE, bitangent);
-        Vector3f p2 = new Vector3f(pos).fma(b, tangent).fma(-MOON_SIZE, bitangent);
-        Vector3f p3 = new Vector3f(pos).fma(b, tangent).fma(MOON_SIZE, bitangent);
-        Vector3f p4 = new Vector3f(pos).fma(a, tangent).fma(MOON_SIZE, bitangent);
+        Vector3f p1 = new Vector3f(pos).fma(a, right).fma(-1.0F, up);
+        Vector3f p2 = new Vector3f(pos).fma(b, right).fma(-1.0F, up);
+        Vector3f p3 = new Vector3f(pos).fma(b, right).fma(1.0F, up);
+        Vector3f p4 = new Vector3f(pos).fma(a, right).fma(1.0F, up);
         bb.addVertex(matrix, p1.x, p1.y, p1.z).setColor(red, green, blue, alpha);
         bb.addVertex(matrix, p2.x, p2.y, p2.z).setColor(red, green, blue, alpha);
         bb.addVertex(matrix, p3.x, p3.y, p3.z).setColor(red, green, blue, alpha);
@@ -222,30 +218,46 @@ public final class SkyBodies {
                 (float) (Math.cos(angle) * RADIUS),
                 (float) (Math.sin(angle) * Math.cos(tilt) * RADIUS),
                 (float) (Math.sin(angle) * Math.sin(tilt) * RADIUS));
-        Vector3f up = new Vector3f(0.0F, 1.0F, 0.0F);
-        Vector3f tangent = new Vector3f(up).cross(pos);
-        if (tangent.lengthSquared() < 1.0E-4F) {
-            tangent.set(1.0F, 0.0F, 0.0F);
-        }
-        tangent.normalize();
-        Vector3f bitangent = new Vector3f(pos).cross(tangent).normalize();
-        tangent.mul(size);
-        bitangent.mul(size);
+        Vector3f right = new Vector3f();
+        Vector3f up = new Vector3f();
+        billboardBasis(matrix, pos, right, up);
+        right.mul(size);
+        up.mul(size);
 
         RenderSystem.setShaderTexture(0, texture);
         Tesselator tess = Tesselator.getInstance();
         BufferBuilder bb = tess.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        bb.addVertex(matrix, pos.x - tangent.x - bitangent.x, pos.y - tangent.y - bitangent.y, pos.z - tangent.z - bitangent.z)
+        bb.addVertex(matrix, pos.x - right.x - up.x, pos.y - right.y - up.y, pos.z - right.z - up.z)
                 .setUv(u0, v0 + vh).setColor(red, green, blue, alpha);
-        bb.addVertex(matrix, pos.x + tangent.x - bitangent.x, pos.y + tangent.y - bitangent.y, pos.z + tangent.z - bitangent.z)
+        bb.addVertex(matrix, pos.x + right.x - up.x, pos.y + right.y - up.y, pos.z + right.z - up.z)
                 .setUv(u0 + uw, v0 + vh).setColor(red, green, blue, alpha);
-        bb.addVertex(matrix, pos.x + tangent.x + bitangent.x, pos.y + tangent.y + bitangent.y, pos.z + tangent.z + bitangent.z)
+        bb.addVertex(matrix, pos.x + right.x + up.x, pos.y + right.y + up.y, pos.z + right.z + up.z)
                 .setUv(u0 + uw, v0).setColor(red, green, blue, alpha);
-        bb.addVertex(matrix, pos.x - tangent.x + bitangent.x, pos.y - tangent.y + bitangent.y, pos.z - tangent.z + bitangent.z)
+        bb.addVertex(matrix, pos.x - right.x + up.x, pos.y - right.y + up.y, pos.z - right.z + up.z)
                 .setUv(u0, v0).setColor(red, green, blue, alpha);
         MeshData mesh = bb.build();
         if (mesh != null) {
             BufferUploader.drawWithShader(mesh);
         }
+    }
+
+    /** Ориентация спрайта к камере: верх текстуры — верх экрана, без переворота. */
+    private static void billboardBasis(Matrix4f matrix, Vector3f pos, Vector3f right, Vector3f up) {
+        Matrix4f inv = new Matrix4f(matrix).transpose();
+        Vector3f camRight = new Vector3f(1.0F, 0.0F, 0.0F);
+        Vector3f camUp = new Vector3f(0.0F, 1.0F, 0.0F);
+        inv.transformDirection(camRight);
+        inv.transformDirection(camUp);
+        Vector3f n = new Vector3f(pos).normalize();
+        right.set(camRight).fma(-camRight.dot(n), n);
+        up.set(camUp).fma(-camUp.dot(n), n);
+        if (right.lengthSquared() < 1.0E-4F) {
+            right.set(up).cross(n);
+        }
+        if (up.lengthSquared() < 1.0E-4F) {
+            up.set(n).cross(right);
+        }
+        right.normalize();
+        up.normalize();
     }
 }
