@@ -48,18 +48,14 @@ def cut_cells(img):
 
 
 def cut_cat(cat):
-    """Убрать старый арбуз из текстуры кота (зелёные пиксели) и сделать глаза зелёными."""
+    """Убрать старый арбуз из текстуры кота; глаза не трогаем."""
     px = cat.load()
     for y in range(cat.height):
         for x in range(cat.width):
             r, g, b, a = px[x, y]
-            if a and g > r + 8 and g > b + 8:
-                px[x, y] = (r, g, b, 0)      # зелёная корка старого арбуза
-    for y in range(cat.height):
-        for x in range(cat.width):
-            r, g, b, a = px[x, y]
-            if a and b > r + 20 and b > g + 20:
-                px[x, y] = (80, 200, 90, 255)  # глаза: были голубые, стали зелёные
+            # корка старого арбуза: зелёная и жёлто-оливковая (у кота таких цветов нет)
+            if a and g >= r - 2 and g > b + 20:
+                px[x, y] = (r, g, b, 0)
     return cat
 
 
