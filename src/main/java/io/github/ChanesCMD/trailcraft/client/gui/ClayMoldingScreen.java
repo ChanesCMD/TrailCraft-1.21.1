@@ -33,9 +33,10 @@ public class ClayMoldingScreen extends Screen {
     private final int shapeIndex;
     private final ClayShape shape;
     private final boolean[][] target = new boolean[GRID][GRID];
-    private final boolean[][] clay = new boolean[GRID][GRID];
+    private final int[][] required = new int[GRID][GRID];
+    private final int[][] layers = new int[GRID][GRID];
     private ResourceLocation texture;
-    private int targetCount;
+    private int requiredTotal;
     private int supply;
     private boolean finished;
     private boolean failed;
@@ -46,7 +47,7 @@ public class ClayMoldingScreen extends Screen {
         this.shapeIndex = shapeIndex;
         this.shape = ClayShape.values()[shapeIndex];
         loadTarget();
-        this.supply = this.targetCount + 24;
+        this.supply = this.requiredTotal + 24;
     }
 
     public static void open(int shapeIndex) {
@@ -86,9 +87,29 @@ public class ClayMoldingScreen extends Screen {
         for (int y = 0; y < GRID; y++) {
             for (int x = 0; x < GRID; x++) {
                 target[y][x] = useDark ? dark[y][x] : opaque[y][x];
-                if (target[y][x]) {
-                    targetCount++;
+            }
+        }
+        // Края формы — два слоя, середина — один.
+        for (int y = 0; y < GRID; y++) {
+            for (int x = 0; x < GRID; x++) {
+                if (!target[y][x]) {
+                    continue;
                 }
+                boolean edge = false;
+                for (int dy = -1; dy <= 1 && !edge; dy++) {
+                    for (int dx = -1; dx <= 1; dx++) {
+                        if (dx == 0 && dy == 0) {
+                            continue;
+                        }
+                        int nx = x + dx, ny = y + dy;
+                        if (nx < 0 || ny < 0 || nx >= GRID || ny >= GRID || !target[ny][nx]) {
+                            edge = true;
+                            break;
+                        }
+                    }
+                }
+                required[y][x] = edge ? 2 : 1;
+                requiredTotal += required[y][x];
             }
         }
     }
@@ -119,18 +140,37 @@ public class ClayMoldingScreen extends Screen {
         int x0 = boardX(), y0 = boardY();
         g.fill(x0 - 2, y0 - 2, x0 + BOARD + 2, y0 + BOARD + 2, 0xFF232323);
         UiDraw.frame(g, x0 - 3, y0 - 3, BOARD + 6, BOARD + 6, 0xFF191919, 0xFF565656, 0xFF191919);
-        if (texture != null) {
-            g.blit(texture, x0, y0, 0, 0, BOARD, BOARD, GRID, GRID);
-        }
+        // чёрный фон плоскости
+        g.fill(x0, y0, x0 + BOARD, y0 + BOARD, 0xFF000000);
 
         for (int y = 0; y < GRID; y++) {
             for (int x = 0; x < GRID; x++) {
                 int px = x0 + x * CELL, py = y0 + y * CELL;
-                if (target[y][x] && !clay[y][x]) {
-                    g.fill(px, py, px + CELL, py + CELL, 0x35D8C090);
-                }
-                if (clay[y][x]) {
-                    g.fill(px, py, px + CELL, py + CELL, target[y][x] ? 0xFFA0785A : 0xFFC06050);
+                int req = required[y][x];
+                int have = layers[y][x];
+                if (req > 0) {
+                    if (have > 0) {
+                        int color = req == 2 && have < 2 ? 0xFF7A4E32 : 0xFFA0785A;
+                        g.fill(px, py, px + CELL, py + CELL, color);
+                        if (have >= 2) {
+                            g.fill(px + 2, py + 2, px + CELL - 2, py + CELL - 2, 0xFFC08A5E);
+                        }
+                        if (have > req) {
+                            g.fill(px, py, px + CELL, py + CELL, 0x55C06050);
+                        }
+                    }
+                    int col = req == 2 ? 0xFFE0E0E0 : 0xFF808080;
+                    border(g, px, py, CELL, col);
+                    if (req == 2) {
+                        border(g, px + 1, py + 1, CELL - 2, col);
+                        if (have == 1) {
+                            g.fill(px + CELL / 2 - 1, py + CELL / 2 - 1,
+                                    px + CELL / 2 + 1, py + CELL / 2 + 1, 0xFFFFE08A);
+                        }
+                    }
+                } else if (have > 0) {
+                    g.fill(px, py, px + CELL, py + CELL, 0xFFC06050);
+                    g.fill(px + 2, py + 2, px + CELL - 2, py + CELL - 2, 0xFFD08070);
                 }
             }
         }
@@ -145,11 +185,12 @@ public class ClayMoldingScreen extends Screen {
         int missing = 0, extra = 0;
         for (int y = 0; y < GRID; y++) {
             for (int x = 0; x < GRID; x++) {
-                if (target[y][x] && !clay[y][x]) {
-                    missing++;
-                }
-                if (clay[y][x] && !target[y][x]) {
-                    extra++;
+                int req = required[y][x];
+                int have = layers[y][x];
+                if (have > req) {
+                    extra += have - req;
+                } else {
+                    missing += req - have;
                 }
             }
         }
@@ -173,6 +214,13 @@ public class ClayMoldingScreen extends Screen {
             color = 0xFF707070;
         }
         g.drawString(font, hint, x0, ty + 36, color, false);
+    }
+
+    private static void border(GuiGraphics g, int x, int y, int size, int color) {
+        g.fill(x, y, x + size, y + 1, color);
+        g.fill(x, y + size - 1, x + size, y + size, color);
+        g.fill(x, y + 1, x + 1, y + size - 1, color);
+        g.fill(x + size - 1, y + 1, x + size, y + size - 1, color);
     }
 
     @Override
@@ -205,14 +253,14 @@ public class ClayMoldingScreen extends Screen {
             return;
         }
         if (button == 0) {
-            if (!clay[y][x] && supply > 0) {
-                clay[y][x] = true;
+            if (layers[y][x] < 2 && supply > 0) {
+                layers[y][x]++;
                 supply--;
                 play(SoundEvents.MUD_PLACE, 1.3f);
                 check();
             }
-        } else if (button == 1 && clay[y][x]) {
-            clay[y][x] = false;
+        } else if (button == 1 && layers[y][x] > 0) {
+            layers[y][x]--;
             play(SoundEvents.MUD_BREAK, 1.5f);
             check();
         }
@@ -222,11 +270,12 @@ public class ClayMoldingScreen extends Screen {
         int missing = 0, extra = 0;
         for (int y = 0; y < GRID; y++) {
             for (int x = 0; x < GRID; x++) {
-                if (target[y][x] && !clay[y][x]) {
-                    missing++;
-                }
-                if (clay[y][x] && !target[y][x]) {
-                    extra++;
+                int req = required[y][x];
+                int have = layers[y][x];
+                if (have > req) {
+                    extra += have - req;
+                } else {
+                    missing += req - have;
                 }
             }
         }

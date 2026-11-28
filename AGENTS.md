@@ -292,8 +292,8 @@
   (`BloomeryBlock`, `BloomeryBlockEntity`, `BloomeryMenu`; слоты: кувшин, топливо `#trailcraft:bloomery_fuels` — уголь
   и торф (горит вдвое меньше угля)).
   Слепок — 3 комка глины; ПКМ — окно форм (`client/gui/ClayMoldScreen`, формы — `ClayShape`), выбранную форму
-  лепят в мини-игре (`client/gui/ClayMoldingScreen`: налепить глину на плоскость, ЛКМ — добавить, ПКМ — убрать;
-  готово — `ClayMoldItem.ShapePayload`)
+  лепят в мини-игре (`client/gui/ClayMoldingScreen`: чёрная плоскость, ЛКМ — добавить, ПКМ — убрать;
+  края — 2 слоя, центр — 1; готово — `ClayMoldItem.ShapePayload`)
   → сырой кувшин → костёр → кувшин (`JugItem`, 4 слота: то, что плавится, — по 16, мелочь из тэга `#trailcraft:jug_items`
   (палки, солома, кирпичи, комки глины, камешки, самородки, уголь, джут, ягоды… — `JUG_ITEMS` в `scripts/gen_smelting.py`) —
   по 64; кувшин с мелочью печь не плавит; содержимое в `trailcraft:contents`, окно `JugMenu`).

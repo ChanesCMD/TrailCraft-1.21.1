@@ -833,7 +833,7 @@
   "gui.trailcraft.clay_mold": "Clay Mold",
   "gui.trailcraft.clay_mold.hint": "Choose a shape",
   "gui.trailcraft.clay_molding": "Clay Molding",
-  "gui.trailcraft.clay_molding.hint": "LMB — add clay, RMB — remove; fill the shape",
+  "gui.trailcraft.clay_molding.hint": "Edges — 2 layers, center — 1. LMB — add, RMB — remove",
   "gui.trailcraft.clay_molding.supply": "Clay: %s",
   "gui.trailcraft.clay_molding.extra": "Extra: %s",
   "gui.trailcraft.clay_molding.missing": "Missing: %s",
