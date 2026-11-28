@@ -88,10 +88,10 @@ public final class SkyBodies {
         boolean cheese = !watermelon && RealMoon.isFullMoonDay();
         int phase = cheese ? 0 : level.getMoonPhase() & 7;
         int u = phase % 4, v = phase / 4;
-        // Луна всегда идёт по небесному экватору с востока на запад; фаза только меняет текстуру
-        // и немного сдвигает восход/закат (до ±1,5 ч), чтобы иногда её было видно и днём.
-        double phaseOffset = Math.toRadians(22.5 * Math.sin(phase * Math.PI / 4.0));
-        double angle = Math.PI + phaseOffset;
+        // Луна — напротив солнца, на небесном экваторе: восход на востоке, закат на западе.
+        // Фаза только меняет текстуру и немного сдвигает восход/закат (до ±1,5 ч), чтобы иногда её было видно и днём.
+        double phaseTilt = 22.5 * Math.sin(phase * Math.PI / 4.0);
+        double angle = -Math.PI / 2.0;
         // Наклон спрайта случайный на каждую игровую ночь, но не больше ±22,5°: кот остаётся сверху.
         long calendarDay = Math.floorDiv(level.getDayTime() + Calendar.MIDNIGHT_OFFSET, Calendar.TICKS_PER_DAY);
         long seed = calendarDay * 0x9E3779B97F4A7C15L
@@ -113,24 +113,24 @@ public final class SkyBodies {
                 int grow = GROW[phase];
                 if (grow > 0) {
                     // у убывающей каждый ореол шире на пиксель: ближний 2 px, дальний 2 px
-                    haloRange(matrix, angle, litMax, litMax + 2, roll, 0.90F, 0.94F, 1.0F, alpha * 0.66F);
-                    haloRange(matrix, angle, litMax + 2, litMax + 3, roll, 0.90F, 0.94F, 1.0F, alpha * 0.33F);
+                    haloRange(matrix, angle, phaseTilt, litMax, litMax + 2, roll, 0.90F, 0.94F, 1.0F, alpha * 0.66F);
+                    haloRange(matrix, angle, phaseTilt, litMax + 2, litMax + 3, roll, 0.90F, 0.94F, 1.0F, alpha * 0.33F);
                 } else if (grow < 0) {
-                    haloRange(matrix, angle, litMin - 1, litMin, roll, 0.90F, 0.94F, 1.0F, alpha * 0.66F);
-                    haloRange(matrix, angle, litMin - 2, litMin - 1, roll, 0.90F, 0.94F, 1.0F, alpha * 0.33F);
+                    haloRange(matrix, angle, phaseTilt, litMin - 1, litMin, roll, 0.90F, 0.94F, 1.0F, alpha * 0.66F);
+                    haloRange(matrix, angle, phaseTilt, litMin - 2, litMin - 1, roll, 0.90F, 0.94F, 1.0F, alpha * 0.33F);
                 }
             }
         }
         if (cheese) {
-            drawBody(matrix, CHEESE_MOON, 0.0F, 0.0F, 1.0F, 1.0F, MOON_SIZE, angle, 0.0, roll, red, green, blue, alpha);
+            drawBody(matrix, CHEESE_MOON, 0.0F, 0.0F, 1.0F, 1.0F, MOON_SIZE, angle, phaseTilt, roll, red, green, blue, alpha);
         } else if (watermelon) {
             if (phase == 0) {
-                drawBody(matrix, WATERMELON_FULL, 0.0F, 0.0F, 1.0F, 1.0F, WATERMELON_FULL_SIZE, angle, 0.0, roll, red, green, blue, alpha);
+                drawBody(matrix, WATERMELON_FULL, 0.0F, 0.0F, 1.0F, 1.0F, WATERMELON_FULL_SIZE, angle, phaseTilt, roll, red, green, blue, alpha);
             } else {
-                drawBody(matrix, WATERMELON_MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, 0.0, roll, red, green, blue, alpha);
+                drawBody(matrix, WATERMELON_MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, phaseTilt, roll, red, green, blue, alpha);
             }
         } else {
-            drawBody(matrix, MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, 0.0, roll, red, green, blue, alpha);
+            drawBody(matrix, MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, phaseTilt, roll, red, green, blue, alpha);
         }
         end();
     }
@@ -156,11 +156,13 @@ public final class SkyBodies {
      * Ореол по диапазону пикселей клетки (0..8 включительно): рисуется прямоугольником той же высоты,
      * что и луна, с того же места, но шире — торчит только в сторону роста.
      */
-    private static void haloRange(Matrix4f matrix, double angle, int fromPx, int toPx, float roll,
+    private static void haloRange(Matrix4f matrix, double angle, double tiltDeg, int fromPx, int toPx, float roll,
                                   float red, float green, float blue, float alpha) {
+        double tilt = Math.toRadians(tiltDeg);
         Vector3f pos = new Vector3f(
                 (float) (Math.cos(angle) * RADIUS),
-                (float) (Math.sin(angle) * RADIUS), 0.0F);
+                (float) (Math.sin(angle) * Math.cos(tilt) * RADIUS),
+                (float) (Math.sin(angle) * Math.sin(tilt) * RADIUS));
         Vector3f right = new Vector3f();
         Vector3f up = new Vector3f();
         billboardBasis(matrix, pos, right, up, roll);
