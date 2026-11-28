@@ -1,5 +1,5 @@
-"""Арбузная луна: вырезает 8 круглых арбузов из превью-трафарета, собирает таблицу 128x64
-и кладёт кота на полную фазу. Обычная и сырная луна не трогаются.
+"""Арбузная луна: фазы 2x (4x по площади), полная — целый арбуз без увеличения,
+поверх кот в исходном разрешении, посаженный выше. В репозиторий идёт выбранный вариант.
 
 Запуск из корня проекта:  python scripts/gen_watermelon_moon.py   (нужен Pillow)
 """
@@ -14,7 +14,9 @@ ENV = os.path.join(ROOT, "src", "main", "resources", "assets", "trailcraft", "te
 OUT_SHEET = os.path.join(ENV, "moon_phases_watermelon.png")
 OUT_FULL = os.path.join(ENV, "moon_watermelon_full.png")
 PREVIEW = os.path.join(ROOT, "docs", "textures", "watermelon_moon.png")
-CELL = 32
+CELL = 64          # фазы растянуты вдвое по стороне (вчетверо по площади)
+FULL = 64          # холст полной луны: запас сверху, чтобы кот сидел выше
+MELON = 32         # сам арбуз полной луны не увеличиваем
 BG = (12, 18, 32)
 
 
@@ -22,8 +24,8 @@ def close(p, q, tol=8):
     return abs(p[0] - q[0]) <= tol and abs(p[1] - q[1]) <= tol and abs(p[2] - q[2]) <= tol
 
 
-def cut_cells(img):
-    """Убрать фон, обрезать каждый арбуз и вписать в клетку 32x32."""
+def cut_cells(img, size):
+    """Убрать фон, обрезать каждый арбуз и вписать в клетку size x size."""
     px = img.load()
     w, h = img.size
     for y in range(h):
@@ -43,7 +45,7 @@ def cut_cells(img):
             side = max(melon.width, melon.height)
             square = Image.new("RGBA", (side, side), (0, 0, 0, 0))
             square.alpha_composite(melon, ((side - melon.width) // 2, (side - melon.height) // 2))
-            cells.append(square.resize((CELL, CELL), Image.BOX))
+            cells.append(square.resize((size, size), Image.BOX))
     return cells
 
 
@@ -59,28 +61,15 @@ def cut_cat(cat):
     return cat
 
 
-def cat_overlay(cat):
-    """Кот без старого арбуза, уменьшенный и посаженный в верхнюю часть полной луны."""
-    cut_cat(cat)
-    bbox = cat.getbbox()
-    if bbox is None:
-        raise SystemExit("пустой кот")
-    content = cat.crop(bbox)
-    target = 24
-    scale = min(target / content.width, target / content.height)
-    w = max(1, round(content.width * scale))
-    h = max(1, round(content.height * scale))
-    content = content.resize((w, h), Image.LANCZOS)
-    layer = Image.new("RGBA", (target, target), (0, 0, 0, 0))
-    layer.alpha_composite(content, ((target - w) // 2, 0))
-    return layer
-
-
 def main():
-    cells = cut_cells(Image.open(SRC).convert("RGBA"))
-    cat = cat_overlay(Image.open(CAT).convert("RGBA"))
-    full = cells[0].copy()
-    full.alpha_composite(cat, ((CELL - cat.width) // 2, 0))
+    src = Image.open(SRC).convert("RGBA")
+    cells = cut_cells(src.copy(), CELL)          # фазы 64x64
+    melon = cut_cells(src.copy(), MELON)[0]       # полная — 32x32
+    cat = cut_cat(Image.open(CAT).convert("RGBA"))  # 32x32, без старого арбуза
+
+    full = Image.new("RGBA", (FULL, FULL), (0, 0, 0, 0))
+    full.alpha_composite(melon, ((FULL - MELON) // 2, (FULL - MELON) // 2))
+    full.alpha_composite(cat, ((FULL - cat.width) // 2, 0))
 
     sheet = Image.new("RGBA", (CELL * 4, CELL * 2), (0, 0, 0, 0))
     for i, cell in enumerate(cells):
@@ -89,24 +78,33 @@ def main():
     sheet.save(OUT_SHEET)
     full.save(OUT_FULL)
 
-    panel, pad, gap = 256, 18, 14
-    labels = ["полная — кот", "1", "2", "3", "4 — новолуние", "5", "6", "7"]
-    img = Image.new("RGBA", (pad * 2 + 4 * panel + 3 * gap, pad * 2 + 2 * (panel + 28) + gap), (12, 18, 32, 255))
+    # превью: полная луна крупно слева (холст 64 -> 512), фазы 1..7 справа по 256
+    pad, gap, panel = 18, 16, 256
+    full_panel = full.resize((512, 512), Image.NEAREST)
+    width = pad * 2 + full_panel.width + 20 + 4 * panel + 3 * 12
+    height = pad * 2 + 30 + 2 * (panel + 26) + 12
+    img = Image.new("RGBA", (width, height), (12, 18, 32, 255))
     d = ImageDraw.Draw(img)
     try:
         font = ImageFont.truetype("arialbd.ttf", 18)
     except OSError:
         font = ImageFont.load_default()
-    for i in range(8):
+    d.text((pad, 10), "полная — кот (32x32, посажен выше)", font=font, fill=(235, 237, 244))
+    img.alpha_composite(full_panel, (pad, 30 + pad))
+    gx = pad + full_panel.width + 20
+    for n in range(1, 8):
+        i = n - 1
         col, row = i % 4, i // 4
-        x = pad + col * (panel + gap)
-        y = pad + row * (panel + 28) + 24
-        pic = full if i == 0 else cells[i]
-        img.alpha_composite(pic.resize((panel, panel), Image.NEAREST), (x, y))
-        d.text((x + 2, y - 24), labels[i], font=font, fill=(235, 237, 244))
+        x = gx + col * (panel + 12)
+        y = 30 + pad + row * (panel + 26) + 22
+        cell = sheet.crop((n * CELL % (CELL * 4), (n * CELL // (CELL * 4)) * CELL,
+                           n * CELL % (CELL * 4) + CELL, (n * CELL // (CELL * 4)) * CELL + CELL))
+        img.alpha_composite(cell.resize((panel, panel), Image.NEAREST), (x, y))
+        d.text((x + 2, y - 22), str(n), font=font, fill=(235, 237, 244))
     os.makedirs(os.path.dirname(PREVIEW), exist_ok=True)
     img.convert("RGB").save(PREVIEW)
-    print("ok", sheet.size, full.size)
+    full_panel.convert("RGB").save(os.path.join(ROOT, "build", "tmp", "watermelon_moon", "full_v9.png"))
+    print("ok", sheet.size, full.size, img.size)
 
 
 if __name__ == "__main__":

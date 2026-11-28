@@ -22,6 +22,8 @@ public final class SkyBodies {
     /** Чуть ближе небесного купола (100), иначе тела мерцают в z-fighting с ним. */
     private static final float RADIUS = 90.0F;
     private static final float MOON_SIZE = 3.0F;
+    /** Полная арбузная луна: холст 64x64, сам арбуз 32x32 по центру, поэтому рисуем вдвое крупнее. */
+    private static final float WATERMELON_FULL_SIZE = MOON_SIZE * 2.0F;
 
     private record Body(ResourceLocation texture, float size, double speed, double phase, double tilt, float dim) {}
 
@@ -113,7 +115,7 @@ public final class SkyBodies {
             drawBody(matrix, CHEESE_MOON, 0.0F, 0.0F, 1.0F, 1.0F, MOON_SIZE, angle, 23.0, red, green, blue, alpha);
         } else if (watermelon) {
             if (phase == 0) {
-                drawBody(matrix, WATERMELON_FULL, 0.0F, 0.0F, 1.0F, 1.0F, MOON_SIZE, angle, 23.0, red, green, blue, alpha);
+                drawBody(matrix, WATERMELON_FULL, 0.0F, 0.0F, 1.0F, 1.0F, WATERMELON_FULL_SIZE, angle, 23.0, red, green, blue, alpha);
             } else {
                 drawBody(matrix, WATERMELON_MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, 23.0, red, green, blue, alpha);
             }
