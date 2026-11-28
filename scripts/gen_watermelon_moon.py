@@ -47,9 +47,25 @@ def cut_cells(img):
     return cells
 
 
+def cut_cat(cat):
+    """Убрать старый арбуз из текстуры кота (зелёные пиксели) и сделать глаза зелёными."""
+    px = cat.load()
+    for y in range(cat.height):
+        for x in range(cat.width):
+            r, g, b, a = px[x, y]
+            if a and g > r + 8 and g > b + 8:
+                px[x, y] = (r, g, b, 0)      # зелёная корка старого арбуза
+    for y in range(cat.height):
+        for x in range(cat.width):
+            r, g, b, a = px[x, y]
+            if a and b > r + 20 and b > g + 20:
+                px[x, y] = (80, 200, 90, 255)  # глаза: были голубые, стали зелёные
+    return cat
+
+
 def main():
     cells = cut_cells(Image.open(SRC).convert("RGBA"))
-    cat = Image.open(CAT).convert("RGBA")
+    cat = cut_cat(Image.open(CAT).convert("RGBA"))
     full = cells[0].copy()
     full.alpha_composite(cat)
 

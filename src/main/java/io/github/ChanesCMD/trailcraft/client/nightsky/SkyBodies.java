@@ -80,8 +80,8 @@ public final class SkyBodies {
 
     /** Луна: обычные фазы; на реальное полнолуние — сырная, на редкое летнее — арбузная с котом. */
     public static void renderMoon(Matrix4f matrix, float partialTick, ClientLevel level, float nightBrightness) {
-        boolean cheese = RealMoon.isFullMoonDay();
-        boolean watermelon = !cheese && WatermelonMoon.isActive(level);
+        boolean watermelon = WatermelonMoon.isActive(level);
+        boolean cheese = !watermelon && RealMoon.isFullMoonDay();
         int phase = cheese ? 0 : level.getMoonPhase() & 7;
         int u = phase % 4, v = phase / 4;
         // полнолуние — напротив солнца (вся ночь), новолуние — рядом с солнцем (день), серпы — утро и вечер
