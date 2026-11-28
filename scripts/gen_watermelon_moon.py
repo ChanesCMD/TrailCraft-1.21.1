@@ -59,11 +59,28 @@ def cut_cat(cat):
     return cat
 
 
+def cat_overlay(cat):
+    """Кот без старого арбуза, уменьшенный и посаженный в верхнюю часть полной луны."""
+    cut_cat(cat)
+    bbox = cat.getbbox()
+    if bbox is None:
+        raise SystemExit("пустой кот")
+    content = cat.crop(bbox)
+    target = 24
+    scale = min(target / content.width, target / content.height)
+    w = max(1, round(content.width * scale))
+    h = max(1, round(content.height * scale))
+    content = content.resize((w, h), Image.LANCZOS)
+    layer = Image.new("RGBA", (target, target), (0, 0, 0, 0))
+    layer.alpha_composite(content, ((target - w) // 2, 0))
+    return layer
+
+
 def main():
     cells = cut_cells(Image.open(SRC).convert("RGBA"))
-    cat = cut_cat(Image.open(CAT).convert("RGBA"))
+    cat = cat_overlay(Image.open(CAT).convert("RGBA"))
     full = cells[0].copy()
-    full.alpha_composite(cat)
+    full.alpha_composite(cat, ((CELL - cat.width) // 2, 0))
 
     sheet = Image.new("RGBA", (CELL * 4, CELL * 2), (0, 0, 0, 0))
     for i, cell in enumerate(cells):
