@@ -1,21 +1,23 @@
 package io.github.ChanesCMD.trailcraft.client.nightsky;
 
+import io.github.ChanesCMD.trailcraft.ServerConfig;
 import io.github.ChanesCMD.trailcraft.calendar.Calendar;
-import io.github.ChanesCMD.trailcraft.season.Seasons;
 import net.minecraft.client.multiplayer.ClientLevel;
 
+import java.time.LocalDate;
+
 /**
- * Редкая арбузная луна: первое полнолуние лета и по четыре дня до/после него. Так видны все фазы:
- * до полнолуния 4, 5, 6, 7, в полнолуние полная (кот), после — 1, 2, 3, 4. Раз в игровой год.
- *
- * Другие варианты, если захочется: 3 августа (Всемирный день арбуза, реальная дата); 13-е полнолуние
- * («голубая луна»); августовское реальное полнолуние (тогда в августе оно перекрывает сырное).
+ * Редкая арбузная луна включается в двух случаях:
+ * 1) реальное 3 августа — Всемирный день арбуза (весь реальный день);
+ * 2) первое полнолуние игрового года, оканчивающегося на 1 с чётным десятком:
+ *    621, 641, 661, 681, 701… (раз в 20 игровых лет), и ±4 игровых дня вокруг него.
+ * В дни вокруг полнолуния видны все фазы: 4, 5, 6, 7 — до, полная (кот) — в полнолуние, 1, 2, 3, 4 — после.
  */
 public final class WatermelonMoon {
     private static final long TICKS_PER_DAY = 24_000L;
     /** Полнолуния повторяются каждые 8 игровых суток. */
     private static final long LUNATION = 8L * TICKS_PER_DAY;
-    /** За сколько дней до/после полнолуния показывать арбузные фазы (весь цикл, включая новолуние). */
+    /** За сколько дней до/после полнолуния показывать арбузные фазы. */
     private static final int WINDOW = 4;
 
     private WatermelonMoon() {}
@@ -24,18 +26,30 @@ public final class WatermelonMoon {
         if (level == null) {
             return false;
         }
+        // Всемирный день арбуза — реальное 3 августа
+        LocalDate today = LocalDate.now();
+        if (today.getMonthValue() == 8 && today.getDayOfMonth() == 3) {
+            return true;
+        }
         long time = level.getDayTime();
         int phase = level.getMoonPhase() & 7;
         long recent = time - phase * TICKS_PER_DAY;                 // прошедшее полнолуние
         long next = time + (8 - phase) * TICKS_PER_DAY;              // будущее полнолуние
         // на новолунии (phase 4) оба полнолуния в четырёх днях — проверяем оба
-        return (phase <= WINDOW && isFirstSummerFull(recent))
-                || (8 - phase <= WINDOW && isFirstSummerFull(next));
+        return (phase <= WINDOW && isFirstFullOfYear(recent))
+                || (8 - phase <= WINDOW && isFirstFullOfYear(next));
     }
 
-    /** Это полнолуние — первое летнее: само летом, а предыдущее полнолуние было ещё не летом. */
-    private static boolean isFirstSummerFull(long full) {
-        return Seasons.of(full) == Calendar.Season.SUMMER
-                && Seasons.of(full - LUNATION) != Calendar.Season.SUMMER;
+    /** Полнолуние — первое в игровом году, номер которого оканчивается на 1 с чётным десятком. */
+    private static boolean isFirstFullOfYear(long full) {
+        int days = ServerConfig.daysPerSeason();
+        Calendar cal = Calendar.of(full, days);
+        long year = cal.year();
+        // 621, 641, 661, 681, 701…: последняя цифра 1, предпоследняя чётная
+        if (year % 10 != 1 || (year / 10) % 2 != 0) {
+            return false;
+        }
+        // предыдущее полнолуние должно быть в прошлом году — значит, это первое в этом
+        return Calendar.of(full - LUNATION, days).year() != year;
     }
 }
