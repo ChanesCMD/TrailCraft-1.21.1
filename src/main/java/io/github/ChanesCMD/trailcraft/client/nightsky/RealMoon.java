@@ -26,12 +26,17 @@ public final class RealMoon {
 
     /** Сегодня (по системной дате) в реальной жизни полнолуние. */
     public static boolean isFullMoonDay() {
-        LocalDate today = LocalDate.now();
+        LocalDate today = today();
         if (!today.equals(cachedDate)) {
             cachedDate = today;
             cachedFullMoon = fullMoonOn(today);
         }
         return cachedFullMoon;
+    }
+
+    /** Системная дата. */
+    static LocalDate today() {
+        return LocalDate.now();
     }
 
     private static boolean fullMoonOn(LocalDate date) {
