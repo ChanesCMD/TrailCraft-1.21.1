@@ -64,7 +64,6 @@ public class ClayMoldingScreen extends Screen {
         }
         boolean[][] dark = new boolean[GRID][GRID];
         boolean[][] opaque = new boolean[GRID][GRID];
-        int darkCount = 0;
         try (var in = resource.get().open(); NativeImage image = NativeImage.read(in)) {
             for (int y = 0; y < GRID; y++) {
                 for (int x = 0; x < GRID; x++) {
@@ -77,39 +76,44 @@ public class ClayMoldingScreen extends Screen {
                     opaque[y][x] = a > 0;
                     if (a > 0 && inside && (r + g + b) / 3 < 120) {
                         dark[y][x] = true;
-                        darkCount++;
                     }
                 }
             }
         } catch (IOException ignored) {
             return;
         }
-        boolean useDark = shape != ClayShape.JUG && darkCount >= 8;
+        boolean mold = shape != ClayShape.JUG;
         for (int y = 0; y < GRID; y++) {
             for (int x = 0; x < GRID; x++) {
-                target[y][x] = useDark ? dark[y][x] : opaque[y][x];
+                // у форм снизу и справа тёмная полоса-тень — она не часть заготовки
+                target[y][x] = opaque[y][x] && (!mold || (y < GRID - 2 && x < GRID - 1));
             }
         }
-        // Края формы — два слоя, середина — один.
         for (int y = 0; y < GRID; y++) {
             for (int x = 0; x < GRID; x++) {
                 if (!target[y][x]) {
                     continue;
                 }
-                boolean edge = false;
-                for (int dy = -1; dy <= 1 && !edge; dy++) {
-                    for (int dx = -1; dx <= 1; dx++) {
-                        if (dx == 0 && dy == 0) {
-                            continue;
-                        }
-                        int nx = x + dx, ny = y + dy;
-                        if (nx < 0 || ny < 0 || nx >= GRID || ny >= GRID || !target[ny][nx]) {
-                            edge = true;
-                            break;
+                if (mold) {
+                    // 1 слой — углубление, куда заливают металл; вокруг — стенка в 2 слоя
+                    required[y][x] = dark[y][x] ? 1 : 2;
+                } else {
+                    // кувшин: края 2 слоя, середина 1
+                    boolean edge = false;
+                    for (int dy = -1; dy <= 1 && !edge; dy++) {
+                        for (int dx = -1; dx <= 1; dx++) {
+                            if (dx == 0 && dy == 0) {
+                                continue;
+                            }
+                            int nx = x + dx, ny = y + dy;
+                            if (nx < 0 || ny < 0 || nx >= GRID || ny >= GRID || !target[ny][nx]) {
+                                edge = true;
+                                break;
+                            }
                         }
                     }
+                    required[y][x] = edge ? 2 : 1;
                 }
-                required[y][x] = edge ? 2 : 1;
                 requiredTotal += required[y][x];
             }
         }
@@ -271,11 +275,24 @@ public class ClayMoldingScreen extends Screen {
             return;
         }
         if (button == 0) {
-            // за одно нажатие/протяжку клетка получает только один слой
-            if (!stroke[y][x] && layers[y][x] < 2 && supply > 0) {
-                layers[y][x]++;
-                stroke[y][x] = true;
-                supply--;
+            int radius = hasShiftDown() ? 1 : 0;
+            boolean changed = false;
+            for (int dy = -radius; dy <= radius; dy++) {
+                for (int dx = -radius; dx <= radius; dx++) {
+                    int nx = x + dx, ny = y + dy;
+                    if (nx < 0 || ny < 0 || nx >= GRID || ny >= GRID) {
+                        continue;
+                    }
+                    // за одно нажатие/протяжку клетка получает только один слой
+                    if (!stroke[ny][nx] && layers[ny][nx] < 2 && supply > 0) {
+                        layers[ny][nx]++;
+                        stroke[ny][nx] = true;
+                        supply--;
+                        changed = true;
+                    }
+                }
+            }
+            if (changed) {
                 play(SoundEvents.MUD_PLACE, 1.3f);
                 check();
             }
