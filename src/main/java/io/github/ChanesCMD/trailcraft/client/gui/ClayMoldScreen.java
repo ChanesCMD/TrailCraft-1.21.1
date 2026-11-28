@@ -1,13 +1,11 @@
 package io.github.ChanesCMD.trailcraft.client.gui;
 
-import io.github.ChanesCMD.trailcraft.smelting.ClayMoldItem;
 import io.github.ChanesCMD.trailcraft.smelting.ClayShape;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 /** Окно слепка: плитки с формами (ClayShape), клик — вылепить. */
 public class ClayMoldScreen extends Screen {
@@ -68,8 +66,7 @@ public class ClayMoldScreen extends Screen {
         for (int i = 0; i < shapes.length; i++) {
             int x = tileX(i), y = tileY(i);
             if (mouseX >= x && mouseX < x + TILE && mouseY >= y && mouseY < y + TILE) {
-                PacketDistributor.sendToServer(new ClayMoldItem.ShapePayload(i));
-                onClose();
+                ClayMoldingScreen.open(i);
                 return true;
             }
         }
