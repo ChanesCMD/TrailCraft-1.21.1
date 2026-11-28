@@ -25,11 +25,23 @@ public final class SkyBodies {
 
     private record Body(ResourceLocation texture, float size, double speed, double phase, double tilt, float dim) {}
 
+    /** Границы светлой части каждой фазы в пикселях клетки (измерены по текстуре), -1 — нет светлой части. */
+    private static final int[] LIT_MIN = {1, 1, 1, 1, -1, 7, 5, 3};
+    private static final int[] LIT_MAX = {7, 5, 3, 1, -1, 7, 7, 7};
+    /** Куда растёт луна: -1 влево (растущая), +1 вправо (убывающая). */
+    private static final int[] GROW = {0, 1, 1, 1, 0, -1, -1, -1};
+
     private static final ResourceLocation MOON =
             ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "textures/environment/moon_phases_06.png");
-    /** Полная луна — кот на арбузе (и на реальное полнолуние тоже). */
-    private static final ResourceLocation CAT_MOON =
-            ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "textures/environment/moon_cat.png");
+    /** Полная сырная луна: рисуется только в реальное полнолуние (RealMoon). */
+    private static final ResourceLocation CHEESE_MOON =
+            ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "textures/environment/moon_cheese.png");
+    /** Арбузные фазы: редкое первое полнолуние лета (WatermelonMoon). */
+    private static final ResourceLocation WATERMELON_MOON =
+            ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "textures/environment/moon_phases_watermelon.png");
+    /** Полная арбузная луна — кот на арбузе. */
+    private static final ResourceLocation WATERMELON_FULL =
+            ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID, "textures/environment/moon_watermelon_full.png");
 
     private static Body planet(String name, float size, double speed, double phase, double tilt, float dim) {
         return new Body(ResourceLocation.fromNamespaceAndPath(TrailCraft.MODID,
@@ -66,11 +78,11 @@ public final class SkyBodies {
         RenderSystem.defaultBlendFunc();
     }
 
-    /** Луна: полная — кот на арбузе, остальные фазы — арбузная таблица; видна и днём. */
+    /** Луна: обычные фазы; на реальное полнолуние — сырная, на редкое летнее — арбузная с котом. */
     public static void renderMoon(Matrix4f matrix, float partialTick, ClientLevel level, float nightBrightness) {
-        // На реальное полнолуние тоже полная (кот), как раньше была сырная.
-        boolean realFullMoon = RealMoon.isFullMoonDay();
-        int phase = realFullMoon ? 0 : level.getMoonPhase() & 7;
+        boolean cheese = RealMoon.isFullMoonDay();
+        boolean watermelon = !cheese && WatermelonMoon.isActive(level);
+        int phase = cheese ? 0 : level.getMoonPhase() & 7;
         int u = phase % 4, v = phase / 4;
         // полнолуние — напротив солнца (вся ночь), новолуние — рядом с солнцем (день), серпы — утро и вечер
         double angle = Math.PI + phase * (Math.PI / 4.0);
@@ -81,8 +93,30 @@ public final class SkyBodies {
         float green = 0.94F + 0.06F * night;
         float blue = 1.0F;
         begin();
-        if (phase == 0) {
-            drawBody(matrix, CAT_MOON, 0.0F, 0.0F, 1.0F, 1.0F, MOON_SIZE, angle, 23.0, red, green, blue, alpha);
+        // ореолы — только у обычной луны: у сырной/арбузной своя форма фаз
+        if (!cheese && !watermelon) {
+            int litMin = LIT_MIN[phase];
+            int litMax = LIT_MAX[phase];
+            if (litMin >= 0) {
+                int grow = GROW[phase];
+                if (grow > 0) {
+                    // у убывающей каждый ореол шире на пиксель: ближний 2 px, дальний 2 px
+                    haloRange(matrix, angle, litMax, litMax + 2, 0.90F, 0.94F, 1.0F, alpha * 0.66F);
+                    haloRange(matrix, angle, litMax + 2, litMax + 3, 0.90F, 0.94F, 1.0F, alpha * 0.33F);
+                } else if (grow < 0) {
+                    haloRange(matrix, angle, litMin - 1, litMin, 0.90F, 0.94F, 1.0F, alpha * 0.66F);
+                    haloRange(matrix, angle, litMin - 2, litMin - 1, 0.90F, 0.94F, 1.0F, alpha * 0.33F);
+                }
+            }
+        }
+        if (cheese) {
+            drawBody(matrix, CHEESE_MOON, 0.0F, 0.0F, 1.0F, 1.0F, MOON_SIZE, angle, 23.0, red, green, blue, alpha);
+        } else if (watermelon) {
+            if (phase == 0) {
+                drawBody(matrix, WATERMELON_FULL, 0.0F, 0.0F, 1.0F, 1.0F, MOON_SIZE, angle, 23.0, red, green, blue, alpha);
+            } else {
+                drawBody(matrix, WATERMELON_MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, 23.0, red, green, blue, alpha);
+            }
         } else {
             drawBody(matrix, MOON, u * 0.25F, v * 0.5F, 0.25F, 0.5F, MOON_SIZE, angle, 23.0, red, green, blue, alpha);
         }
@@ -103,6 +137,79 @@ public final class SkyBodies {
                     body.size(), angle, body.tilt(), dim, dim, dim, 1.0F);
         }
         end();
+    }
+
+    /** Светлый прямоугольник-ореол на месте луны (без текстуры, только цвет и прозрачность). */
+    /**
+     * Ореол по диапазону пикселей клетки (0..8 включительно): рисуется прямоугольником той же высоты,
+     * что и луна, с того же места, но шире — торчит только в сторону роста.
+     */
+    private static void haloRange(Matrix4f matrix, double angle, int fromPx, int toPx,
+                                  float red, float green, float blue, float alpha) {
+        double tilt = Math.toRadians(23.0);
+        Vector3f pos = new Vector3f(
+                (float) (Math.cos(angle) * RADIUS),
+                (float) (Math.sin(angle) * Math.cos(tilt) * RADIUS),
+                (float) (Math.sin(angle) * Math.sin(tilt) * RADIUS));
+        Vector3f up = new Vector3f(0.0F, 1.0F, 0.0F);
+        Vector3f tangent = new Vector3f(up).cross(pos);
+        if (tangent.lengthSquared() < 1.0E-4F) {
+            tangent.set(1.0F, 0.0F, 0.0F);
+        }
+        tangent.normalize();
+        Vector3f bitangent = new Vector3f(pos).cross(tangent).normalize();
+        float px = MOON_SIZE / 4.0F;                   // 4 пикселя от центра до края спрайта
+        float a = (fromPx - 4.0F) * px;
+        float b = (toPx - 4.0F) * px;
+        tangent.mul(1.0F);
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        Tesselator tess = Tesselator.getInstance();
+        BufferBuilder bb = tess.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        Vector3f p1 = new Vector3f(pos).fma(a, tangent).fma(-MOON_SIZE, bitangent);
+        Vector3f p2 = new Vector3f(pos).fma(b, tangent).fma(-MOON_SIZE, bitangent);
+        Vector3f p3 = new Vector3f(pos).fma(b, tangent).fma(MOON_SIZE, bitangent);
+        Vector3f p4 = new Vector3f(pos).fma(a, tangent).fma(MOON_SIZE, bitangent);
+        bb.addVertex(matrix, p1.x, p1.y, p1.z).setColor(red, green, blue, alpha);
+        bb.addVertex(matrix, p2.x, p2.y, p2.z).setColor(red, green, blue, alpha);
+        bb.addVertex(matrix, p3.x, p3.y, p3.z).setColor(red, green, blue, alpha);
+        bb.addVertex(matrix, p4.x, p4.y, p4.z).setColor(red, green, blue, alpha);
+        MeshData mesh = bb.build();
+        if (mesh != null) {
+            BufferUploader.drawWithShader(mesh);
+        }
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+    }
+
+    private static void halo(Matrix4f matrix, double angle, float halfW, float halfH,
+                             float red, float green, float blue, float alpha) {
+        double tilt = Math.toRadians(23.0);
+        Vector3f pos = new Vector3f(
+                (float) (Math.cos(angle) * RADIUS),
+                (float) (Math.sin(angle) * Math.cos(tilt) * RADIUS),
+                (float) (Math.sin(angle) * Math.sin(tilt) * RADIUS));
+        Vector3f up = new Vector3f(0.0F, 1.0F, 0.0F);
+        Vector3f tangent = new Vector3f(up).cross(pos);
+        if (tangent.lengthSquared() < 1.0E-4F) {
+            tangent.set(1.0F, 0.0F, 0.0F);
+        }
+        tangent.normalize().mul(halfW);
+        Vector3f bitangent = new Vector3f(pos).cross(tangent).normalize().mul(halfH);
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        Tesselator tess = Tesselator.getInstance();
+        BufferBuilder bb = tess.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        bb.addVertex(matrix, pos.x - tangent.x - bitangent.x, pos.y - tangent.y - bitangent.y, pos.z - tangent.z - bitangent.z)
+                .setColor(red, green, blue, alpha);
+        bb.addVertex(matrix, pos.x + tangent.x - bitangent.x, pos.y + tangent.y - bitangent.y, pos.z + tangent.z - bitangent.z)
+                .setColor(red, green, blue, alpha);
+        bb.addVertex(matrix, pos.x + tangent.x + bitangent.x, pos.y + tangent.y + bitangent.y, pos.z + tangent.z + bitangent.z)
+                .setColor(red, green, blue, alpha);
+        bb.addVertex(matrix, pos.x - tangent.x + bitangent.x, pos.y - tangent.y + bitangent.y, pos.z - tangent.z + bitangent.z)
+                .setColor(red, green, blue, alpha);
+        MeshData mesh = bb.build();
+        if (mesh != null) {
+            BufferUploader.drawWithShader(mesh);
+        }
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
     }
 
     private static void drawBody(Matrix4f matrix, ResourceLocation texture, float u0, float v0,
