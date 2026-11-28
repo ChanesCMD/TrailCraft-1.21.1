@@ -27,7 +27,7 @@ public class ClayMoldingScreen extends Screen {
     private static final int BOARD = GRID * CELL;
     private static final int PAD = 16;
     private static final int WIDTH = BOARD + PAD * 2;
-    private static final int HEIGHT = BOARD + 90;
+    private static final int HEIGHT = BOARD + 100;
     private static final int MAX_EXTRA = 6;
 
     private final int shapeIndex;
@@ -35,6 +35,7 @@ public class ClayMoldingScreen extends Screen {
     private final boolean[][] target = new boolean[GRID][GRID];
     private final int[][] required = new int[GRID][GRID];
     private final int[][] layers = new int[GRID][GRID];
+    private final boolean[][] stroke = new boolean[GRID][GRID];
     private ResourceLocation texture;
     private int requiredTotal;
     private int supply;
@@ -214,6 +215,8 @@ public class ClayMoldingScreen extends Screen {
             color = 0xFF707070;
         }
         g.drawString(font, hint, x0, ty + 36, color, false);
+        g.drawString(font, Component.translatable("gui.trailcraft.clay_molding.controls"), x0, ty + 47,
+                0xFF707070, false);
     }
 
     private static void border(GuiGraphics g, int x, int y, int size, int color) {
@@ -233,6 +236,7 @@ public class ClayMoldingScreen extends Screen {
             onClose();
             return true;
         }
+        clearStroke();
         paint(mouseX, mouseY, button);
         return true;
     }
@@ -246,6 +250,20 @@ public class ClayMoldingScreen extends Screen {
         return true;
     }
 
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        clearStroke();
+        return super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    private void clearStroke() {
+        for (int y = 0; y < GRID; y++) {
+            for (int x = 0; x < GRID; x++) {
+                stroke[y][x] = false;
+            }
+        }
+    }
+
     private void paint(double mouseX, double mouseY, int button) {
         int x = (int) Math.floor((mouseX - boardX()) / (double) CELL);
         int y = (int) Math.floor((mouseY - boardY()) / (double) CELL);
@@ -253,16 +271,21 @@ public class ClayMoldingScreen extends Screen {
             return;
         }
         if (button == 0) {
-            if (layers[y][x] < 2 && supply > 0) {
+            // за одно нажатие/протяжку клетка получает только один слой
+            if (!stroke[y][x] && layers[y][x] < 2 && supply > 0) {
                 layers[y][x]++;
+                stroke[y][x] = true;
                 supply--;
                 play(SoundEvents.MUD_PLACE, 1.3f);
                 check();
             }
-        } else if (button == 1 && layers[y][x] > 0) {
-            layers[y][x]--;
-            play(SoundEvents.MUD_BREAK, 1.5f);
-            check();
+        } else if (button == 1) {
+            if (!stroke[y][x] && layers[y][x] > 0) {
+                layers[y][x]--;
+                stroke[y][x] = true;
+                play(SoundEvents.MUD_BREAK, 1.5f);
+                check();
+            }
         }
     }
 
